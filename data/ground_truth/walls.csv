@@ -1,0 +1,3 @@
+drawing_file,wall_type,length_m,net_area_m2,material_id
+data/sample/sample_floor.dxf,220,33.12,105.64,GN01
+data/sample/sample_floor.dxf,110,4.56,15.05,AAC01

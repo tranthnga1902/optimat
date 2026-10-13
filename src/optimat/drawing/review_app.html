@@ -1,0 +1,753 @@
+<title>Kiểm tra bóc tách</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Bố cục: bàn vẽ bên trái (thanh công cụ nổi), cột danh sách nhận dạng bên phải có 4 tab; thanh đầu trang giữ thao tác chốt. */
+:root {
+  --paper: #f2f4f1; --panel: #ffffff; --sunk: #f7f8f6; --ink: #1c2321; --muted: #5b6965; --rule: #d5dcd8;
+  --line: #9aa7a2; --wall-line: #27302d;
+  --c110: #1f8a7a; --c150: #6b8f23; --c220: #c7741a; --c330: #5a55b8; --concrete: #7d8784;
+  --open: #d1453b; --accent: #1f6f8b; --accent-ink: #ffffff; --sel: #e0a800; --ok: #2e7d4f; --warn: #b7791f;
+  --f-ui: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --f-num: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #131817; --panel: #1b2120; --sunk: #161c1b; --ink: #e4ebe8; --muted: #9aaaa5; --rule: #2e3735;
+    --line: #56625e; --wall-line: #d5ddda; --c110: #3fbfa9; --c150: #9cc24a; --c220: #f0a14a; --c330: #9b96f0;
+    --concrete: #8e9895; --open: #ff7a6e; --accent: #5cb6d6; --accent-ink: #0f1514; --sel: #ffd23f; --ok: #5cc98a; --warn: #f0b85a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #131817; --panel: #1b2120; --sunk: #161c1b; --ink: #e4ebe8; --muted: #9aaaa5; --rule: #2e3735;
+  --line: #56625e; --wall-line: #d5ddda; --c110: #3fbfa9; --c150: #9cc24a; --c220: #f0a14a; --c330: #9b96f0;
+  --concrete: #8e9895; --open: #ff7a6e; --accent: #5cb6d6; --accent-ink: #0f1514; --sel: #ffd23f; --ok: #5cc98a; --warn: #f0b85a;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--panel); color: var(--ink); font: 14px/1.45 var(--f-ui); }
+button, select, input { font: inherit; color: inherit; }
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
+header h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+.file { font-family: var(--f-num); font-size: 12.5px; color: var(--muted); overflow-wrap: anywhere; }
+.grow { flex: 1 1 auto; }
+.field { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.field select, .field input { font-size: 13px; color: var(--ink); background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 6px; }
+.field input[type=number] { width: 72px; font-family: var(--f-num); }
+.btn { border: 1px solid var(--rule); background: var(--panel); border-radius: 6px; padding: 5px 11px; cursor: pointer; font-weight: 500; font-size: 13px; white-space: nowrap; }
+.btn:hover { border-color: var(--muted); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.btn:focus-visible, select:focus-visible, input:focus-visible, .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.status { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--rule); white-space: nowrap; }
+.status.done { color: var(--ok); border-color: var(--ok); }
+.status.edit { color: var(--warn); border-color: var(--warn); }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 470px; min-height: 0; }
+.board { position: relative; background: var(--paper); min-height: 0; overflow: hidden; touch-action: none; }
+.board svg { width: 100%; height: 100%; display: block; }
+.board[data-mode="select"] svg { cursor: grab; }
+.board[data-mode="wall"] svg, .board[data-mode="open"] svg { cursor: crosshair; }
+.toolbar { position: absolute; left: 12px; top: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; pointer-events: none; }
+.toolbar > * { pointer-events: auto; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; background: var(--panel); }
+.seg button { border: 0; background: transparent; padding: 5px 10px; cursor: pointer; font-size: 13px; font-weight: 500; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.chipset { display: inline-flex; gap: 4px; background: var(--panel); border: 1px solid var(--rule); border-radius: 7px; padding: 3px 6px; font-size: 12.5px; }
+.chipset label { display: inline-flex; gap: 4px; align-items: center; cursor: pointer; }
+.hint { position: absolute; left: 12px; bottom: 12px; max-width: min(520px, calc(100% - 140px)); background: var(--panel); border: 1px solid var(--rule); border-radius: 7px; padding: 6px 10px; font-size: 12.5px; color: var(--muted); }
+.scale { position: absolute; right: 12px; bottom: 12px; font-family: var(--f-num); font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 3px 8px; }
+.tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 9px; font-size: 12px; box-shadow: 0 4px 14px rgb(0 0 0 / .12); }
+aside { border-left: 1px solid var(--rule); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+aside .list { flex: 1 1 auto; }
+.tabs { display: flex; border-bottom: 1px solid var(--rule); padding: 0 8px; overflow-x: auto; }
+.tab { all: unset; cursor: pointer; padding: 10px 10px 8px; border-bottom: 3px solid transparent; color: var(--muted); font-weight: 500; white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+.tab .n { font-family: var(--f-num); font-size: 11.5px; margin-left: 4px; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; border-bottom: 1px solid var(--rule); font-size: 12.5px; align-items: center; }
+.filters:empty { display: none; }
+.pill { border: 1px solid var(--rule); border-radius: 999px; padding: 2px 9px; cursor: pointer; background: var(--panel); font-size: 12.5px; }
+.pill[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.list { overflow-y: auto; min-height: 0; }
+.row { display: grid; grid-template-columns: 22px 46px 1fr auto; gap: 4px 8px; padding: 8px 12px; border-bottom: 1px solid var(--rule); align-items: center; cursor: pointer; }
+.row:hover { background: var(--sunk); }
+.row.sel { background: color-mix(in srgb, var(--sel) 16%, transparent); box-shadow: inset 3px 0 0 var(--sel); }
+.row.off { opacity: .5; }
+.row.off .rid { text-decoration: line-through; }
+.rid { font-family: var(--f-num); font-weight: 600; font-size: 12.5px; display: flex; align-items: center; gap: 5px; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; flex: none; }
+.rmain { min-width: 0; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.rmain select, .rmain input { font-size: 12.5px; border: 1px solid var(--rule); border-radius: 5px; background: var(--panel); padding: 2px 4px; }
+.rmain input[type=number] { width: 66px; font-family: var(--f-num); }
+.rnum { text-align: right; font-family: var(--f-num); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rnum small { display: block; color: var(--muted); font-size: 11px; }
+.tag { font-size: 11px; padding: 0 6px; border-radius: 4px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+.tag.low { border-color: var(--warn); color: var(--warn); }
+.tag.man { border-color: var(--accent); color: var(--accent); }
+.tag.edit { border-color: var(--sel); color: var(--ink); }
+.x { border: 0; background: transparent; cursor: pointer; color: var(--muted); font-size: 15px; padding: 0 4px; }
+.x:hover { color: var(--open); }
+.empty { padding: 18px 14px; color: var(--muted); }
+.qty { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+th, td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--rule); }
+th { color: var(--muted); font-weight: 600; font-size: 11.5px; }
+td.num, th.num { text-align: right; font-family: var(--f-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tfoot td { font-weight: 700; border-bottom: 0; }
+.label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; margin: 0 0 4px; }
+.warn { list-style: none; margin: 0; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+.warn li { padding: 6px 8px; border-left: 3px solid var(--sel); background: color-mix(in srgb, var(--sel) 10%, transparent); font-size: 12.5px; }
+.foot { border-top: 1px solid var(--rule); padding: 10px 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--sunk); }
+.total { font-size: 13px; }
+.total b { font-family: var(--f-num); font-size: 15px; }
+.sheet { position: fixed; inset: 0; background: rgb(0 0 0 / .35); display: grid; place-items: center; padding: 16px; z-index: 10; }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; width: min(520px, 100%); max-height: 90vh; overflow: auto; display: flex; flex-direction: column; gap: 12px; }
+.card h2 { margin: 0; font-size: 16px; }
+.card p { margin: 0; color: var(--muted); }
+.actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.startup { display: grid; place-items: center; height: 100%; padding: 24px; text-align: center; color: var(--muted); }
+.startup .card { text-align: left; }
+@media (max-width: 900px) {
+  .app { height: auto; }
+  .main { grid-template-columns: 1fr; }
+  .board { height: 60vh; }
+  aside { border-left: 0; border-top: 1px solid var(--rule); }
+  .list { max-height: 70vh; }
+}
+@media (prefers-reduced-motion: no-preference) { .tab, .row { transition: background .12s, color .12s; } }
+</style>
+
+<div class="app">
+  <header>
+    <h1>Kiểm tra bóc tách</h1>
+    <span class="file" id="file"></span>
+    <label class="field" id="planField" hidden>Mặt bằng <select id="plan"></select></label>
+    <label class="field">Chiều cao tầng (m) <input id="height" type="number" step="0.05" min="1" max="10"></label>
+    <span class="status edit" id="status">Đang kiểm tra</span>
+    <span class="grow"></span>
+    <label class="btn" id="openBtn" hidden>Mở bản vẽ… <input id="upload" type="file" accept=".dxf,.dwg" hidden></label>
+    <button class="btn" id="undo" type="button" disabled>Hoàn tác</button>
+    <button class="btn primary" id="confirm" type="button">Xác nhận bản vẽ</button>
+  </header>
+  <div class="main" id="main">
+    <div class="board" id="board" data-mode="select">
+      <svg id="svg" role="img" aria-label="Mặt bằng và các tường nhận dạng"></svg>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Chế độ">
+          <button type="button" data-mode="select" aria-pressed="true">Chọn</button>
+          <button type="button" data-mode="wall" aria-pressed="false">Vẽ thêm tường</button>
+          <button type="button" data-mode="open" aria-pressed="false">Thêm cửa</button>
+        </div>
+        <label class="field" id="newClsField" hidden>Loại <select id="newCls"></select></label>
+        <label class="field" id="newKindField" hidden><select id="newKind"><option value="door">Cửa đi</option><option value="window">Cửa sổ</option></select>
+          <input id="newW" type="number" step="50" min="200" value="900" aria-label="Rộng (mm)"> × <input id="newH" type="number" step="50" min="200" value="2200" aria-label="Cao (mm)"> mm</label>
+        <span class="chipset">
+          <label><input type="checkbox" id="showRaw" checked> Nét gốc</label>
+          <label><input type="checkbox" id="showLabels"> Nhãn</label>
+        </span>
+        <button class="btn" type="button" id="fit">Vừa khung</button>
+      </div>
+      <div class="hint" id="hint"></div>
+      <div class="scale" id="scale"></div>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+    <aside>
+      <div class="tabs" role="tablist" id="tabs">
+        <button class="tab" role="tab" data-tab="walls">Tường<span class="n" id="nWalls"></span></button>
+        <button class="tab" role="tab" data-tab="open">Lỗ mở<span class="n" id="nOpen"></span></button>
+        <button class="tab" role="tab" data-tab="qty">Khối lượng</button>
+        <button class="tab" role="tab" data-tab="warn">Cảnh báo<span class="n" id="nWarn"></span></button>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="list" id="list"></div>
+      <div class="foot">
+        <span class="total">Diện tích tường thực <b id="total">0</b> m²</span>
+        <span class="grow"></span>
+        <button class="btn" type="button" id="csv">Xuất CSV</button>
+        <button class="btn" type="button" id="json">Xuất JSON</button>
+      </div>
+    </aside>
+  </div>
+</div>
+<div class="sheet" id="sheet" hidden></div>
+
+<script>
+const EMBED = /*__DATA__*/null;          // trang tự chứa (script view_takeoff.py) có dữ liệu nhúng; trang chạy trong API thì null
+const API = EMBED ? null : "";           // cùng máy chủ với trang
+const SVGNS = "http://www.w3.org/2000/svg";
+const $ = (id) => document.getElementById(id);
+const fmt = (v, d = 2) => Number(v).toLocaleString("vi-VN", { minimumFractionDigits: d, maximumFractionDigits: d });
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const CLASSES = ["110", "150", "220", "330"];
+const clsColor = (c) => `var(--c${CLASSES.includes(c) ? c : "110"})`;
+const ROLE = { envelope: "bao che", partition: "ngăn" };
+const KIND = { door: "Cửa đi", window: "Cửa sổ", block: "Block cửa" };
+
+let DATA = null, PI = 0, P = null, S = null;      // dữ liệu tải về, chỉ số mặt bằng, dữ liệu mặt bằng, trạng thái sửa
+const STATES = {};                                // trạng thái sửa theo từng mặt bằng (giữ khi đổi mặt bằng)
+let history = [], tab = "walls", filter = "all", selected = null, mode = "select", confirmed = {};
+
+// ---------------------------------------------------------------- trạng thái
+function initState(p) {
+  return {
+    height_mm: p.height_mm,
+    walls: p.walls.map((w) => ({ id: w.id, cls: w.cls, role: w.role || "partition", x1: w.x1, y1: w.y1, x2: w.x2, y2: w.y2,
+      mat: w.mat || null, fam: w.fam || null, cand: w.cand || [], masonry: w.masonry, conf: w.conf, layer: w.layer, msrc: w.src, rule: w.rule,
+      keep: true, src: "auto", edited: false })),
+    openings: p.openings.filter((o) => o.wall).map((o, i) => ({ id: "O" + (i + 1), wall: o.wall, kind: o.kind || "block",
+      w: o.w, h: o.h, ev: o.ev, x: o.x, y: o.y, keep: true, src: "auto" })),
+    seq: 0,
+  };
+}
+function snapshot() { history.push(JSON.stringify(S)); if (history.length > 100) history.shift(); $("undo").disabled = false; markDirty(); }
+function undo() { if (!history.length) return; S = JSON.parse(history.pop()); STATES[PI] = S; $("undo").disabled = !history.length; markDirty(); renderAll(); }
+function markDirty() { delete confirmed[PI]; updateStatus(); }
+const wallLen = (w) => Math.hypot(w.x2 - w.x1, w.y2 - w.y1) / 1000;
+
+function compute() {
+  const H = S.height_mm;
+  const kept = S.walls.filter((w) => w.keep && w.masonry), ids = new Set(kept.map((w) => w.id));
+  const openArea = {};
+  for (const o of S.openings) if (o.keep && ids.has(o.wall)) openArea[o.wall] = (openArea[o.wall] || 0) + o.w * Math.min(o.h, H) / 1e6;
+  const groups = {};
+  for (const w of kept) {
+    const k = w.cls + "|" + w.role, g = (groups[k] = groups[k] || { cls: w.cls, role: w.role, L: 0, open: 0, mats: {} });
+    g.L += wallLen(w); g.open += openArea[w.id] || 0;
+    if (w.mat) g.mats[w.mat] = (g.mats[w.mat] || 0) + wallLen(w);
+  }
+  const list = Object.values(groups).sort((a, b) => (a.cls + a.role).localeCompare(b.cls + b.role)).map((g) => {
+    const gross = g.L * H / 1000, mat = Object.keys(g.mats).sort((a, b) => g.mats[b] - g.mats[a])[0] || null;
+    return { ...g, gross, net: Math.max(0, gross - g.open), mat, share: mat ? g.mats[mat] / g.L : 0 };
+  });
+  return { groups: list, openArea, total: list.reduce((s, g) => s + g.net, 0) };
+}
+
+// ---------------------------------------------------------------- vẽ
+const svg = $("svg");
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+let G = {}, unit = 100, snapGrid = null;
+function buildStatic() {
+  svg.innerHTML = "";
+  G = {};
+  ["hatch", "raw", "walls", "open", "labels", "draft"].forEach((k) => (G[k] = el("g", { "data-layer": k }, svg)));
+  const [W, H] = P.size;
+  unit = Math.max(W, H) / 100;
+  const wallLayers = new Set(P.wall_layers || []);
+  const paths = { wall: [], other: [], hatch: [] };
+  snapGrid = new Map();
+  const addSnap = (x, y) => { const k = Math.floor(x / 500) + ":" + Math.floor(y / 500); (snapGrid.get(k) || snapGrid.set(k, []).get(k)).push([x, y]); };
+  for (const [x1, y1, x2, y2, li, isH] of P.segs) {
+    const d = `M${x1} ${y1}L${x2} ${y2}`;
+    if (isH) { paths.hatch.push(d); continue; }
+    (wallLayers.has(P.layers[li].name) ? paths.wall : paths.other).push(d);
+    addSnap(x1, y1); addSnap(x2, y2);
+  }
+  el("path", { d: paths.hatch.join(""), fill: "none", stroke: "var(--line)", "stroke-width": 0.4, opacity: 0.3, "vector-effect": "non-scaling-stroke" }, G.hatch);
+  el("path", { d: paths.other.join(""), fill: "none", stroke: "var(--line)", "stroke-width": 0.7, opacity: 0.75, "vector-effect": "non-scaling-stroke" }, G.raw);
+  el("path", { d: paths.wall.join(""), fill: "none", stroke: "var(--wall-line)", "stroke-width": 1.1, "vector-effect": "non-scaling-stroke" }, G.raw);
+  applyToggles();
+}
+function band(w) {
+  const dx = w.x2 - w.x1, dy = w.y2 - w.y1, L = Math.hypot(dx, dy) || 1, t = Number(w.cls) / 2;
+  const nx = (-dy / L) * t, ny = (dx / L) * t;
+  return [[w.x1 + nx, w.y1 + ny], [w.x2 + nx, w.y2 + ny], [w.x2 - nx, w.y2 - ny], [w.x1 - nx, w.y1 - ny]].map((p) => p.join(",")).join(" ");
+}
+function drawDynamic() {
+  G.walls.innerHTML = ""; G.open.innerHTML = ""; G.labels.innerHTML = "";
+  for (const w of S.walls) {
+    const color = !w.masonry ? "var(--concrete)" : clsColor(w.cls), on = w.keep;
+    const g = el("g", { "data-id": w.id, style: "cursor:pointer" }, G.walls);
+    el("polygon", { points: band(w), fill: on ? color : "transparent", "fill-opacity": on ? 0.34 : 0,
+      stroke: w.id === selected ? "var(--sel)" : on ? color : "var(--muted)", "stroke-width": w.id === selected ? 3 : w.role === "envelope" ? 2 : 1.1,
+      "stroke-dasharray": on ? (w.src === "manual" ? "6 3" : "") : "3 3", "vector-effect": "non-scaling-stroke" }, g);
+    if (!on) el("line", { x1: w.x1, y1: w.y1, x2: w.x2, y2: w.y2, stroke: "var(--open)", "stroke-width": 1, "vector-effect": "non-scaling-stroke" }, g);
+    g.addEventListener("pointerenter", (e) => showTip(e, `<b>${esc(w.id)}</b> · tường ${w.cls} · ${ROLE[w.role]}<br>${fmt(wallLen(w))} m${on ? "" : " · <b>đã loại</b>"}`));
+    g.addEventListener("pointermove", moveTip);
+    g.addEventListener("pointerleave", hideTip);
+    g.addEventListener("click", (e) => { if (mode === "select") { e.stopPropagation(); select(w.id, true); } });
+    if ($("showLabels").checked && on) {
+      const t = el("text", { x: (w.x1 + w.x2) / 2, y: (w.y1 + w.y2) / 2, "font-size": unit * 1.5, "text-anchor": "middle", fill: "var(--ink)",
+        "font-family": "var(--f-num)", "paint-order": "stroke", stroke: "var(--paper)", "stroke-width": unit * 0.4 }, G.labels);
+      t.textContent = w.id;
+    }
+  }
+  const byId = Object.fromEntries(S.walls.map((w) => [w.id, w]));
+  for (const o of S.openings) {
+    const w = byId[o.wall];
+    if (!w) continue;
+    const L2 = (w.x2 - w.x1) ** 2 + (w.y2 - w.y1) ** 2 || 1;
+    const t = Math.max(0, Math.min(1, ((o.x - w.x1) * (w.x2 - w.x1) + (o.y - w.y1) * (w.y2 - w.y1)) / L2));
+    const px = w.x1 + t * (w.x2 - w.x1), py = w.y1 + t * (w.y2 - w.y1);
+    const L = Math.sqrt(L2), ux = (w.x2 - w.x1) / L, uy = (w.y2 - w.y1) / L, half = o.w / 2;
+    const on = o.keep && w.keep;
+    el("line", { x1: px - ux * half, y1: py - uy * half, x2: px + ux * half, y2: py + uy * half, stroke: on ? "var(--open)" : "var(--muted)",
+      "stroke-width": o.id === selected ? 7 : 4, "stroke-linecap": "butt", "vector-effect": "non-scaling-stroke", opacity: on ? 0.9 : 0.4,
+      style: "cursor:pointer" }, G.open).addEventListener("click", (e) => { if (mode === "select") { e.stopPropagation(); select(o.id, true); } });
+  }
+}
+function applyToggles() {
+  G.raw.style.display = $("showRaw").checked ? "" : "none";
+  G.hatch.style.display = $("showRaw").checked ? "" : "none";
+}
+
+// ---------------------------------------------------------------- danh sách
+// vật liệu = mã trong danh mục (GN01, AAC01...): cùng mã dùng để tra giá. Phương án tường suy theo mã + loại tường.
+const matOf = (id) => DATA.materials.find((m) => m.id === id);
+const matLabel = (id) => { if (!id) return "Chưa rõ"; const m = matOf(id); return m ? m.label : id + " (không có trong danh mục)"; };
+const sysOf = (id, cls) => { const m = matOf(id); return m && m.systems ? m.systems[cls] || null : null; };
+const famLabel = (f) => (f || "").split("|").map((x) => (DATA.families.find((k) => k.id === x) || { label: x }).label).join(" hoặc ");
+function matSelect(w) {
+  const opt = (m) => `<option value="${esc(m.id)}" ${m.id === w.mat ? "selected" : ""}>${esc(m.label)}${m.systems && m.systems[w.cls] ? "" : ` (chưa có phương án tường ${w.cls})`}</option>`;
+  const head = w.mat ? "Chưa rõ" : w.fam ? "Chưa chọn · bản vẽ ghi: " + famLabel(w.fam) : "Chưa rõ";
+  const opts = [`<option value="">${esc(head)}</option>`];
+  const sugg = (w.cand || []).map((sid) => DATA.materials.find((m) => m.systems && m.systems[w.cls] === sid)).filter(Boolean);
+  if (sugg.length) opts.push(`<optgroup label="Phương án hợp với ghi chú">${sugg.map(opt).join("")}</optgroup>`);
+  for (const f of DATA.families) {
+    const ms = DATA.materials.filter((m) => m.family === f.id);
+    if (ms.length) opts.push(`<optgroup label="${esc(f.label)}">${ms.map(opt).join("")}</optgroup>`);
+  }
+  if (w.mat && !matOf(w.mat)) opts.push(`<option value="${esc(w.mat)}" selected>${esc(matLabel(w.mat))}</option>`);
+  return `<select data-f="mat" aria-label="Vật liệu">${opts.join("")}</select>`;
+}
+function renderList() {
+  const c = compute();
+  $("nWalls").textContent = S.walls.filter((w) => w.keep).length;
+  $("nOpen").textContent = S.openings.filter((o) => o.keep).length;
+  $("nWarn").textContent = (P.warnings || []).length;
+  $("total").textContent = fmt(c.total);
+  [...$("tabs").children].forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  const F = $("filters"), L = $("list");
+  F.innerHTML = ""; L.innerHTML = "";
+  if (tab === "walls") {
+    const counts = { all: S.walls.length, low: S.walls.filter((w) => w.keep && w.conf < 0.7).length,
+      off: S.walls.filter((w) => !w.keep).length, man: S.walls.filter((w) => w.src === "manual").length,
+      nomat: S.walls.filter((w) => w.keep && w.masonry && !w.mat).length };
+    const names = { all: "Tất cả", low: "Tin cậy thấp", nomat: "Chưa có vật liệu", man: "Vẽ thêm", off: "Đã loại" };
+    F.innerHTML = Object.keys(names).map((k) => `<button class="pill" type="button" data-filter="${k}" aria-pressed="${filter === k}">${names[k]} ${counts[k]}</button>`).join("")
+      + `<span class="grow"></span><button class="pill" type="button" id="allMat">Gán vật liệu cho mọi tường chưa rõ…</button>`;
+    let items = S.walls;
+    if (filter === "low") items = items.filter((w) => w.keep && w.conf < 0.7);
+    if (filter === "off") items = items.filter((w) => !w.keep);
+    if (filter === "man") items = items.filter((w) => w.src === "manual");
+    if (filter === "nomat") items = items.filter((w) => w.keep && w.masonry && !w.mat);
+    if (!items.length) L.innerHTML = `<div class="empty">Không có tường nào trong mục này.</div>`;
+    for (const w of items) {
+      const area = wallLen(w) * S.height_mm / 1000 - (c.openArea[w.id] || 0);
+      const row = document.createElement("div");
+      row.className = "row" + (w.keep ? "" : " off") + (w.id === selected ? " sel" : "");
+      row.dataset.id = w.id;
+      row.innerHTML = `
+        <input type="checkbox" data-f="keep" ${w.keep ? "checked" : ""} aria-label="Giữ tường ${esc(w.id)}" title="Bỏ chọn để loại tường nhận nhầm">
+        <span class="rid"><i class="sw" style="background:${w.masonry ? clsColor(w.cls) : "var(--concrete)"}"></i>${esc(w.id)}</span>
+        <span class="rmain">
+          <select data-f="cls" aria-label="Loại tường">${CLASSES.map((k) => `<option ${k === w.cls ? "selected" : ""}>${k}</option>`).join("")}</select>
+          <select data-f="role" aria-label="Vai trò"><option value="envelope" ${w.role === "envelope" ? "selected" : ""}>bao che</option><option value="partition" ${w.role === "partition" ? "selected" : ""}>ngăn</option></select>
+          ${w.masonry ? matSelect(w) : `<span class="tag">bê tông, không tính</span>`}
+          ${w.src === "manual" ? `<span class="tag man">vẽ thêm</span>` : w.edited ? `<span class="tag edit">đã sửa</span>` : ""}
+          ${w.src !== "manual" && w.conf < 0.7 ? `<span class="tag low">tin cậy ${fmt(w.conf)}</span>` : ""}
+        </span>
+        <span class="rnum">${fmt(wallLen(w))} m<small>${w.keep && w.masonry ? fmt(Math.max(0, area)) + " m²" : "—"}</small></span>`;
+      if (w.src === "manual") row.querySelector(".rnum").insertAdjacentHTML("afterend", "");
+      L.appendChild(row);
+    }
+  } else if (tab === "open") {
+    F.innerHTML = `<span>Rộng × cao theo mm. Cửa nhận từ khe tường lấy cao mặc định: kiểm tra lại theo bảng thống kê cửa.</span>`;
+    const byId = Object.fromEntries(S.walls.map((w) => [w.id, w]));
+    if (!S.openings.length) L.innerHTML = `<div class="empty">Chưa có lỗ mở. Chọn "Thêm cửa" rồi bấm lên tường để thêm.</div>`;
+    for (const o of S.openings) {
+      const w = byId[o.wall], on = o.keep && w && w.keep;
+      const row = document.createElement("div");
+      row.className = "row" + (on ? "" : " off") + (o.id === selected ? " sel" : "");
+      row.dataset.id = o.id;
+      row.innerHTML = `
+        <input type="checkbox" data-f="keep" ${o.keep ? "checked" : ""} aria-label="Giữ lỗ mở ${esc(o.id)}">
+        <span class="rid"><i class="sw" style="background:var(--open)"></i>${esc(o.id)}</span>
+        <span class="rmain">
+          <select data-f="kind" aria-label="Loại cửa">${Object.keys(KIND).map((k) => `<option value="${k}" ${k === o.kind ? "selected" : ""}>${KIND[k]}</option>`).join("")}</select>
+          <input type="number" data-f="w" value="${Math.round(o.w)}" step="50" min="100" aria-label="Rộng (mm)"> ×
+          <input type="number" data-f="h" value="${Math.round(o.h)}" step="50" min="100" aria-label="Cao (mm)">
+          <span class="tag">tường ${esc(o.wall)}</span>
+          ${o.src === "manual" ? `<span class="tag man">thêm tay</span>` : o.ev ? `<span class="tag">${esc(o.ev)}</span>` : ""}
+          ${o.src === "manual" ? `<button class="x" type="button" data-f="del" aria-label="Xóa lỗ mở">×</button>` : ""}
+        </span>
+        <span class="rnum">${fmt(o.w * Math.min(o.h, S.height_mm) / 1e6)} m²</span>`;
+      L.appendChild(row);
+    }
+  } else if (tab === "qty") {
+    const edits = S.walls.filter((w) => w.edited || w.src === "manual" || !w.keep).length + S.openings.filter((o) => o.src === "manual" || o.edited || !o.keep).length;
+    L.innerHTML = `<div class="qty">
+      <p class="label">Khối lượng theo loại tường · chiều cao ${fmt(S.height_mm / 1000)} m</p>
+      <div style="overflow-x:auto"><table><thead><tr><th>Loại</th><th>Vai trò</th><th class="num">Dài m</th><th class="num">Gộp m²</th><th class="num">Lỗ mở m²</th><th class="num">Thực m²</th></tr></thead>
+      <tbody>${c.groups.map((g) => `<tr><td><i class="sw" style="background:${clsColor(g.cls)}"></i> ${g.cls}</td><td>${ROLE[g.role]}</td><td class="num">${fmt(g.L)}</td><td class="num">${fmt(g.gross)}</td><td class="num">${fmt(g.open)}</td><td class="num"><b>${fmt(g.net)}</b></td></tr>`).join("") || `<tr><td colspan="6">Chưa có tường nào được giữ.</td></tr>`}</tbody>
+      <tfoot><tr><td colspan="5">Tổng</td><td class="num">${fmt(c.total)}</td></tr></tfoot></table></div>
+      <p class="label">Vật liệu theo thiết kế</p>
+      <div style="overflow-x:auto"><table><tbody>${c.groups.map((g) => `<tr><td>${g.cls} ${ROLE[g.role]}</td><td>${g.mat ? esc(matLabel(g.mat)) + ` <span class="tag">${Math.round(g.share * 100)}% chiều dài</span>` + (sysOf(g.mat, g.cls) ? ` <span class="tag">${esc(sysOf(g.mat, g.cls))}</span>` : ` <span class="tag low">chưa có phương án tường ${g.cls}</span>`) : `<span class="tag low">chưa rõ</span>`}</td></tr>`).join("")}</tbody></table></div>
+      <p style="color:var(--muted);margin:0">${edits ? `Đã chỉnh tay ${edits} mục so với kết quả tự động.` : "Chưa chỉnh mục nào."} Số trên trang là tính tạm; bấm "Xác nhận bản vẽ" để chốt và tra giá theo mã vật liệu.</p>
+      ${confirmed[PI] && confirmed[PI].bill ? billTable(confirmed[PI]) : ""}</div>`;
+  } else {
+    L.innerHTML = (P.warnings || []).length ? `<ul class="warn">${P.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : `<div class="empty">Không có cảnh báo.</div>`;
+  }
+}
+function renderAll() { drawDynamic(); renderList(); $("height").value = (S.height_mm / 1000).toFixed(2); updateStatus(); }
+
+// sửa trong danh sách
+$("list").addEventListener("change", (e) => {
+  const row = e.target.closest(".row"), f = e.target.dataset.f;
+  if (!row || !f) return;
+  const item = S.walls.find((w) => w.id === row.dataset.id) || S.openings.find((o) => o.id === row.dataset.id);
+  if (!item) return;
+  snapshot();
+  if (f === "keep") item.keep = e.target.checked;
+  else if (f === "w" || f === "h") item[f] = Math.max(100, Number(e.target.value) || item[f]);
+  else item[f] = e.target.value || null;
+  if (f !== "keep") item.edited = true;
+  renderAll();
+});
+$("list").addEventListener("click", (e) => {
+  const row = e.target.closest(".row");
+  if (!row) return;
+  if (e.target.dataset.f === "del") {
+    snapshot();
+    S.openings = S.openings.filter((o) => o.id !== row.dataset.id);
+    return renderAll();
+  }
+  if (e.target.closest("select,input,button")) return;
+  select(row.dataset.id, false);
+});
+$("filters").addEventListener("click", (e) => {
+  if (e.target.id === "allMat") return askMaterial();
+  const b = e.target.closest("[data-filter]");
+  if (b) { filter = b.dataset.filter; renderList(); }
+});
+$("tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (b) { tab = b.dataset.tab; renderList(); } });
+
+function select(id, fromDrawing) {
+  selected = selected === id ? null : id;
+  const isOpen = S.openings.some((o) => o.id === id);
+  if (selected && (tab === "walls" && isOpen || tab === "open" && !isOpen || tab === "qty" || tab === "warn")) tab = isOpen ? "open" : "walls";
+  if (selected && filter !== "all" && !isOpen) filter = "all";
+  renderAll();
+  if (!selected) return;
+  const row = $("list").querySelector(`[data-id="${CSS.escape(selected)}"]`);
+  if (row && fromDrawing) row.scrollIntoView({ block: "nearest" });
+  if (!fromDrawing) {
+    const w = S.walls.find((x) => x.id === selected) || S.walls.find((x) => x.id === (S.openings.find((o) => o.id === selected) || {}).wall);
+    if (w) focusOn(w);
+  }
+}
+
+// ---------------------------------------------------------------- vẽ thêm tường, thêm cửa
+function setMode(m) {
+  mode = m;
+  $("board").dataset.mode = m;
+  document.querySelectorAll(".seg [data-mode]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.mode === m));
+  $("newClsField").hidden = m !== "wall";
+  $("newKindField").hidden = m !== "open";
+  draft = null; G.draft && (G.draft.innerHTML = "");
+  $("hint").textContent = {
+    select: "Bấm vào tường hoặc dòng trong danh sách để chọn. Lăn chuột để phóng, kéo để di chuyển.",
+    wall: "Bấm điểm đầu và điểm cuối theo trục tim tường; điểm tự hút vào đầu nét gần nhất. Esc để hủy.",
+    open: "Chọn loại, nhập rộng × cao rồi bấm lên tường để thêm lỗ mở.",
+  }[m];
+}
+document.querySelectorAll(".seg [data-mode]").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+$("newKind").addEventListener("change", (e) => { $("newH").value = e.target.value === "door" ? 2200 : 1400; $("newW").value = e.target.value === "door" ? 900 : 1200; });
+
+let draft = null;
+function toWorld(e) {
+  const r = svg.getBoundingClientRect();
+  return [vb.x + (e.clientX - r.left) / r.width * vb.w, vb.y + (e.clientY - r.top) / r.height * vb.h];
+}
+function snap([x, y]) {
+  const tol = 10 * vb.w / (svg.getBoundingClientRect().width || 1);
+  let best = null, bd = tol;
+  const cx = Math.floor(x / 500), cy = Math.floor(y / 500);
+  for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (const p of snapGrid.get((cx + i) + ":" + (cy + j)) || []) {
+    const d = Math.hypot(p[0] - x, p[1] - y);
+    if (d < bd) { bd = d; best = p; }
+  }
+  for (const w of S.walls) for (const p of [[w.x1, w.y1], [w.x2, w.y2]]) { const d = Math.hypot(p[0] - x, p[1] - y); if (d < bd) { bd = d; best = p; } }
+  return best ? [...best] : [x, y];
+}
+function nearestWall(x, y) {
+  let best = null, bd = 600;
+  for (const w of S.walls) {
+    if (!w.keep) continue;
+    const L2 = (w.x2 - w.x1) ** 2 + (w.y2 - w.y1) ** 2 || 1;
+    const t = Math.max(0, Math.min(1, ((x - w.x1) * (w.x2 - w.x1) + (y - w.y1) * (w.y2 - w.y1)) / L2));
+    const d = Math.hypot(x - (w.x1 + t * (w.x2 - w.x1)), y - (w.y1 + t * (w.y2 - w.y1)));
+    if (d < bd) { bd = d; best = w; }
+  }
+  return best;
+}
+svg.addEventListener("click", (e) => {
+  if (moved) return;
+  if (mode === "select") { if (selected) { selected = null; renderAll(); } return; }
+  const p = toWorld(e);
+  if (mode === "wall") {
+    const q = snap(p);
+    if (!draft) { draft = q; return; }
+    if (Math.hypot(q[0] - draft[0], q[1] - draft[1]) < 200) return;
+    snapshot();
+    S.seq += 1;
+    const w = { id: "M" + S.seq, cls: $("newCls").value, role: "partition", x1: draft[0], y1: draft[1], x2: q[0], y2: q[1],
+      mat: null, masonry: true, conf: 1, keep: true, src: "manual", edited: false };
+    S.walls.push(w);
+    draft = null; G.draft.innerHTML = "";
+    selected = w.id; tab = "walls"; filter = "all";
+    renderAll();
+  } else if (mode === "open") {
+    const w = nearestWall(p[0], p[1]);
+    if (!w) { $("hint").textContent = "Không có tường đang giữ trong vòng 0,6 m quanh điểm bấm."; return; }
+    snapshot();
+    S.seq += 1;
+    const o = { id: "N" + S.seq, wall: w.id, kind: $("newKind").value, w: Number($("newW").value) || 900, h: Number($("newH").value) || 2200,
+      x: p[0], y: p[1], keep: true, src: "manual" };
+    S.openings.push(o);
+    selected = o.id; tab = "open";
+    renderAll();
+  }
+});
+svg.addEventListener("pointermove", (e) => {
+  if (mode !== "wall" || !draft) return;
+  const q = snap(toWorld(e));
+  G.draft.innerHTML = "";
+  el("line", { x1: draft[0], y1: draft[1], x2: q[0], y2: q[1], stroke: "var(--accent)", "stroke-width": 2, "stroke-dasharray": "6 4", "vector-effect": "non-scaling-stroke" }, G.draft);
+  el("circle", { cx: q[0], cy: q[1], r: unit * 0.6, fill: "var(--accent)" }, G.draft);
+});
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") { draft = null; G.draft && (G.draft.innerHTML = ""); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !e.target.closest("input,select")) { e.preventDefault(); undo(); }
+});
+
+// ---------------------------------------------------------------- hộp thoại trong trang
+function sheet(html) { $("sheet").innerHTML = `<div class="card" role="dialog" aria-modal="true">${html}</div>`; $("sheet").hidden = false; }
+function closeSheet() { $("sheet").hidden = true; $("sheet").innerHTML = ""; }
+$("sheet").addEventListener("click", (e) => { if (e.target.id === "sheet" || e.target.dataset.close !== undefined) closeSheet(); });
+function askMaterial() {
+  const n = S.walls.filter((w) => w.keep && w.masonry && !w.mat).length;
+  sheet(`<h2>Gán vật liệu cho ${n} tường chưa rõ</h2><p>Dùng khi bản vẽ không ghi vật liệu nhưng thuyết minh hoặc dự toán có ghi. Có thể sửa lại từng tường sau.</p>
+    <label class="field">Vật liệu <select id="bulkMat">${DATA.families.map((f) => { const ms = DATA.materials.filter((m) => m.family === f.id); return ms.length ? `<optgroup label="${esc(f.label)}">${ms.map((m) => `<option value="${esc(m.id)}">${esc(m.label)}</option>`).join("")}</optgroup>` : ""; }).join("")}</select></label>
+    <label class="field">Chỉ tường loại <select id="bulkCls"><option value="">tất cả</option>${CLASSES.map((c) => `<option>${c}</option>`).join("")}</select></label>
+    <div class="actions"><button class="btn" type="button" data-close>Hủy</button><button class="btn primary" type="button" id="bulkOk">Gán</button></div>`);
+  $("bulkOk").addEventListener("click", () => {
+    const m = $("bulkMat").value, c = $("bulkCls").value;
+    snapshot();
+    S.walls.forEach((w) => { if (w.keep && w.masonry && !w.mat && (!c || w.cls === c)) { w.mat = m; w.edited = true; } });
+    closeSheet(); renderAll();
+  });
+}
+
+// ---------------------------------------------------------------- xác nhận, xuất
+// ?project=12 trên địa chỉ trang: kết quả chốt được lưu vào dự án (bảng takeoff_results) khi máy chủ có PostgreSQL
+const PROJECT = (() => { try { return Number(new URLSearchParams(location.search).get("project")) || null; } catch (e) { return null; } })();
+function payload() {
+  return { project_id: PROJECT, file: DATA.file, plan: P.plan.name, height_mm: S.height_mm,
+    walls: S.walls.map(({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited }) => ({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited })),
+    openings: S.openings.map(({ id, wall, kind, w, h, keep, src }) => ({ id, wall, kind, w, h, keep, src })) };
+}
+function updateStatus() {
+  const s = $("status"), c = confirmed[PI];
+  s.className = "status " + (c ? "done" : "edit");
+  s.textContent = c ? "Đã xác nhận" : "Đang kiểm tra";
+}
+$("confirm").addEventListener("click", () => {
+  const c = compute();
+  const off = S.walls.filter((w) => !w.keep).length, man = S.walls.filter((w) => w.src === "manual" && w.keep).length;
+  const nomat = S.walls.filter((w) => w.keep && w.masonry && !w.mat).length;
+  sheet(`<h2>Xác nhận mặt bằng "${esc(P.plan.name)}"</h2>
+    <p>Chiều cao tầng ${fmt(S.height_mm / 1000)} m · ${S.walls.filter((w) => w.keep).length} đoạn tường (vẽ thêm ${man}, đã loại ${off}) · ${S.openings.filter((o) => o.keep).length} lỗ mở.</p>
+    <p>Diện tích tường thực tính tạm: <b>${fmt(c.total)} m²</b>.${nomat ? ` Còn ${nomat} tường chưa có vật liệu.` : ""}</p>
+    <p>${API !== null ? "Máy chủ sẽ tính lại khối lượng bằng cùng công thức và trả kết quả chốt." : "Trang đang mở ngoài ứng dụng: kết quả được chốt trên trang, dùng Xuất JSON để lưu."}</p>
+    <div class="actions"><button class="btn" type="button" data-close>Quay lại sửa</button><button class="btn primary" type="button" id="doConfirm">Xác nhận</button></div>`);
+  $("doConfirm").addEventListener("click", async () => {
+    if (API === null) { confirmed[PI] = { total: c.total }; closeSheet(); updateStatus(); return; }   // không có máy chủ: chưa tra giá
+    $("doConfirm").disabled = true; $("doConfirm").textContent = "Đang gửi…";
+    try {
+      const r = await fetch(API + "/api/takeoff/confirm", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload()) });
+      const body = await r.json();
+      if (!r.ok) throw new Error(body.detail || "Máy chủ từ chối kết quả.");
+      confirmed[PI] = body;
+      remember(body);
+      sheet(`<h2>Đã xác nhận</h2><p>Máy chủ tính được <b>${fmt(body.total_net_area_m2)} m²</b> tường thực (trang tính tạm ${fmt(c.total)} m²).</p>
+        ${body.takeoff_id ? `<p>Đã lưu vào dự án (mã kết quả ${body.takeoff_id}).</p>` : ""}
+        ${billTable(body)}
+        ${body.warnings.length ? `<ul class="warn">${body.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : ""}
+        <p>Đã ghi mặt bằng này cho giao diện chung: <a href="/app#vat-lieu" target="_top">Vật liệu và giá (gộp các tầng)</a> · <a href="/app#toi-uu" target="_top">Phương án tối ưu</a>.</p>
+        <p class="label">Hoặc tối ưu nhanh riêng mặt bằng này</p>
+        <label class="field"><input type="checkbox" id="keepDesign"> Giữ vật liệu theo thiết kế (chỉ chọn nhà cung cấp và xe)</label>
+        <div id="optOut"></div>
+        <div class="actions"><button class="btn" type="button" data-close>Đóng</button><button class="btn primary" type="button" id="doOptimize">Tối ưu</button></div>`);
+      $("doOptimize").addEventListener("click", () => runOptimize(body.groups));
+      updateStatus(); renderList();
+    } catch (err) {
+      sheet(`<h2>Chưa xác nhận được</h2><p>${esc(err.message)}</p><div class="actions"><button class="btn" type="button" data-close>Đóng</button></div>`);
+    }
+  });
+});
+// bảng vật liệu cần mua và giá đang có (máy chủ tra theo mã vật liệu trong danh mục)
+const money = (v) => v == null ? "" : Math.round(v).toLocaleString("vi-VN");
+function billTable(r) {
+  if (!r.bill || !r.bill.length) return "";
+  const rows = r.bill.map((b) => {
+    const best = b.offers.find((o) => o.price != null);
+    return `<tr><td>${b.wall_type} ${ROLE[b.role] || b.role}</td><td>${b.kind === "mortar" ? "Vữa " : ""}${b.material_id ? esc(b.material_id + " · " + (b.material_name || "")) : `<span class="tag low">chưa chọn</span>`}</td>
+      <td class="num">${b.quantity == null ? `<span class="tag low">thiếu</span>` : fmt(b.quantity) + " " + esc(b.unit || "")}</td>
+      <td class="num">${best ? money(best.price) : `<span class="tag low">chưa có giá</span>`}</td>
+      <td>${best ? (best.url ? `<a href="${esc(best.url)}" target="_blank" rel="noopener">${esc(best.supplier_name || best.supplier_id || "")}</a>` : esc(best.supplier_name || best.supplier_id || best.price_level || "")) + (best.data_kind && best.data_kind !== "ACTUAL" ? ` <span class="tag low">${esc(best.data_kind)}</span>` : "") : ""}</td>
+      <td class="num">${money(b.est_cost)}</td></tr>`;
+  }).join("");
+  return `<p class="label">Vật liệu cần mua và giá trong danh mục</p>
+    <div style="overflow-x:auto"><table><thead><tr><th>Nhóm tường</th><th>Vật liệu</th><th class="num">Khối lượng</th><th class="num">Giá thấp nhất</th><th>Nguồn giá</th><th class="num">Thành tiền</th></tr></thead>
+    <tbody>${rows}</tbody><tfoot><tr><td colspan="5">Tổng tiền vật liệu</td><td class="num">${r.bill_total == null ? "chưa đủ giá" : money(r.bill_total)}</td></tr></tfoot></table></div>
+    ${(r.bill_missing || []).length ? `<ul class="warn">${r.bill_missing.map((m) => `<li>${esc(m)}</li>`).join("")}</ul>` : ""}`;
+}
+// Ghi mặt bằng đã chốt cho giao diện chung (/app: Vật liệu và giá, Phương án tối ưu). Lưu trên trình duyệt, cùng máy chủ;
+// kết quả chính thức nằm trong takeoff_results khi có mã dự án. Một bản vẽ + mặt bằng chỉ giữ lần xác nhận mới nhất.
+function remember(body) {
+  try {
+    const list = JSON.parse(localStorage.getItem("optimat-confirmed") || "[]").filter((p) => !(p.file === body.file && p.plan === body.plan));
+    list.push({ file: body.file, plan: body.plan, height_mm: body.height_mm, groups: body.groups, total_net_area_m2: body.total_net_area_m2,
+      confirmed_at: body.confirmed_at, takeoff_id: body.takeoff_id || null });
+    localStorage.setItem("optimat-confirmed", JSON.stringify(list));
+    if (window.parent !== window) window.parent.postMessage({ type: "optimat-confirmed" }, location.origin);
+  } catch (e) {}
+}
+// gọi bước tối ưu với các nhóm tường máy chủ đã chốt (cùng mã vật liệu, phương án tường)
+async function runOptimize(groups) {
+  const out = $("optOut"), btn = $("doOptimize");
+  btn.disabled = true; btn.textContent = "Đang tối ưu…";
+  try {
+    const r = await fetch(API + "/api/optimize", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ groups, constraints: { keep_design_material: $("keepDesign").checked } }) });
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.detail || "Không tối ưu được.");
+    const sols = body.solutions || [];
+    const pick = sols.length ? [["Chi phí thấp nhất", sols[0]],
+      ["Cung ứng nhanh nhất", [...sols].sort((a, b) => a.supply_days - b.supply_days || a.total_cost - b.total_cost)[0]],
+      ["Cách nhiệt tốt nhất", [...sols].sort((a, b) => a.u_value - b.u_value || a.total_cost - b.total_cost)[0]]] : [];
+    out.innerHTML = (sols.length ? `<div style="overflow-x:auto"><table><thead><tr><th>Phương án</th><th>Tường</th><th>Vật liệu</th><th>Nhà cung cấp</th><th class="num">Tổng đồng</th><th class="num">Ngày</th><th class="num">U</th></tr></thead><tbody>${
+      pick.map(([label, s]) => s.choices.map((c, i) => `<tr><td>${i ? "" : esc(label)}</td><td>${esc(c.wall_type)}</td><td>${esc(c.wall_system_id || c.material_id)}</td><td>${c.product_url ? `<a href="${esc(c.product_url)}" target="_blank" rel="noopener">${esc(c.supplier_name)}</a>` : esc(c.supplier_name)}</td><td class="num">${i ? "" : money(s.total_cost)}</td><td class="num">${i ? "" : s.supply_days}</td><td class="num">${i ? "" : s.u_value}</td></tr>`).join("")).join("")
+    }</tbody></table></div>` : "<p>Không có phương án nào.</p>") + ((body.notes || []).length ? `<ul class="warn">${body.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>` : "");
+  } catch (err) { out.innerHTML = `<ul class="warn"><li>${esc(err.message)}</li></ul>`; }
+  btn.disabled = false; btn.textContent = "Tối ưu";
+}
+function download(name, text, type) {
+  try {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type }));
+    a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  } catch (e) { sheet(`<h2>Không tải được file</h2><p>${esc(e.message)}</p><div class="actions"><button class="btn" data-close type="button">Đóng</button></div>`); }
+}
+const base = () => (DATA.file || "ban_ve").replace(/\.[^.]+$/, "") + "_" + (P.plan.name || "mat_bang").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/gi, "d").replace(/[^\w]+/g, "_");
+$("csv").addEventListener("click", () => {
+  const c = compute(), rows = [["muc", "id", "loai", "vai_tro", "dai_m", "dien_tich_thuc_m2", "vat_lieu", "phuong_an_tuong", "nguon", "giu"]];
+  for (const w of S.walls) rows.push(["tuong", w.id, w.cls, w.role, wallLen(w).toFixed(3), w.keep && w.masonry ? Math.max(0, wallLen(w) * S.height_mm / 1000 - (c.openArea[w.id] || 0)).toFixed(2) : "", w.mat || "", (w.mat && sysOf(w.mat, w.cls)) || "", w.src, w.keep ? 1 : 0]);
+  for (const o of S.openings) rows.push(["lo_mo", o.id, o.kind, o.wall, (o.w / 1000).toFixed(3), (o.w * Math.min(o.h, S.height_mm) / 1e6).toFixed(2), "", "", o.src, o.keep ? 1 : 0]);
+  for (const g of c.groups) rows.push(["tong_hop", "", g.cls, g.role, g.L.toFixed(3), g.net.toFixed(2), g.mat || "", (g.mat && sysOf(g.mat, g.cls)) || "", "", 1]);
+  download(base() + ".csv", "﻿" + rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n"), "text/csv");
+});
+$("json").addEventListener("click", () => download(base() + ".json", JSON.stringify({ ...payload(), confirmed: confirmed[PI] || null }, null, 2), "application/json"));
+$("undo").addEventListener("click", undo);
+$("height").addEventListener("change", (e) => {
+  const v = Number(e.target.value);
+  if (!(v >= 1 && v <= 10)) { e.target.value = (S.height_mm / 1000).toFixed(2); return; }
+  snapshot(); S.height_mm = Math.round(v * 1000); renderAll();
+});
+$("showRaw").addEventListener("change", applyToggles);
+$("showLabels").addEventListener("change", drawDynamic);
+
+// ---------------------------------------------------------------- chú thích nổi, phóng kéo
+const tip = $("tip");
+function showTip(e, html) { tip.innerHTML = html; tip.hidden = false; moveTip(e); }
+function moveTip(e) {
+  const r = $("board").getBoundingClientRect();
+  let x = e.clientX - r.left + 14, y = e.clientY - r.top + 14;
+  if (x + tip.offsetWidth > r.width - 8) x -= tip.offsetWidth + 28;
+  if (y + tip.offsetHeight > r.height - 8) y -= tip.offsetHeight + 28;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip() { tip.hidden = true; }
+let vb = { x: 0, y: 0, w: 1, h: 1 };
+function setVB(v) { vb = v; svg.setAttribute("viewBox", `${v.x} ${v.y} ${v.w} ${v.h}`); const r = svg.getBoundingClientRect(); const mm = v.w / (r.width || 1) * 100; const nice = [100, 200, 500, 1000, 2000, 5000, 10000, 20000].find((n) => n >= mm) || 50000; $("scale").textContent = `${Math.round(100 * nice / mm)} px = ${nice >= 1000 ? nice / 1000 + " m" : nice + " mm"}`; }
+function fitBox(x0, y0, x1, y1, padRatio = 0.08) {
+  const r = svg.getBoundingClientRect(), ar = (r.width || 1) / (r.height || 1);
+  const pad = Math.max(x1 - x0, y1 - y0) * padRatio + 500;
+  let w = x1 - x0 + 2 * pad, h = y1 - y0 + 2 * pad;
+  if (w / h < ar) w = h * ar; else h = w / ar;
+  setVB({ x: (x0 + x1) / 2 - w / 2, y: (y0 + y1) / 2 - h / 2, w, h });
+}
+function fit() { fitBox(0, 0, P.size[0], P.size[1], 0.03); }
+function focusOn(w) { fitBox(Math.min(w.x1, w.x2), Math.min(w.y1, w.y2), Math.max(w.x1, w.x2), Math.max(w.y1, w.y2), 0.6); }
+function zoom(f, cx, cy) {
+  const r = svg.getBoundingClientRect(), px = (cx - r.left) / r.width, py = (cy - r.top) / r.height;
+  setVB({ x: vb.x + vb.w * (1 - f) * px, y: vb.y + vb.h * (1 - f) * py, w: vb.w * f, h: vb.h * f });
+}
+svg.addEventListener("wheel", (e) => { e.preventDefault(); zoom(e.deltaY > 0 ? 1.15 : 1 / 1.15, e.clientX, e.clientY); }, { passive: false });
+let drag = null, moved = false;
+svg.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY, vb: { ...vb } }; moved = false; });
+window.addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 4) moved = true;
+  if (!moved) return;
+  const r = svg.getBoundingClientRect();
+  setVB({ ...drag.vb, x: drag.vb.x - (e.clientX - drag.x) * vb.w / r.width, y: drag.vb.y - (e.clientY - drag.y) * vb.h / r.height });
+});
+window.addEventListener("pointerup", () => { drag = null; setTimeout(() => (moved = false), 0); });
+$("fit").addEventListener("click", fit);
+window.addEventListener("resize", () => setVB(vb));
+
+// ---------------------------------------------------------------- tải dữ liệu
+function loadPlan(i) {
+  PI = i; P = DATA.plans[i];
+  S = STATES[i] = STATES[i] || initState(P);
+  history = []; $("undo").disabled = true; selected = null; draft = null;
+  buildStatic(); fit(); renderAll(); setMode(mode);
+}
+function start(data) {
+  DATA = data;
+  DATA.materials = DATA.materials || [];
+  DATA.families = DATA.families || [];
+  $("file").textContent = DATA.file || "";
+  $("newCls").innerHTML = CLASSES.map((c) => `<option ${c === "220" ? "selected" : ""}>${c}</option>`).join("");
+  const many = DATA.plans.length > 1;
+  $("planField").hidden = !many;
+  $("plan").innerHTML = DATA.plans.map((p, i) => `<option value="${i}">${i + 1}. ${esc(p.plan.name)}</option>`).join("");
+  $("plan").onchange = (e) => loadPlan(Number(e.target.value));
+  for (const k in STATES) delete STATES[k];
+  confirmed = {};
+  if (!DATA.plans.length) {
+    $("svg").innerHTML = ""; $("list").innerHTML = `<div class="empty">Bản vẽ không có mặt bằng kiến trúc để đo tường (chỉ có mặt bằng kết cấu, móng hoặc điện nước).</div>`;
+    return;
+  }
+  loadPlan(0);
+}
+if (EMBED) start(EMBED);
+else {
+  $("openBtn").hidden = false;
+  $("svg").innerHTML = "";
+  $("list").innerHTML = `<div class="empty">Chọn "Mở bản vẽ…" để tải file .dxf hoặc .dwg. Hệ thống tách từng mặt bằng tầng, nhận dạng tường và lỗ mở; bạn kiểm tra, sửa, bổ sung rồi xác nhận.</div>`;
+  $("upload").addEventListener("change", async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    $("list").innerHTML = `<div class="empty">Đang đọc ${esc(f.name)}…</div>`;
+    const form = new FormData(); form.append("file", f);
+    try {
+      const r = await fetch("/api/takeoff/view", { method: "POST", body: form });
+      const body = await r.json();
+      if (!r.ok) throw new Error(body.detail || "Không đọc được bản vẽ.");
+      start(body);
+    } catch (err) { $("list").innerHTML = `<div class="empty">${esc(err.message)}</div>`; }
+  });
+}
+setMode("select");
+</script>

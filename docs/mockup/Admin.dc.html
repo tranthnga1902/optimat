@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>OptiMat AI - Quản trị</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0F6B5C}a:hover{color:#0A4A40}
+</style>
+</helmet>
+<div style="min-height: 1280px; display: flex; flex-wrap: wrap; font-family: 'Be Vietnam Pro', sans-serif; color: #16211D; background: #F4F6F5; font-size: 14px">
+<nav aria-label="Menu quản trị" style="flex: 1 1 220px; background: #16211D; color: #FFFFFF; padding: 24px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<svg width="28" height="28" viewBox="0 0 36 36" fill="none" stroke="#F3B562" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="20" width="12" height="12"></rect><rect x="20" y="20" width="12" height="12"></rect><rect x="12" y="6" width="12" height="12"></rect></svg>
+<span style="font-size: 18px; font-weight: 700">OptiMat AI</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="Admin.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px; background: #33423C; color: #FFFFFF; text-decoration: none; font-weight: 600">Quản trị hệ thống</a>
+<a href="UserProject.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9D8D2; text-decoration: none">Xem giao diện người dùng</a>
+</div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding: 0 8px">
+<span style="font-size: 12px; color: #C9D8D2">Vai trò: Quản trị viên</span>
+<a href="Main.dc.html" style="color: #F3B562; font-size: 13px; min-height: 44px; display: flex; align-items: center">Đổi vai trò</a>
+</div>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 24px; font-weight: 700">Quản trị hệ thống</h1>
+<span style="color: #4C5A55">Quản lý dữ liệu vật liệu, giá, nhà cung cấp, mô hình và tài khoản. Số liệu minh họa.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px">
+<div style="background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 16px"><div style="color: #4C5A55; font-size: 13px">Vật liệu (SKU)</div><div style="font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums">40</div><div style="color: #4C5A55; font-size: 13px">5 nhóm vật liệu</div></div>
+<div style="background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 16px"><div style="color: #4C5A55; font-size: 13px">Nhà cung cấp</div><div style="font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums">25</div><div style="color: #4C5A55; font-size: 13px">Khu vực miền Bắc</div></div>
+<div style="background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 16px"><div style="color: #4C5A55; font-size: 13px">Bản ghi giá</div><div style="font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums">1.248</div><div style="color: #4C5A55; font-size: 13px">Có nguồn và ngày thu thập</div></div>
+<div style="background: #FCEBD0; border: 1px solid #E2B877; border-radius: 12px; padding: 16px; color: #5C3204"><div style="font-size: 13px">Liên kết lỗi cần xử lý</div><div style="font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums">7</div><div style="font-size: 13px">Không hiển thị cho người dùng</div></div>
+</div>
+<div role="tablist" aria-label="Khu vực quản trị" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+<button type="button" role="tab" aria-selected="{{t.selected}}" onClick="{{t.pick}}" style="min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid {{t.border}}; background: {{t.bg}}; color: {{t.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{t.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{showData}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<section style="background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 18px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Trình thu thập giá</h2>
+<span style="color: #4C5A55">Lần chạy gần nhất: 06/10/2026, 02:00. Đã quét 9 website, thêm 86 bản ghi, 7 liên kết lỗi.</span>
+<span style="color: #4C5A55">Lịch: hằng tuần, chạy nền. Nguồn bổ sung: công bố giá của Sở Xây dựng.</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 8px; border: 1px solid #16211D; background: #FFFFFF; color: #16211D; font-family: inherit; font-weight: 600; cursor: pointer">Nhập công bố giá</button>
+<button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 8px; border: 0; background: #0F6B5C; color: #FFFFFF; font-family: inherit; font-weight: 600; cursor: pointer">Chạy thu thập ngay</button>
+</div>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Bản ghi giá mới thu thập</h2>
+<div style="display: flex; gap: 8px; align-items: center"><label for="loc" style="color: #4C5A55">Lọc</label><select id="loc" style="height: 44px; border: 1px solid #B9C5C0; border-radius: 8px; padding: 0 12px; font-family: inherit; font-size: 14px; background: #FFFFFF"><option>Tất cả trạng thái</option><option>Chờ duyệt</option><option>Liên kết lỗi</option></select></div>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; min-width: 760px">
+<thead>
+<tr style="text-align: left; color: #4C5A55; font-size: 13px">
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Vật liệu</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Nhà cung cấp</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600; text-align: right">Đơn giá</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Loại dữ liệu</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Trạng thái</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Thao tác</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{records}}" as="r" hint-placeholder-count="5">
+<tr>
+<td style="padding: 10px; border-bottom: 1px solid #E6EBE8"><div style="font-weight: 600">{{r.mat}}</div><div style="color: #4C5A55; font-size: 13px">{{r.code}}</div></td>
+<td style="padding: 10px; border-bottom: 1px solid #E6EBE8">{{r.sup}}</td>
+<td style="padding: 10px; border-bottom: 1px solid #E6EBE8; text-align: right; font-variant-numeric: tabular-nums">{{r.price}}</td>
+<td style="padding: 10px; border-bottom: 1px solid #E6EBE8">{{r.kind}}</td>
+<td style="padding: 10px; border-bottom: 1px solid #E6EBE8"><span style="padding: 5px 10px; border-radius: 999px; background: {{r.bg}}; color: {{r.fg}}; font-weight: 600; font-size: 13px">{{r.status}}</span></td>
+<td style="padding: 10px; border-bottom: 1px solid #E6EBE8"><button type="button" style="min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid #B9C5C0; background: #FFFFFF; color: #16211D; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{r.action}}</button></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</sc-if>
+<sc-if value="{{showModel}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 2 1 460px; min-width: 0; background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Mô hình dự đoán</h2>
+<button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 8px; border: 0; background: #0F6B5C; color: #FFFFFF; font-family: inherit; font-weight: 600; cursor: pointer">Huấn luyện lại</button>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; min-width: 560px">
+<thead>
+<tr style="text-align: left; color: #4C5A55; font-size: 13px">
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Mô hình</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Phiên bản</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600; text-align: right">MAE</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600; text-align: right">RMSE</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600; text-align: right">R²</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Vai trò</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{models}}" as="m" hint-placeholder-count="5">
+<tr>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; font-weight: 600">{{m.name}}</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8">{{m.ver}}</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; text-align: right; color: #4C5A55">[MAE]</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; text-align: right; color: #4C5A55">[RMSE]</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; text-align: right; color: #4C5A55">[R²]</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8">{{m.role}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<span style="color: #4C5A55; font-size: 13px">Các chỉ số sẽ được điền sau khi có kết quả thực nghiệm trên tập kiểm tra.</span>
+</section>
+<section style="flex: 1 1 280px; background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Cấu hình NSGA-II</h2>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="pop" style="font-weight: 600">Kích thước quần thể</label><input id="pop" type="number" value="100" style="height: 44px; border: 1px solid #B9C5C0; border-radius: 8px; padding: 0 12px; font-family: inherit; font-size: 14px; box-sizing: border-box"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="gen" style="font-weight: 600">Số thế hệ</label><input id="gen" type="number" value="150" style="height: 44px; border: 1px solid #B9C5C0; border-radius: 8px; padding: 0 12px; font-family: inherit; font-size: 14px; box-sizing: border-box"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 600">Mục tiêu cần cực tiểu</span><span style="color: #4C5A55; line-height: 1.6">Tổng chi phí, thời gian cung ứng, hệ số truyền nhiệt của tường</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 600">Ràng buộc</span><span style="color: #4C5A55; line-height: 1.6">Ngân sách, hạn giao, tải trọng xe, yêu cầu kỹ thuật, tuổi thọ tối thiểu</span></div>
+<button type="button" style="min-height: 44px; border-radius: 8px; border: 1px solid #16211D; background: #FFFFFF; color: #16211D; font-family: inherit; font-weight: 600; cursor: pointer">Lưu cấu hình</button>
+</section>
+</div>
+</sc-if>
+<sc-if value="{{showUsers}}" hint-placeholder-val="{{ false }}">
+<section style="background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Tài khoản và phân quyền</h2>
+<button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 8px; border: 0; background: #0F6B5C; color: #FFFFFF; font-family: inherit; font-weight: 600; cursor: pointer">Thêm tài khoản</button>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; min-width: 620px">
+<thead>
+<tr style="text-align: left; color: #4C5A55; font-size: 13px">
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Tài khoản</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Vai trò</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Quyền</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Trạng thái</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; font-weight: 600">[TÀI KHOẢN QUẢN TRỊ]</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8">Quản trị viên</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; color: #4C5A55">Quản lý vật liệu, giá, nhà cung cấp, mô hình, tài khoản, nhật ký</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8"><span style="padding: 5px 10px; border-radius: 999px; background: #D7EDE6; color: #0A4A40; font-weight: 600; font-size: 13px">Hoạt động</span></td>
+</tr>
+<tr>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; font-weight: 600">[TÀI KHOẢN NGƯỜI DÙNG]</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8">Người dùng</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; color: #4C5A55">Tạo dự án, tải bản vẽ, xác nhận đo bóc, chạy tối ưu, xuất kết quả</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8"><span style="padding: 5px 10px; border-radius: 999px; background: #D7EDE6; color: #0A4A40; font-weight: 600; font-size: 13px">Hoạt động</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</sc-if>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1280}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { tab: 'data' };
+}
+renderVals() {
+const tab = this.state.tab;
+const tabs = [['data', 'Dữ liệu giá'], ['model', 'Mô hình và tối ưu'], ['users', 'Tài khoản']].map((t) => {
+const on = t[0] === tab;
+return { label: t[1], selected: on ? 'true' : 'false', bg: on ? '#16211D' : '#FFFFFF', fg: on ? '#FFFFFF' : '#16211D', border: on ? '#16211D' : '#B9C5C0', pick: () => this.setState({ tab: t[0] }) };
+});
+const st = {
+ok: { status: 'Hợp lệ', bg: '#D7EDE6', fg: '#0A4A40', action: 'Xem nguồn' },
+wait: { status: 'Chờ duyệt', bg: '#E3E8F5', fg: '#22366B', action: 'Duyệt' },
+bad: { status: 'Liên kết lỗi', bg: '#FCEBD0', fg: '#7A4206', action: 'Sửa liên kết' }
+};
+const rows = [
+['Gạch AAC 600x200x100', 'MAT_AAC_100', 'Nhà phân phối A, Hà Đông', '1.780.000 đ/m³', 'Thu thập web', 'ok'],
+['Gạch bê tông 2 lỗ', 'MAT_CMU_2L', 'Nhà phân phối B, Thanh Trì', '1.520 đ/viên', 'Thu thập web', 'wait'],
+['Xi măng PCB40', 'MAT_CEM_PCB40', 'Công bố giá Sở Xây dựng', '[GIÁ CÔNG BỐ]', 'Công bố giá', 'ok'],
+['Gạch AAC 600x200x200', 'MAT_AAC_200', 'Nhà phân phối C, Hoài Đức', '1.860.000 đ/m³', 'Thu thập web', 'bad'],
+['Vữa xây chuyên dụng AAC', 'MAT_MORTAR_AAC', 'Nhà phân phối A, Hà Đông', '[GIÁ]', 'Nhập tay', 'wait']
+];
+const records = rows.map((r) => ({ mat: r[0], code: r[1], sup: r[2], price: r[3], kind: r[4], ...st[r[5]] }));
+const models = [
+{ name: 'XGBoost: chi phí vật liệu', ver: 'v0.3', role: 'Đang dùng' },
+{ name: 'XGBoost: chi phí vận chuyển', ver: 'v0.2', role: 'Đang dùng' },
+{ name: 'Hồi quy tuyến tính', ver: 'v0.1', role: 'Đối chứng' },
+{ name: 'LightGBM', ver: 'v0.1', role: 'Đối chứng' },
+{ name: 'CatBoost', ver: 'v0.1', role: 'Đối chứng' }
+];
+return { tabs: tabs, records: records, models: models, showData: tab === 'data', showModel: tab === 'model', showUsers: tab === 'users' };
+}
+}
+</script>
+</body>
+</html>

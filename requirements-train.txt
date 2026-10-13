@@ -1,0 +1,7 @@
+# Dùng khi huấn luyện (Google Colab hoặc máy cá nhân)
+pandas>=2.0
+numpy>=1.26
+scikit-learn>=1.4
+xgboost>=2.0
+lightgbm>=4.0
+catboost>=1.2

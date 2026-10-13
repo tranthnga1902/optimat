@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>OptiMat AI - Đăng nhập</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0F6B5C}a:hover{color:#0A4A40}
+</style>
+</helmet>
+<div style="min-height: 760px; display: flex; flex-wrap: wrap; font-family: 'Be Vietnam Pro', sans-serif; color: #16211D; background: #F4F6F5">
+<div style="flex: 1 1 420px; background: #10261F; color: #FFFFFF; padding: 56px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 48px">
+<div style="display: flex; align-items: center; gap: 12px">
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#7FD6BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="20" width="12" height="12"></rect><rect x="20" y="20" width="12" height="12"></rect><rect x="12" y="6" width="12" height="12"></rect></svg>
+<div style="font-size: 22px; font-weight: 700; letter-spacing: 0.2px">OptiMat AI</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 20px">
+<h1 style="margin: 0; font-size: 40px; line-height: 1.2; font-weight: 700">Từ bản vẽ đến phương án vật liệu tối ưu</h1>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #C9D8D2; max-width: 460px">Đọc bản vẽ DXF, đo bóc khối lượng tường, tìm nhà cung cấp và đề xuất các phương án cân bằng giữa chi phí, thời gian cung ứng và khả năng cách nhiệt.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; color: #C9D8D2">
+<span style="border: 1px solid #3C5A50; border-radius: 999px; padding: 6px 12px">AI Agent chạy cục bộ</span>
+<span style="border: 1px solid #3C5A50; border-radius: 999px; padding: 6px 12px">XGBoost</span>
+<span style="border: 1px solid #3C5A50; border-radius: 999px; padding: 6px 12px">NSGA-II</span>
+</div>
+</div>
+<div style="flex: 1 1 480px; padding: 56px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 28px">
+<div style="max-width: 460px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 26px; font-weight: 700">Đăng nhập</h2>
+<p style="margin: 0; font-size: 15px; color: #4C5A55">Bản mockup: chọn một vai trò để xem giao diện tương ứng.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="email" style="font-size: 14px; font-weight: 600">Email</label>
+<input id="email" type="email" placeholder="ten@example.com" style="height: 46px; border: 1px solid #B9C5C0; border-radius: 8px; padding: 0 14px; font-size: 15px; font-family: inherit; background: #FFFFFF; box-sizing: border-box">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="pw" style="font-size: 14px; font-weight: 600">Mật khẩu</label>
+<input id="pw" type="password" placeholder="Nhập mật khẩu" style="height: 46px; border: 1px solid #B9C5C0; border-radius: 8px; padding: 0 14px; font-size: 15px; font-family: inherit; background: #FFFFFF; box-sizing: border-box">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<a href="UserProject.dc.html" style="display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 10px; background: #0F6B5C; color: #FFFFFF; text-decoration: none">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; font-weight: 600">Vào với vai trò Người dùng</span>
+<span style="font-size: 13px; color: #D3ECE5">Chủ nhà, kỹ sư, nhà thầu: tải bản vẽ, xem phương án</span>
+</span>
+</a>
+<a href="Admin.dc.html" style="display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 10px; background: #FFFFFF; color: #16211D; text-decoration: none; border: 1px solid #B9C5C0">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"></path><path d="M9 12l2 2 4-4"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; font-weight: 600">Vào với vai trò Quản trị viên</span>
+<span style="font-size: 13px; color: #4C5A55">Quản lý vật liệu, giá, nhà cung cấp và mô hình</span>
+</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":760}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

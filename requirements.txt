@@ -1,0 +1,16 @@
+# Chạy hệ thống trên máy cá nhân
+ezdxf>=1.3
+pandas>=2.0
+numpy>=1.26
+scikit-learn>=1.4
+xgboost>=2.0
+pymoo>=0.6.1
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
+pydantic>=2.6
+requests>=2.31
+sqlalchemy>=2.0
+psycopg[binary]>=3.1
+pytest>=8.0
+httpx>=0.27

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>OptiMat AI - Phương án tối ưu</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0F6B5C}a:hover{color:#0A4A40}
+</style>
+</helmet>
+<div style="min-height: 1680px; display: flex; flex-wrap: wrap; font-family: 'Be Vietnam Pro', sans-serif; color: #16211D; background: #F4F6F5; font-size: 14px">
+<nav aria-label="Menu người dùng" style="flex: 1 1 220px; background: #10261F; color: #FFFFFF; padding: 24px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<svg width="28" height="28" viewBox="0 0 36 36" fill="none" stroke="#7FD6BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="20" width="12" height="12"></rect><rect x="20" y="20" width="12" height="12"></rect><rect x="12" y="6" width="12" height="12"></rect></svg>
+<span style="font-size: 18px; font-weight: 700">OptiMat AI</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="UserProject.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9D8D2; text-decoration: none">Hồ sơ và đo bóc</a>
+<a href="UserResult.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px; background: #1F4A3E; color: #FFFFFF; text-decoration: none; font-weight: 600">Phương án tối ưu</a>
+<a href="#" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #C9D8D2; text-decoration: none">Dự án của tôi</a>
+</div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding: 0 8px">
+<span style="font-size: 12px; color: #C9D8D2">Vai trò: Người dùng</span>
+<a href="Main.dc.html" style="color: #7FD6BF; font-size: 13px; min-height: 44px; display: flex; align-items: center">Đổi vai trò</a>
+</div>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 24px; font-weight: 700">Phương án tối ưu cho phần tường</h1>
+<span style="color: #4C5A55">Nhà phố 3 tầng, Hà Đông. Số liệu minh họa, chưa phải kết quả thực nghiệm.</span>
+</div>
+<button type="button" style="min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid #16211D; background: #FFFFFF; color: #16211D; font-family: inherit; font-weight: 600; cursor: pointer">Xuất Excel</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section style="flex: 2 1 440px; min-width: 0; background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Tập phương án Pareto</h2>
+<span style="color: #4C5A55; font-size: 13px">Mỗi điểm là một tổ hợp vật liệu, nhà cung cấp, loại xe</span>
+</div>
+<div style="display: flex; gap: 8px">
+<div style="writing-mode: vertical-rl; transform: rotate(180deg); color: #4C5A55; font-size: 12px; text-align: center">Thời gian cung ứng (ngày)</div>
+<div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<div style="position: relative; height: 280px; border-left: 1px solid #7C8B85; border-bottom: 1px solid #7C8B85; background: #F8FAF9">
+<sc-for list="{{dots}}" as="d" hint-placeholder-count="12">
+<div style="position: absolute; left: {{d.x}}; bottom: {{d.y}}; width: {{d.size}}; height: {{d.size}}; margin-left: -8px; margin-bottom: -8px; border-radius: 50%; background: {{d.fill}}; border: 2px solid {{d.ring}}; box-sizing: border-box"></div>
+</sc-for>
+<sc-for list="{{labels}}" as="l" hint-placeholder-count="3">
+<div style="position: absolute; left: {{l.x}}; bottom: {{l.y}}; margin-left: 14px; margin-bottom: 4px; font-weight: 700; font-size: 13px; color: #16211D">{{l.text}}</div>
+</sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; color: #4C5A55; font-size: 12px"><span>Thấp</span><span>Tổng chi phí (triệu đồng)</span><span>Cao</span></div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; color: #4C5A55; font-size: 13px">
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #0F6B5C; display: inline-block"></span>Phương án đang chọn</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #FFFFFF; border: 2px solid #0F6B5C; box-sizing: border-box; display: inline-block"></span>Phương án đề xuất khác</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #B9C5C0; display: inline-block"></span>Phương án Pareto còn lại</span>
+</div>
+</section>
+<section aria-label="Giải thích của trợ lý" style="flex: 1 1 300px; background: #10261F; color: #FFFFFF; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Trợ lý giải thích</h2>
+<div style="font-size: 20px; font-weight: 700; color: #7FD6BF">{{pickedTitle}}</div>
+<p style="margin: 0; line-height: 1.65; color: #E3ECE8">{{explain}}</p>
+<p style="margin: 0; line-height: 1.65; color: #C9D8D2; font-size: 13px">Mọi con số và liên kết lấy trực tiếp từ kết quả của công cụ, trợ lý không tự tạo ra. Phương án cần được kỹ sư xác nhận trước khi áp dụng.</p>
+</section>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<sc-for list="{{plans}}" as="p" hint-placeholder-count="3">
+<button type="button" onClick="{{p.pick}}" aria-pressed="{{p.pressed}}" style="text-align: left; font-family: inherit; font-size: 14px; color: #16211D; background: #FFFFFF; border: 2px solid {{p.border}}; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px; cursor: pointer">
+<span style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="font-size: 17px; font-weight: 700">{{p.title}}</span><span style="padding: 4px 10px; border-radius: 999px; background: #D7EDE6; color: #0A4A40; font-size: 12px; font-weight: 600">{{p.tag}}</span></span>
+<span style="color: #4C5A55">{{p.material}}</span>
+<span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4C5A55">Tổng chi phí</span><span style="font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums">{{p.cost}}</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4C5A55">Cung ứng</span><span style="font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums">{{p.time}}</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4C5A55">Truyền nhiệt</span><span style="font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums">{{p.u}}</span></span>
+</span>
+</button>
+</sc-for>
+</div>
+<section style="background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Quãng đường từ công trình đến nhà phân phối</h2>
+<span style="color: #4C5A55; font-size: 13px">Bản đồ minh họa. Bản thật dùng bản đồ OpenStreetMap và tuyến đường tính bằng OSRM.</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+<div style="flex: 2 1 420px; min-width: 0; position: relative; height: 340px; border-radius: 10px; overflow: hidden; background: #E6ECE8; border: 1px solid #D5DDD9">
+<svg viewBox="0 0 600 340" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%">
+<path d="M0,300 C120,270 200,330 330,300 S520,230 600,250" fill="none" stroke="#BFD9E6" stroke-width="18"></path>
+<path d="M0,110 H600 M0,190 H600 M0,250 H600 M220,0 V340 M360,0 V340 M440,0 V340 M110,0 V340 M500,0 V340" fill="none" stroke="#FFFFFF" stroke-width="7"></path>
+<path d="M0,40 H600 M300,0 V340 M560,0 V340 M40,0 V340" fill="none" stroke="#F5F8F6" stroke-width="4"></path>
+<path d="M300,190 L360,190 L360,110 L420,110" fill="none" stroke="{{rA.stroke}}" stroke-width="{{rA.w}}" stroke-dasharray="{{rA.dash}}" stroke-linejoin="round" stroke-linecap="round"></path>
+<path d="M300,190 L300,250 L440,250 L440,290 L500,290" fill="none" stroke="{{rB.stroke}}" stroke-width="{{rB.w}}" stroke-dasharray="{{rB.dash}}" stroke-linejoin="round" stroke-linecap="round"></path>
+<path d="M300,190 L220,190 L220,80 L110,80" fill="none" stroke="{{rC.stroke}}" stroke-width="{{rC.w}}" stroke-dasharray="{{rC.dash}}" stroke-linejoin="round" stroke-linecap="round"></path>
+</svg>
+<div style="position: absolute; left: 50%; top: 55.9%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 4px">
+<span style="width: 22px; height: 22px; border-radius: 50%; background: #16211D; border: 3px solid #FFFFFF; box-sizing: border-box"></span>
+<span style="padding: 3px 8px; border-radius: 6px; background: #16211D; color: #FFFFFF; font-size: 12px; font-weight: 600; white-space: nowrap">Công trình</span>
+</div>
+<sc-for list="{{pins}}" as="pin" hint-placeholder-count="3">
+<div style="position: absolute; left: {{pin.x}}; top: {{pin.y}}; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 4px">
+<span style="width: 20px; height: 20px; border-radius: 50%; background: {{pin.fill}}; border: 3px solid #0F6B5C; box-sizing: border-box"></span>
+<span style="padding: 3px 8px; border-radius: 6px; background: #FFFFFF; color: #16211D; font-size: 12px; font-weight: 600; white-space: nowrap; border: 1px solid #B9C5C0">{{pin.label}}</span>
+</div>
+</sc-for>
+</div>
+<div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{sups}}" as="s" hint-placeholder-count="3">
+<button type="button" onClick="{{s.pick}}" aria-pressed="{{s.pressed}}" style="text-align: left; font-family: inherit; font-size: 14px; color: #16211D; background: {{s.bg}}; border: 2px solid {{s.border}}; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer">
+<span style="font-weight: 700">{{s.name}}</span>
+<span style="display: flex; flex-wrap: wrap; gap: 6px 14px; color: #4C5A55; font-variant-numeric: tabular-nums"><span>{{s.dist}}</span><span>{{s.time}}</span><span>{{s.trips}}</span></span>
+</button>
+</sc-for>
+<div style="margin-top: auto; display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 10px; background: #F4F6F5">
+<div style="flex: 0 0 88px; height: 66px; border-radius: 8px; border: 1px dashed #7C8B85; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 11px; color: #4C5A55; background: #FFFFFF">[ẢNH SẢN PHẨM]</div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">{{pickedMat}}</span><span style="color: #4C5A55; font-size: 13px">Ảnh lấy từ trang sản phẩm của nhà phân phối, kèm liên kết nguồn</span></div>
+</div>
+</div>
+</div>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #D5DDD9; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline">
+<h2 style="margin: 0; font-size: 16px; font-weight: 700">Bảng giá chi tiết: ba mức giá cho mỗi vật liệu</h2>
+<span style="color: #4C5A55; font-size: 13px">Liên kết được kiểm tra trước khi hiển thị</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; min-width: 720px">
+<thead>
+<tr style="text-align: left; color: #4C5A55; font-size: 13px">
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Vật liệu</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Nhà phân phối</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600; text-align: right">Đơn giá</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600; text-align: right">Cự ly</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Ngày thu thập</th>
+<th style="padding: 8px 10px; border-bottom: 1px solid #D5DDD9; font-weight: 600">Nguồn</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{prices}}" as="r" hint-placeholder-count="6">
+<tr>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; font-weight: 600">{{r.mat}}</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8">{{r.sup}} <sc-if value="{{r.best}}" hint-placeholder-val="{{ false }}"><span style="margin-left: 6px; padding: 3px 8px; border-radius: 999px; background: #0F6B5C; color: #FFFFFF; font-size: 12px; font-weight: 600">Phù hợp nhất</span></sc-if></td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; text-align: right; font-variant-numeric: tabular-nums">{{r.price}}</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; text-align: right; font-variant-numeric: tabular-nums">{{r.dist}}</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8; font-variant-numeric: tabular-nums">{{r.date}}</td>
+<td style="padding: 12px 10px; border-bottom: 1px solid #E6EBE8"><a href="#">Xem trang sản phẩm</a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1680}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { picked: 'B', sup: 0 };
+}
+renderVals() {
+const picked = this.state.picked;
+const base = [
+{ id: 'A', title: 'Phương án A', tag: 'Chi phí thấp nhất', material: 'Gạch bê tông 2 lỗ, vữa xi măng mác 75', cost: '118,4 tr', time: '6 ngày', u: '2,10', x: '14%', y: '72%',
+explain: 'Rẻ nhất trong tập Pareto vì gạch bê tông có đơn giá thấp và mua được gần công trình. Đổi lại, tường dẫn nhiệt nhiều hơn và phải chở 7 chuyến xe 2,5 tấn nên thời gian cung ứng dài nhất.',
+mat: 'Gạch bê tông 2 lỗ', prices: ['1.450 đ/viên', '1.520 đ/viên', '1.600 đ/viên'] },
+{ id: 'B', title: 'Phương án B', tag: 'Cân bằng', material: 'Gạch AAC dày 100 và 200, vữa xây chuyên dụng', cost: '131,7 tr', time: '4 ngày', u: '0,95', x: '46%', y: '30%',
+explain: 'Tiền mua gạch AAC cao hơn phương án A khoảng 13 triệu, nhưng gạch nhẹ nên chỉ cần 4 chuyến xe và thi công nhanh hơn. Thời gian cung ứng ngắn nhất và khả năng cách nhiệt tốt hơn rõ rệt, vẫn nằm trong ngân sách 150 triệu.',
+mat: 'Gạch AAC 600x200x100', prices: ['1.780.000 đ/m³', '1.850.000 đ/m³', '1.920.000 đ/m³'] },
+{ id: 'C', title: 'Phương án C', tag: 'Cách nhiệt tốt nhất', material: 'Gạch AAC dày 200 cho toàn bộ tường bao', cost: '146,2 tr', time: '5 ngày', u: '0,72', x: '82%', y: '44%',
+explain: 'Dùng gạch AAC dày 200 cho toàn bộ tường bao nên hệ số truyền nhiệt thấp nhất. Chi phí sát trần ngân sách và nhà phân phối có đủ hàng ở xa hơn, làm thời gian cung ứng dài hơn phương án B một ngày.',
+mat: 'Gạch AAC 600x200x200', prices: ['1.800.000 đ/m³', '1.860.000 đ/m³', '1.950.000 đ/m³'] }
+];
+const plans = base.map((p) => ({ ...p, pressed: p.id === picked ? 'true' : 'false', border: p.id === picked ? '#0F6B5C' : '#D5DDD9', pick: () => this.setState({ picked: p.id }) }));
+const cur = base.find((p) => p.id === picked);
+const others = [['8%', '90%'], ['20%', '62%'], ['27%', '50%'], ['34%', '41%'], ['55%', '27%'], ['63%', '33%'], ['70%', '38%'], ['90%', '52%'], ['40%', '36%']];
+const dots = others.map((o) => ({ x: o[0], y: o[1], size: '12px', fill: '#B9C5C0', ring: '#B9C5C0' }))
+.concat(base.map((p) => ({ x: p.x, y: p.y, size: '16px', fill: p.id === picked ? '#0F6B5C' : '#FFFFFF', ring: '#0F6B5C' })));
+const labels = base.map((p) => ({ x: p.x, y: p.y, text: p.id }));
+const sups = ['Nhà phân phối A, Hà Đông', 'Nhà phân phối B, Thanh Trì', 'Nhà phân phối C, Hoài Đức'];
+const dist = ['6 km', '14 km', '11 km'];
+const date = ['06/10/2026', '05/10/2026', '06/10/2026'];
+const mortar = ['[GIÁ 1]', '[GIÁ 2]', '[GIÁ 3]'];
+const prices = sups.map((s, i) => ({ mat: cur.mat, sup: s, price: cur.prices[i], dist: dist[i], date: date[i], best: i === 0 }))
+.concat(sups.map((s, i) => ({ mat: 'Vữa xây', sup: s, price: mortar[i], dist: dist[i], date: date[i], best: i === 1 })));
+const sel = this.state.sup;
+const route = (i) => (i === sel ? { stroke: '#0F6B5C', w: '6', dash: 'none' } : { stroke: '#7C8B85', w: '3', dash: '6 8' });
+const supInfo = [
+{ name: sups[0], dist: '6 km', time: 'Khoảng 20 phút', trips: '4 chuyến xe 2,5 tấn', label: 'A', x: '70%', y: '32.4%' },
+{ name: sups[1], dist: '14 km', time: 'Khoảng 40 phút', trips: '4 chuyến xe 2,5 tấn', label: 'B', x: '83.3%', y: '85.3%' },
+{ name: sups[2], dist: '11 km', time: 'Khoảng 35 phút', trips: '4 chuyến xe 2,5 tấn', label: 'C', x: '18.3%', y: '23.5%' }
+];
+const supList = supInfo.map((s, i) => ({ ...s, pressed: i === sel ? 'true' : 'false', bg: i === sel ? '#EAF5F1' : '#FFFFFF', border: i === sel ? '#0F6B5C' : '#D5DDD9', pick: () => this.setState({ sup: i }) }));
+const pins = supInfo.map((s, i) => ({ x: s.x, y: s.y, label: 'Nhà phân phối ' + s.label, fill: i === sel ? '#0F6B5C' : '#FFFFFF' }));
+return { plans: plans, dots: dots, labels: labels, prices: prices, pickedTitle: cur.title + ': ' + cur.tag, explain: cur.explain, sups: supList, pins: pins, rA: route(0), rB: route(1), rC: route(2), pickedMat: cur.mat };
+}
+}
+</script>
+</body>
+</html>

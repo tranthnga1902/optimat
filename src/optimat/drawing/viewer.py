@@ -1,0 +1,140 @@
+"""Trang xem trực quan quá trình bóc tách một bản vẽ.
+
+    python scripts/view_takeoff.py data/drawings/build/H01_T1.dxf --height 3300
+
+Trang HTML tự chứa (mở bằng trình duyệt, không cần mạng ngoài phông chữ): vẽ lại bản vẽ và cho xem
+từng bước của luồng đo bóc thật (cùng mã với API): nét và layer, cặp nét thành tường, trừ lỗ mở,
+gán vật liệu, bảng khối lượng. Trang chỉ hiển thị, không tính lại gì.
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from ..catalog.repository import FAMILY_LABELS, Catalog, default_catalog
+from ..schemas import PlanTakeoff, TakeoffResult
+from .dxf_reader import Drawing, crop
+from .material_rules import _best, load_rules, rule_label
+
+TEMPLATE = Path(__file__).with_name("viewer_template.html")          # trang 5 bước (giải thích thuật toán)
+REVIEW_TEMPLATE = Path(__file__).with_name("review_app.html")       # trang Kiểm tra bóc tách (sửa, bổ sung, xác nhận)
+
+
+def _r(v: float) -> float:
+    return round(v, 1)
+
+
+def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: dict | None = None) -> dict:
+    """Gom dữ liệu cho trang xem. Tọa độ đổi về gốc góc trên trái, trục y hướng xuống (mm)."""
+    xs = [c for s in drawing.segments for c in (s.x1, s.x2)] or [0.0, 1.0]
+    ys = [c for s in drawing.segments for c in (s.y1, s.y2)] or [0.0, 1.0]
+    x0, y1 = min(xs), max(ys)
+
+    def tx(x: float) -> float:
+        return _r(x - x0)
+
+    def ty(y: float) -> float:
+        return _r(y1 - y)
+
+    layer_names = sorted({s.layer for s in drawing.segments})
+    index = {name: i for i, name in enumerate(layer_names)}
+    role_of_class = {g.wall_type: g.role for g in result.groups}
+    rules = load_rules()
+    hatches = []
+    for h in drawing.hatches:
+        rule = _best(rules, "hatch", h.pattern)
+        hatches.append({
+            "pattern": h.pattern, "layer": h.layer,
+            "rule": rule.rule_id if rule else None,
+            "result": rule_label(rule) if rule else None,
+            "concrete": bool(rule and rule.element == "CONCRETE"),
+            "polys": [[[tx(x), ty(y)] for x, y in poly] for poly in h.polygons],
+        })
+    return {
+        "file": file_name,
+        "height_mm": result.floor_height_mm,
+        "size": [_r(max(xs) - x0), _r(y1 - min(ys))],
+        "layers": [{"name": n, "role": result.layer_classes.get(n, "UNKNOWN")} for n in layer_names],
+        "segs": [[tx(s.x1), ty(s.y1), tx(s.x2), ty(s.y2), index[s.layer], 1 if s.kind == "hatch" else 0]
+                 for s in drawing.segments],
+        "walls": [{
+            "id": w.wall_id, "cls": w.thickness_class, "layer": w.layer,
+            "x1": tx(w.x1), "y1": ty(w.y1), "x2": tx(w.x2), "y2": ty(w.y2),
+            "len": round(w.length_mm / 1000, 3), "open": round(w.opening_area_m2, 2),
+            "conf": w.confidence, "masonry": w.is_masonry, "role": w.role or role_of_class.get(w.thickness_class),
+            "mat": w.material_id, "fam": w.material_family, "sys": w.wall_system_id, "cand": w.material_candidates,
+            "t": w.thickness_mm, "src": w.material_source,
+            "rule": w.material_rule, "mconf": w.material_confidence,
+        } for w in result.walls],
+        "openings": [{"name": o.name, "x": tx(o.x), "y": ty(o.y), "w": o.width_mm, "h": o.height_mm,
+                      "wall": o.wall_id, "kind": o.kind, "ev": o.evidence} for o in result.openings],
+        "hatches": hatches,
+        "texts": [{"t": t.text.strip()[:120], "x": tx(t.x), "y": ty(t.y), "enc": t.encoding}
+                  for t in drawing.texts if t.text.strip()],
+        "arcs": [[tx(a.cx), ty(a.cy), _r(a.r), round(a.start, 1), round(a.end, 1)] for a in drawing.arcs if a.r >= 300],
+        "hatchsegs": len([s for s in drawing.segments if s.kind == "hatch"]),
+        "plan": plan or {"name": file_name},
+        "wall_layers": result.wall_layers, "auto_wall_layers": result.auto_wall_layers,
+        "wall_layer_scores": result.wall_layer_scores,
+        "groups": [g.model_dump() for g in result.groups],
+        "warnings": result.warnings,
+        "unmatched": result.unmatched,
+        "rule_hits": result.rule_hits,
+    }
+
+
+def plans_data(drawing: Drawing, plans: list[PlanTakeoff], file_name: str) -> dict:
+    out = []
+    for p in plans:
+        sub = crop(drawing, tuple(p.bbox)) if p.name != "Toàn bộ bản vẽ" else drawing
+        info = {"name": p.name, "level_m": p.level_m, "height_mm": p.height_mm, "height_source": p.height_source}
+        out.append(viewer_data(sub, p.result, file_name, info))
+    return {"file": file_name, "plans": out}
+
+
+def material_options(catalog: Catalog | None = None) -> list[dict]:
+    """Vật liệu tường người dùng chọn được trên trang: lấy từ danh mục (cùng mã dùng để tra giá).
+    systems: lớp chiều dày -> phương án tường; ready: phương án đủ số liệu để tối ưu."""
+    catalog = catalog or default_catalog()
+    view = catalog.wall_view()
+    mats = catalog.materials[catalog.materials.get("family").isin(list(FAMILY_LABELS))] if "family" in catalog.materials else []
+    out = []
+    for m in (mats.itertuples() if len(mats) else []):
+        rows = view[view.material_id == m.material_id] if len(view) else view
+        out.append({
+            "id": m.material_id, "name": m.name, "label": f"{m.material_id} · {m.name}", "unit": m.unit,
+            "family": m.family, "family_label": FAMILY_LABELS[m.family],
+            "systems": {r.detect_class: r.wall_system_id for r in rows.itertuples() if r.detect_class},
+            "ready": {r.detect_class: bool(r.ready) for r in rows.itertuples() if r.detect_class},
+        })
+    order = list(FAMILY_LABELS)
+    return sorted(out, key=lambda o: (order.index(o["family"]), o["id"]))
+
+
+def view_payload(drawing: Drawing, result, file_name: str) -> dict:
+    """result: một TakeoffResult (cả bản vẽ) hoặc danh sách PlanTakeoff (từng mặt bằng)."""
+    if isinstance(result, list):
+        payload = plans_data(drawing, result, file_name)
+    else:
+        payload = {"file": file_name, "plans": [viewer_data(drawing, result, file_name)]}
+    payload["materials"] = material_options()
+    payload["families"] = [{"id": k, "label": v} for k, v in FAMILY_LABELS.items()]
+    return payload
+
+
+def _embed(template: Path, payload: dict | None) -> str:
+    html = template.read_text(encoding="utf8")
+    if payload is None:
+        return html
+    data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    return html.replace("/*__DATA__*/null", data, 1)
+
+
+def build_viewer_html(drawing: Drawing, result, file_name: str) -> str:
+    """Trang 5 bước, dữ liệu nhúng sẵn."""
+    return _embed(TEMPLATE, view_payload(drawing, result, file_name))
+
+
+def build_review_html(drawing: Drawing | None = None, result=None, file_name: str = "") -> str:
+    """Trang Kiểm tra bóc tách. Không truyền bản vẽ: trang rỗng để chạy trong API (tải file lên)."""
+    return _embed(REVIEW_TEMPLATE, None if drawing is None else view_payload(drawing, result, file_name))
