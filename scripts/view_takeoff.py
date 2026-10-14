@@ -42,9 +42,8 @@ def main() -> None:
     else:
         result = takeoff_plans(drawing, args.height, catalog)
         if not result:
-            print("Bản vẽ chỉ có mặt bằng kết cấu, móng hoặc điện nước, không có mặt bằng kiến trúc để đo tường. "
-                  "Dùng --whole nếu vẫn muốn đo cả bản vẽ.")
-            return
+            print("Bản vẽ chỉ có mặt bằng kết cấu, móng hoặc điện nước, không có mặt bằng kiến trúc để đo tường "
+                  "(trang vẫn hiện toàn bộ bản vẽ). Dùng --whole nếu vẫn muốn đo cả bản vẽ.")
         summary = "; ".join(f"{p.name}: {len(p.result.walls)} đoạn tường" for p in result)
     out = Path(args.out) if args.out else path.with_suffix(".takeoff.html")
     out.parent.mkdir(parents=True, exist_ok=True)

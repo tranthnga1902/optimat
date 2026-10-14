@@ -92,6 +92,7 @@ class Drawing:
     warnings: list[str]
     arcs: list[ArcItem] = field(default_factory=list)
     user_wall_layers: bool = False   # người dùng đã chỉ định layer tường: không tự nhận thêm
+    doc: object = field(default=None, repr=False, compare=False)   # tài liệu ezdxf gốc, để vẽ lại đúng như phần mềm CAD
 
 
 def _convex_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
@@ -329,7 +330,7 @@ def read_dxf(path: str, layer_overrides: dict[str, str] | None = None) -> Drawin
     unknown = [name for name, c in classes.items() if c == LayerClass.UNKNOWN and name != "0"]
     if unknown:
         warnings.append("Layer chưa xác định vai trò: " + ", ".join(unknown[:8]) + (" ..." if len(unknown) > 8 else ""))
-    return Drawing(col.segments, texts, blocks, col.hatches, layers, classes, scale, warnings, col.arcs, user_walls)
+    return Drawing(col.segments, texts, blocks, col.hatches, layers, classes, scale, warnings, col.arcs, user_walls, doc)
 
 
 def crop(drawing: Drawing, bbox: tuple[float, float, float, float]) -> Drawing:
@@ -344,7 +345,7 @@ def crop(drawing: Drawing, bbox: tuple[float, float, float, float]) -> Drawing:
         segments=segs, texts=[t for t in drawing.texts if inside(t.x, t.y)],
         blocks=[b for b in drawing.blocks if inside(b.x, b.y)], hatches=hatches, layers=drawing.layers,
         layer_classes=drawing.layer_classes, unit_scale=drawing.unit_scale, warnings=[],
-        arcs=[a for a in drawing.arcs if inside(a.cx, a.cy)], user_wall_layers=drawing.user_wall_layers)
+        arcs=[a for a in drawing.arcs if inside(a.cx, a.cy)], user_wall_layers=drawing.user_wall_layers, doc=drawing.doc)
 
 
 def read_drawing(path: str, layer_overrides: dict[str, str] | None = None) -> Drawing:

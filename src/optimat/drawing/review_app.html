@@ -48,6 +48,13 @@ header h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: -0.01e
 .status.edit { color: var(--warn); border-color: var(--warn); }
 .main { display: grid; grid-template-columns: minmax(0, 1fr) 470px; min-height: 0; }
 .board { position: relative; background: var(--paper); min-height: 0; overflow: hidden; touch-action: none; }
+/* nền bản vẽ gốc vẽ như phần mềm CAD: nền đen mặc định (giống DWG FastView); nền trắng = đảo màu giữ sắc độ */
+.board.cadbg { background: #000; }
+.board.cadbg.light { background: #fff; }
+.board.light .cadlayer { filter: invert(1) hue-rotate(180deg); }
+.board.cadbg .scale { background: rgba(0,0,0,.6); color: #ddd; border-color: #333; }
+.ovl-rect { fill: rgba(92,182,214,.06); stroke: #5cb6d6; cursor: pointer; }
+.ovl-rect:hover { fill: rgba(92,182,214,.18); }
 .board svg { width: 100%; height: 100%; display: block; }
 .board[data-mode="select"] svg { cursor: grab; }
 .board[data-mode="wall"] svg, .board[data-mode="open"] svg { cursor: crosshair; }
@@ -146,7 +153,8 @@ tfoot td { font-weight: 700; border-bottom: 0; }
         <label class="field" id="newKindField" hidden><select id="newKind"><option value="door">Cửa đi</option><option value="window">Cửa sổ</option></select>
           <input id="newW" type="number" step="50" min="200" value="900" aria-label="Rộng (mm)"> × <input id="newH" type="number" step="50" min="200" value="2200" aria-label="Cao (mm)"> mm</label>
         <span class="chipset">
-          <label><input type="checkbox" id="showRaw" checked> Nét gốc</label>
+          <label>Nền <select id="bgMode" aria-label="Nền bản vẽ"><option value="cad">Bản vẽ gốc · nền đen</option><option value="cad-light">Bản vẽ gốc · nền trắng</option><option value="lines">Nét đã đọc</option></select></label>
+          <label><input type="checkbox" id="showRec" checked> Nhận dạng</label>
           <label><input type="checkbox" id="showLabels"> Nhãn</label>
         </span>
         <button class="btn" type="button" id="fit">Vừa khung</button>
@@ -238,7 +246,9 @@ let G = {}, unit = 100, snapGrid = null;
 function buildStatic() {
   svg.innerHTML = "";
   G = {};
-  ["hatch", "raw", "walls", "open", "labels", "draft"].forEach((k) => (G[k] = el("g", { "data-layer": k }, svg)));
+  ["cad", "hatch", "raw", "walls", "open", "labels", "draft"].forEach((k) => (G[k] = el("g", { "data-layer": k }, svg)));
+  G.cad.setAttribute("class", "cadlayer");
+  if (P.cad) G.cad.innerHTML = P.cad;          // bản vẽ gốc vẽ đúng như phần mềm CAD (máy chủ dựng bằng ezdxf)
   const [W, H] = P.size;
   unit = Math.max(W, H) / 100;
   const wallLayers = new Set(P.wall_layers || []);
@@ -295,8 +305,20 @@ function drawDynamic() {
   }
 }
 function applyToggles() {
-  G.raw.style.display = $("showRaw").checked ? "" : "none";
-  G.hatch.style.display = $("showRaw").checked ? "" : "none";
+  const hasCad = DATA && (PI < 0 ? !!(DATA.overview && DATA.overview.cad) : !!(P && P.cad));
+  const sel = $("bgMode");
+  [...sel.options].forEach((o) => { if (o.value !== "lines") o.disabled = !hasCad; });
+  if (!hasCad && sel.value !== "lines") sel.value = "lines";
+  if (PI < 0 && sel.value === "lines") sel.value = "cad";
+  const m = sel.value, board = $("board");
+  board.classList.toggle("cadbg", m !== "lines");
+  board.classList.toggle("light", m === "cad-light");
+  if (G.cad) G.cad.style.display = m === "lines" ? "none" : "";
+  if (G.raw) G.raw.style.display = m === "lines" ? "" : "none";
+  if (G.hatch) G.hatch.style.display = m === "lines" ? "" : "none";
+  const rec = $("showRec").checked ? "" : "none";
+  ["walls", "open", "labels", "ovl"].forEach((k) => { if (G[k]) G[k].style.display = rec; });
+  try { localStorage.setItem("optimat-bg", m); } catch (e) {}
 }
 
 // ---------------------------------------------------------------- danh sách
@@ -319,6 +341,7 @@ function matSelect(w) {
   return `<select data-f="mat" aria-label="Vật liệu">${opts.join("")}</select>`;
 }
 function renderList() {
+  if (!S) return;
   const c = compute();
   $("nWalls").textContent = S.walls.filter((w) => w.keep).length;
   $("nOpen").textContent = S.openings.filter((o) => o.keep).length;
@@ -490,7 +513,7 @@ function nearestWall(x, y) {
   return best;
 }
 svg.addEventListener("click", (e) => {
-  if (moved) return;
+  if (moved || !S) return;
   if (mode === "select") { if (selected) { selected = null; renderAll(); } return; }
   const p = toWorld(e);
   if (mode === "wall") {
@@ -663,7 +686,9 @@ $("height").addEventListener("change", (e) => {
   if (!(v >= 1 && v <= 10)) { e.target.value = (S.height_mm / 1000).toFixed(2); return; }
   snapshot(); S.height_mm = Math.round(v * 1000); renderAll();
 });
-$("showRaw").addEventListener("change", applyToggles);
+$("bgMode").addEventListener("change", applyToggles);
+$("showRec").addEventListener("change", applyToggles);
+try { const m = localStorage.getItem("optimat-bg"); if (m) $("bgMode").value = m; } catch (e) {}
 $("showLabels").addEventListener("change", drawDynamic);
 
 // ---------------------------------------------------------------- chú thích nổi, phóng kéo
@@ -686,7 +711,7 @@ function fitBox(x0, y0, x1, y1, padRatio = 0.08) {
   if (w / h < ar) w = h * ar; else h = w / ar;
   setVB({ x: (x0 + x1) / 2 - w / 2, y: (y0 + y1) / 2 - h / 2, w, h });
 }
-function fit() { fitBox(0, 0, P.size[0], P.size[1], 0.03); }
+function fit() { const sz = PI < 0 ? DATA.overview.size : P.size; fitBox(0, 0, sz[0], sz[1], 0.03); }
 function focusOn(w) { fitBox(Math.min(w.x1, w.x2), Math.min(w.y1, w.y2), Math.max(w.x1, w.x2), Math.max(w.y1, w.y2), 0.6); }
 function zoom(f, cx, cy) {
   const r = svg.getBoundingClientRect(), px = (cx - r.left) / r.width, py = (cy - r.top) / r.height;
@@ -707,6 +732,31 @@ $("fit").addEventListener("click", fit);
 window.addEventListener("resize", () => setVB(vb));
 
 // ---------------------------------------------------------------- tải dữ liệu
+// Toàn bộ bản vẽ: mở cả file như phần mềm xem bản vẽ, khung các mặt bằng đã tách; bấm khung để kiểm tra mặt bằng đó.
+function showOverview() {
+  PI = -1; P = null; S = null; selected = null; draft = null; history = []; $("undo").disabled = true;
+  $("plan").value = "-1"; setMode("select");
+  svg.innerHTML = ""; G = {};
+  G.cad = el("g", { class: "cadlayer" }, svg); G.cad.innerHTML = DATA.overview.cad || "";
+  G.ovl = el("g", {}, svg);
+  const O = DATA.overview; unit = Math.max(O.size[0], O.size[1]) / 100;
+  O.plans.forEach((b, i) => {
+    const g = el("g", {}, G.ovl);
+    el("rect", { x: b.x, y: b.y, width: b.w, height: b.h, class: "ovl-rect", "stroke-width": 2, "vector-effect": "non-scaling-stroke" }, g);
+    const t = el("text", { x: b.x + b.w / 2, y: b.y - unit * 0.6, "text-anchor": "middle", "font-size": unit * 1.2, fill: "#5cb6d6",
+      "paint-order": "stroke", stroke: "#000", "stroke-width": unit * 0.25 }, g);
+    t.textContent = `${i + 1}. ${b.name}`;
+    g.addEventListener("click", (e) => { if (moved) return; e.stopPropagation(); $("plan").value = String(i); loadPlan(i); });
+  });
+  ["nWalls", "nOpen", "nWarn"].forEach((id) => ($(id).textContent = ""));
+  $("filters").innerHTML = "";
+  $("list").innerHTML = `<div class="empty" style="text-align:left">Toàn bộ bản vẽ, vẽ như phần mềm CAD. Khung xanh là các mặt bằng tầng hệ thống đã tách (${O.plans.length}).
+    Bấm vào khung hoặc chọn bên dưới để kiểm tra từng mặt bằng.</div>` +
+    O.plans.map((b, i) => `<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--rule)"><b style="flex:1">${i + 1}. ${esc(b.name)}</b><button class="btn" type="button" data-open-plan="${i}">Kiểm tra</button></div>`).join("");
+  $("list").querySelectorAll("[data-open-plan]").forEach((x) => x.addEventListener("click", () => { $("plan").value = x.dataset.openPlan; loadPlan(Number(x.dataset.openPlan)); }));
+  $("total").textContent = "–"; $("status").className = "status"; $("status").textContent = "Xem toàn bộ";
+  fit(); applyToggles();
+}
 function loadPlan(i) {
   PI = i; P = DATA.plans[i];
   S = STATES[i] = STATES[i] || initState(P);
@@ -719,12 +769,14 @@ function start(data) {
   DATA.families = DATA.families || [];
   $("file").textContent = DATA.file || "";
   $("newCls").innerHTML = CLASSES.map((c) => `<option ${c === "220" ? "selected" : ""}>${c}</option>`).join("");
-  const many = DATA.plans.length > 1;
-  $("planField").hidden = !many;
-  $("plan").innerHTML = DATA.plans.map((p, i) => `<option value="${i}">${i + 1}. ${esc(p.plan.name)}</option>`).join("");
-  $("plan").onchange = (e) => loadPlan(Number(e.target.value));
+  const hasOverview = !!(DATA.overview && DATA.overview.cad);
+  $("planField").hidden = !(DATA.plans.length > 1 || hasOverview);
+  $("plan").innerHTML = (hasOverview ? `<option value="-1">Toàn bộ bản vẽ</option>` : "") +
+    DATA.plans.map((p, i) => `<option value="${i}">${i + 1}. ${esc(p.plan.name)}</option>`).join("");
+  $("plan").onchange = (e) => { const v = Number(e.target.value); v < 0 ? showOverview() : loadPlan(v); };
   for (const k in STATES) delete STATES[k];
   confirmed = {};
+  if (hasOverview) { showOverview(); if (!DATA.plans.length) $("list").insertAdjacentHTML("afterbegin", `<div class="empty">Không tìm thấy mặt bằng kiến trúc để đo tường (bản vẽ chỉ có mặt bằng kết cấu, móng hoặc điện nước).</div>`); return; }
   if (!DATA.plans.length) {
     $("svg").innerHTML = ""; $("list").innerHTML = `<div class="empty">Bản vẽ không có mặt bằng kiến trúc để đo tường (chỉ có mặt bằng kết cấu, móng hoặc điện nước).</div>`;
     return;

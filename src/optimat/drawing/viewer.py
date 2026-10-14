@@ -14,6 +14,7 @@ from pathlib import Path
 from ..catalog.repository import FAMILY_LABELS, Catalog, default_catalog
 from ..schemas import PlanTakeoff, TakeoffResult
 from .dxf_reader import Drawing, crop
+from .render import DrawingRenderer
 from .material_rules import _best, load_rules, rule_label
 
 TEMPLATE = Path(__file__).with_name("viewer_template.html")          # trang 5 bước (giải thích thuật toán)
@@ -74,6 +75,7 @@ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: d
         "arcs": [[tx(a.cx), ty(a.cy), _r(a.r), round(a.start, 1), round(a.end, 1)] for a in drawing.arcs if a.r >= 300],
         "hatchsegs": len([s for s in drawing.segments if s.kind == "hatch"]),
         "plan": plan or {"name": file_name},
+        "origin": [_r(x0), _r(y1)], "bbox_mm": [_r(x0), _r(min(ys)), _r(max(xs)), _r(y1)],
         "wall_layers": result.wall_layers, "auto_wall_layers": result.auto_wall_layers,
         "wall_layer_scores": result.wall_layer_scores,
         "groups": [g.model_dump() for g in result.groups],
@@ -111,12 +113,40 @@ def material_options(catalog: Catalog | None = None) -> list[dict]:
     return sorted(out, key=lambda o: (order.index(o["family"]), o["id"]))
 
 
-def view_payload(drawing: Drawing, result, file_name: str) -> dict:
-    """result: một TakeoffResult (cả bản vẽ) hoặc danh sách PlanTakeoff (từng mặt bằng)."""
-    if isinstance(result, list):
+def add_cad_layers(drawing: Drawing, payload: dict, plans: list[PlanTakeoff] | None) -> None:
+    """Thêm nền bản vẽ gốc vẽ đúng như phần mềm CAD cho từng mặt bằng ("cad") và trang tổng thể cả file ("overview")."""
+    if getattr(drawing, "doc", None) is None:
+        return
+    try:
+        renderer = DrawingRenderer(drawing.doc, drawing.unit_scale)
+    except Exception as exc:  # noqa: BLE001 - vẽ nền lỗi không được làm hỏng kết quả nhận dạng
+        payload.setdefault("warnings", []).append(f"Không vẽ được nền bản vẽ gốc: {exc}")
+        return
+    for i, p in enumerate(payload["plans"]):
+        box = tuple(plans[i].bbox) if plans and plans[i].name != "Toàn bộ bản vẽ" else None
+        p["cad"] = renderer.view(box or tuple(p["bbox_mm"]), tuple(p["origin"])).svg
+    xs = [c for s in drawing.segments for c in (s.x1, s.x2)] or [0.0, 1.0]
+    ys = [c for s in drawing.segments for c in (s.y1, s.y2)] or [0.0, 1.0]
+    ox, oy = min(xs), max(ys)
+    boxes = []
+    for i, p in enumerate(payload["plans"]):
+        bx = plans[i].bbox if plans else p["bbox_mm"]
+        boxes.append({"name": p["plan"]["name"], "x": _r(bx[0] - ox), "y": _r(oy - bx[3]),
+                      "w": _r(bx[2] - bx[0]), "h": _r(bx[3] - bx[1])})
+    payload["overview"] = {"cad": renderer.view(None, (ox, oy)).svg, "size": [_r(max(xs) - ox), _r(oy - min(ys))],
+                           "plans": boxes}
+
+
+def view_payload(drawing: Drawing, result, file_name: str, cad: bool = True) -> dict:
+    """result: một TakeoffResult (cả bản vẽ) hoặc danh sách PlanTakeoff (từng mặt bằng).
+    cad: thêm nền bản vẽ gốc vẽ như phần mềm CAD (chậm hơn với file lớn)."""
+    plans = result if isinstance(result, list) else None
+    if plans is not None:
         payload = plans_data(drawing, result, file_name)
     else:
         payload = {"file": file_name, "plans": [viewer_data(drawing, result, file_name)]}
+    if cad:
+        add_cad_layers(drawing, payload, plans)
     payload["materials"] = material_options()
     payload["families"] = [{"id": k, "label": v} for k, v in FAMILY_LABELS.items()]
     return payload

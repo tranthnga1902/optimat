@@ -7,7 +7,7 @@ Kế hoạch 15 tuần và danh sách việc nằm trong `PLAN.md`. Trao đổi 
 ## Lệnh
 
 ```powershell
-pytest                                                        # 58 bài; 66 bài khi có OPTIMAT_TEST_DATABASE_URL
+pytest                                                        # 61 bài; 69 bài khi có OPTIMAT_TEST_DATABASE_URL
 python scripts/check_data.py [--strict]                       # kiểm soát dữ liệu; 0 lỗi mới commit (hook .githooks/pre-commit)
 python scripts/survey_drawings.py <thư mục hoặc file bản vẽ>     # thống kê layer, hatch, block, ghi chú chưa có quy tắc
 python scripts/evaluate_takeoff.py                            # so kết quả bóc tách với data/ground_truth
@@ -39,6 +39,9 @@ Luồng: bản vẽ DWG/DXF -> nhận diện tường -> đo bóc -> tìm nguồ
   tới giao trục tim, nối khe cửa (cung cánh cửa, block, nét kính) rồi trừ lỗ mở; `takeoff.py` xác định tường bao che
   bằng tia dò ra ngoài nhà và có `takeoff_plans()` đo từng mặt bằng.
   `material_rules.py` gán vật liệu theo thiết kế từ ghi chú, hatch, layer, block; `evaluate.py` chấm điểm và khảo sát;
+  `render.py` vẽ lại bản vẽ gốc như phần mềm CAD (ezdxf drawing → SVG: màu ACI, kiểu nét, chữ TCVN3 đổi Unicode,
+  hatch, kích thước, block; nền đen, nét 1 px) làm nền trang kiểm tra, cắt theo từng mặt bằng + trang "Toàn bộ bản vẽ"
+  có khung các mặt bằng đã tách; ma trận trong `<g class="cad">` đưa về đúng tọa độ lớp nhận dạng. Vẽ mất ~25 s với file 8–20 MB.
   `viewer.py` + `viewer_template.html` dựng trang xem từng bước (chỉ hiển thị kết quả đo bóc, không tính lại).
   Trang Kiểm tra bóc tách (`review_app.html`, `/ui/takeoff`): bản vẽ bên trái, danh sách nhận dạng bên phải; người dùng
   loại bỏ, sửa loại/vai trò/vật liệu, vẽ thêm tường, thêm/sửa cửa, sửa chiều cao rồi xác nhận. Trang chỉ tính tạm;
