@@ -68,6 +68,7 @@ class TakeoffResult(BaseModel):
     wall_layers: list[str] = Field(default_factory=list)           # layer đã dùng làm tường
     auto_wall_layers: list[str] = Field(default_factory=list)      # trong đó, layer tự nhận bằng hình học
     wall_layer_scores: dict[str, float] = Field(default_factory=dict)  # mm cặp nét song song theo layer
+    rejected: list[dict] = Field(default_factory=list)              # cặp nét giống tường nhưng bị loại: lý do, tọa độ
 
 
 class PlanTakeoff(BaseModel):

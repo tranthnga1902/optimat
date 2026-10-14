@@ -15,7 +15,7 @@ from .dxf_reader import BlockRef, Drawing, crop, read_drawing
 from .layer_classifier import LayerClass
 from .material_rules import apply_material_rules, block_rule
 from .plans import find_plans, floor_heights, has_only_other_plans
-from .walls import bridge_openings, choose_wall_layers, dedupe_walls, detect_walls, extend_corners
+from .walls import bridge_openings, choose_wall_layers, dedupe_walls, detect_walls, extend_corners, hatch_strip_walls
 
 
 def _is_opening(block: BlockRef, drawing: Drawing) -> bool:
@@ -97,6 +97,10 @@ def compute_takeoff(drawing: Drawing, floor_height_mm: float | None = None,
     elif auto:
         warnings.append("Tự nhận layer tường theo cặp nét song song: " + ", ".join(auto) + ". Kiểm tra lại trên trang xem.")
     walls = detect_walls(drawing, wall_layers)
+    strip = hatch_strip_walls(drawing, walls, set(wall_layers))
+    if strip:
+        walls += strip
+        warnings.append(f"{len(strip)} đoạn tường nhận theo một nét mặt + hatch (mặt kia không vẽ): độ tin cậy thấp, cần kiểm tra.")
     if not walls:
         warnings.append("Không nhận diện được tường nào.")
     walls = dedupe_walls(walls)
@@ -188,7 +192,9 @@ def compute_takeoff(drawing: Drawing, floor_height_mm: float | None = None,
                          openings_count=len(opening_items), openings=opening_items, warnings=warnings,
                          layer_classes={name: c.value for name, c in drawing.layer_classes.items()},
                          rule_hits=rule_hits, unmatched=unmatched, wall_layers=sorted(wall_layers),
-                         auto_wall_layers=auto, wall_layer_scores=scores)
+                         auto_wall_layers=auto, wall_layer_scores=scores,
+                         rejected=[{"reason": r, "x1": x1, "y1": y1, "x2": x2, "y2": y2, "cls": c}
+                                   for r, x1, y1, x2, y2, c in getattr(drawing, "rejected_pairs", [])])
 
 
 def takeoff_from_file(path: str, floor_height_mm: float | None = None,

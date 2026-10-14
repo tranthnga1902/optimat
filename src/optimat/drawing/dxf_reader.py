@@ -92,7 +92,8 @@ class Drawing:
     warnings: list[str]
     arcs: list[ArcItem] = field(default_factory=list)
     user_wall_layers: bool = False   # người dùng đã chỉ định layer tường: không tự nhận thêm
-    doc: object = field(default=None, repr=False, compare=False)   # tài liệu ezdxf gốc, để vẽ lại đúng như phần mềm CAD
+    doc: object = field(default=None, repr=False, compare=False)
+    rejected_pairs: list = field(default_factory=list, repr=False, compare=False)   # cặp nét bị loại khi nhận tường   # tài liệu ezdxf gốc, để vẽ lại đúng như phần mềm CAD
 
 
 def _convex_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]:

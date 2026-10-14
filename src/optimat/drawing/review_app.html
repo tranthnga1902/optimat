@@ -138,6 +138,7 @@ tfoot td { font-weight: 700; border-bottom: 0; }
     <span class="grow"></span>
     <label class="btn" id="openBtn" hidden>Mở bản vẽ… <input id="upload" type="file" accept=".dxf,.dwg" hidden></label>
     <button class="btn" id="undo" type="button" disabled>Hoàn tác</button>
+    <button class="btn" id="saveGT" type="button" title="Lưu mặt bằng đã sửa đúng làm đáp án để đo độ chính xác nhận diện">Lưu làm đáp án</button>
     <button class="btn primary" id="confirm" type="button">Xác nhận bản vẽ</button>
   </header>
   <div class="main" id="main">
@@ -193,6 +194,8 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<
 const CLASSES = ["110", "150", "220", "330"];
 const clsColor = (c) => `var(--c${CLASSES.includes(c) ? c : "110"})`;
 const ROLE = { envelope: "bao che", partition: "ngăn" };
+// lý do loại một tường nhận nhầm: dùng để thống kê lỗi nhận diện khi lưu làm đáp án
+const REASONS = ["chưa ghi lý do", "cầu thang", "lan can", "khung cửa, kính", "nội thất, thiết bị", "bồn hoa, bậc", "cột, vách bê tông", "trùng tường khác", "ký hiệu, chi tiết", "khác"];
 const KIND = { door: "Cửa đi", window: "Cửa sổ", block: "Block cửa" };
 
 let DATA = null, PI = 0, P = null, S = null;      // dữ liệu tải về, chỉ số mặt bằng, dữ liệu mặt bằng, trạng thái sửa
@@ -204,7 +207,7 @@ function initState(p) {
   return {
     height_mm: p.height_mm,
     walls: p.walls.map((w) => ({ id: w.id, cls: w.cls, role: w.role || "partition", x1: w.x1, y1: w.y1, x2: w.x2, y2: w.y2,
-      mat: w.mat || null, fam: w.fam || null, cand: w.cand || [], masonry: w.masonry, conf: w.conf, layer: w.layer, msrc: w.src, rule: w.rule,
+      reason: null, mat: w.mat || null, fam: w.fam || null, cand: w.cand || [], masonry: w.masonry, conf: w.conf, layer: w.layer, msrc: w.src, rule: w.rule,
       keep: true, src: "auto", edited: false })),
     openings: p.openings.filter((o) => o.wall).map((o, i) => ({ id: "O" + (i + 1), wall: o.wall, kind: o.kind || "block",
       w: o.w, h: o.h, ev: o.ev, x: o.x, y: o.y, keep: true, src: "auto" })),
@@ -246,9 +249,16 @@ let G = {}, unit = 100, snapGrid = null;
 function buildStatic() {
   svg.innerHTML = "";
   G = {};
-  ["cad", "hatch", "raw", "walls", "open", "labels", "draft"].forEach((k) => (G[k] = el("g", { "data-layer": k }, svg)));
+  ["cad", "hatch", "raw", "rej", "walls", "open", "labels", "draft"].forEach((k) => (G[k] = el("g", { "data-layer": k }, svg)));
   G.cad.setAttribute("class", "cadlayer");
   if (P.cad) G.cad.innerHTML = P.cad;          // bản vẽ gốc vẽ đúng như phần mềm CAD (máy chủ dựng bằng ezdxf)
+  // cặp nét giống tường nhưng đã loại (bậc thang, lan can, khung cửa sổ): nét đứt xám, rê chuột xem lý do
+  for (const r of P.rejected || []) {
+    const ln = el("line", { x1: r.x1, y1: r.y1, x2: r.x2, y2: r.y2, stroke: "#9aa7a2", "stroke-width": 2, "stroke-dasharray": "4 4",
+      "vector-effect": "non-scaling-stroke", opacity: 0.8 }, G.rej);
+    ln.addEventListener("pointerenter", (e) => showTip(e, `Không tính là tường: <b>${esc(r.reason)}</b>`));
+    ln.addEventListener("pointermove", moveTip); ln.addEventListener("pointerleave", hideTip);
+  }
   const [W, H] = P.size;
   unit = Math.max(W, H) / 100;
   const wallLayers = new Set(P.wall_layers || []);
@@ -317,7 +327,7 @@ function applyToggles() {
   if (G.raw) G.raw.style.display = m === "lines" ? "" : "none";
   if (G.hatch) G.hatch.style.display = m === "lines" ? "" : "none";
   const rec = $("showRec").checked ? "" : "none";
-  ["walls", "open", "labels", "ovl"].forEach((k) => { if (G[k]) G[k].style.display = rec; });
+  ["walls", "open", "labels", "ovl", "rej"].forEach((k) => { if (G[k]) G[k].style.display = rec; });
   try { localStorage.setItem("optimat-bg", m); } catch (e) {}
 }
 
@@ -377,6 +387,7 @@ function renderList() {
           ${w.masonry ? matSelect(w) : `<span class="tag">bê tông, không tính</span>`}
           ${w.src === "manual" ? `<span class="tag man">vẽ thêm</span>` : w.edited ? `<span class="tag edit">đã sửa</span>` : ""}
           ${w.src !== "manual" && w.conf < 0.7 ? `<span class="tag low">tin cậy ${fmt(w.conf)}</span>` : ""}
+          ${!w.keep && w.src !== "manual" ? `<select data-f="reason" aria-label="Lý do loại">${REASONS.map((r) => `<option ${r === w.reason ? "selected" : ""}>${r}</option>`).join("")}</select>` : ""}
         </span>
         <span class="rnum">${fmt(wallLen(w))} m<small>${w.keep && w.masonry ? fmt(Math.max(0, area)) + " m²" : "—"}</small></span>`;
       if (w.src === "manual") row.querySelector(".rnum").insertAdjacentHTML("afterend", "");
@@ -429,10 +440,10 @@ $("list").addEventListener("change", (e) => {
   const item = S.walls.find((w) => w.id === row.dataset.id) || S.openings.find((o) => o.id === row.dataset.id);
   if (!item) return;
   snapshot();
-  if (f === "keep") item.keep = e.target.checked;
+  if (f === "keep") { item.keep = e.target.checked; if (!item.keep && !item.reason) item.reason = REASONS[0]; }
   else if (f === "w" || f === "h") item[f] = Math.max(100, Number(e.target.value) || item[f]);
   else item[f] = e.target.value || null;
-  if (f !== "keep") item.edited = true;
+  if (f !== "keep" && f !== "reason") item.edited = true;
   renderAll();
 });
 $("list").addEventListener("click", (e) => {
@@ -664,6 +675,29 @@ async function runOptimize(groups) {
   } catch (err) { out.innerHTML = `<ul class="warn"><li>${esc(err.message)}</li></ul>`; }
   btn.disabled = false; btn.textContent = "Tối ưu";
 }
+// ---------------------------------------------------------------- đáp án nhận diện
+// Mặt bằng đã sửa cho đúng = đáp án. Tọa độ lưu theo hệ của bản vẽ (mm) để so với lần nhận diện sau dù khung cắt thay đổi.
+function groundTruth() {
+  const [ox, oy] = P.origin || [0, 0], ab = (x, y) => [Math.round((x + ox) * 10) / 10, Math.round((oy - y) * 10) / 10];
+  const wall = (w) => { const [x1, y1] = ab(w.x1, w.y1), [x2, y2] = ab(w.x2, w.y2); return { id: w.id, cls: w.cls, role: w.role, x1, y1, x2, y2, src: w.src, edited: !!w.edited }; };
+  return { version: 1, file: DATA.file, plan: P.plan.name, height_mm: S.height_mm, saved_at: new Date().toISOString(),
+    walls: S.walls.filter((w) => w.keep && w.masonry).map(wall),
+    removed: S.walls.filter((w) => !w.keep && w.src !== "manual").map((w) => ({ ...wall(w), reason: w.reason || REASONS[0] })),
+    openings: S.openings.filter((o) => o.keep).map((o) => ({ id: o.id, wall: o.wall, kind: o.kind, w: o.w, h: o.h, src: o.src })) };
+}
+$("saveGT").addEventListener("click", async () => {
+  if (!S) return;
+  const gt = groundTruth(), n = gt.removed.filter((r) => r.reason === REASONS[0]).length;
+  const name = base() + ".gt.json";
+  if (API === null) { download(name, JSON.stringify(gt, null, 2), "application/json");
+    sheet(`<h2>Đã tải ${esc(name)}</h2><p>Chép file vào <code>data/ground_truth/plans/</code> rồi chạy <code>python scripts/evaluate_recognition.py</code>.</p>${n ? `<p>Còn ${n} tường đã loại chưa ghi lý do.</p>` : ""}<div class="actions"><button class="btn primary" data-close type="button">Đóng</button></div>`); return; }
+  try {
+    const r = await fetch(API + "/api/ground-truth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(gt) });
+    const body = await r.json(); if (!r.ok) throw new Error(body.detail || "Không lưu được.");
+    sheet(`<h2>Đã lưu đáp án</h2><p>${esc(body.path)} · ${gt.walls.length} tường, ${gt.removed.length} tường loại, ${gt.openings.length} lỗ mở.</p>${n ? `<p>Còn ${n} tường đã loại chưa ghi lý do: chọn lý do ở tab Tường (lọc "Đã loại") rồi lưu lại.</p>` : ""}
+      <p>Đo độ chính xác: <code>python scripts/evaluate_recognition.py</code></p><div class="actions"><button class="btn primary" data-close type="button">Đóng</button></div>`);
+  } catch (err) { sheet(`<h2>Chưa lưu được</h2><p>${esc(err.message)}</p><div class="actions"><button class="btn" data-close type="button">Đóng</button></div>`); }
+});
 function download(name, text, type) {
   try {
     const a = document.createElement("a");

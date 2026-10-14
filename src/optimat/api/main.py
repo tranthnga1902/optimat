@@ -241,3 +241,34 @@ def models_info() -> dict:
     return {"loaded": MaterialPriceModel.load() is not None, "metrics": metrics,
             "nsga": {"pop_size": config.NSGA_POP_SIZE, "generations": config.NSGA_GENERATIONS},
             "llm_provider": config.LLM_PROVIDER, "llm_model": config.OPENAI_MODEL, "llm_available": llm_available()}
+
+
+class GroundTruthPlan(BaseModel):
+    version: int = 1
+    file: str
+    plan: str
+    height_mm: float
+    saved_at: str = ""
+    walls: list[dict]
+    removed: list[dict] = []
+    openings: list[dict] = []
+
+
+@app.post("/api/ground-truth")
+def save_ground_truth(gt: GroundTruthPlan) -> dict:
+    """Lưu mặt bằng đã sửa đúng làm đáp án nhận diện (data/ground_truth/plans), dùng cho scripts/evaluate_recognition.py."""
+    import re
+    import unicodedata
+
+    from ..drawing import recognition_eval
+    GT_PLANS_DIR = recognition_eval.GT_PLANS_DIR
+
+    def slug(text: str) -> str:
+        t = unicodedata.normalize("NFD", text.replace("đ", "d").replace("Đ", "D"))
+        t = "".join(c for c in t if unicodedata.category(c) != "Mn")
+        return re.sub(r"[^A-Za-z0-9]+", "_", t).strip("_")[:80] or "ban_ve"
+    GT_PLANS_DIR.mkdir(parents=True, exist_ok=True)
+    path = GT_PLANS_DIR / f"{slug(Path(gt.file).stem)}_{slug(gt.plan)}.gt.json"
+    path.write_text(json.dumps(gt.model_dump(), ensure_ascii=False, indent=1), encoding="utf8")
+    shown = path.relative_to(config.ROOT) if path.is_relative_to(config.ROOT) else path
+    return {"path": str(shown), "walls": len(gt.walls), "removed": len(gt.removed)}

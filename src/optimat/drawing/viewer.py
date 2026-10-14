@@ -67,6 +67,8 @@ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: d
             "t": w.thickness_mm, "src": w.material_source,
             "rule": w.material_rule, "mconf": w.material_confidence,
         } for w in result.walls],
+        "rejected": [{"reason": r["reason"], "cls": r["cls"], "x1": tx(r["x1"]), "y1": ty(r["y1"]), "x2": tx(r["x2"]),
+                      "y2": ty(r["y2"])} for r in result.rejected],
         "openings": [{"name": o.name, "x": tx(o.x), "y": ty(o.y), "w": o.width_mm, "h": o.height_mm,
                       "wall": o.wall_id, "kind": o.kind, "ev": o.evidence} for o in result.openings],
         "hatches": hatches,

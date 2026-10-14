@@ -174,6 +174,86 @@ def _is_stringer(treads, a: Segment, ux: float, uy: float, lo: float, hi: float,
     return False
 
 
+PAR_CELL_MM = 600.0
+
+
+def _line_index(drawing: Drawing):
+    """Lưới mọi nét thẳng (mọi layer, kể cả trong block) để hỏi nhanh các nét song song quanh một cặp nét."""
+    lines = [x for x in drawing.segments if x.kind != "hatch"]
+    grid: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for k, x in enumerate(lines):
+        L = math.hypot(x.x2 - x.x1, x.y2 - x.y1)
+        n = max(1, int(L // PAR_CELL_MM) + 1)
+        seen = set()
+        for t in range(n + 1):
+            px, py = x.x1 + (x.x2 - x.x1) * t / n, x.y1 + (x.y2 - x.y1) * t / n
+            c = (int(px // PAR_CELL_MM), int(py // PAR_CELL_MM))
+            if c not in seen:
+                seen.add(c)
+                grid[c].append(k)
+    return lines, grid
+
+
+def _parallels(index, a: Segment, ux: float, uy: float, lo: float, hi: float, reach: float, skip=()):
+    """Các nét song song với a trong dải [lo, hi] dọc trục a, cách a không quá reach.
+    Trả về (khoảng cách có dấu tới a, tỉ lệ chồng lên đoạn [lo, hi], chiều dài nét)."""
+    lines, grid = index
+    nx, ny = -uy, ux
+    cells = set()
+    steps = max(1, int((hi - lo) // PAR_CELL_MM) + 1)
+    for t in range(steps + 1):
+        d = lo + (hi - lo) * t / steps
+        for off in (-reach, 0.0, reach):
+            px, py = a.x1 + ux * d + nx * off, a.y1 + uy * d + ny * off
+            cx, cy = int(px // PAR_CELL_MM), int(py // PAR_CELL_MM)
+            for i in (-1, 0, 1):
+                for j in (-1, 0, 1):
+                    cells.add((cx + i, cy + j))
+    out, seen = [], set()
+    for c in cells:
+        for k in grid.get(c, ()):
+            if k in seen:
+                continue
+            seen.add(k)
+            x = lines[k]
+            if x is a or id(x) in skip:
+                continue
+            L = math.hypot(x.x2 - x.x1, x.y2 - x.y1)
+            if L < 1 or abs((x.x2 - x.x1) / L * ux + (x.y2 - x.y1) / L * uy) < 0.995:
+                continue
+            o1 = (x.x1 - a.x1) * nx + (x.y1 - a.y1) * ny
+            o2 = (x.x2 - a.x1) * nx + (x.y2 - a.y1) * ny
+            if abs(o1 - o2) > 5 or abs(o1) > reach:
+                continue
+            p1 = (x.x1 - a.x1) * ux + (x.y1 - a.y1) * uy
+            p2 = (x.x2 - a.x1) * ux + (x.y2 - a.y1) * uy
+            ov = min(hi, max(p1, p2)) - max(lo, min(p1, p2))
+            if ov > 0:
+                out.append(((o1 + o2) / 2, ov / (hi - lo), L))
+    return out
+
+
+def _ladder_or_frame(index, a: Segment, b: Segment, ux: float, uy: float, lo: float, hi: float, side: float) -> str | None:
+    """Cặp nét không phải tường:
+    - "bậc thang / lan can": có nét thứ ba song song cách đều (cùng khoảng cách) phía ngoài cặp, kiểu bậc thang,
+      thanh lan can, sọc lát;
+    - "khung cửa sổ": giữa hai nét có từ hai nét song song ngắn (kính, khung), dài xấp xỉ đoạn cặp nét.
+      Tường thật giữa hai mặt chỉ có hatch chéo hoặc nét trát sát mặt; trục định vị đi qua tường thì dài hơn nhiều."""
+    dist = abs(side)
+    sgn = 1.0 if side >= 0 else -1.0
+    near = _parallels(index, a, ux, uy, lo, hi, 2.2 * dist, skip=(id(b),))
+    for off, frac, _ in near:
+        beyond_b = sgn * off - dist
+        before_a = -sgn * off
+        if frac >= 0.5 and (abs(beyond_b - dist) < 0.15 * dist or abs(before_a - dist) < 0.15 * dist):
+            return "bậc thang / lan can"
+    inner = [1 for off, frac, L in near
+             if 0.2 * dist < sgn * off < 0.8 * dist and frac >= 0.6 and L <= 1.3 * (hi - lo)]
+    if len(inner) >= 2:
+        return "khung cửa sổ"
+    return None
+
+
 def wall_layer_scores(drawing: Drawing) -> tuple[dict[str, float], dict[str, float]]:
     """Theo từng layer: (tổng mm cặp nét song song đúng chiều dày, phần trong đó có hatch nằm giữa hai nét)."""
     by_layer: dict[str, list[Segment]] = defaultdict(list)
@@ -266,8 +346,10 @@ def detect_walls(drawing: Drawing, wall_layers: set[str] | None = None) -> list[
     units = [_unit(s) for s in segs]
     candidates = sorted(_pairs(segs), reverse=True)
     treads = _tread_index(drawing)
+    index = _line_index(drawing)
     used: dict[int, list[tuple[float, float]]] = {}
     walls: list[WallSegment] = []
+    drawing.rejected_pairs = []                      # cặp nét đã loại và lý do, để xem trên trang kiểm tra
 
     def covered(intervals, lo, hi):
         total = sum(max(0.0, min(hi, b) - max(lo, a)) for a, b in intervals)
@@ -283,6 +365,13 @@ def detect_walls(drawing: Drawing, wall_layers: set[str] | None = None) -> list[
         if covered(used.get(i, []), lo, hi) > 0.5 or covered(used.get(j, []), blo, bhi) > 0.5:
             continue
         if _is_stringer(treads, a, ux, uy, lo, hi, (b.x1 - a.x1) * (-uy) + (b.y1 - a.y1) * ux):
+            continue
+        side0 = (b.x1 - a.x1) * (-uy) + (b.y1 - a.y1) * ux
+        reason = _ladder_or_frame(index, a, b, ux, uy, lo, hi, side0)
+        if reason:
+            off0 = side0 / 2.0
+            drawing.rejected_pairs.append((reason, a.x1 + ux * lo - uy * off0, a.y1 + uy * lo + ux * off0,
+                                           a.x1 + ux * hi - uy * off0, a.y1 + uy * hi + ux * off0, cls))
             continue
         used.setdefault(i, []).append((lo, hi))
         used.setdefault(j, []).append((blo, bhi))
@@ -491,3 +580,89 @@ def bridge_openings(walls: list[WallSegment], drawing: Drawing, wall_layers: set
             if changed:
                 break
     return walls, openings, used_blocks
+
+
+# ------------------------------------------------------------------ tường vẽ bằng một nét + hatch
+STRIP_MIN_HATCH_PER_M = 2.0      # số nét hatch tối thiểu mỗi mét chạm mặt tường
+STRIP_MAX_SPREAD_MM = 25.0       # độ lệch cho phép của đầu nét hatch phía mặt kia (mặt kia phải thẳng)
+STRIP_CONFIDENCE = 0.6
+
+
+def hatch_strip_walls(drawing: Drawing, existing: list[WallSegment], wall_layers: set[str] | None = None) -> list[WallSegment]:
+    """Tường chỉ có một nét mặt (mặt kia không vẽ hoặc nằm trên layer khác, bị cắt vụn) nhưng có hatch gạch chéo:
+    các nét hatch chạy từ mặt này sang mặt kia, nên đầu bên kia của chúng thẳng hàng ở khoảng cách bằng chiều dày.
+    Nhận thành tường khi khoảng cách đó thuộc một lớp chiều dày. Độ tin cậy thấp để người dùng duyệt."""
+    hatch = [s for s in drawing.segments if s.kind == "hatch"]
+    if not hatch or drawing.user_wall_layers:
+        return []
+    wall_layers = wall_layers or set()
+    ok_class = (LayerClass.WALL, LayerClass.UNKNOWN)
+
+    def face_layer_ok(name: str) -> bool:   # mặt tường không nằm trên layer trục, kích thước, chữ, nội thất, cửa
+        return name in wall_layers or drawing.layer_classes.get(name, LayerClass.UNKNOWN) in ok_class
+    grid: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for k, h in enumerate(hatch):
+        for x, y in ((h.x1, h.y1), (h.x2, h.y2)):
+            grid[(int(x // HATCH_CELL_MM), int(y // HATCH_CELL_MM))].append(k)
+    faces = [s for s in drawing.segments if _usable(s) and face_layer_ok(s.layer) and math.hypot(s.x2 - s.x1, s.y2 - s.y1) >= 400]
+    out: list[WallSegment] = []
+    taken = list(existing)
+
+    def overlaps_existing(x1, y1, x2, y2) -> bool:
+        L = math.hypot(x2 - x1, y2 - y1)
+        for w in taken:
+            wl = math.hypot(w.x2 - w.x1, w.y2 - w.y1) or 1.0
+            ux, uy = (w.x2 - w.x1) / wl, (w.y2 - w.y1) / wl
+            if abs(ux * (x2 - x1) / L + uy * (y2 - y1) / L) < 0.995:
+                continue
+            if max(abs((x1 - w.x1) * -uy + (y1 - w.y1) * ux), abs((x2 - w.x1) * -uy + (y2 - w.y1) * ux)) > 200:
+                continue
+            p1, p2 = (x1 - w.x1) * ux + (y1 - w.y1) * uy, (x2 - w.x1) * ux + (y2 - w.y1) * uy
+            if min(max(p1, p2), wl) - max(min(p1, p2), 0.0) > 0.5 * L:
+                return True
+        return False
+
+    for a in faces:
+        ux, uy, L = _unit(a)
+        nx, ny = -uy, ux
+        cells = set()
+        n = max(1, int(L // HATCH_CELL_MM) + 1)
+        for t in range(n + 1):
+            px, py = a.x1 + ux * L * t / n, a.y1 + uy * L * t / n
+            cx, cy = int(px // HATCH_CELL_MM), int(py // HATCH_CELL_MM)
+            cells.update((cx + i, cy + j) for i in (-1, 0, 1) for j in (-1, 0, 1))
+        seen, sides = set(), {1: [], -1: []}
+        for c in cells:
+            for k in grid.get(c, ()):
+                if k in seen:
+                    continue
+                seen.add(k)
+                h = hatch[k]
+                ends = [((h.x1 - a.x1) * nx + (h.y1 - a.y1) * ny, (h.x1 - a.x1) * ux + (h.y1 - a.y1) * uy),
+                        ((h.x2 - a.x1) * nx + (h.y2 - a.y1) * ny, (h.x2 - a.x1) * ux + (h.y2 - a.y1) * uy)]
+                for e_on, e_off in (ends, ends[::-1]):
+                    if abs(e_on[0]) <= 15 and -20 <= e_on[1] <= L + 20 and abs(e_off[0]) > 60:
+                        sides[1 if e_off[0] > 0 else -1].append((abs(e_off[0]), e_on[1]))
+                        break
+        for sgn, pts in sides.items():
+            if len(pts) < 3:
+                continue
+            offs = sorted(p[0] for p in pts)
+            med = offs[len(offs) // 2]
+            good = [p for p in pts if abs(p[0] - med) <= STRIP_MAX_SPREAD_MM]
+            lo, hi = min(p[1] for p in good), max(p[1] for p in good)
+            span = max(hi - lo, 1.0)
+            cls = classify_thickness(med)
+            if cls is None or span < 400 or len(good) / (span / 1000) < STRIP_MIN_HATCH_PER_M or len(good) < 0.7 * len(pts):
+                continue
+            lo, hi = max(0.0, lo - 50), min(L, hi + 50)
+            off = sgn * med / 2
+            x1, y1 = a.x1 + ux * lo + nx * off, a.y1 + uy * lo + ny * off
+            x2, y2 = a.x1 + ux * hi + nx * off, a.y1 + uy * hi + ny * off
+            if overlaps_existing(x1, y1, x2, y2):
+                continue
+            w = WallSegment(wall_id=f"H{len(out) + 1}", layer=a.layer, thickness_class=cls, length_mm=round(hi - lo, 1),
+                            x1=x1, y1=y1, x2=x2, y2=y2, confidence=STRIP_CONFIDENCE, thickness_mm=round(med, 1))
+            out.append(w)
+            taken.append(w)
+    return out
