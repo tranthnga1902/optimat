@@ -1,5 +1,33 @@
--- Lược đồ OptiMat AI (19 bảng). Sinh tự động từ src/optimat/db/models.py, không sửa tay.
+-- Lược đồ OptiMat AI (26 bảng). Sinh tự động từ src/optimat/db/models.py, không sửa tay.
 -- Chạy trong DBeaver khi đang kết nối tới database optimat bằng tài khoản optimat.
+
+CREATE TABLE convention_clauses (
+	id SERIAL NOT NULL, 
+	ma VARCHAR(16) NOT NULL, 
+	nhom VARCHAR(64) NOT NULL, 
+	dieu_khoan TEXT NOT NULL, 
+	muc VARCHAR(1) NOT NULL, 
+	cach_kiem TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT ck_convention_clauses_muc CHECK (muc IN ('B', 'K')), 
+	CONSTRAINT convention_clauses_ma_key UNIQUE (ma)
+);
+
+CREATE TABLE drawing_concepts (
+	id SERIAL NOT NULL, 
+	ma VARCHAR(16) NOT NULL, 
+	khai_niem VARCHAR(64) NOT NULL, 
+	qu VARCHAR(16), 
+	tin_hieu VARCHAR(16) NOT NULL, 
+	mau VARCHAR(128) NOT NULL, 
+	vai_tro VARCHAR(16) NOT NULL, 
+	rong_mm FLOAT, 
+	cao_mm FLOAT, 
+	ghi_chu TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT ck_drawing_concepts_signal CHECK (tin_hieu IN ('layer', 'block')), 
+	CONSTRAINT drawing_concepts_ma_key UNIQUE (ma)
+);
 
 CREATE TABLE labor_rates (
 	id SERIAL NOT NULL, 
@@ -15,12 +43,51 @@ CREATE TABLE labor_rates (
 
 CREATE INDEX ix_labor_rates_province ON labor_rates (province);
 
+CREATE TABLE material_families (
+	family_id VARCHAR(32) NOT NULL, 
+	name VARCHAR(255) NOT NULL, 
+	sort_order INTEGER NOT NULL, 
+	is_wall BOOLEAN DEFAULT 'false' NOT NULL, 
+	PRIMARY KEY (family_id)
+);
+
 CREATE TABLE material_groups (
 	group_id VARCHAR(64) NOT NULL, 
 	sort_order INTEGER NOT NULL, 
 	name VARCHAR(255) NOT NULL, 
 	description TEXT DEFAULT '' NOT NULL, 
 	PRIMARY KEY (group_id)
+);
+
+CREATE TABLE material_notes (
+	id SERIAL NOT NULL, 
+	rule_id VARCHAR(32) NOT NULL, 
+	pattern VARCHAR(255) NOT NULL, 
+	material_id VARCHAR(32) NOT NULL, 
+	ten VARCHAR(255), 
+	nguon VARCHAR(32), 
+	kiem_chung VARCHAR(32), 
+	ghi_chu TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT material_notes_rule_id_key UNIQUE (rule_id)
+);
+
+CREATE INDEX ix_material_notes_material_id ON material_notes (material_id);
+
+CREATE TABLE material_rules (
+	id SERIAL NOT NULL, 
+	rule_id VARCHAR(32) NOT NULL, 
+	signal VARCHAR(16) NOT NULL, 
+	pattern VARCHAR(255) NOT NULL, 
+	target VARCHAR(255), 
+	element VARCHAR(32), 
+	width_mm FLOAT, 
+	height_mm FLOAT, 
+	priority INTEGER DEFAULT '0' NOT NULL, 
+	note TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT ck_material_rules_signal CHECK (signal IN ('text', 'hatch', 'layer', 'block')), 
+	CONSTRAINT material_rules_rule_id_key UNIQUE (rule_id)
 );
 
 CREATE TABLE model_versions (
@@ -34,6 +101,32 @@ CREATE TABLE model_versions (
 	is_active BOOLEAN DEFAULT 'false' NOT NULL, 
 	PRIMARY KEY (version)
 );
+
+CREATE TABLE room_rules (
+	id SERIAL NOT NULL, 
+	rule_id VARCHAR(32) NOT NULL, 
+	pattern VARCHAR(255) NOT NULL, 
+	kind VARCHAR(16) NOT NULL, 
+	note TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT room_rules_rule_id_key UNIQUE (rule_id)
+);
+
+CREATE TABLE rough_norms (
+	id SERIAL NOT NULL, 
+	work_code VARCHAR(32) NOT NULL, 
+	variant VARCHAR(32), 
+	material_id VARCHAR(64), 
+	material_name VARCHAR(255), 
+	qty FLOAT, 
+	qty_unit VARCHAR(64), 
+	norm_code VARCHAR(64), 
+	source VARCHAR(255), 
+	note TEXT, 
+	PRIMARY KEY (id)
+);
+
+CREATE INDEX ix_rough_norms_work_code ON rough_norms (work_code);
 
 CREATE TABLE standards (
 	standard_id SERIAL NOT NULL, 
@@ -159,7 +252,8 @@ CREATE TABLE materials (
 	data_note TEXT, 
 	PRIMARY KEY (material_id), 
 	CONSTRAINT ck_materials_data_kind CHECK (data_kind IN ('ACTUAL', 'SAMPLE', 'SYNTHETIC')), 
-	FOREIGN KEY("group") REFERENCES material_groups (group_id)
+	FOREIGN KEY("group") REFERENCES material_groups (group_id), 
+	FOREIGN KEY(family) REFERENCES material_families (family_id)
 );
 
 CREATE TABLE projects (
@@ -170,6 +264,10 @@ CREATE TABLE projects (
 	site_lat FLOAT, 
 	site_lon FLOAT, 
 	floor_height_mm FLOAT, 
+	door_width_mm FLOAT, 
+	door_height_mm FLOAT, 
+	window_width_mm FLOAT, 
+	window_height_mm FLOAT, 
 	budget FLOAT, 
 	deadline_days FLOAT, 
 	max_vehicle_ton FLOAT, 

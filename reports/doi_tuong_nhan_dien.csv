@@ -1,0 +1,145 @@
+﻿ban_ve,mat_bang,loai,ma,layer,lop_day,day_mm,dai_m,rong_mm,cao_mm,x1,y1,x2,y2,vai_tro,vat_lieu,phuong_an_tuong,do_tin_cay,ghi_chu
+data/sample/sample_floor.dxf,Toàn bộ bản vẽ,tuong,W1,TUONG,220,220,11.78,,,110,11890,110,110,envelope,GN01,W-GN01-220,0.99,A-GN01-4
+data/sample/sample_floor.dxf,Toàn bộ bản vẽ,tuong,W2,TUONG,220,220,11.78,,,4890,110,4890,11890,envelope,GN01,W-GN01-220,0.99,A-GN01-4
+data/sample/sample_floor.dxf,Toàn bộ bản vẽ,tuong,W3,TUONG,220,220,4.78,,,4890,11890,110,11890,envelope,GN01,W-GN01-220,0.99,A-GN01-4
+data/sample/sample_floor.dxf,Toàn bộ bản vẽ,tuong,W4,TUONG,220,220,4.78,,,110,110,4890,110,envelope,GN01,W-GN01-220,0.99,A-GN01-4
+data/sample/sample_floor.dxf,Toàn bộ bản vẽ,tuong,W5,TUONG,110,110,4.56,,,220,6055,4780,6055,partition,AAC01,W-AAC01-100,1.0,T02
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W1,1,220,200,5.05,,,-92944,132956,-87890,132956,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W2,1,110,100,4.65,,,-88140,136806,-83490,136806,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W3,1,110,100,4.4,,,-92944,136806,-88540,136806,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W4,1,110,100,3.28,,,-79390,136335,-79390,133056,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W5,1,220,200,3.17,,,-93240,133270,-93240,136441,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W6,1,110,100,2.75,,,-83490,134056,-83490,136806,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W7,1,110,100,2.75,,,-87240,134006,-84490,134006,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W8,1,220,200,2.7,,,-82440,131956,-79740,131956,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W9,1,220,200,2.65,,,-85090,132956,-82440,132956,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W10,1,110,100,2.1,,,-88190,136456,-88190,134356,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W11,1,110,100,1.96,,,-81819,136806,-79861,136806,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W12,1,110,100,1.78,,,-84490,135789,-84490,134006,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W13,1,110,100,1.05,,,-83490,136806,-82440,136806,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W14,1,110,100,0.67,,,-79861,136806,-79390,136335,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,tuong,W15,1,110,100,0.55,,,-81819,136806,-82205,136420,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,loai_bo,,,220,,,,,-82340,134056,-82340,136314,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,loai_bo,,,330,,,,,-93490,133856,-93490,135856,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,Nội thất,SOFA4150,VATLIEU,,,,,,-79829,135212,,,IGNORE,,,,ký hiệu B12
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,Nội thất,SOFA4150,VATLIEU,,,,,,-81851,135212,,,IGNORE,,,,ký hiệu B12
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,Cao độ,COS-MB,0,,,,,,-91844,134963,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,Cao độ,COS-MB,0,,,,,,-86617,135190,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,Cao độ,COS-MB,0,,,,,,-81316,133709,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,Cao độ,COS-MB,0,,,,,,-82996,134865,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,Cao độ,COS-MB,0,,,,,,-87187,132237,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG TRỆT,Cao độ,COS-MB,0,,,,,,-93778,132237,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W1,1,110,100,5.7,,,-82440,128848,-88140,128848,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W2,1,110,100,4.4,,,-88540,128848,-92944,128848,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W3,0,110,100,3.45,,,-88890,128548,-88890,125098,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W4,1,110,100,2.75,,,-79390,127848,-79390,125098,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W5,0,150,150,2.0,,,-93265,126098,-93265,128098,envelope,,,0.96,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W6,1,110,100,1.9,,,-81290,127848,-79390,127848,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W7,1,110,100,1.75,,,-79540,128848,-81290,128848,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W8,0,110,100,1.6,,,-84240,124648,-82640,124648,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W9,0,110,100,1.0,,,-81290,127848,-81290,128848,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W10,1,220,200,0.9,,,-88540,124998,-89440,124998,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W11,1,110,100,0.85,,,-79390,128698,-79390,127848,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W12,1,220,200,0.8,,,-82340,127898,-82340,128698,partition,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W13,1,220,200,0.79,,,-93240,126098,-93240,125313,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W14,1,220,200,0.75,,,-82340,123998,-81590,123998,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W15,1,220,200,0.7,,,-92240,124998,-92944,124998,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W16,1,220,200,0.6,,,-79440,124898,-79440,124298,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W17,1,220,200,0.45,,,-80190,123998,-79740,123998,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W18,1,220,200,0.39,,,-93240,128483,-93240,128098,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W19,0,110,100,0.35,,,-88540,128548,-88890,128548,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,tuong,W20,1,220,200,0.3,,,-82740,124998,-82440,124998,partition,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,220,,,,,-93240,126098,-93240,127098,,,,,khung cửa sổ
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,110,,,,,-93190,126098,-93190,127098,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,110,,,,,-93190,128098,-93190,127098,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,110,,,,,-81340,128848,-82240,128848,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83340,127678,-82440,127678,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83540,126838,-84440,126838,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83540,126558,-84440,126558,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83340,127398,-82440,127398,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83340,127118,-82440,127118,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83340,126558,-82440,126558,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83340,126838,-82440,126838,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83806,127118,-84440,127118,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-83540,127678,-84097,127678,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,loai_bo,,,330,,,,,-82390,124598,-82390,124898,,,,,khung cửa sổ
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,Nội thất,SOFA,VATLIEU,,,,,,-87181,128798,,,IGNORE,,,,ký hiệu B12
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,Cao độ,COS-MB,0,,,,,,-87153,126792,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,Cao độ,COS-MB,0,,,,,,-81502,125993,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LỬNG,Cao độ,COS-MB,0,,,,,,-81064,128237,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W1,1,110,100,5.8,,,-91390,120207,-85590,120207,envelope,,,0.91,H05
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W2,1,110,100,4.9,,,-79540,120207,-84440,120207,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W3,1,110,100,3.6,,,-79390,120057,-79390,116457,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W4,1,110,100,2.9,,,-94290,120207,-91390,120207,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W5,1,110,100,2.8,,,-82390,120057,-82390,117257,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W6,1,110,100,2.8,,,-91390,120207,-91390,117407,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W7,1,220,200,2.6,,,-82340,115357,-79740,115357,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W8,1,110,100,1.95,,,-91390,117407,-89440,117407,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W9,1,110,100,1.55,,,-85590,118657,-85590,120207,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W10,1,110,100,1.2,,,-84490,118657,-84490,119857,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W11,1,110,100,1.2,,,-85440,117407,-86640,117407,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W12,1,110,100,1.0,,,-86590,118657,-86582,119657,partition,,,0.6,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W13,1,110,100,0.95,,,-94290,119257,-94290,120207,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W14,1,220,200,0.9,,,-93140,116357,-92240,116357,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W15,1,220,200,0.9,,,-89440,116357,-88540,116357,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W16,1,110,100,0.8,,,-88490,120057,-88490,119257,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W17,1,110,100,0.75,,,-85590,120207,-84840,120207,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W18,1,110,100,0.7,,,-93290,117257,-93290,117957,envelope,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W19,1,110,100,0.55,,,-86690,120207,-86690,119657,partition,,,0.91,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,tuong,W20,1,220,200,0.3,,,-82740,116357,-82440,116357,envelope,,,0.92,
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,loai_bo,,,110,,,,,-84490,117457,-84490,118557,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,loai_bo,,,110,,,,,-88490,117457,-88490,118357,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,loai_bo,,,110,,,,,-86740,117407,-87540,117407,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,loai_bo,,,110,,,,,-86690,118657,-86690,119157,,,,,bậc thang / lan can
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Nội thất,SOFA,VATLIEU,,,,,,-94159,118376,,,IGNORE,,,,ký hiệu B12
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-93340,121857,,,IGNORE,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-88440,121857,,,IGNORE,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-84540,121857,,,IGNORE,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-82340,121857,,,IGNORE,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-79340,121857,,,IGNORE,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-77575,120257,,,IGNORE,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-77575,116257,,,IGNORE,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-90135,118400,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-92458,118144,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-87044,116740,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-87090,115903,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-81510,117656,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-93720,116625,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-85889,119466,,,ANNOTATION,,,,ký hiệu B08
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 1,tuong,W1,CHU_KT,110,107,6.8,,,533579,-112961,540367,-112597,envelope,,,0.98,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 1,tuong,W2,CHU_KT,110,110,5.67,,,533423,-113138,533880,-118785,envelope,,,0.99,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 1,tuong,W3,CHU_KT,110,110,3.89,,,540094,-114973,539328,-118792,envelope,,,1.0,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 1,tuong,W4,NET_THAY,110,110,2.47,,,534040,-118946,536511,-118946,envelope,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 1,tuong,W5,NET_THAY,220,220,2.3,,,537796,-114973,540094,-114973,envelope,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 1,tuong,W6,CHU_KT,110,110,2.25,,,540536,-112768,540094,-114973,envelope,,,1.0,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 1,tuong,W7,NET_THAY,330,325,1.0,,,534247,-117394,534247,-116394,partition,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 1,loai_bo,,,150,,,,,533997,-117394,533997,-116394,,,,,bậc thang / lan can
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W1,CHU_KT,110,110,6.35,,,554164,-112768,552917,-118990,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W2,NET_THAY,110,110,3.2,,,547131,-119346,550328,-119346,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W3,THAY,110,110,3.02,,,550383,-116227,547361,-116227,partition,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W4,CHU_KT,110,108,2.67,,,548668,-112883,551335,-112741,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W5,CHU_KT,110,109,2.57,,,551335,-112741,553905,-112604,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W6,OK_NET_MANH,110,110,2.27,,,551423,-114918,553688,-114918,partition,,,1.0,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W7,NET_THAY,110,110,2.19,,,550383,-116227,550383,-114038,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W8,OK_NET_MANH,110,110,1.98,,,551423,-116227,553404,-116227,envelope,,,1.0,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W9,OK_NET_MANH,110,110,0.71,,,552916,-119491,552916,-118781,envelope,,,1.0,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W10,THAY,110,110,0.49,,,550383,-119491,550383,-119001,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),tuong,W11,LAYER1,110,110,0.38,,,547470,-118946,547095,-118946,envelope,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),loai_bo,,,110,,,,,550383,-116172,550383,-113998,,,,,bậc thang / lan can
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),Kích thước,_OBLIQUE,OK_NET_MANH,,,,,,551030,-119424,,,ANNOTATION,,,,ký hiệu B11
+data/drawings/build/nha_pho.dxf,mặt băng tầng 2 (+3.30),Kích thước,_OBLIQUE,OK_NET_MANH,,,,,,548639,-119210,,,ANNOTATION,,,,ký hiệu B11
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),tuong,W1,CHU_KT,110,107,6.91,,,566185,-112968,573086,-112598,envelope,,,0.97,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),tuong,W2,CHU_KT,110,110,6.35,,,573255,-112768,572008,-118990,envelope,,,1.0,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),tuong,W3,LAYER1,110,110,5.87,,,566131,-119001,566131,-113134,envelope,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),tuong,W4,KHUNG,110,110,5.63,,,572195,-116227,566562,-116227,partition,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),tuong,W5,NET_THAY,110,110,3.15,,,566186,-119346,569332,-119346,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),tuong,W6,CHU_KT,110,110,2.21,,,569397,-112955,569397,-115161,partition,,,1.0,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),tuong,W7,OK_NET_MANH,110,110,0.71,,,572007,-119491,572007,-118781,envelope,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),tuong,W8,THAY,110,110,0.49,,,569387,-119491,569387,-119001,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60),loai_bo,,,110,,,,,569477,-116226,568664,-116227,,,,,bậc thang / lan can
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W1,CHU_KT,110,110,6.35,,,585233,-112768,583986,-118990,envelope,,,1.0,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W2,LAYER1,110,110,2.72,,,583954,-116282,583954,-119001,envelope,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W3,NET_THAY,110,110,2.6,,,583969,-119546,581366,-119546,envelope,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W4,CHU_KT,110,109,2.57,,,582407,-112740,584972,-112604,envelope,,,0.6,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W5,OK_NET_MANH,150,141,0.77,,,583969,-119546,583969,-118781,envelope,,,0.5,
+data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W6,THAY,110,110,0.55,,,581366,-119546,581366,-119001,envelope,,,0.6,

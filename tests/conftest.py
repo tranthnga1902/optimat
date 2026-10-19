@@ -12,6 +12,13 @@ if not os.environ.get("OPTIMAT_CATALOG_OVERLAY"):
 
 
 @pytest.fixture(scope="session")
+def sample_openings():
+    """Kích thước cửa của dự án mẫu: block D1, S1 trong bản vẽ mẫu không ghi kích thước."""
+    from optimat.schemas import OpeningDefaults
+    return OpeningDefaults(door_width_mm=900, door_height_mm=2200, window_width_mm=1200, window_height_mm=1400)
+
+
+@pytest.fixture(scope="session")
 def sample_dxf() -> str:
     path = ROOT / "data/sample/sample_floor.dxf"
     if not path.exists():

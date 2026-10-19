@@ -7,11 +7,12 @@ from optimat.drawing.dxf_reader import read_drawing
 from optimat.drawing.review import ReviewPlan, compute_review
 from optimat.drawing.takeoff import compute_takeoff
 from optimat.drawing.viewer import view_payload
+from optimat.schemas import OpeningDefaults
 
 
 def _plan(sample_dxf):
     d = read_drawing(sample_dxf)
-    payload = view_payload(d, compute_takeoff(d, 3300), "sample_floor.dxf")
+    payload = view_payload(d, compute_takeoff(d, 3300, openings=OpeningDefaults(door_width_mm=900, door_height_mm=2200, window_width_mm=1200, window_height_mm=1400)), "sample_floor.dxf")
     p = payload["plans"][0]
     walls = [{"id": w["id"], "cls": w["cls"], "role": w["role"], "x1": w["x1"], "y1": w["y1"], "x2": w["x2"],
               "y2": w["y2"], "mat": w["mat"], "masonry": w["masonry"]} for w in p["walls"]]

@@ -21,6 +21,20 @@ def _engine_for(url: str) -> Engine:
     return create_engine(url, pool_pre_ping=True)
 
 
+def read_rule_table(table: str, path, default_csv) -> "pd.DataFrame":
+    """Bảng quy tắc dạng chuỗi (ô trống = ""), cùng dạng với file CSV sửa bằng Excel. path: đọc file đó;
+    không có path thì đọc PostgreSQL khi có DATABASE_URL, ngược lại default_csv. Bảng trong database có cột id giữ thứ tự dòng."""
+    import pandas as pd
+    if not path and get_database_url():
+        with get_engine().connect() as conn:
+            df = pd.read_sql_query(f'SELECT * FROM "{table}" ORDER BY id', conn).drop(columns=["id"])
+        for c in df.columns:   # số nguyên đọc về dạng 90.0 khi cột có ô trống: trả lại "90"
+            df[c] = [("" if v is None or v != v else str(int(v)) if isinstance(v, float) and v.is_integer() else str(v))
+                     for v in df[c]]
+        return df
+    return pd.read_csv(path or default_csv, dtype=str, keep_default_na=False)
+
+
 def get_engine(url: str | None = None) -> Engine:
     url = url or get_database_url()
     if not url:

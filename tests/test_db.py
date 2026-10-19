@@ -61,7 +61,26 @@ def test_all_tables_created(seeded_db):
     from optimat.db.models import Base
     from optimat.db.session import get_engine
     existing = set(inspect(get_engine(seeded_db)).get_table_names())
-    assert set(Base.metadata.tables) <= existing and len(Base.metadata.tables) == 19
+    assert set(Base.metadata.tables) <= existing and len(Base.metadata.tables) == 26
+
+
+def test_rules_and_families_from_db(seeded_db, monkeypatch):
+    """Quy tắc, định mức, họ vật liệu đọc từ PostgreSQL giống hệt bản CSV đã nạp."""
+    from optimat.catalog.repository import Catalog
+    from optimat.drawing import material_rules
+    from optimat.rough import areas, norms
+    csv = (material_rules.load_rules(str(material_rules.RULES_PATH)), areas.load_room_rules(str(areas.ROOM_RULES_PATH)),
+           norms.load_norms(str(norms.NORMS_PATH)))
+    monkeypatch.setenv("DATABASE_URL", seeded_db)
+    for f in (material_rules.load_rules, areas.load_room_rules, norms.load_norms):
+        f.cache_clear()
+    try:
+        assert (material_rules.load_rules(), areas.load_room_rules(), norms.load_norms()) == csv
+    finally:
+        for f in (material_rules.load_rules, areas.load_room_rules, norms.load_norms):
+            f.cache_clear()
+    db = Catalog.from_db(seeded_db)
+    assert db.wall_families() == Catalog.from_csv().wall_families()
 
 
 def test_project_flow_roundtrip(seeded_db, sample_dxf):
@@ -101,7 +120,7 @@ def test_project_flow_roundtrip(seeded_db, sample_dxf):
 
 
 def test_materials_sql_script_loads_and_reruns(seeded_db):
-    """sql/03_materials.sql nạp 75 vật liệu, chạy lại không sinh dòng trùng."""
+    """sql/03_materials.sql nạp 93 vật liệu, chạy lại không sinh dòng trùng."""
     from pathlib import Path
 
     from sqlalchemy import text
@@ -118,7 +137,7 @@ def test_materials_sql_script_loads_and_reruns(seeded_db):
             raw.close()
     with engine.connect() as conn:
         count = lambda sql: conn.execute(text(sql)).scalar()
-        assert count("SELECT count(*) FROM materials WHERE tier IS NOT NULL") == 75
+        assert count("SELECT count(*) FROM materials WHERE tier IS NOT NULL") == 93
         assert count("SELECT count(*) FROM materials WHERE tier = 1") == 16
         assert count("SELECT count(DISTINCT \"group\") FROM materials WHERE tier IS NOT NULL") == 5
         assert count("SELECT count(*) FROM wall_systems") == 20
@@ -203,3 +222,99 @@ def test_confirm_saves_to_project(seeded_db, sample_dxf, monkeypatch):
         row = session.get(TakeoffResultRow, body["takeoff_id"])
         assert row.project_id == pid and row.confirmed_at and row.result["input"]["walls"]
     assert client.post("/api/takeoff/confirm", json={**plan, "project_id": 999999}).status_code == 404
+
+
+def test_rough_saves_to_project(seeded_db, sample_dxf, monkeypatch):
+    """Bảng phần thô chốt có gắn dự án: lưu vào takeoff_results với kind = rough, không cần bảng mới."""
+    from fastapi.testclient import TestClient
+    from sqlalchemy.orm import Session
+
+    from optimat.api.main import app
+    from optimat.catalog.repository import Catalog
+    from optimat.db.models import Project, TakeoffResultRow, User
+    from optimat.db.session import get_engine
+    from optimat.drawing.dxf_reader import read_drawing
+    from optimat.rough.takeoff import rough_from_drawing
+    with Session(get_engine(seeded_db)) as session:
+        user = User(email="phantho@example.com", password_hash="chua-dat", role="user")
+        session.add(user)
+        session.flush()
+        project = Project(user_id=user.user_id, name="Nhà thử phần thô")
+        session.add(project)
+        session.commit()
+        pid = project.project_id
+    monkeypatch.setenv("DATABASE_URL", seeded_db)
+    req = rough_from_drawing(read_drawing(sample_dxf), floor_height_mm=3300, catalog=Catalog.from_db(seeded_db))
+    req.project_id = pid
+    client = TestClient(app)
+    body = client.post("/api/takeoff/rough", json=req.model_dump(mode="json")).json()
+    assert body["takeoff_id"] and body["totals"]
+    with Session(get_engine(seeded_db)) as session:
+        row = session.get(TakeoffResultRow, body["takeoff_id"])
+        assert row.result["kind"] == "rough" and row.result["input"]["plans"]
+    assert client.post("/api/takeoff/rough", json={**req.model_dump(mode="json"), "project_id": 999999}).status_code == 404
+
+
+def test_takeoff_reads_project_params(seeded_db, tmp_path, monkeypatch):
+    """API đo bóc có project_id: chiều cao tầng và kích thước cửa lấy từ bảng projects; chiều cao gửi kèm thắng."""
+    import ezdxf
+    from fastapi.testclient import TestClient
+    from sqlalchemy.orm import Session
+
+    from optimat.api.main import app
+    from optimat.db.models import Project, User
+    from optimat.db.session import get_engine
+    doc = ezdxf.new("R2010")
+    doc.header["$INSUNITS"] = 4
+    doc.blocks.new("D5").add_line((0, 0), (900, 0))          # block cửa không ghi kích thước
+    msp = doc.modelspace()
+    msp.add_line((0, 0), (6000, 0), dxfattribs={"layer": "TUONG"})
+    msp.add_line((0, 220), (6000, 220), dxfattribs={"layer": "TUONG"})
+    msp.add_blockref("D5", (3000, 110), dxfattribs={"layer": "CUA"})
+    path = tmp_path / "cua.dxf"
+    doc.saveas(path)
+    with Session(get_engine(seeded_db)) as session:
+        user = User(email="cua@example.com", password_hash="chua-dat", role="user")
+        session.add(user)
+        session.flush()
+        project = Project(user_id=user.user_id, name="Nhà thử cửa", floor_height_mm=3000,
+                          door_width_mm=800, door_height_mm=2100)
+        session.add(project)
+        session.commit()
+        pid = project.project_id
+    monkeypatch.setenv("DATABASE_URL", seeded_db)
+    client = TestClient(app)
+
+    def post(**data):
+        with open(path, "rb") as f:
+            return client.post("/api/takeoff", files={"file": ("cua.dxf", f, "application/dxf")}, data=data)
+    body = post(project_id=str(pid)).json()
+    assert body["floor_height_mm"] == 3000
+    assert [(o["name"], o["width_mm"], o["height_mm"]) for o in body["openings"]] == [("D5", 800, 2100)]
+    assert body["groups"][0]["opening_area_m2"] == pytest.approx(0.8 * 2.1, abs=0.01)
+    assert post(project_id=str(pid), floor_height_mm="3300").json()["floor_height_mm"] == 3300
+    plain = post(floor_height_mm="3300").json()                # không gắn dự án: không trừ, có cảnh báo
+    assert plain["openings"] == [] and any("chưa có kích thước" in w for w in plain["warnings"])
+    assert post(project_id="999999").status_code == 404
+
+
+def test_concepts_admin_crud(seeded_db, monkeypatch):
+    """Quản trị sửa bảng drawing_concepts: thêm, sửa, xóa; nhận diện dùng ngay ký hiệu mới (không cần khởi động lại)."""
+    from fastapi.testclient import TestClient
+
+    from optimat.api.main import app
+    from optimat.drawing import concepts
+    monkeypatch.setenv("DATABASE_URL", seeded_db)
+    concepts.load_signals.cache_clear()
+    client = TestClient(app)
+    body = {"ma": "l99", "khai_niem": "Cầu thang", "qu": "QU-17", "tin_hieu": "layer", "mau": "CẦU_THANG", "vai_tro": "IGNORE"}
+    row = client.post("/api/concepts", json=body).json()
+    assert row["ma"] == "L99" and row["mau"] == "cau thang"
+    assert client.get("/api/concepts").json()["editable"] and concepts.match_layer("cau thang 2").ma == "L99"
+    assert client.post("/api/concepts", json=body).status_code == 409
+    assert client.put("/api/concepts/L99", json={**body, "vai_tro": "ANNOTATION"}).json()["vai_tro"] == "ANNOTATION"
+    assert concepts.match_layer("cau thang").vai_tro == "ANNOTATION"
+    assert client.delete("/api/concepts/L99").status_code == 200 and concepts.match_layer("cau thang") is None
+    assert client.delete("/api/concepts/L99").status_code == 404
+    monkeypatch.delenv("DATABASE_URL")
+    concepts.load_signals.cache_clear()

@@ -22,7 +22,7 @@ Cần Python 3.10 trở lên.
 
 ### PostgreSQL
 
-Cơ sở dữ liệu gồm 19 bảng, định nghĩa trong `src/optimat/db/models.py`. Có hai cách tạo, cho kết quả như nhau.
+Cơ sở dữ liệu gồm 23 bảng, định nghĩa trong `src/optimat/db/models.py`. Có hai cách tạo, cho kết quả như nhau.
 
 **Bước chung:** trong DBeaver, kết nối bằng tài khoản `postgres` rồi chạy từng lệnh trong
 `sql/00_create_database.sql` (tạo người dùng `optimat` và database `optimat` mã hóa UTF-8).
@@ -35,12 +35,12 @@ python scripts/init_db.py --prices data/sample/prices_sample.csv
 ```
 
 **Cách 2, bằng SQL trong DBeaver:** kết nối tới database `optimat` bằng tài khoản `optimat`, mở và chạy
-`sql/01_schema.sql` (Alt+X để chạy cả file), rồi `sql/02_seed_sample.sql`.
+`sql/01_schema.sql` (Alt+X để chạy cả file), rồi `sql/02_seed_sample.sql`, `sql/03_materials.sql`, `sql/05_rules.sql`.
 
-Sau đó trong DBeaver, bấm F5 ở mục Tables để thấy 19 bảng. Sửa `db/models.py` thì chạy
-`python scripts/export_sql.py` để sinh lại hai file SQL.
+Sau đó trong DBeaver, bấm F5 ở mục Tables để thấy 23 bảng. Sửa `db/models.py` thì chạy
+`python scripts/export_sql.py` để sinh lại các file SQL.
 
-Khi có `DATABASE_URL`, hệ thống đọc danh mục và lịch sử giá từ PostgreSQL. Khi không có, hệ thống đọc
+Khi có `DATABASE_URL`, hệ thống đọc danh mục, họ vật liệu, đơn giá nhân công, bộ quy tắc, định mức và lịch sử giá từ PostgreSQL. Khi không có, hệ thống đọc
 các file CSV trong `data/catalog` (dùng cho kiểm thử). `GET /api/health` cho biết đang dùng nguồn nào.
 
 ### Đọc file DWG
@@ -105,7 +105,7 @@ print(state["explanation"])
 | Thư mục | Nội dung |
 |---|---|
 | `src/optimat/drawing/` | Đọc DXF và DWG (`dxf_reader.py`, `dwg_convert.py`), gán vai trò layer (`layer_classifier.py`), chuyển mã phông TCVN3 (`encoding.py`), nhận diện tường (`walls.py`), đo bóc (`takeoff.py`) |
-| `src/optimat/db/` | Lược đồ 19 bảng PostgreSQL (`models.py`), kết nối (`session.py`) |
+| `src/optimat/db/` | Lược đồ 23 bảng PostgreSQL (`models.py`), kết nối (`session.py`) |
 | `sql/` | File SQL để tạo database, bảng và dữ liệu mẫu trực tiếp trong DBeaver |
 | `src/optimat/catalog/` | Nạp danh mục vật liệu, nhà cung cấp, phương tiện; ước lượng cự ly |
 | `src/optimat/predict/` | Đặc trưng (`features.py`), huấn luyện và so sánh mô hình (`train.py`), nạp mô hình để dự đoán (`cost_model.py`) |

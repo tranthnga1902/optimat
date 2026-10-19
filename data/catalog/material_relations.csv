@@ -1,0 +1,14 @@
+material_id,relation_type,related_material_id,quantity,quantity_unit,source,note
+AAC01,REQUIRES,VU04,0.035,m³ vữa / m³ khối xây,"Thông tư 12/2021/TT-BXD, định mức dự toán xây dựng, mã AE.86 (xây gạch AAC bằng vữa xây bê tông nhẹ), Công báo số 771+772 [A]",Định mức AE.862. Muốn đổi sang tấn cần khối lượng thể tích vữa tươi của sản phẩm
+AAC02,REQUIRES,VU04,0.034,m³ vữa / m³ khối xây,"Thông tư 12/2021/TT-BXD, định mức dự toán xây dựng, mã AE.86 (xây gạch AAC bằng vữa xây bê tông nhẹ), Công báo số 771+772 [A]",Định mức AE.864
+AAC03,REQUIRES,VU04,0.035,m³ vữa / m³ khối xây,"Thông tư 12/2021/TT-BXD, định mức dự toán xây dựng, mã AE.86 (xây gạch AAC bằng vữa xây bê tông nhẹ), Công báo số 771+772 [A]",Định mức AE.866
+AAC01,REQUIRES,PK01,,m² lưới / m² tường,,Chưa có định mức. Xác nhận có bắt buộc không
+AAC02,REQUIRES,PK01,,m² lưới / m² tường,,Như trên
+AAC03,REQUIRES,PK01,,m² lưới / m² tường,,Như trên
+ALC01,REQUIRES,PK03,,kg keo / m² tường,,Chưa có định mức
+ALC02,REQUIRES,PK03,,kg keo / m² tường,,Chưa có định mức
+PN01,REQUIRES,PK03,,kg keo / m² tường,,Chưa có định mức
+VU01,COMPOSED_OF,XM01,226.0,kg xi măng / m³ vữa,Bài viết cấp phối vữa (không dẫn văn bản) [B],"Vữa xi măng cát vàng mác 50, xi măng PCB30. Nguồn không dẫn văn bản"
+VU01,COMPOSED_OF,CA02,1.193,m³ cát / m³ vữa,Bài viết cấp phối vữa (không dẫn văn bản) [B],Như trên
+VU02,COMPOSED_OF,XM01,307.0,kg xi măng / m³ vữa,"Bài viết cấp phối vữa mác 75 (ghi ""theo Thông tư 12/2021/TT-BXD"") [B]","Vữa xi măng cát vàng mác 75, xi măng PCB30. Nguồn khác ghi 310 kg và 1,153 m³"
+VU02,COMPOSED_OF,CA02,1.13,m³ cát / m³ vữa,"Bài viết cấp phối vữa mác 75 (ghi ""theo Thông tư 12/2021/TT-BXD"") [B]",Như trên

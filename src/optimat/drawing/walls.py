@@ -18,9 +18,11 @@ from __future__ import annotations
 import math
 from collections import defaultdict
 from dataclasses import dataclass
+from typing import Optional
 
 from .. import config
-from ..schemas import WallSegment
+from ..schemas import OpeningDefaults, WallSegment
+from .concepts import block_signals
 from .dxf_reader import Drawing, Segment
 from .layer_classifier import LayerClass
 
@@ -479,7 +481,7 @@ class GapOpening:
     x: float
     y: float
     width_mm: float
-    height_mm: float
+    height_mm: Optional[float]   # None: dự án chưa có chiều cao cửa, lỗ mở chưa trừ
     wall_id: str
     evidence: str      # cung cửa, nét kính, block ...
 
@@ -492,12 +494,17 @@ def _project(w: WallSegment, x: float, y: float):
 
 
 def bridge_openings(walls: list[WallSegment], drawing: Drawing, wall_layers: set[str],
-                    opening_blocks: list) -> tuple[list[WallSegment], list[GapOpening], list]:
-    """Nối các đoạn tường thẳng hàng bị ngắt tại cửa. Trả về (tường, lỗ mở từ khe, block cửa đã dùng)."""
-    openings: list[GapOpening] = []
+                    opening_blocks: list, openings: OpeningDefaults | None = None
+                    ) -> tuple[list[WallSegment], list[GapOpening], list]:
+    """Nối các đoạn tường thẳng hàng bị ngắt tại cửa. Trả về (tường, lỗ mở từ khe, block cửa đã dùng).
+    Rộng lấy theo khe, cao theo thông số cửa của dự án (openings); dự án chưa có thì cao để trống."""
+    def _h(kind: str) -> Optional[float]:
+        return getattr(openings, f"{kind}_height_mm", None)
+    gaps: list[GapOpening] = []
     used_blocks: list = []
     lo_r, hi_r = config.DOOR_ARC_RADIUS_MM
     door_arcs = [a for a in drawing.arcs if lo_r <= a.r <= hi_r and 60 <= a.sweep <= 120]
+    window_prefixes = tuple(s.mau.upper() for s in block_signals() if s.vai_tro == "window")   # QU-14: S, CS, W
     glass = [s for s in drawing.segments if s.kind == "line" and s.layer not in wall_layers]
     changed = True
     while changed:
@@ -535,14 +542,14 @@ def bridge_openings(walls: list[WallSegment], drawing: Drawing, wall_layers: set
                 for arc in ([] if silent else door_arcs):
                     p, d = _project(a, arc.cx, arc.cy)
                     if d <= t / 2 + 250 and g0 - 250 <= p <= g1 + 250:
-                        found = GapOpening("door", cx, cy, gap, config.DEFAULT_OPENINGS_MM["D"][1], "", "cung cánh cửa")
+                        found = GapOpening("door", cx, cy, gap, _h("door"), "", "cung cánh cửa")
                         break
                 if found is None and not silent:
                     for blk in opening_blocks:
                         p, d = _project(a, blk.x, blk.y)
                         if d <= t / 2 + 600 and g0 - 300 <= p <= g1 + 300:
-                            kind = "window" if blk.name.upper().startswith(("S", "CS", "W")) else "door"
-                            h = config.DEFAULT_OPENINGS_MM["S" if kind == "window" else "D"][1]
+                            kind = "window" if blk.name.upper().startswith(window_prefixes) else "door"
+                            h = _h(kind)
                             found = GapOpening(kind, cx, cy, gap, h, "", f"block {blk.name}")
                             used_blocks.append(blk)
                             break
@@ -557,7 +564,7 @@ def bridge_openings(walls: list[WallSegment], drawing: Drawing, wall_layers: set
                         if max(e1, e2) <= t / 2 + 30:
                             cover = max(cover, min(g1, max(p1, p2)) - max(g0, min(p1, p2)))
                     if cover >= 0.6 * gap:
-                        found = GapOpening("window", cx, cy, gap, config.DEFAULT_OPENINGS_MM["S"][1], "", "nét kính")
+                        found = GapOpening("window", cx, cy, gap, _h("window"), "", "nét kính")
                 if found is None and not silent:
                     continue
                 # nối: đoạn mới đi từ đầu xa của a tới đầu xa của b
@@ -568,18 +575,18 @@ def bridge_openings(walls: list[WallSegment], drawing: Drawing, wall_layers: set
                 a.x2, a.y2 = e1
                 _set_length(a)
                 a.confidence = min(a.confidence, b.confidence)
-                for o in openings:
+                for o in gaps:
                     if o.wall_id == b.wall_id:
                         o.wall_id = a.wall_id
                 if found is not None:
                     found.wall_id = a.wall_id
-                    openings.append(found)
+                    gaps.append(found)
                 walls.pop(j)
                 changed = True
                 break
             if changed:
                 break
-    return walls, openings, used_blocks
+    return walls, gaps, used_blocks
 
 
 # ------------------------------------------------------------------ tường vẽ bằng một nét + hatch

@@ -11,11 +11,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ..catalog.repository import FAMILY_LABELS, Catalog, default_catalog
+from ..catalog.repository import Catalog, default_catalog
 from ..schemas import PlanTakeoff, TakeoffResult
 from .dxf_reader import Drawing, crop
 from .render import DrawingRenderer
 from .material_rules import _best, load_rules, rule_label
+from ..rough.areas import room_labels
+from ..rough.columns import detect_columns
 
 TEMPLATE = Path(__file__).with_name("viewer_template.html")          # trang 5 bước (giải thích thuật toán)
 REVIEW_TEMPLATE = Path(__file__).with_name("review_app.html")       # trang Kiểm tra bóc tách (sửa, bổ sung, xác nhận)
@@ -84,14 +86,20 @@ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: d
         "warnings": result.warnings,
         "unmatched": result.unmatched,
         "rule_hits": result.rule_hits,
+        # phần thô: cột nhận từ vùng tô đặc và tên phòng (WC, ban công) để tính chống thấm; cùng hệ tọa độ trang
+        "columns": [{"id": c.id, "x": tx(c.x), "y": ty(c.y), "b_mm": c.b_mm, "h_mm": c.h_mm} for c in detect_columns(drawing)],
+        "labels": [{"kind": k, "text": t, "x": tx(x), "y": ty(y)} for k, t, x, y in room_labels(drawing)],
     }
 
 
 def plans_data(drawing: Drawing, plans: list[PlanTakeoff], file_name: str) -> dict:
+    from ..rough.takeoff import ground_index
+    ground = ground_index([p.name for p in plans], [p.level_m for p in plans])
     out = []
-    for p in plans:
+    for i, p in enumerate(plans):
         sub = crop(drawing, tuple(p.bbox)) if p.name != "Toàn bộ bản vẽ" else drawing
-        info = {"name": p.name, "level_m": p.level_m, "height_mm": p.height_mm, "height_source": p.height_source}
+        info = {"name": p.name, "level_m": p.level_m, "height_mm": p.height_mm, "height_source": p.height_source,
+                "is_ground": i == ground}
         out.append(viewer_data(sub, p.result, file_name, info))
     return {"file": file_name, "plans": out}
 
@@ -101,17 +109,18 @@ def material_options(catalog: Catalog | None = None) -> list[dict]:
     systems: lớp chiều dày -> phương án tường; ready: phương án đủ số liệu để tối ưu."""
     catalog = catalog or default_catalog()
     view = catalog.wall_view()
-    mats = catalog.materials[catalog.materials.get("family").isin(list(FAMILY_LABELS))] if "family" in catalog.materials else []
+    families = catalog.wall_families()
+    mats = catalog.materials[catalog.materials.get("family").isin(list(families))] if "family" in catalog.materials else []
     out = []
     for m in (mats.itertuples() if len(mats) else []):
         rows = view[view.material_id == m.material_id] if len(view) else view
         out.append({
             "id": m.material_id, "name": m.name, "label": f"{m.material_id} · {m.name}", "unit": m.unit,
-            "family": m.family, "family_label": FAMILY_LABELS[m.family],
+            "family": m.family, "family_label": families[m.family],
             "systems": {r.detect_class: r.wall_system_id for r in rows.itertuples() if r.detect_class},
             "ready": {r.detect_class: bool(r.ready) for r in rows.itertuples() if r.detect_class},
         })
-    order = list(FAMILY_LABELS)
+    order = list(families)
     return sorted(out, key=lambda o: (order.index(o["family"]), o["id"]))
 
 
@@ -149,9 +158,24 @@ def view_payload(drawing: Drawing, result, file_name: str, cad: bool = True) -> 
         payload = {"file": file_name, "plans": [viewer_data(drawing, result, file_name)]}
     if cad:
         add_cad_layers(drawing, payload, plans)
+    if plans is not None:
+        payload["conventions"] = convention_summary(drawing, plans, file_name)
     payload["materials"] = material_options()
-    payload["families"] = [{"id": k, "label": v} for k, v in FAMILY_LABELS.items()]
+    payload["families"] = [{"id": k, "label": v} for k, v in default_catalog().wall_families().items()]
     return payload
+
+
+def convention_summary(drawing: Drawing, plans: list, file_name: str) -> dict:
+    """Đối chiếu Quy ước v1.0 cho tab Cảnh báo: kết luận và từng điều khoản (chi tiết: scripts/concept_report.py).
+    Phần này chỉ để báo; lỗi ở đây không được chặn việc mở bản vẽ, nên trả lời báo lỗi thay vì ném ngoại lệ."""
+    from .convention_check import analyze_drawing
+    try:
+        r = analyze_drawing(drawing, plans, file_name)
+    except Exception as exc:   # noqa: BLE001
+        return {"error": f"Chưa đối chiếu được quy ước: {exc}"}
+    return {"trong_quy_uoc": r.trong_quy_uoc,
+            "checks": [c.model_dump(include={"ma", "muc", "nhom", "dieu_khoan", "trang_thai", "ket_qua", "bang_chung"})
+                       for c in r.checks]}
 
 
 def _embed(template: Path, payload: dict | None) -> str:

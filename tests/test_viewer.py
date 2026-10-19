@@ -26,6 +26,6 @@ def test_viewer_html_embeds_data(sample_dxf):
     assert payload["file"] == "sample_floor.dxf" and len(payload["plans"]) == 1
 
 
-def test_openings_recorded(sample_dxf):
-    result = compute_takeoff(read_drawing(sample_dxf), 3300)
+def test_openings_recorded(sample_dxf, sample_openings):
+    result = compute_takeoff(read_drawing(sample_dxf), 3300, openings=sample_openings)
     assert [o.name for o in result.openings] == ["D1", "S1"] and all(o.wall_id for o in result.openings)

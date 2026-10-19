@@ -1,0 +1,23 @@
+work_code,variant,material_id,material_name,qty,qty_unit,norm_code,source,note
+TRAT,15,@VUA,Vữa trát,,m³ / m²,,,"Vữa trát 1 m² tường, trát dày 15 mm. Chờ tra TT 38/2026/TT-BXD (công tác trát), ghi số hiệu bảng"
+TRAT,20,@VUA,Vữa trát,,m³ / m²,,,"Như trên, trát dày 20 mm"
+CAN_NEN,30,@VUA,Vữa cán nền,,m³ / m²,,,"Vữa cán 1 m² nền dày 30 mm. Chờ tra TT 38/2026/TT-BXD (công tác láng nền), ghi số hiệu bảng"
+CAN_NEN,50,@VUA,Vữa cán nền,,m³ / m²,,,"Như trên, cán dày 50 mm"
+BE_TONG_TRON,M100,XM02,,,kg / m³,,,"Cấp phối bê tông trộn tại chỗ mác 100 (bê tông lót). Chờ tra TT 38/2026/TT-BXD (phụ lục cấp phối)"
+BE_TONG_TRON,M100,CA01,,,m³ / m³,,,Như trên
+BE_TONG_TRON,M100,DA01,,,m³ / m³,,,"Như trên. Cỡ đá bê tông lót chưa chốt (1×2 hay 4×6)"
+BE_TONG_TRON,M200,XM02,,,kg / m³,,,"Cấp phối bê tông trộn tại chỗ mác 200. Chờ tra TT 38/2026/TT-BXD"
+BE_TONG_TRON,M200,CA01,,,m³ / m³,,,Như trên
+BE_TONG_TRON,M200,DA01,,,m³ / m³,,,Như trên
+BE_TONG_TRON,M250,XM02,,,kg / m³,,,"Cấp phối bê tông trộn tại chỗ mác 250. Chờ tra TT 38/2026/TT-BXD"
+BE_TONG_TRON,M250,CA01,,,m³ / m³,,,Như trên
+BE_TONG_TRON,M250,DA01,,,m³ / m³,,,Như trên
+BE_TONG_TRON,M300,XM02,,,kg / m³,,,"Cấp phối bê tông trộn tại chỗ mác 300. Chờ tra TT 38/2026/TT-BXD"
+BE_TONG_TRON,M300,CA01,,,m³ / m³,,,Như trên
+BE_TONG_TRON,M300,DA01,,,m³ / m³,,,Như trên
+COT_THEP,,,Dây thép buộc,,kg / tấn,,,"Dây buộc theo tấn cốt thép. Chờ tra TT 38/2026/TT-BXD. Danh mục chưa có mã dây thép buộc"
+CHONG_THAM,CT01,CT01,,,m² / m²,,,"Màng khò nóng: m² màng / m² chống thấm (gồm chồng mí). Chờ tra định mức"
+CHONG_THAM,CT02,CT02,,,kg / m²,,,"Chống thấm gốc xi măng 2 thành phần. Chờ tra định mức hoặc mức dùng của nhà sản xuất"
+CHONG_THAM,CT03,CT03,,,kg / m²,,,"Chống thấm gốc polyurethane. Chờ tra định mức hoặc mức dùng của nhà sản xuất"
+NEN_DEM_CAT,,CA03,,,m³ / m³,,,"Cát đệm nền: m³ cát rời / m³ đệm đã đầm (hệ số đầm nén). Chờ tra"
+COP_PHA,,CP01,,,m² / m²,,,"Ván khuôn theo biện pháp thi công (số lần luân chuyển): nhập tay"

@@ -12,6 +12,7 @@ from ..catalog.repository import Catalog
 from ..drawing.takeoff import takeoff_from_file
 from ..optimize.problem import optimize
 from ..predict.cost_model import MaterialPriceModel
+from ..rough.models import ProjectParams
 from ..schemas import Constraints, OptimizeResult, Solution, TakeoffResult
 from .llm import parse_constraints, write_explanation
 
@@ -51,6 +52,35 @@ def step_bill(state: dict) -> dict:
     return state
 
 
+def step_rough(state: dict) -> dict:
+    """Bóc phần thô (xây, trát, bê tông, thép, cốp pha... và vật liệu mua về) khi người dùng gửi thông số công trình.
+    Không gửi thì bỏ qua: phần thô cần thông số (mác bê tông, dày sàn...) mà agent không được đoán."""
+    params: ProjectParams | None = state.get("rough_params")
+    if params is None:
+        return state
+    from ..drawing.dxf_reader import read_drawing
+    from ..rough.takeoff import compute_rough, rough_from_drawing
+    catalog = state.get("catalog") or Catalog.load()
+    req = rough_from_drawing(read_drawing(state["drawing_path"], state.get("layer_overrides")), params,
+                             state.get("floor_height_mm"), catalog)
+    state["rough"] = compute_rough(req, catalog)
+    return state
+
+
+def describe_rough(rough) -> str:
+    """Tổng khối lượng từng công tác và vật liệu mua về; phần chưa tính được ghi rõ."""
+    lines = ["Phần thô (khối lượng công tác):"]
+    for t in rough.totals:
+        q = f"{t.quantity:.2f} {t.unit}" if t.quantity is not None else "chưa tính được"
+        lines.append(f"  {t.name}: {q}{'' if t.complete else ' (còn phần thiếu thông số)'}")
+    lines.append("Vật liệu mua về:")
+    for m in rough.materials:
+        q = f"{m.quantity:.2f} {m.unit}" if m.quantity is not None else "chưa tính được"
+        miss = f" (thiếu: {', '.join(m.missing[:3])})" if not m.complete and m.missing else ""
+        lines.append(f"  {m.material_id or '-'} {m.name}: {q}{miss}")
+    return "\n".join(lines)
+
+
 def step_optimize(state: dict) -> dict:
     try:
         state["result"] = optimize(state["takeoff"].groups, state["constraints"], state.get("catalog") or Catalog.load(),
@@ -84,6 +114,8 @@ def describe(sol: Solution, label: str) -> str:
 def step_explain(state: dict) -> dict:
     result: OptimizeResult = state["result"]
     design = ("Vật liệu theo thiết kế:\n" + describe_bill(state["bill"])) if state.get("bill") else ""
+    if state.get("rough") is not None:
+        design = "\n".join(x for x in (design, describe_rough(state["rough"])) if x)
     if not result.solutions:
         state["facts"] = "\n".join(x for x in [design] + result.notes if x)
         state["explanation"] = "Không có phương án nào thỏa các ràng buộc hiện tại." + \
@@ -104,16 +136,16 @@ def step_explain(state: dict) -> dict:
     return state
 
 
-STEPS = [step_takeoff, step_check, step_bill, step_constraints, step_optimize, step_explain]
+STEPS = [step_takeoff, step_check, step_bill, step_rough, step_constraints, step_optimize, step_explain]
 
 
 def run_pipeline(drawing_path: str, message: str | None = None, constraints: Constraints | None = None,
                  floor_height_mm: float | None = None, layer_overrides: dict[str, str] | None = None,
-                 use_llm: bool = True, catalog: Catalog | None = None) -> dict:
-    """drawing_path: file .dxf hoặc .dwg."""
+                 use_llm: bool = True, catalog: Catalog | None = None, rough_params: ProjectParams | None = None) -> dict:
+    """drawing_path: file .dxf hoặc .dwg. rough_params: thông số công trình; có thì bóc thêm phần thô."""
     state = {"drawing_path": drawing_path, "message": message, "constraints": constraints,
              "floor_height_mm": floor_height_mm, "layer_overrides": layer_overrides, "use_llm": use_llm,
-             "catalog": catalog}
+             "catalog": catalog, "rough_params": rough_params}
     for step in STEPS:
         state = step(state)
     return state

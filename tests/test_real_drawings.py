@@ -5,6 +5,7 @@ import pytest
 
 from optimat.drawing.dxf_reader import read_drawing
 from optimat.drawing.takeoff import compute_takeoff, takeoff_plans
+from optimat.schemas import OpeningDefaults
 
 
 def _house(msp, ox: float, oy: float, title: str, layer: str = "NET_1") -> None:
@@ -56,7 +57,7 @@ def test_loose_hatch_and_stairs_marked(messy_dxf):
 
 
 def test_wall_layer_found_by_geometry_and_door_bridged(messy_dxf):
-    plans = takeoff_plans(read_drawing(messy_dxf))
+    plans = takeoff_plans(read_drawing(messy_dxf), openings=OpeningDefaults(door_height_mm=2200))
     assert [p.name for p in plans] == ["MẶT BẰNG TẦNG 1", "MẶT BẰNG TẦNG 2 (+3.60)"]
     r = plans[0].result
     assert r.wall_layers == ["NET_1"] and r.auto_wall_layers == ["NET_1"]
@@ -72,7 +73,16 @@ def test_levels_give_floor_height(messy_dxf):
     plans = takeoff_plans(read_drawing(messy_dxf))
     assert plans[0].level_m == 0.0 and plans[1].level_m == pytest.approx(3.6)
     assert plans[0].height_mm == 3600 and plans[0].height_source == "cao độ tầng trên"
-    assert plans[1].height_source == "mặc định"
+    assert plans[1].height_mm is None and plans[1].height_source == "chưa có"
+    assert plans[1].result.groups == [] and any("Chưa có chiều cao tầng" in w for w in plans[1].result.warnings)
+
+
+def test_missing_opening_size_not_subtracted(messy_dxf):
+    """Dự án chưa nhập kích thước cửa: cửa vẫn được nối qua nhưng không trừ lỗ mở, có cảnh báo (Quy ước B7)."""
+    r = takeoff_plans(read_drawing(messy_dxf))[0].result
+    g = {(x.wall_type, x.role): x for x in r.groups}[("220", "envelope")]
+    assert g.length_m == pytest.approx(19.12, abs=0.02) and g.opening_area_m2 == 0
+    assert r.openings == [] and any("chưa có kích thước" in w and "Cửa đi" in w for w in r.warnings)
 
 
 def test_user_choice_disables_auto_detection(messy_dxf):

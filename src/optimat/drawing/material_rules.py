@@ -28,12 +28,11 @@ import math
 import re
 from dataclasses import dataclass
 from functools import lru_cache
-from pathlib import Path
 
-import pandas as pd
 
 from .. import config
-from ..catalog.repository import FAMILY_LABELS, Catalog, default_catalog
+from ..catalog.repository import Catalog, default_catalog
+from ..db.session import read_rule_table
 from ..schemas import WallSegment
 from .dxf_reader import BlockRef, Drawing
 from .encoding import normalize
@@ -61,7 +60,7 @@ class Rule:
 
 @lru_cache(maxsize=8)
 def load_rules(path: str | None = None) -> tuple[Rule, ...]:
-    df = pd.read_csv(Path(path) if path else RULES_PATH, dtype=str, keep_default_na=False)
+    df = read_rule_table("material_rules", path, RULES_PATH)
     rules = []
     for r in df.to_dict("records"):
         if r["signal"] not in ("text", "hatch", "layer", "block"):
@@ -84,9 +83,10 @@ def alias_rules(catalog: Catalog) -> tuple[Rule, ...]:
     if catalog.aliases.empty or "family" not in catalog.materials:
         return ()
     fam = catalog.materials.set_index("material_id").family
+    wall_families = catalog.wall_families()
     out, seen = [], set()
     for a in catalog.aliases.sort_values(["material_id", "alias"]).itertuples():
-        if fam.get(a.material_id) not in FAMILY_LABELS:
+        if fam.get(a.material_id) not in wall_families:
             continue
         pattern = normalize(str(a.alias)).strip()
         if len(pattern) < 4 or (pattern, a.material_id) in seen:
@@ -117,9 +117,15 @@ def _best(rules, signal: str, value: str) -> Rule | None:
             return rule
         if signal == "block" and re.match(rule.pattern, value.upper()):
             return rule
-        if signal in ("text", "layer") and rule.pattern in value:
+        if signal in ("text", "layer") and _word(rule.pattern).search(value):
             return rule
     return None
+
+
+@lru_cache(maxsize=2048)
+def _word(pattern: str) -> re.Pattern:
+    """So nguyên từ: "thep tron" không khớp "thep trong", "ngoi do" không khớp "ngoi dong"."""
+    return re.compile(rf"(?<![a-z0-9]){re.escape(pattern)}(?![a-z0-9])")
 
 
 def block_rule(block: BlockRef, rules=None) -> Rule | None:

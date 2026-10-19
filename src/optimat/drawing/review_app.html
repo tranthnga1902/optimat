@@ -70,7 +70,8 @@ header h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: -0.01e
 .scale { position: absolute; right: 12px; bottom: 12px; font-family: var(--f-num); font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 3px 8px; }
 .tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 9px; font-size: 12px; box-shadow: 0 4px 14px rgb(0 0 0 / .12); }
 aside { border-left: 1px solid var(--rule); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
-aside .list { flex: 1 1 auto; }
+aside .list { flex: 1 1 0; }
+aside .tabs, aside .filters, aside .foot { flex-shrink: 0; }   /* nội dung dài (tab Phần thô) không được ép thanh tab */
 .tabs { display: flex; border-bottom: 1px solid var(--rule); padding: 0 8px; overflow-x: auto; }
 .tab { all: unset; cursor: pointer; padding: 10px 10px 8px; border-bottom: 3px solid transparent; color: var(--muted); font-weight: 500; white-space: nowrap; }
 .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
@@ -118,6 +119,15 @@ tfoot td { font-weight: 700; border-bottom: 0; }
 .actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 .startup { display: grid; place-items: center; height: 100%; padding: 24px; text-align: center; color: var(--muted); }
 .startup .card { text-align: left; }
+/* tab Phần thô: form thông số, dòng vật liệu còn thiếu số liệu tô màu */
+.rfs { border: 1px solid var(--rule); border-radius: 8px; margin: 0; padding: 8px 10px 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px 10px; }
+.rfs legend { font-size: 12px; font-weight: 600; color: var(--muted); padding: 0 4px; }
+.rf { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
+.rf input, .rf select { font-size: 13px; color: var(--ink); background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 6px; }
+.rf input[type=number] { font-family: var(--f-num); }
+.rf.rfc { flex-direction: row; align-items: center; gap: 6px; grid-column: 1 / -1; color: var(--ink); }
+tr.missrow td { background: color-mix(in srgb, var(--warn) 12%, transparent); }
+details summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
 @media (max-width: 900px) {
   .app { height: auto; }
   .main { grid-template-columns: 1fr; }
@@ -169,6 +179,7 @@ tfoot td { font-weight: 700; border-bottom: 0; }
         <button class="tab" role="tab" data-tab="walls">Tường<span class="n" id="nWalls"></span></button>
         <button class="tab" role="tab" data-tab="open">Lỗ mở<span class="n" id="nOpen"></span></button>
         <button class="tab" role="tab" data-tab="qty">Khối lượng</button>
+        <button class="tab" role="tab" data-tab="rough">Phần thô</button>
         <button class="tab" role="tab" data-tab="warn">Cảnh báo<span class="n" id="nWarn"></span></button>
       </div>
       <div class="filters" id="filters"></div>
@@ -216,7 +227,7 @@ function initState(p) {
 }
 function snapshot() { history.push(JSON.stringify(S)); if (history.length > 100) history.shift(); $("undo").disabled = false; markDirty(); }
 function undo() { if (!history.length) return; S = JSON.parse(history.pop()); STATES[PI] = S; $("undo").disabled = !history.length; markDirty(); renderAll(); }
-function markDirty() { delete confirmed[PI]; updateStatus(); }
+function markDirty() { delete confirmed[PI]; updateStatus(); scheduleRough(); }
 const wallLen = (w) => Math.hypot(w.x2 - w.x1, w.y2 - w.y1) / 1000;
 
 function compute() {
@@ -249,7 +260,7 @@ let G = {}, unit = 100, snapGrid = null;
 function buildStatic() {
   svg.innerHTML = "";
   G = {};
-  ["cad", "hatch", "raw", "rej", "walls", "open", "labels", "draft"].forEach((k) => (G[k] = el("g", { "data-layer": k }, svg)));
+  ["cad", "hatch", "raw", "rej", "walls", "cols", "open", "labels", "draft"].forEach((k) => (G[k] = el("g", { "data-layer": k }, svg)));
   G.cad.setAttribute("class", "cadlayer");
   if (P.cad) G.cad.innerHTML = P.cad;          // bản vẽ gốc vẽ đúng như phần mềm CAD (máy chủ dựng bằng ezdxf)
   // cặp nét giống tường nhưng đã loại (bậc thang, lan can, khung cửa sổ): nét đứt xám, rê chuột xem lý do
@@ -313,6 +324,7 @@ function drawDynamic() {
       "stroke-width": o.id === selected ? 7 : 4, "stroke-linecap": "butt", "vector-effect": "non-scaling-stroke", opacity: on ? 0.9 : 0.4,
       style: "cursor:pointer" }, G.open).addEventListener("click", (e) => { if (mode === "select") { e.stopPropagation(); select(o.id, true); } });
   }
+  drawColumns();
 }
 function applyToggles() {
   const hasCad = DATA && (PI < 0 ? !!(DATA.overview && DATA.overview.cad) : !!(P && P.cad));
@@ -327,7 +339,7 @@ function applyToggles() {
   if (G.raw) G.raw.style.display = m === "lines" ? "" : "none";
   if (G.hatch) G.hatch.style.display = m === "lines" ? "" : "none";
   const rec = $("showRec").checked ? "" : "none";
-  ["walls", "open", "labels", "ovl", "rej"].forEach((k) => { if (G[k]) G[k].style.display = rec; });
+  ["walls", "cols", "open", "labels", "ovl", "rej"].forEach((k) => { if (G[k]) G[k].style.display = rec; });
   try { localStorage.setItem("optimat-bg", m); } catch (e) {}
 }
 
@@ -355,7 +367,7 @@ function renderList() {
   const c = compute();
   $("nWalls").textContent = S.walls.filter((w) => w.keep).length;
   $("nOpen").textContent = S.openings.filter((o) => o.keep).length;
-  $("nWarn").textContent = (P.warnings || []).length;
+  $("nWarn").textContent = (P.warnings || []).length + convBad().length;
   $("total").textContent = fmt(c.total);
   [...$("tabs").children].forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab));
   const F = $("filters"), L = $("list");
@@ -427,9 +439,27 @@ function renderList() {
       <div style="overflow-x:auto"><table><tbody>${c.groups.map((g) => `<tr><td>${g.cls} ${ROLE[g.role]}</td><td>${g.mat ? esc(matLabel(g.mat)) + ` <span class="tag">${Math.round(g.share * 100)}% chiều dài</span>` + (sysOf(g.mat, g.cls) ? ` <span class="tag">${esc(sysOf(g.mat, g.cls))}</span>` : ` <span class="tag low">chưa có phương án tường ${g.cls}</span>`) : `<span class="tag low">chưa rõ</span>`}</td></tr>`).join("")}</tbody></table></div>
       <p style="color:var(--muted);margin:0">${edits ? `Đã chỉnh tay ${edits} mục so với kết quả tự động.` : "Chưa chỉnh mục nào."} Số trên trang là tính tạm; bấm "Xác nhận bản vẽ" để chốt và tra giá theo mã vật liệu.</p>
       ${confirmed[PI] && confirmed[PI].bill ? billTable(confirmed[PI]) : ""}</div>`;
+  } else if (tab === "rough") {
+    renderRough(F, L);
   } else {
-    L.innerHTML = (P.warnings || []).length ? `<ul class="warn">${P.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : `<div class="empty">Không có cảnh báo.</div>`;
+    L.innerHTML = convHtml() + ((P.warnings || []).length ? `<p class="label" style="margin:12px">Mặt bằng này</p><ul class="warn">${P.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : `<div class="empty">Không có cảnh báo.</div>`);
   }
+}
+// đối chiếu Quy ước bản vẽ v1.0 (cả file, máy chủ tính khi mở bản vẽ: convention_check.py)
+const convBad = () => (DATA && DATA.conventions && DATA.conventions.checks || []).filter((c) => c.trang_thai === "vi_pham")
+  .sort((a, b) => (a.muc === b.muc ? 0 : a.muc === "B" ? -1 : 1));
+function convHtml() {
+  const C = DATA && DATA.conventions;
+  if (!C) return "";
+  if (C.error) return `<ul class="warn"><li>${esc(C.error)}</li></ul>`;
+  const n = (st) => C.checks.filter((c) => c.trang_thai === st).length;
+  const verdict = C.trong_quy_uoc == null ? "Không áp dụng: file không có mặt bằng kiến trúc."
+    : C.trong_quy_uoc ? "Trong quy ước: không vi phạm điều khoản bắt buộc (B)."
+    : "Ngoài quy ước: có vi phạm điều khoản bắt buộc (B). Vẫn bóc tách, nhưng không tính vào số liệu cam kết sai số.";
+  const items = convBad().map((c) => `<li><b>${esc(c.ma)}</b> <span class="tag${c.muc === "B" ? " low" : ""}">${c.muc === "B" ? "bắt buộc" : "khuyến nghị"}</span> ${esc(c.ket_qua)}${
+    c.bang_chung.length ? `<details><summary>${c.bang_chung.length} bằng chứng</summary>${c.bang_chung.map(esc).join("<br>")}</details>` : ""}</li>`).join("");
+  return `<p class="label" style="margin:12px">Quy ước bản vẽ v1.0 (cả file)</p><p style="margin:0 12px">${esc(verdict)}</p>${items ? `<ul class="warn">${items}</ul>` : ""}
+    <p style="color:var(--muted);margin:0 12px 12px;font-size:12px">${n("dat")} đạt · ${n("chua_kiem")} chưa kiểm · ${n("khong_ap_dung")} không áp dụng. Định nghĩa và bằng chứng từng điều khoản: <code>python scripts/concept_report.py &lt;bản vẽ&gt;</code></p>`;
 }
 function renderAll() { drawDynamic(); renderList(); $("height").value = (S.height_mm / 1000).toFixed(2); updateStatus(); }
 
@@ -675,6 +705,151 @@ async function runOptimize(groups) {
   } catch (err) { out.innerHTML = `<ul class="warn"><li>${esc(err.message)}</li></ul>`; }
   btn.disabled = false; btn.textContent = "Tối ưu";
 }
+// ---------------------------------------------------------------- phần thô
+// Thông số công trình (Quy ước B1) nhập một lần cho cả bản vẽ, nhớ trên trình duyệt; thông số từng mặt bằng nhập theo tầng.
+// Trang không tự tính phần thô: gửi mọi mặt bằng (đã sửa) lên /api/takeoff/rough, máy chủ là công thức chốt duy nhất.
+const RP = [
+  ["Bê tông", [["concrete_supply", "Cấp bê tông", [["", "chưa chọn"], ["ready_mix", "thương phẩm"], ["site_mix", "trộn tại chỗ"]]],
+    ["concrete_grade", "Mác bê tông", "text", "M250"], ["lean_concrete_grade", "Mác bê tông lót", "text", "M100"]]],
+  ["Vữa", [["masonry_mortar_grade", "Mác vữa xây", "text", "M75"], ["plaster_mortar_grade", "Mác vữa trát", "text", "M75"],
+    ["screed_mortar_grade", "Mác vữa cán", "text", "M75"], ["plaster_thickness_mm", "Dày trát (mm)", "num"], ["screed_thickness_mm", "Dày cán nền (mm)", "num"]]],
+  ["Kết cấu", [["slab_thickness_mm", "Dày sàn (mm)", "num"], ["beam_width_mm", "Rộng dầm (mm)", "num"], ["beam_depth_mm", "Cao dầm (mm)", "num"],
+    ["lintel_height_mm", "Cao lanh tô (mm)", "num"], ["lintel_bearing_mm", "Gối lanh tô (mm)", "num"], ["stair_slab_thickness_mm", "Dày bản thang (mm)", "num"]]],
+  ["Nền, chống thấm", [["ground_sand_mm", "Đệm cát nền (mm)", "num"], ["ground_lean_mm", "Bê tông lót nền (mm)", "num"],
+    ["waterproof_upturn_mm", "Cổ tường chống thấm (mm)", "num"],
+    ["waterproof_material_id", "Vật liệu chống thấm", [["", "chưa chọn"], ["CT01", "CT01 màng khò nóng"], ["CT02", "CT02 gốc xi măng"], ["CT03", "CT03 polyurethane"]]]]],
+  ["Hàm lượng thép (kg/m³)", [["steel_COT", "Cột", "num"], ["steel_DAM", "Dầm", "num"], ["steel_SAN", "Sàn", "num"],
+    ["steel_LANH_TO", "Lanh tô", "num"], ["steel_CAU_THANG", "Cầu thang", "num"], ["steel_MONG", "Móng", "num"]]],
+];
+const PP = [["void_area_m2", "Ô trống trên sàn (m²)"], ["balcony_area_m2", "Ban công cần chống thấm (m²)"],
+  ["outline_area_m2", "Nhập tay: trong tim tường bao (m²)"], ["usable_area_m2", "Nhập tay: diện tích sử dụng (m²)"],
+  ["stair_steps", "Thang: số bậc"], ["stair_width", "Thang: rộng vế (mm)"], ["stair_tread", "Thang: rộng bậc (mm)"], ["stair_landing", "Thang: chiếu nghỉ (m²)"]];
+const RP_KEY = "optimat-rough-params";
+let ROUGH = null, roughTimer = null, roughBusy = false;
+const PLANP = {};
+const numOr = (v) => (v === "" || v == null || isNaN(Number(v)) ? null : Number(v));
+function roughValues() { try { return JSON.parse(localStorage.getItem(RP_KEY) || "{}"); } catch (e) { return {}; } }
+function planParams(i) {
+  const p = DATA.plans[i];
+  return (PLANP[i] = PLANP[i] || { is_ground: !!(p.plan && p.plan.is_ground),
+    cols: (p.columns || []).map((c) => ({ ...c, keep: true, source: "hatch" })) });
+}
+function projectParams() {
+  const v = roughValues(), out = { steel_kg_per_m3: {}, ground_layers: [] };
+  for (const [, fields] of RP) for (const [k, , type] of fields) {
+    const raw = v[k];
+    if (raw === undefined || raw === "") continue;
+    if (k.startsWith("steel_")) { if (numOr(raw) != null) out.steel_kg_per_m3[k.slice(6)] = numOr(raw); }
+    else if (k === "ground_sand_mm") { if (numOr(raw)) out.ground_layers.push({ kind: "NEN_DEM_CAT", thickness_mm: numOr(raw) }); }
+    else if (k === "ground_lean_mm") { if (numOr(raw)) out.ground_layers.push({ kind: "BE_TONG_LOT", thickness_mm: numOr(raw) }); }
+    else out[k] = type === "num" ? numOr(raw) : type === "text" ? String(raw).trim().toUpperCase() : raw;   // mác: M250
+  }
+  return out;
+}
+function roughRequest() {
+  return { project_id: PROJECT, file: DATA.file, params: projectParams(), plans: DATA.plans.map((p, i) => {
+    const st = STATES[i] || initState(p), pp = planParams(i);
+    const stair = numOr(pp.stair_steps) ? [{ id: "T1", steps: Math.round(numOr(pp.stair_steps)), flight_width_mm: numOr(pp.stair_width),
+      tread_mm: numOr(pp.stair_tread), landing_area_m2: numOr(pp.stair_landing) || 0 }] : [];
+    return { name: p.plan.name, is_ground: pp.is_ground, height_mm: st.height_mm,
+      void_area_m2: numOr(pp.void_area_m2), balcony_area_m2: numOr(pp.balcony_area_m2),
+      outline_area_m2: numOr(pp.outline_area_m2), usable_area_m2: numOr(pp.usable_area_m2),
+      walls: st.walls.map(({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited }) => ({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited })),
+      openings: st.openings.map(({ id, wall, kind, w, h, keep, src }) => ({ id, wall, kind, w, h, keep, src })),
+      columns: pp.cols.map(({ id, x, y, b_mm, h_mm, keep, source }) => ({ id, x, y, b_mm, h_mm, keep, source })),
+      stairs: stair, labels: p.labels || [] };
+  }) };
+}
+function scheduleRough() {
+  if (API === null || !ROUGH) return;               // chỉ tự tính lại khi đã bấm "Tính phần thô" ít nhất một lần
+  clearTimeout(roughTimer);
+  roughTimer = setTimeout(computeRough, 700);
+}
+async function computeRough() {
+  if (API === null || roughBusy) return;
+  roughBusy = true;
+  const btn = $("roughGo"); if (btn) { btn.disabled = true; btn.textContent = "Đang tính…"; }
+  try {
+    const r = await fetch(API + "/api/takeoff/rough", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(roughRequest()) });
+    const body = await r.json();
+    if (!r.ok) throw new Error(typeof body.detail === "string" ? body.detail
+      : "Máy chủ từ chối dữ liệu phần thô: " + (body.detail || []).map((d) => (d.loc || []).slice(-1)[0] + " " + d.msg).join("; "));
+    ROUGH = body;
+    try { localStorage.setItem("optimat-rough", JSON.stringify({ file: DATA.file, at: new Date().toISOString(), result: body }));
+      if (window.parent !== window) window.parent.postMessage({ type: "optimat-rough" }, location.origin); } catch (e) {}
+  } catch (err) { ROUGH = { error: err.message }; }
+  roughBusy = false;
+  const btn2 = $("roughGo"); if (btn2) { btn2.disabled = false; btn2.textContent = "Tính phần thô"; }
+  // chỉ thay phần kết quả: giữ vị trí cuộn và ô đang nhập của form thông số
+  if (tab === "rough" && $("roughOut")) $("roughOut").innerHTML = roughResultHtml(ROUGH);
+  else if (tab === "rough") renderList();
+}
+const missTip = (list) => esc((list || []).join("; "));
+function roughResultHtml(R) {
+  if (!R) return `<p style="color:var(--muted);margin:0">Nhập thông số rồi bấm "Tính phần thô". Thông số nào để trống thì công tác cần nó để trống và có cảnh báo, hệ thống không tự điền.</p>`;
+  if (R.error) return `<ul class="warn"><li>${esc(R.error)}</li></ul>`;
+  const why = (code) => R.works.filter((w) => w.code === code && w.missing.length).flatMap((w) => w.missing.map((m) => (w.plan ? w.plan + ": " : "") + m));
+  const totals = R.totals.map((t) => `<tr><td>${esc(t.name)}</td><td class="num">${t.quantity == null ? "" : fmt(t.quantity)}</td><td>${esc(t.unit)}</td>
+    <td>${t.complete ? "" : `<span class="tag low" title="${missTip([...new Set(why(t.code))])}">còn thiếu</span>`}</td></tr>`).join("");
+  const form = (R.formwork || []).map((f) => `<tr><td>${esc(f.name)}</td><td class="num">${f.quantity == null ? "" : fmt(f.quantity)}</td><td>m²</td><td>${f.complete ? "" : `<span class="tag low">còn thiếu</span>`}</td></tr>`).join("");
+  const mats = R.materials.map((m) => `<tr${m.complete ? "" : ` class="missrow" title="${missTip(m.missing)}"`}><td>${esc(m.material_id || "—")}</td><td>${esc(m.name)}</td>
+    <td class="num">${m.quantity == null ? `<span class="tag low">thiếu</span>` : fmt(m.quantity, 3)}</td>
+    <td class="num">${m.quantity_with_waste == null ? `<span class="tag" title="Chưa có hao hụt thi công">—</span>` : fmt(m.quantity_with_waste, 3)}</td><td>${esc(m.unit)}</td></tr>`).join("");
+  const plans = [...new Set(R.works.map((w) => w.plan || "Cả công trình"))];
+  const detail = plans.map((pl) => `<details><summary>${esc(pl)}</summary><div style="overflow-x:auto"><table><tbody>${
+    R.works.filter((w) => (w.plan || "Cả công trình") === pl).map((w) => `<tr><td>${esc(w.name)}<br><small style="color:var(--muted)">${esc(w.element || "")}</small></td>
+      <td><small>${esc(w.formula)}</small>${w.missing.length ? `<br><span class="tag low">thiếu: ${esc(w.missing.join(", "))}</span>` : ""}</td>
+      <td class="num">${w.quantity == null ? "" : fmt(w.quantity, 3)} ${esc(w.unit)}</td></tr>`).join("")}</tbody></table></div></details>`).join("");
+  return `<p class="label">Khối lượng công tác (cộng các tầng)</p>
+    <div style="overflow-x:auto"><table><thead><tr><th>Công tác</th><th class="num">Khối lượng</th><th>ĐVT</th><th></th></tr></thead><tbody>${totals}</tbody></table></div>
+    ${form ? `<p class="label">Cốp pha theo cấu kiện</p><div style="overflow-x:auto"><table><tbody>${form}</tbody></table></div>` : ""}
+    <p class="label">Vật liệu mua về</p>
+    <div style="overflow-x:auto"><table><thead><tr><th>Mã</th><th>Vật liệu</th><th class="num">Khối lượng</th><th class="num">Có hao hụt</th><th>ĐVT</th></tr></thead><tbody>${mats}</tbody></table></div>
+    <p style="color:var(--muted);margin:0;font-size:12px">Dòng tô màu còn thiếu số liệu: rê chuột để xem thiếu gì.</p>
+    <p class="label">Chi tiết theo tầng</p>${detail}
+    ${R.warnings.length ? `<p class="label">Cảnh báo</p><ul class="warn" style="padding:0">${R.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : ""}
+    ${R.takeoff_id ? `<p>Đã lưu vào dự án (mã kết quả ${R.takeoff_id}).</p>` : ""}`;
+}
+function renderRough(F, L) {
+  F.innerHTML = `<span>Phần thô cả công trình: mọi mặt bằng trong file, theo tường, cửa đã sửa ở các tab khác.</span>`;
+  const v = roughValues(), pp = planParams(PI);
+  const field = ([k, label, type, ph]) => Array.isArray(type)
+    ? `<label class="rf"><span>${esc(label)}</span><select data-rp="${k}">${type.map(([val, txt]) => `<option value="${val}" ${String(v[k] || "") === val ? "selected" : ""}>${esc(txt)}</option>`).join("")}</select></label>`
+    : `<label class="rf"><span>${esc(label)}</span><input data-rp="${k}" ${type === "num" ? 'type="number" min="0" step="any"' : 'type="text"'} value="${esc(v[k] ?? "")}" placeholder="${esc(ph || "")}"></label>`;
+  const cols = pp.cols;
+  L.innerHTML = `<div class="qty">
+    <p class="label">Thông số công trình</p>
+    ${RP.map(([title, fields]) => `<fieldset class="rfs"><legend>${esc(title)}</legend>${fields.map(field).join("")}</fieldset>`).join("")}
+    <p class="label">Mặt bằng "${esc(P.plan.name)}"</p>
+    <fieldset class="rfs"><label class="rf rfc"><input type="checkbox" data-pp="is_ground" ${pp.is_ground ? "checked" : ""}> <span>Tầng trệt (tính nền, không tính sàn)</span></label>
+    ${PP.map(([k, label]) => `<label class="rf"><span>${esc(label)}</span><input data-pp="${k}" type="number" min="0" step="any" value="${esc(pp[k] ?? "")}"></label>`).join("")}</fieldset>
+    <p style="margin:0;color:var(--muted);font-size:12.5px">Cột nhận được: ${cols.filter((c) => c.keep).length}/${cols.length} (bấm vào ô cột trên bản vẽ để bỏ hoặc giữ). Dầm chưa có bản vẽ kết cấu thì suy từ tường và cột.</p>
+    <div class="actions" style="justify-content:flex-start"><button class="btn primary" type="button" id="roughGo" ${API === null ? "disabled" : ""}>Tính phần thô</button>
+      ${API === null ? `<span style="color:var(--muted)">Cần mở trang trong ứng dụng (máy chủ) để tính.</span>` : ""}</div>
+    <div id="roughOut" class="qty" style="padding:0">${roughResultHtml(ROUGH)}</div></div>`;
+  $("roughGo") && $("roughGo").addEventListener("click", computeRough);
+}
+$("list").addEventListener("change", (e) => {
+  const rp = e.target.dataset.rp, ppk = e.target.dataset.pp;
+  if (!rp && !ppk) return;
+  if (rp) { const v = roughValues(); v[rp] = e.target.value; try { localStorage.setItem(RP_KEY, JSON.stringify(v)); } catch (err) {} }
+  else { const pp = planParams(PI); pp[ppk] = e.target.type === "checkbox" ? e.target.checked : e.target.value; }
+  scheduleRough();
+});
+function drawColumns() {
+  if (!G.cols) return;
+  G.cols.innerHTML = "";
+  if (!DATA || PI < 0) return;
+  for (const c of planParams(PI).cols) {
+    const r = el("rect", { x: c.x - c.b_mm / 2, y: c.y - c.h_mm / 2, width: c.b_mm, height: c.h_mm, fill: c.keep ? "var(--concrete)" : "transparent",
+      "fill-opacity": 0.55, stroke: c.keep ? "var(--ink)" : "var(--muted)", "stroke-dasharray": c.keep ? "" : "3 3", "stroke-width": 1.2,
+      "vector-effect": "non-scaling-stroke", style: "cursor:pointer" }, G.cols);
+    r.addEventListener("pointerenter", (e) => showTip(e, `<b>${esc(c.id)}</b> · cột ${c.b_mm}×${c.h_mm}${c.keep ? "" : " · <b>đã bỏ</b>"}<br>Bấm để ${c.keep ? "bỏ" : "giữ"}`));
+    r.addEventListener("pointermove", moveTip); r.addEventListener("pointerleave", hideTip);
+    r.addEventListener("click", (e) => { if (mode !== "select") return; e.stopPropagation(); c.keep = !c.keep; drawColumns(); if (tab === "rough") renderList(); scheduleRough(); });
+  }
+}
+
 // ---------------------------------------------------------------- đáp án nhận diện
 // Mặt bằng đã sửa cho đúng = đáp án. Tọa độ lưu theo hệ của bản vẽ (mm) để so với lần nhận diện sau dù khung cắt thay đổi.
 function groundTruth() {
@@ -809,7 +984,8 @@ function start(data) {
     DATA.plans.map((p, i) => `<option value="${i}">${i + 1}. ${esc(p.plan.name)}</option>`).join("");
   $("plan").onchange = (e) => { const v = Number(e.target.value); v < 0 ? showOverview() : loadPlan(v); };
   for (const k in STATES) delete STATES[k];
-  confirmed = {};
+  for (const k in PLANP) delete PLANP[k];
+  confirmed = {}; ROUGH = null;
   if (hasOverview) { showOverview(); if (!DATA.plans.length) $("list").insertAdjacentHTML("afterbegin", `<div class="empty">Không tìm thấy mặt bằng kiến trúc để đo tường (bản vẽ chỉ có mặt bằng kết cấu, móng hoặc điện nước).</div>`); return; }
   if (!DATA.plans.length) {
     $("svg").innerHTML = ""; $("list").innerHTML = `<div class="empty">Bản vẽ không có mặt bằng kiến trúc để đo tường (chỉ có mặt bằng kết cấu, móng hoặc điện nước).</div>`;

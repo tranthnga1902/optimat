@@ -20,7 +20,7 @@ from datetime import date
 import pandas as pd
 
 from . import config
-from .catalog.repository import FAMILY_LABELS, Catalog
+from .catalog.repository import Catalog
 from .db.session import get_database_url, get_engine
 from .drawing.encoding import normalize
 from .drawing.material_rules import load_rules
@@ -32,7 +32,7 @@ DATA_KINDS = ("ACTUAL", "SAMPLE", "SYNTHETIC")
 @dataclass
 class Finding:
     level: str          # error | warning | info
-    area: str           # vat_lieu | phuong_an_tuong | ten_goi_khac | quy_tac | nguon_cung | gia | dap_an
+    area: str           # vat_lieu | phuong_an_tuong | ten_goi_khac | quy_tac | dinh_muc_phan_tho | nguon_cung | gia | dap_an
     item: str
     message: str
 
@@ -48,7 +48,7 @@ def _check_materials(cat: Catalog, out: list[Finding]) -> None:
             out.append(Finding("error", "vat_lieu", mid, f"Mã vật liệu lặp {n} lần."))
     walls = m[m.get("family").notna()] if "family" in m else m.iloc[0:0]
     for r in walls.itertuples():
-        if r.family not in FAMILY_LABELS:
+        if r.family not in cat.wall_families():
             out.append(Finding("error", "vat_lieu", r.material_id, f"Họ vật liệu {r.family} không có trong danh sách họ tường."))
         miss = [label for col, label in (("unit_weight_kg", "khối lượng / đơn vị"), ("lambda_w_mk", "hệ số dẫn nhiệt λ"),
                                          ("waste_pct", "hao hụt thi công (%)")) if _blank(getattr(r, col, None))]
@@ -99,7 +99,7 @@ def _check_aliases(cat: Catalog, out: list[Finding]) -> None:
         if a.material_id not in ids:
             out.append(Finding("error", "ten_goi_khac", str(a.alias), f"Trỏ tới mã {a.material_id} không có trong danh mục."))
             continue
-        if fam.get(a.material_id) in FAMILY_LABELS:
+        if fam.get(a.material_id) in cat.wall_families():
             owners[normalize(str(a.alias)).strip()].add(a.material_id)
     for alias, mats in sorted(owners.items()):
         if len(mats) > 1:
@@ -109,7 +109,7 @@ def _check_aliases(cat: Catalog, out: list[Finding]) -> None:
 
 def _check_rules(cat: Catalog, out: list[Finding]) -> None:
     rules = load_rules()
-    known = set(FAMILY_LABELS) | set(cat.materials.material_id)
+    known = set(cat.wall_families()) | set(cat.materials.material_id)
     for rid, n in Counter(r.rule_id for r in rules).items():
         if n > 1:
             out.append(Finding("error", "quy_tac", rid, f"Mã quy tắc lặp {n} lần."))
@@ -122,6 +122,51 @@ def _check_rules(cat: Catalog, out: list[Finding]) -> None:
                 re.compile(r.pattern)
             except re.error as exc:
                 out.append(Finding("error", "quy_tac", r.rule_id, f"Biểu thức chính quy lỗi: {exc}."))
+
+
+def _check_rough_norms(cat: Catalog, out: list[Finding]) -> dict:
+    """data/rules/dinh_muc_phan_tho.csv: mã công tác, mã vật liệu, đơn vị đổi được, số có kèm số hiệu bảng TT 38."""
+    from .rough.norms import MORTAR, load_norms, unit_factor
+    try:
+        norms = load_norms()
+    except (ValueError, KeyError) as exc:
+        out.append(Finding("error", "dinh_muc_phan_tho", "dinh_muc_phan_tho.csv", str(exc)))
+        return {"dong": 0, "con_trong": 0}
+    units = cat.materials.set_index("material_id").unit if not cat.materials.empty else pd.Series(dtype=object)
+    for n in norms:
+        item = f"{n.work_code} {n.variant} {n.material_id or n.material_name}".replace("  ", " ")
+        if n.material_id not in (None, MORTAR) and n.material_id not in units.index:
+            out.append(Finding("error", "dinh_muc_phan_tho", item, f"Mã vật liệu {n.material_id} không có trong danh mục."))
+        elif n.material_id not in (None, MORTAR) and unit_factor(n.numerator_unit, str(units[n.material_id])) is None:
+            out.append(Finding("warning", "dinh_muc_phan_tho", item,
+                               f"Không đổi được {n.qty_unit} sang đơn vị {units[n.material_id]} của vật liệu."))
+        if n.qty is not None and not n.norm_code:
+            out.append(Finding("error", "dinh_muc_phan_tho", item, "Có số định mức mà chưa ghi số hiệu bảng TT 38/2026 (Quy ước B7)."))
+    blank = [n for n in norms if n.qty is None]
+    if blank:
+        out.append(Finding("warning", "dinh_muc_phan_tho", "dinh_muc_phan_tho.csv",
+                           f"{len(blank)}/{len(norms)} dòng định mức còn trống, chờ tra TT 38/2026: công tác dùng các dòng này "
+                           "chưa ra vật liệu mua về."))
+    return {"dong": len(norms), "con_trong": len(blank)}
+
+
+def _check_material_notes(cat: Catalog, out: list[Finding]) -> None:
+    """data/rules/material_notes.csv (bảng material_notes): mã vật liệu phải có trong danh mục, mã quy tắc không lặp."""
+    from collections import Counter
+
+    from .drawing.material_notes import load_note_rules
+    try:
+        rules = load_note_rules()
+    except (ValueError, KeyError) as exc:
+        out.append(Finding("error", "quy_tac", "material_notes.csv", str(exc)))
+        return
+    known = set(cat.materials.material_id)
+    for rid, n in Counter(r.rule_id for r in rules).items():
+        if n > 1:
+            out.append(Finding("error", "quy_tac", rid, f"Mã quy tắc ghi chú lặp {n} lần."))
+    for r in rules:
+        if r.material_id not in known:
+            out.append(Finding("error", "quy_tac", r.rule_id, f"Ghi chú \"{r.pattern}\" trỏ tới mã {r.material_id} không có trong danh mục."))
 
 
 def _check_supply(cat: Catalog, out: list[Finding], today: date) -> dict:
@@ -145,7 +190,7 @@ def _check_supply(cat: Catalog, out: list[Finding], today: date) -> dict:
         if all(_blank(getattr(r, c, None)) for c in ("maps_url", "website", "facebook", "price_page_url")):
             out.append(Finding("warning", "nguon_cung", r.supplier_id, "Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được."))
     fam = cat.materials.set_index("material_id").get("family", pd.Series(dtype=object))
-    wall_mats = sorted(m for m in mat_ids if fam.get(m) in FAMILY_LABELS)
+    wall_mats = sorted(m for m in mat_ids if fam.get(m) in cat.wall_families())
     priced = set(sm[sm.base_price.notna()].material_id) if "base_price" in sm else set()
     no_price = [m for m in wall_mats if m not in priced]
     if no_price:
@@ -205,6 +250,8 @@ def run_checks(catalog: Catalog | None = None, today: date | None = None) -> dic
     classes = _check_wall_systems(cat, out)
     _check_aliases(cat, out)
     _check_rules(cat, out)
+    rough = _check_rough_norms(cat, out)
+    _check_material_notes(cat, out)
     supply = _check_supply(cat, out, today)
     prices = _price_records_summary(out)
     truth = _check_ground_truth(cat, out)
@@ -213,10 +260,10 @@ def run_checks(catalog: Catalog | None = None, today: date | None = None) -> dic
     summary = {
         "nguon_du_lieu": "postgresql" if get_database_url() else "csv",
         "ngay_kiem_tra": today.isoformat(),
-        "vat_lieu": len(cat.materials), "vat_lieu_tuong": int(fam.isin(list(FAMILY_LABELS)).sum()),
+        "vat_lieu": len(cat.materials), "vat_lieu_tuong": int(fam.isin(list(cat.wall_families())).sum()),
         "phuong_an_tuong": len(view), "phuong_an_du_so_lieu": int(view.ready.sum()) if len(view) else 0,
         "theo_lop_tuong": classes, "ten_goi_khac": len(cat.aliases), "quy_tac": len(load_rules()),
-        "nguon_cung": supply, "lich_su_gia": prices, "dap_an_do_tay": truth,
+        "nguon_cung": supply, "lich_su_gia": prices, "dap_an_do_tay": truth, "dinh_muc_phan_tho": rough,
     }
     levels = Counter(f.level for f in out)
     return {"ok": levels.get("error", 0) == 0, "counts": {k: levels.get(k, 0) for k in ("error", "warning", "info")},

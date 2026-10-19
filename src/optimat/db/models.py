@@ -1,4 +1,4 @@
-"""Lược đồ bảng PostgreSQL (SQLAlchemy), gồm 19 bảng chia 4 cụm:
+"""Lược đồ bảng PostgreSQL (SQLAlchemy), gồm 26 bảng chia 4 cụm:
 danh mục vật liệu, nguồn cung và giá, người dùng và dự án, vận hành hệ thống.
 
 Tên cột của các bảng danh mục trùng với tên cột trong các file CSV để phần còn lại của hệ thống
@@ -38,6 +38,15 @@ class MaterialGroup(Base):
     description: Mapped[str] = mapped_column(Text, default="", server_default="")
 
 
+class MaterialFamily(Base):
+    """Họ vật liệu (cột family của bảng materials). is_wall: họ vật liệu xây tường, dùng cho quy tắc bóc tách và tối ưu."""
+    __tablename__ = "material_families"
+    family_id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    name: Mapped[str] = mapped_column(String(255))
+    sort_order: Mapped[int] = mapped_column(Integer)
+    is_wall: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
+
+
 class Material(Base):
     __tablename__ = "materials"
     __table_args__ = (CheckConstraint(f"data_kind IN {DATA_KINDS}", name="ck_materials_data_kind"),)
@@ -51,10 +60,10 @@ class Material(Base):
     lambda_w_mk: Mapped[Optional[float]] = mapped_column(Float)
     labor_days_per_m2: Mapped[Optional[float]] = mapped_column(Float)
     data_kind: Mapped[str] = mapped_column(String(16), default="ACTUAL", server_default="ACTUAL")
-    # --- Danh mục 75 vật liệu (nạp bằng sql/03_materials.sql). Các cột thickness_mm, qty_per_m2, weight_kg_per_m2,
+    # --- Danh mục 93 vật liệu (nạp bằng sql/03_materials.sql). Các cột thickness_mm, qty_per_m2, weight_kg_per_m2,
     # labor_days_per_m2 ở trên là của dữ liệu mẫu cũ; định mức theo chiều dày tường nay nằm ở bảng wall_systems.
     subgroup: Mapped[Optional[str]] = mapped_column(String(128))
-    family: Mapped[Optional[str]] = mapped_column(String(32))            # họ vật liệu, dùng cho quy tắc bóc tách
+    family: Mapped[Optional[str]] = mapped_column(ForeignKey("material_families.family_id"))   # họ vật liệu, dùng cho quy tắc bóc tách
     usage_text: Mapped[Optional[str]] = mapped_column(String(255))
     usage_role: Mapped[Optional[str]] = mapped_column(String(128))
     tier: Mapped[Optional[int]] = mapped_column(Integer)                 # 1 tối ưu sâu, 2 tối ưu nguồn cung, 3 tham khảo
@@ -143,6 +152,89 @@ class MaterialStandard(Base):
     material_id: Mapped[str] = mapped_column(ForeignKey("materials.material_id", ondelete="CASCADE"), primary_key=True)
     standard_id: Mapped[int] = mapped_column(ForeignKey("standards.standard_id", ondelete="CASCADE"), primary_key=True)
     note: Mapped[str] = mapped_column(String(255), default="", server_default="")
+
+
+class MaterialRule(Base):
+    """Quy tắc gán vật liệu theo thiết kế khi bóc tách (nạp từ data/rules/material_rules.csv). id giữ thứ tự dòng."""
+    __tablename__ = "material_rules"
+    __table_args__ = (CheckConstraint("signal IN ('text', 'hatch', 'layer', 'block')", name="ck_material_rules_signal"),)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    rule_id: Mapped[str] = mapped_column(String(32), unique=True)
+    signal: Mapped[str] = mapped_column(String(16))
+    pattern: Mapped[str] = mapped_column(String(255))
+    target: Mapped[Optional[str]] = mapped_column(String(255))          # họ hoặc mã vật liệu, ngăn cách bằng |
+    element: Mapped[Optional[str]] = mapped_column(String(32))
+    width_mm: Mapped[Optional[float]] = mapped_column(Float)
+    height_mm: Mapped[Optional[float]] = mapped_column(Float)
+    priority: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    note: Mapped[Optional[str]] = mapped_column(Text)
+
+
+class RoomRule(Base):
+    """Nhận loại phòng từ tên phòng trên bản vẽ (nạp từ data/rules/room_rules.csv). Quy tắc khớp trước thắng."""
+    __tablename__ = "room_rules"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    rule_id: Mapped[str] = mapped_column(String(32), unique=True)
+    pattern: Mapped[str] = mapped_column(String(255))                    # biểu thức chính quy trên chữ đã bỏ dấu
+    kind: Mapped[str] = mapped_column(String(16))                        # WET | BALCONY
+    note: Mapped[Optional[str]] = mapped_column(Text)
+
+
+class RoughNorm(Base):
+    """Định mức công tác phần thô, cấp phối bê tông trộn tại chỗ (nạp từ data/rules/dinh_muc_phan_tho.csv)."""
+    __tablename__ = "rough_norms"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    work_code: Mapped[str] = mapped_column(String(32), index=True)
+    variant: Mapped[Optional[str]] = mapped_column(String(32))
+    material_id: Mapped[Optional[str]] = mapped_column(String(64))       # mã danh mục, "@VUA" = vữa theo mác công trình
+    material_name: Mapped[Optional[str]] = mapped_column(String(255))
+    qty: Mapped[Optional[float]] = mapped_column(Float)
+    qty_unit: Mapped[Optional[str]] = mapped_column(String(64))
+    norm_code: Mapped[Optional[str]] = mapped_column(String(64))         # số hiệu bảng TT 38/2026/TT-BXD
+    source: Mapped[Optional[str]] = mapped_column(String(255))
+    note: Mapped[Optional[str]] = mapped_column(Text)
+
+class MaterialNote(Base):
+    """Ghi chú vật liệu phần thô trên bản vẽ (nạp từ data/rules/material_notes.csv): mẫu chữ đã bỏ dấu -> mã vật liệu.
+    So nguyên từ (drawing/material_notes.py). kiem_chung: ban_ve_build = có ghi chú thật trên bản vẽ nhóm build khớp mẫu."""
+    __tablename__ = "material_notes"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    rule_id: Mapped[str] = mapped_column(String(32), unique=True)
+    pattern: Mapped[str] = mapped_column(String(255))
+    material_id: Mapped[str] = mapped_column(String(32), index=True)
+    ten: Mapped[Optional[str]] = mapped_column(String(255))
+    nguon: Mapped[Optional[str]] = mapped_column(String(32))           # danh_muc | de_xuat
+    kiem_chung: Mapped[Optional[str]] = mapped_column(String(32))      # ban_ve_build | chua_kiem
+    ghi_chu: Mapped[Optional[str]] = mapped_column(Text)
+
+
+class DrawingConcept(Base):
+    """Ký hiệu nhận dạng theo Quy ước bản vẽ v1.0 (nạp từ data/rules/concepts.csv): tên layer -> vai trò, tiền tố block cửa.
+    id giữ thứ tự dòng: ký hiệu khớp đầu tiên thắng."""
+    __tablename__ = "drawing_concepts"
+    __table_args__ = (CheckConstraint("tin_hieu IN ('layer', 'block')", name="ck_drawing_concepts_signal"),)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    ma: Mapped[str] = mapped_column(String(16), unique=True)
+    khai_niem: Mapped[str] = mapped_column(String(64))
+    qu: Mapped[Optional[str]] = mapped_column(String(16))
+    tin_hieu: Mapped[str] = mapped_column(String(16))
+    mau: Mapped[str] = mapped_column(String(128))
+    vai_tro: Mapped[str] = mapped_column(String(16))
+    rong_mm: Mapped[Optional[float]] = mapped_column(Float)
+    cao_mm: Mapped[Optional[float]] = mapped_column(Float)
+    ghi_chu: Mapped[Optional[str]] = mapped_column(Text)
+
+
+class ConventionClause(Base):
+    """23 điều khoản của Quy ước bản vẽ v1.0 (nạp từ data/rules/quy_uoc.csv); mức B bắt buộc, K khuyến nghị."""
+    __tablename__ = "convention_clauses"
+    __table_args__ = (CheckConstraint("muc IN ('B', 'K')", name="ck_convention_clauses_muc"),)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    ma: Mapped[str] = mapped_column(String(16), unique=True)
+    nhom: Mapped[str] = mapped_column(String(64))
+    dieu_khoan: Mapped[str] = mapped_column(Text)
+    muc: Mapped[str] = mapped_column(String(1))
+    cach_kiem: Mapped[Optional[str]] = mapped_column(Text)
 
 
 # ============================== 2. Nguồn cung và giá ==============================
@@ -298,6 +390,11 @@ class Project(Base):
     site_lat: Mapped[Optional[float]] = mapped_column(Float)
     site_lon: Mapped[Optional[float]] = mapped_column(Float)
     floor_height_mm: Mapped[Optional[float]] = mapped_column(Float)
+    # kích thước cửa của dự án: dùng khi block cửa không ghi kích thước, trống thì lỗ mở chưa được trừ (Quy ước B7)
+    door_width_mm: Mapped[Optional[float]] = mapped_column(Float)
+    door_height_mm: Mapped[Optional[float]] = mapped_column(Float)
+    window_width_mm: Mapped[Optional[float]] = mapped_column(Float)
+    window_height_mm: Mapped[Optional[float]] = mapped_column(Float)
     budget: Mapped[Optional[float]] = mapped_column(Float)
     deadline_days: Mapped[Optional[float]] = mapped_column(Float)
     max_vehicle_ton: Mapped[Optional[float]] = mapped_column(Float)

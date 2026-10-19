@@ -38,6 +38,7 @@ class PlanRegion:
     level_m: float | None
     level_source: str
     n_segments: int
+    title: str = ""          # tiêu đề gốc khi tên đã được đánh số thêm vì trùng (QU-05)
 
 
 def _is_plan_title(text: str) -> bool:
@@ -177,6 +178,12 @@ def find_plans(drawing: Drawing) -> list[PlanRegion]:
                 level, source = 0.0, "tầng 1 coi là ±0.000"
         name = re.sub(r"\s+", " ", t.text).strip()
         plans.append(PlanRegion(name, t.x, t.y, bbox, level, source if level is not None else "", weight))
+    # QU-05: tên mặt bằng là khóa ở trang kiểm tra, /app, file đáp án, phần thô; hai tiêu đề trùng thì đánh số thêm
+    seen: dict[str, int] = {}
+    for p in plans:
+        seen[p.name] = seen.get(p.name, 0) + 1
+        if seen[p.name] > 1:
+            p.title, p.name = p.name, f"{p.name} ({seen[p.name]})"
     return plans
 
 

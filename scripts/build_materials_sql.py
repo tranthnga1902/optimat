@@ -2,9 +2,9 @@
 
     python scripts/build_materials_sql.py
 
-File SQL sinh ra chạy được nhiều lần: thêm cột và bảng nếu chưa có, rồi chèn hoặc cập nhật 75 vật liệu,
+File SQL sinh ra chạy được nhiều lần: thêm cột và bảng nếu chưa có, rồi chèn hoặc cập nhật 93 vật liệu,
 các phương án tường, quan hệ vật liệu và tên gọi khác. Sửa số liệu trong file Excel rồi chạy lại script này.
-Script cũng ghi data/catalog/materials.csv, wall_systems.csv, material_aliases.csv (cùng số liệu, cho chế độ CSV),
+Script cũng ghi data/catalog/materials.csv, wall_systems.csv, material_aliases.csv, material_relations.csv (cùng số liệu, cho chế độ CSV),
 để mã vật liệu khi nhận diện bản vẽ, tối ưu và tra giá luôn là mã của danh mục thật (GN01, AAC01...).
 """
 import re
@@ -80,7 +80,7 @@ def upsert(table: str, cols: list[str], values: list[str], key: str) -> str:
     return f'INSERT INTO "{table}" ({quoted}) VALUES ({", ".join(values)})\n  ON CONFLICT ({conflict}) DO UPDATE SET {sets};'
 
 
-def export_csv(materials: list[dict], walls: list[dict], aliases: list[tuple[str, str]]) -> None:
+def export_csv(materials: list[dict], walls: list[dict], aliases: list[tuple[str, str]], rels: list[dict]) -> None:
     """Cùng dữ liệu với file SQL, ghi ra CSV cho chế độ không có PostgreSQL (data/catalog). Một nguồn: file Excel."""
     import pandas as pd
     mats = pd.DataFrame([{RENAME.get(c, c): m.get(c) for c in MATERIAL_COLS} for m in materials])
@@ -92,7 +92,9 @@ def export_csv(materials: list[dict], walls: list[dict], aliases: list[tuple[str
     ws.to_csv(CSV_DIR / "wall_systems.csv", index=False)
     pd.DataFrame([{"alias": a, "material_id": m, "source": "tu khoa de xuat"} for a, m in aliases]).to_csv(
         CSV_DIR / "material_aliases.csv", index=False)
-    print(f"Đã ghi data/catalog/materials.csv, wall_systems.csv, material_aliases.csv")
+    pd.DataFrame([{c: r.get(c) for c in REL_COLS} for r in rels], columns=REL_COLS).to_csv(
+        CSV_DIR / "material_relations.csv", index=False)
+    print(f"Đã ghi data/catalog/materials.csv, wall_systems.csv, material_aliases.csv, material_relations.csv")
 
 
 def main() -> None:
@@ -100,7 +102,7 @@ def main() -> None:
     labels = source_labels(wb)
     dialect = postgresql.dialect()
     tables = Base.metadata.tables
-    out = ["-- OptiMat AI: danh mục 75 vật liệu, phương án tường, quan hệ vật liệu, tên gọi khác.",
+    out = ["-- OptiMat AI: danh mục 93 vật liệu, phương án tường, quan hệ vật liệu, tên gọi khác.",
            "-- Sinh tự động bằng scripts/build_materials_sql.py từ data/catalog/materials_master.xlsx. Không sửa tay.",
            "-- Chạy SAU 01_schema.sql (hoặc scripts/init_db.py). Chạy lại nhiều lần được: dòng đã có sẽ được cập nhật.",
            "-- DBeaver: mở file này, bấm Alt+X (Execute SQL Script) để chạy toàn bộ, không bôi đen từng đoạn.",
@@ -110,8 +112,8 @@ def main() -> None:
     for col in tables["materials"].columns:
         if col.name not in legacy:
             out.append(f'ALTER TABLE "materials" ADD COLUMN IF NOT EXISTS "{col.name}" {col.type.compile(dialect=dialect)};')
-    out += ["", "-- 2. Hai bảng mới (bỏ qua nếu đã có)"]
-    for name in ("wall_systems", "material_relations"):
+    out += ["", "-- 2. Bảng mới (bỏ qua nếu đã có)"]
+    for name in ("material_families", "wall_systems", "material_relations"):
         ddl = str(CreateTable(tables[name]).compile(dialect=dialect)).strip().replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", 1)
         out.append(ddl + ";")
         for index in sorted(tables[name].indexes, key=lambda i: i.name):
@@ -122,6 +124,16 @@ def main() -> None:
     out.append("-- 3. Năm nhóm vật liệu bắt buộc")
     for g in GROUPS:
         out.append(upsert("material_groups", ["group_id", "sort_order", "name", "description"], [lit(v) for v in g], "group_id"))
+
+    import pandas as pd
+    families = pd.read_csv(CSV_DIR / "material_families.csv")
+    out += ["", f"-- 3b. Họ vật liệu: {len(families)} dòng (nguồn data/catalog/material_families.csv)"]
+    for f in families.itertuples(index=False):
+        out.append(upsert("material_families", list(families.columns), [lit(v) for v in f], "family_id"))
+    out += ["DO $$ BEGIN",
+            '  ALTER TABLE "materials" ADD CONSTRAINT "materials_family_fkey" FOREIGN KEY ("family") REFERENCES "material_families" ("family_id");',
+            "EXCEPTION WHEN duplicate_object THEN NULL;",
+            "END $$;"]
 
     materials = sheet_rows(wb, "Vat lieu")
     out += ["", f"-- 4. Vật liệu: {len(materials)} dòng"]
@@ -165,7 +177,7 @@ def main() -> None:
             "", "COMMIT;", "",
             "-- Kiểm tra sau khi chạy:",
             "--   SELECT g.sort_order, g.name, count(*) FROM materials m JOIN material_groups g ON g.group_id = m.\"group\"",
-            "--     WHERE m.tier IS NOT NULL GROUP BY 1, 2 ORDER BY 1;          -- 28, 23, 8, 7, 9",
+            "--     WHERE m.tier IS NOT NULL GROUP BY 1, 2 ORDER BY 1;          -- 32, 33, 8, 7, 13",
             "--   SELECT * FROM v_wall_systems ORDER BY wall_system_id;",
             "",
             "-- Tùy chọn: xóa 6 vật liệu MẪU cũ (MAT_...) cùng giá và nguồn cung mẫu của chúng. Bỏ dấu -- rồi chạy riêng.",
@@ -173,7 +185,7 @@ def main() -> None:
             "-- DELETE FROM supplier_materials WHERE material_id LIKE 'MAT\\_%';",
             "-- DELETE FROM materials WHERE material_id LIKE 'MAT\\_%';", ""]
     OUT.write_text("\n".join(out), encoding="utf8")
-    export_csv(materials, walls, aliases)
+    export_csv(materials, walls, aliases, rels)
     print(f"Đã ghi {OUT.relative_to(ROOT)}: {len(materials)} vật liệu, {len(walls)} phương án tường, {len(rels)} quan hệ, {len(aliases)} tên gọi khác")
 
 

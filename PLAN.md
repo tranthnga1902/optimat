@@ -54,6 +54,17 @@ tuần 1, 2, 3–4, 5–7, 8–9, 10–12, 13–15; danh sách việc theo tuầ
 - [ ] Tìm và đánh giá công bố giá của Sở Xây dựng Hà Nội và các tỉnh lân cận (vật liệu nào, từ năm nào, định dạng).
 - [ ] Viết bộ 30–50 câu hỏi đánh giá agent có đáp án.
 
+### Phần thô (17/10/2026, theo hướng nga chốt)
+
+Bóc toàn bộ phần thô ra công tác và vật liệu mua về, chia 17 sprint nhỏ trong `SPRINTS.md`, nhật ký trong `NHAT_KY.md`.
+
+- [x] S0–S7: chuỗi công tác → vật liệu, xây, trát, lanh tô, sàn, cán nền, nền, chống thấm, cột, dầm (suy), thang (nhập tay),
+  cốp pha, cốt thép theo hàm lượng, móng nhập tay, gộp tầng, API, agent, kiểm soát định mức, tab "Phần thô".
+- [ ] Tra TT 38/2026 điền `data/rules/dinh_muc_phan_tho.csv` (22 dòng đang trống) và hao hụt trong `materials_master.xlsx`.
+- [ ] Thêm 4 mã còn thiếu vào danh mục (dây thép buộc, đinh, con kê, gỗ xẻ) khi nga đồng ý.
+- [ ] Đọc dầm từ bản vẽ kết cấu (S4b.5); nhận thang và đếm bậc tự động (S4c.1–2).
+- [ ] Giảng viên duyệt: trừ dầm khỏi chiều cao tường, công thức thang, cốp pha sàn có trừ đáy dầm hay không.
+
 ## Tuần 3–4: Bản vẽ và dữ liệu (19/10–01/11)
 
 Đây là hai tuần quyết định: mọi số liệu đo bóc phụ thuộc vào bộ bản vẽ này.

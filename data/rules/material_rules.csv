@@ -16,13 +16,13 @@ T15,text,xi mang soi,CEMBOARD,WALL_MASONRY,,,80,"Ghi chú có ""xi măng sợi""
 T16,text,alc,ALC_PANEL,WALL_MASONRY,,,85,"Ghi chú có ""ALC"""
 T17,text,eps,EPS_PANEL,WALL_MASONRY,,,80,"Ghi chú có ""EPS"""
 H01,hatch,ANSI31,,WALL_MASONRY,,,60,"Nét gạch chéo là mặt cắt khối xây chung: xác nhận là tường xây, không cho biết loại gạch"
-H02,hatch,AR-BRSTD,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,60,Mẫu gạch xây tiêu chuẩn
-H03,hatch,AR-B816,CMU_HOLLOW,WALL_MASONRY,,,60,Mẫu block bê tông 8x16
+H02,hatch,AR-BRSTD,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,60,"Mẫu gạch xây tiêu chuẩn. GIẢ ĐỊNH theo TCVN, chưa kiểm trên bản vẽ gốc AutoCAD (bản vẽ build bị phá hatch): ngoài chỉ tiêu S10"
+H03,hatch,AR-B816,CMU_HOLLOW,WALL_MASONRY,,,60,"Mẫu block bê tông 8x16. GIẢ ĐỊNH theo TCVN, chưa kiểm trên bản vẽ gốc AutoCAD (bản vẽ build bị phá hatch): ngoài chỉ tiêu S10"
 H04,hatch,AR-CONC,,CONCRETE,,,95,Bê tông: cấu kiện không phải tường xây (cột hoặc vách). Loại khỏi khối lượng xây
 H05,hatch,SOLID,,CONCRETE,,,40,Tô đặc thường là cột hoặc vách bê tông. Cần kiểm trên bản vẽ thật
 L01,layer,aac,AAC,WALL_MASONRY,,,40,"Tên layer có ""AAC"""
 L02,layer,gach nung,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,40,"Tên layer có ""gạch nung"""
 L03,layer,gach be tong,CMU_SOLID|CMU_HOLLOW,WALL_MASONRY,,,40,"Tên layer có ""gạch bê tông"""
 L04,layer,thach cao,GYPSUM,WALL_MASONRY,,,40,"Tên layer có ""thạch cao"""
-B01,block,^(D|CD)\d*$,,DOOR,900,2200,50,Cửa đi: kích thước mặc định khi block không có thuộc tính WIDTH và HEIGHT
-B02,block,^(S|CS|W)\d*$,,WINDOW,1200,1400,50,Cửa sổ: kích thước mặc định
+B01,block,^(D|CD)\d*$,,DOOR,,,50,Cửa đi; kích thước lấy từ thuộc tính WIDTH/HEIGHT hoặc thông số cửa của dự án
+B02,block,^(S|CS|W)\d*$,,WINDOW,,,50,Cửa sổ; kích thước lấy từ thuộc tính WIDTH/HEIGHT hoặc thông số cửa của dự án

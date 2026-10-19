@@ -10,8 +10,8 @@ from optimat.drawing.encoding import normalize, tcvn3_to_unicode
 from optimat.drawing.takeoff import takeoff_from_file
 
 
-def test_wall_groups(sample_dxf):
-    result = takeoff_from_file(sample_dxf, floor_height_mm=3300)
+def test_wall_groups(sample_dxf, sample_openings):
+    result = takeoff_from_file(sample_dxf, floor_height_mm=3300, openings=sample_openings)
     groups = {g.wall_type: g for g in result.groups}
     assert set(groups) == {"110", "220"}
     assert groups["220"].length_m == pytest.approx(33.12, abs=0.01)

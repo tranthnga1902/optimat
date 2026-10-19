@@ -7,8 +7,8 @@ CATALOG_DIR = DATA_DIR / "catalog"
 MODELS_DIR = ROOT / "models"
 
 # ---- Nhận diện bản vẽ ----
-# Quy tắc gán vai trò cho layer nằm trong drawing/layer_classifier.py.
-OPENING_BLOCK_PREFIXES = ("D", "S", "W", "CD", "CS")
+# Ký hiệu nhận dạng theo Quy ước bản vẽ v1.0 (tên layer -> vai trò, tiền tố block cửa)
+# nằm trong data/rules/concepts.csv; 23 điều khoản QU trong data/rules/quy_uoc.csv (drawing/concepts.py).
 
 # Lớp chiều dày tường (mm): tên lớp -> (nhỏ nhất, lớn nhất) của khoảng cách hai nét song song.
 # Dải đủ rộng để nhận cả tường 100 (lớp 110), 200 (lớp 220), 300 (lớp 330) gặp trên bản vẽ thật.
@@ -20,13 +20,18 @@ WALL_LAYER_REL_SCORE = 0.6         # và không dưới tỷ lệ này so với 
 MAX_OPENING_GAP_MM = 3600.0        # khe giữa hai đoạn tường thẳng hàng có cửa thì được nối lại
 DOOR_ARC_RADIUS_MM = (450.0, 1300.0)
 
-# Kích thước lỗ mở mặc định (rộng, cao) theo tiền tố tên block, dùng khi block không có thuộc tính.
-DEFAULT_OPENINGS_MM = {"D": (900, 2200), "CD": (900, 2200), "S": (1200, 1400), "CS": (1200, 1400), "W": (1200, 1400)}
-DEFAULT_FLOOR_HEIGHT_MM = 3300.0
+# Chiều cao tầng và kích thước cửa là thông số của dự án (bảng projects), không có giá trị mặc định (Quy ước B7).
+
+# Cột trên mặt bằng kiến trúc: vùng tô đặc (SOLID, kể cả hatch đã bị tách thành tam giác) gần chữ nhật, hai cạnh trong
+# khoảng này (mm) và lấp đầy khung bao ít nhất COLUMN_MIN_FILL. Mới chỉnh trên 2 bản vẽ build (cột 200×200, 220×220).
+COLUMN_SIDE_MM = (150.0, 700.0)
+COLUMN_MAX_ASPECT = 4.0
+COLUMN_MIN_FILL = 0.8
+# Tên mặt bằng tầng trệt (đã bỏ dấu, chữ thường), dùng khi bản vẽ không ghi đủ cao độ các tầng
+GROUND_PLAN_PATTERNS = (r"\btret\b", r"\btang 1\b", r"\btang mot\b")
 
 # ---- Chi phí và tối ưu ----
-WASTE_FACTOR = 1.05            # hao hụt vật liệu
-LABOR_RATE_PER_DAY = 350_000   # đồng/công, SỐ MẪU: thay bằng đơn giá nhân công của tỉnh
+# Hao hụt lấy từ materials.waste_pct, đơn giá nhân công từ bảng labor_rates (PostgreSQL); thiếu thì báo, không điền mặc định.
 ROAD_FACTOR = 1.3              # cự ly đường bộ ~ đường chim bay x hệ số; thay bằng OSRM khi tích hợp
 TRIPS_PER_DAY = 4
 R_SI, R_SE = 0.13, 0.04        # nhiệt trở bề mặt trong, ngoài (m2K/W)

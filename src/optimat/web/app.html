@@ -153,14 +153,14 @@ function mergedGroups() {
   }
   return Object.values(by).sort((a, b) => (a.wall_type + a.role).localeCompare(b.wall_type + b.role));
 }
-window.addEventListener("message", (e) => { if (e.origin === location.origin && e.data && e.data.type === "optimat-confirmed") renderNav(); });
+window.addEventListener("message", (e) => { if (e.origin === location.origin && e.data && ["optimat-confirmed", "optimat-rough"].includes(e.data.type)) renderNav(); });
 
 // ------------------------------------------------------------------ điều hướng
 const ROUTES = {
   "dang-nhap": { role: null }, "do-boc": { role: "user", title: "Hồ sơ và đo bóc" }, "vat-lieu": { role: "user", title: "Vật liệu và giá" },
-  "toi-uu": { role: "user", title: "Phương án tối ưu" }, "kiem-soat": { role: "admin", title: "Kiểm soát dữ liệu" },
+  "toi-uu": { role: "user", title: "Phương án tối ưu" }, "phan-tho": { role: "user", title: "Phần thô" }, "kiem-soat": { role: "admin", title: "Kiểm soát dữ liệu" },
   "danh-muc": { role: "admin", title: "Vật liệu và phương án tường" }, "gia": { role: "admin", title: "Giá và nhà cung cấp" },
-  "mo-hinh": { role: "admin", title: "Mô hình và cấu hình" },
+  "mo-hinh": { role: "admin", title: "Mô hình và cấu hình" }, "nhan-dien": { role: "admin", title: "Ký hiệu nhận diện bản vẽ" },
 };
 const route = () => { const r = location.hash.replace(/^#/, ""); return ROUTES[r] ? r : (store.get("optimat-role", null) === "admin" ? "kiem-soat" : store.get("optimat-role", null) ? "do-boc" : "dang-nhap"); };
 window.addEventListener("hashchange", render);
@@ -170,8 +170,9 @@ function renderNav() {
   if (!nav) return;
   const n = confirmedPlans().length;
   const items = role === "admin"
-    ? [["kiem-soat", "Kiểm soát dữ liệu"], ["danh-muc", "Vật liệu, phương án tường"], ["gia", "Giá, nhà cung cấp"], ["mo-hinh", "Mô hình, cấu hình"]]
-    : [["do-boc", "Hồ sơ và đo bóc"], ["vat-lieu", "Vật liệu và giá", n ? `${n} mặt bằng` : ""], ["toi-uu", "Phương án tối ưu"]];
+    ? [["kiem-soat", "Kiểm soát dữ liệu"], ["danh-muc", "Vật liệu, phương án tường"], ["gia", "Giá, nhà cung cấp"], ["nhan-dien", "Ký hiệu nhận diện"], ["mo-hinh", "Mô hình, cấu hình"]]
+    : [["do-boc", "Hồ sơ và đo bóc"], ["vat-lieu", "Vật liệu và giá", n ? `${n} mặt bằng` : ""], ["phan-tho", "Phần thô", store.get("optimat-rough", null) ? "đã tính" : ""],
+       ["toi-uu", "Phương án tối ưu"]];
   nav.className = "side " + role;
   nav.innerHTML = `<div class="brand">${logo(role === "admin" ? "#F3B562" : "#7FD6BF")} OptiMat AI</div>
     <div class="menu">${items.map(([k, t, b]) => `<a href="#${k}" ${k === r ? 'aria-current="page"' : ""}>${esc(t)}${b ? `<span class="badge">${esc(b)}</span>` : ""}</a>`).join("")}</div>
@@ -188,8 +189,8 @@ function render() {
   store.set("optimat-role", def.role);
   root.innerHTML = `<div class="shell"><nav id="nav" aria-label="Menu"></nav><main id="main"></main></div>`;
   renderNav();
-  ({ "do-boc": viewTakeoff, "vat-lieu": viewBill, "toi-uu": viewOptimize, "kiem-soat": viewDataCheck,
-     "danh-muc": viewCatalog, "gia": viewOffers, "mo-hinh": viewModels })[r]($("main"));
+  ({ "do-boc": viewTakeoff, "vat-lieu": viewBill, "phan-tho": viewRough, "toi-uu": viewOptimize, "kiem-soat": viewDataCheck,
+     "danh-muc": viewCatalog, "gia": viewOffers, "mo-hinh": viewModels, "nhan-dien": viewConcepts })[r]($("main"));
 }
 
 // ------------------------------------------------------------------ đăng nhập (chọn vai trò; chưa có xác thực)
@@ -204,7 +205,8 @@ function loginView() {
 
 function steps(cur) {
   const n = confirmedPlans().length;
-  const list = [["do-boc", "1. Bản vẽ và đo bóc", n > 0], ["vat-lieu", "2. Vật liệu và giá", false], ["toi-uu", "3. Tối ưu", false]];
+  const list = [["do-boc", "1. Bản vẽ và đo bóc", n > 0], ["vat-lieu", "2. Vật liệu và giá", false], ["phan-tho", "Phần thô", !!store.get("optimat-rough", null)],
+    ["toi-uu", "3. Tối ưu", false]];
   return `<ol class="steps">${list.map(([k, t, done]) => `<li><a href="#${k}" class="${done && k !== cur ? "done" : ""}" ${k === cur ? 'aria-current="step"' : ""}>${t}</a></li>`).join("")}</ol>`;
 }
 
@@ -253,6 +255,35 @@ function billTable(bill) {
       <td class="n">${money(b.est_cost)}</td></tr>`; }).join("")
   }</tbody><tfoot><tr><td colspan="5">Tổng tiền vật liệu (chưa gồm vận chuyển, nhân công)</td><td class="n">${total == null ? "chưa đủ giá" : money(total)}</td></tr></tfoot></table></div>
   ${miss.length ? `<ul class="notes">${miss.map((b) => `<li>Tường ${esc(b.wall_type)} ${ROLE[b.role] || ""}, ${b.kind === "mortar" ? "vữa" : "vật liệu"} ${esc(b.material_id || "")}: thiếu ${esc(b.missing.join(", "))}</li>`).join("")}</ul>` : ""}`;
+}
+
+// ------------------------------------------------------------------ người dùng: phần thô (kết quả tab Phần thô của trang kiểm tra)
+// Trang kiểm tra gửi mọi mặt bằng lên /api/takeoff/rough và ghi kết quả gần nhất vào "optimat-rough"; ở đây chỉ hiển thị.
+function viewRough(main) {
+  main.className = "";
+  const saved = store.get("optimat-rough", null), R = saved && saved.result;
+  main.innerHTML = `${steps("phan-tho")}<div class="head"><div><h1>Khối lượng phần thô</h1>
+    <p>Xây, trát, lanh tô, cột, dầm, sàn, cầu thang, cán nền, chống thấm, nền, cốt thép, cốp pha và vật liệu mua về. Phần nào thiếu thông số
+    hoặc định mức thì để trống và ghi rõ thiếu gì; hệ thống không tự điền số.</p></div>
+    <a class="btn" href="#do-boc" style="display:inline-flex;align-items:center;text-decoration:none">Sửa trên trang kiểm tra</a></div><div id="body"></div>`;
+  const body = $("body");
+  if (!R) { body.innerHTML = `<div class="empty">Chưa tính phần thô. Vào <a href="#do-boc">Hồ sơ và đo bóc</a>, mở bản vẽ, chọn tab "Phần thô", nhập thông số rồi bấm "Tính phần thô".</div>`; return; }
+  const why = (code) => [...new Set(R.works.filter((w) => w.code === code).flatMap((w) => w.missing.map((m) => (w.plan ? w.plan + ": " : "") + m)))];
+  const total = (t) => `<tr><td>${esc(t.name)}</td><td class="n">${t.quantity == null ? "" : nf(t.quantity)}</td><td>${esc(t.unit)}</td>
+    <td>${t.complete ? "" : `<span title="${esc(why(t.code).join("; "))}">${pill("warn", "còn thiếu")}</span>`}</td></tr>`;
+  const done = R.materials.filter((m) => m.complete).length;
+  body.innerHTML = `<div class="tiles">
+      <div class="tile"><div class="k">Bản vẽ</div><div class="v" style="font-size:18px">${esc(saved.file || "")}</div><div class="s">tính lúc ${esc((saved.at || "").replace("T", " ").slice(0, 16))}</div></div>
+      <div class="tile ${R.totals.every((t) => t.complete) ? "ok" : "warn"}"><div class="k">Công tác đủ số</div><div class="v">${R.totals.filter((t) => t.complete).length}/${R.totals.length}</div></div>
+      <div class="tile ${done === R.materials.length ? "ok" : "warn"}"><div class="k">Vật liệu đủ số</div><div class="v">${done}/${R.materials.length}</div><div class="s">thiếu chủ yếu do định mức chưa tra TT 38</div></div></div>
+    <div class="row"><div class="card"><h2>Khối lượng công tác</h2><div class="tw"><table><thead><tr><th>Công tác</th><th class="n">Khối lượng</th><th>ĐVT</th><th></th></tr></thead>
+      <tbody>${R.totals.map(total).join("")}</tbody></table></div></div>
+    <div class="card"><h2>Cốp pha theo cấu kiện</h2><div class="tw"><table><tbody>${(R.formwork || []).map((f) => `<tr><td>${esc(f.name)}</td><td class="n">${f.quantity == null ? "" : nf(f.quantity)}</td><td>m²</td></tr>`).join("") || "<tr><td>Chưa có cốp pha.</td></tr>"}</tbody></table></div></div></div>
+    <div class="card"><h2>Vật liệu mua về</h2><div class="tw"><table><thead><tr><th>Mã</th><th>Vật liệu</th><th class="n">Khối lượng</th><th class="n">Có hao hụt</th><th>ĐVT</th><th>Thiếu</th></tr></thead><tbody>${
+      R.materials.map((m) => `<tr><td>${esc(m.material_id || "—")}</td><td>${esc(m.name)}</td><td class="n">${m.quantity == null ? pill("warn", "thiếu") : nf(m.quantity, 3)}</td>
+        <td class="n">${m.quantity_with_waste == null ? "" : nf(m.quantity_with_waste, 3)}</td><td>${esc(m.unit)}</td><td class="small muted">${esc(m.missing.join("; "))}</td></tr>`).join("")
+    }</tbody></table></div></div>
+    ${R.warnings.length ? `<div class="card"><h2>Cảnh báo</h2><ul class="notes">${R.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul></div>` : ""}`;
 }
 
 // ------------------------------------------------------------------ người dùng: ràng buộc, trợ lý, tối ưu
@@ -393,6 +424,105 @@ async function viewModels(main) {
         <tr><td>Chuyển DWG (ODA)</td><td>${h.dwg_converter_available ? pill("ok", "có") : pill("warn", "chưa cài")}</td></tr></tbody></table>
         <p class="small muted" style="margin:0">Sửa cấu hình trong <code>src/optimat/config.py</code> và biến môi trường.</p></div>`;
   } catch (err) { $("body").innerHTML = `<div class="note">${esc(err.message)}</div>`; }
+}
+
+// ------------------------------------------------------------------ quản trị: ký hiệu nhận diện bản vẽ (bảng drawing_concepts)
+const OBJ_NAME = { tuong: "Tường", loai_bo: "Cặp nét bị loại", cua: "Cửa", door: "Cửa đi", window: "Cửa sổ" };
+async function viewConcepts(main) {
+  main.className = "";
+  main.innerHTML = `<div class="head"><div><h1>Ký hiệu nhận diện bản vẽ</h1><p>Tên layer, tên block nào thì là đối tượng gì (bảng <code>drawing_concepts</code>, Quy ước bản vẽ v1.0). Dòng khớp đầu tiên thắng. Sửa ở đây thì lần đọc bản vẽ sau dùng ngay.</p></div>
+    <a class="btn" href="/api/concepts/csv" style="display:inline-flex;align-items:center;text-decoration:none">Tải concepts.csv</a></div><div id="body" class="muted">Đang tải…</div>`;
+  let d;
+  try { d = await api("/api/concepts"); } catch (err) { $("body").innerHTML = `<div class="note">${esc(err.message)}</div>`; return; }
+  const sig = d.signals, nLayer = sig.filter((s) => s.tin_hieu === "layer").length;
+  const opt = (vals) => vals.map((v) => `<option>${esc(v)}</option>`).join("");
+  $("body").className = "";
+  $("body").innerHTML = `${d.editable ? `<div class="note" style="margin-bottom:14px">Đang sửa trực tiếp trong PostgreSQL. Lệnh <code>python scripts/init_db.py --reload-rules</code> nạp lại từ <code>data/rules/concepts.csv</code> và xóa các sửa đổi ở đây: tải concepts.csv, chép đè file đó trước khi nạp lại.</div>`
+      : `<div class="note" style="margin-bottom:14px">Chưa kết nối PostgreSQL (DATABASE_URL), đang đọc <code>data/rules/concepts.csv</code>: chỉ xem được. Đặt DATABASE_URL rồi chạy <code>python scripts/init_db.py --reload-rules</code> để quản lý tại đây.</div>`}
+    <div class="tiles"><div class="tile"><div class="k">Ký hiệu layer</div><div class="v">${nLayer}</div><div class="s">tên layer → vai trò</div></div>
+      <div class="tile"><div class="k">Ký hiệu block</div><div class="v">${sig.length - nLayer}</div><div class="s">tiền tố tên block → đối tượng</div></div>
+      <div class="tile"><div class="k">Khái niệm</div><div class="v">${new Set(sig.map((s) => s.khai_niem)).size}</div><div class="s">nguồn: ${esc(d.source)}</div></div></div>
+    ${d.editable ? `<div class="card"><h2 id="ftitle">Thêm ký hiệu</h2><form id="cf" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end">
+      <label class="f">Mã <input name="ma" required maxlength="16" pattern="[A-Za-z0-9_\\-]+" placeholder="L36, B22"></label>
+      <label class="f">Khái niệm <input name="khai_niem" required maxlength="64" placeholder="Cột, Cầu thang…"></label>
+      <label class="f">Tín hiệu <select name="tin_hieu"><option>layer</option><option>block</option></select></label>
+      <label class="f">Mẫu <input name="mau" required maxlength="128" placeholder="layer: chuỗi con; block: tiền tố"></label>
+      <label class="f">Vai trò <select name="vai_tro"></select></label>
+      <label class="f">Điều khoản <select name="qu">${d.clauses.map((c) => `<option value="${esc(c.ma)}">${esc(c.ma)} · ${esc(c.nhom)}</option>`).join("")}</select></label>
+      <label class="f">Rộng mm <input name="rong_mm" type="number" min="1" step="any"></label>
+      <label class="f">Cao mm <input name="cao_mm" type="number" min="1" step="any"></label>
+      <label class="f" style="grid-column:1/-1">Ghi chú <input name="ghi_chu"></label>
+      <div class="filters"><button class="btn primary" type="submit">Lưu</button><button class="btn" type="button" id="cancel">Hủy</button><span id="fmsg" class="small" role="status"></span></div></form></div>` : ""}
+    <div class="card"><div class="filters"><h2 style="margin-right:auto">${sig.length} ký hiệu</h2>
+      <label>Tín hiệu <select id="ft"><option value="">tất cả</option><option>layer</option><option>block</option></select></label>
+      <label>Tìm <input id="fq" type="search" placeholder="mã, khái niệm, mẫu"></label></div>
+      <div class="tw"><table><thead><tr><th>Mã</th><th>Khái niệm</th><th>Tín hiệu</th><th>Mẫu</th><th>Vai trò</th><th>QU</th><th>Ghi chú</th>${d.editable ? "<th></th>" : ""}</tr></thead><tbody id="rows"></tbody></table></div></div>
+    <div class="card"><h2>Thử trên bản vẽ</h2><p class="muted small">Chạy nhận diện với bảng ký hiệu hiện hành, liệt kê từng đối tượng và các layer chưa có ký hiệu.</p>
+      <div class="filters"><input id="tf" type="file" accept=".dxf,.dwg" aria-label="Chọn bản vẽ"><button class="btn primary" id="tb" type="button">Nhận diện</button></div><div id="tr"></div></div>`;
+  const draw = () => {
+    const t = $("ft").value, q = $("fq").value.trim().toLowerCase();
+    $("rows").innerHTML = sig.filter((s) => (!t || s.tin_hieu === t) && (!q || [s.ma, s.khai_niem, s.mau, s.ghi_chu].join(" ").toLowerCase().includes(q)))
+      .map((s) => `<tr><td><b>${esc(s.ma)}</b></td><td>${esc(s.khai_niem)}</td><td>${esc(s.tin_hieu)}</td><td><code>${esc(s.mau)}</code></td><td>${esc(s.vai_tro)}</td><td>${esc(s.qu)}</td><td class="small">${esc(s.ghi_chu || "")}</td>${d.editable
+        ? `<td style="white-space:nowrap"><button class="btn" type="button" data-edit="${esc(s.ma)}">Sửa</button> <button class="btn" type="button" data-del="${esc(s.ma)}">Xóa</button></td>` : ""}</tr>`).join("")
+      || `<tr><td colspan="8" class="muted">Không có ký hiệu nào.</td></tr>`;
+  };
+  ["ft", "fq"].forEach((id) => $(id).addEventListener("input", draw)); draw();
+  if (d.editable) {
+    const f = $("cf"); let editing = null;
+    const roles = () => { f.vai_tro.innerHTML = opt(f.tin_hieu.value === "layer" ? d.layer_roles : d.block_roles); };
+    const fill = (s) => {
+      editing = s && sig.some((x) => x.ma === s.ma) ? s.ma : null; f.reset();
+      if (s && s.tin_hieu) f.tin_hieu.value = s.tin_hieu;
+      roles();
+      for (const [k, v] of Object.entries(s || {})) if (f[k] && k !== "tin_hieu") f[k].value = v == null ? "" : v;
+      $("ftitle").textContent = editing ? `Sửa ký hiệu ${editing}` : "Thêm ký hiệu"; $("fmsg").textContent = "";
+      f.scrollIntoView({ block: "center" });
+    };
+    window.prefillConcept = fill;
+    f.tin_hieu.addEventListener("change", roles); roles();
+    $("cancel").addEventListener("click", () => fill(null));
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const body = Object.fromEntries(new FormData(f));
+      for (const k of ["rong_mm", "cao_mm"]) body[k] = body[k] === "" ? null : +body[k];
+      try {
+        await api(editing ? `/api/concepts/${encodeURIComponent(editing)}` : "/api/concepts",
+          { method: editing ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+        viewConcepts(main);
+      } catch (err) { $("fmsg").innerHTML = pill("bad", err.message); }
+    });
+    $("rows").addEventListener("click", async (e) => {
+      const ed = e.target.dataset.edit, del = e.target.dataset.del;
+      if (ed) fill(sig.find((s) => s.ma === ed));
+      if (del && confirm(`Xóa ký hiệu ${del}? Bản vẽ đọc sau sẽ không còn nhận theo ký hiệu này.`)) {
+        try { await api(`/api/concepts/${encodeURIComponent(del)}`, { method: "DELETE" }); viewConcepts(main); } catch (err) { alert(err.message); }
+      }
+    });
+  }
+  $("tb").addEventListener("click", async () => {
+    const file = $("tf").files[0];
+    if (!file) { $("tr").innerHTML = `<div class="note">Chọn file .dxf hoặc .dwg trước.</div>`; return; }
+    $("tr").innerHTML = `<p class="muted">Đang nhận diện ${esc(file.name)}…</p>`;
+    const fd = new FormData(); fd.append("file", file);
+    let r;
+    try { r = await api("/api/concepts/try", { method: "POST", body: fd }); } catch (err) { $("tr").innerHTML = `<div class="note">${esc(err.message)}</div>`; return; }
+    const name = (o) => OBJ_NAME[o.loai] || o.loai, count = {};
+    r.rows.forEach((o) => { count[name(o)] = (count[name(o)] || 0) + 1; });
+    const n = (v) => v == null || v === "" ? "" : esc(v);
+    $("tr").innerHTML = `<p>${Object.entries(count).map(([k, v]) => pill("info", `${v} ${k}`)).join(" ") || pill("warn", "không nhận được đối tượng nào")}</p>
+      ${r.unknown_layers.length ? `<p class="small"><b>${r.unknown_layers.length} layer chưa có ký hiệu${d.editable ? " (bấm để thêm)" : ""}:</b> ${r.unknown_layers.map((l) => d.editable
+        ? `<button class="btn" type="button" data-layer="${esc(l)}" style="min-height:32px;margin:2px">${esc(l)}</button>` : `<code>${esc(l)}</code>`).join(" ")}</p>` : ""}
+      <div class="filters"><label>Loại <select id="tk"><option value="">tất cả</option>${Object.keys(count).map((k) => `<option>${esc(k)}</option>`).join("")}</select></label></div>
+      <div class="tw"><table><thead><tr><th>Mặt bằng</th><th>Loại</th><th>Mã</th><th>Layer</th><th>Lớp dày</th><th class="n">Dài m</th><th>Vai trò</th><th>Vật liệu</th><th class="n">Tin cậy</th><th>Ghi chú, lý do</th></tr></thead><tbody id="trows"></tbody></table></div>`;
+    const drawT = () => {
+      const k = $("tk").value;
+      $("trows").innerHTML = r.rows.filter((o) => !k || name(o) === k).map((o) => `<tr><td>${esc(o.mat_bang)}</td><td>${esc(name(o))}</td><td>${n(o.ma)}</td><td>${n(o.layer)}</td><td>${n(o.lop_day)}</td><td class="n">${n(o.dai_m)}</td><td>${n(o.vai_tro)}</td><td>${n(o.phuong_an_tuong || o.vat_lieu)}</td><td class="n">${n(o.do_tin_cay)}</td><td class="small">${n(o.ghi_chu)}</td></tr>`).join("")
+        || `<tr><td colspan="10" class="muted">Không có đối tượng nào.</td></tr>`;
+    };
+    $("tk").addEventListener("change", drawT); drawT();
+    $("tr").querySelectorAll("[data-layer]").forEach((b) => b.addEventListener("click",
+      () => window.prefillConcept({ tin_hieu: "layer", mau: b.dataset.layer, qu: "QU-08", ghi_chu: `layer ${b.dataset.layer} (${file.name})` })));
+  });
 }
 
 render();

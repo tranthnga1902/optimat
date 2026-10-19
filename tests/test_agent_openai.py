@@ -33,14 +33,14 @@ def test_agent_calls_tools_and_keeps_tool_numbers(sample_dxf):
 def test_agent_replaces_answer_with_invented_numbers(sample_dxf):
     replies = iter([_call("do_boc_ban_ve", {}, "c1"), _call("toi_uu_vat_lieu", {}, "c2"),
                     {"role": "assistant", "content": "Phương án tốt nhất chỉ tốn 12345 triệu đồng."}])
-    out = run_agent(sample_dxf, "tư vấn giúp tôi", chat=lambda messages, tools=None, json_mode=False: next(replies))
+    out = run_agent(sample_dxf, "tư vấn giúp tôi", 3300, chat=lambda messages, tools=None, json_mode=False: next(replies))
     assert out["guarded"] and "12345" not in out["answer"] and "Chi phí thấp nhất" in out["answer"]
 
 
 def test_agent_falls_back_when_model_unavailable(sample_dxf):
     def down(messages, tools=None, json_mode=False):
         raise llm.LLMUnavailable("mất mạng")
-    out = run_agent(sample_dxf, "xe 2,5 tấn", chat=down)
+    out = run_agent(sample_dxf, "xe 2,5 tấn", 3300, chat=down)
     assert out["mode"] == "fallback" and out["result"].solutions and out["constraints"].max_vehicle_ton == 2.5
 
 

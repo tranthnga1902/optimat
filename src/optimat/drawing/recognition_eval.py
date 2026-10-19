@@ -79,7 +79,7 @@ def evaluate_plan(gt: dict, auto_walls: list) -> dict:
     tp_auto = _covered_length(auto_walls, gt_walls)
     tp_gt = _covered_length(gt_walls, auto_walls)
     same = _covered_length(auto_walls, gt_walls, same_class=True)
-    H = gt.get("height_mm") or config.DEFAULT_FLOOR_HEIGHT_MM
+    H = gt.get("height_mm")             # đáp án chưa có chiều cao tầng thì chưa so diện tích
     fp_by_reason: dict[str, float] = {}
     for r in gt.get("removed", []):
         fp_by_reason[r.get("reason", "khác")] = fp_by_reason.get(r.get("reason", "khác"), 0.0) + _length([r]) / 1000
@@ -91,7 +91,7 @@ def evaluate_plan(gt: dict, auto_walls: list) -> dict:
         "recall": round(tp_gt / L_gt, 3) if L_gt else None,
         "class_ok": round(same / tp_auto, 3) if tp_auto else None,
         "area_err": round((L_auto - L_gt) / L_gt, 3) if L_gt else None,
-        "area_auto_m2": round(L_auto * H / 1e6, 2), "area_gt_m2": round(L_gt * H / 1e6, 2),
+        "area_auto_m2": round(L_auto * H / 1e6, 2) if H else None, "area_gt_m2": round(L_gt * H / 1e6, 2) if H else None,
         "missed_m": round(_length(missed) / 1000, 2), "fp_by_reason_m": {k: round(v, 2) for k, v in fp_by_reason.items()},
     }
 

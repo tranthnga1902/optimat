@@ -18,25 +18,13 @@ from .. import config
 from ..db.session import get_database_url, get_engine
 
 
-# Họ vật liệu tường trong danh mục (cột family của bảng materials). Tên hiển thị trên trang kiểm tra và trong lời giải thích.
-FAMILY_LABELS = {
-    "CLAY_SOLID": "Gạch đất nung đặc",
-    "CLAY_HOLLOW": "Gạch đất nung rỗng (2 lỗ, 6 lỗ)",
-    "CMU_SOLID": "Gạch bê tông đặc (không nung)",
-    "CMU_HOLLOW": "Gạch block bê tông rỗng",
-    "CLC": "Gạch bê tông bọt (CLC)",
-    "AAC": "Gạch bê tông khí chưng áp (AAC)",
-    "ALC_PANEL": "Tấm tường ALC",
-    "EPS_PANEL": "Tấm panel EPS 3D",
-    "CEMBOARD": "Vách tấm xi măng sợi (Cemboard)",
-    "GYPSUM": "Vách thạch cao",
-}
 # Thông số phương án tường cần có để đưa vào tối ưu, kèm tên tiếng Việt để báo còn thiếu
 READY_FIELDS = {"qty_per_m2": "số lượng vật liệu / m² tường", "labor_day_per_m2": "công / m² tường",
                 "weight_kg_per_m2": "khối lượng tường kg/m²", "lambda_w_mk": "hệ số dẫn nhiệt λ",
                 "masonry_thickness_mm": "chiều dày khối xây"}
-CSV_TABLES = {"materials": "material_id", "wall_systems": "wall_system_id", "material_aliases": None,
-              "suppliers": "supplier_id", "supplier_materials": None, "vehicles": "vehicle_id"}
+CSV_TABLES = {"material_families": "family_id", "materials": "material_id", "wall_systems": "wall_system_id", "material_aliases": None,
+              "material_relations": None, "suppliers": "supplier_id", "supplier_materials": None, "vehicles": "vehicle_id",
+              "labor_rates": None}
 
 
 @dataclass
@@ -61,6 +49,11 @@ class Catalog:
     vehicles: pd.DataFrame
     wall_systems: pd.DataFrame = field(default_factory=lambda: _empty(["wall_system_id", "material_id", "detect_class"]))
     aliases: pd.DataFrame = field(default_factory=lambda: _empty(["alias", "material_id"]))
+    # quan hệ vật liệu: REQUIRES (vật liệu đi kèm) và COMPOSED_OF (cấp phối: vữa -> xi măng, cát)
+    relations: pd.DataFrame = field(default_factory=lambda: _empty(
+        ["material_id", "relation_type", "related_material_id", "quantity", "quantity_unit", "source", "note"]))
+    families: pd.DataFrame = field(default_factory=lambda: _empty(["family_id", "name", "sort_order", "is_wall"]))
+    labor_rates: pd.DataFrame = field(default_factory=lambda: _empty(["province", "grade", "rate_per_day", "valid_from"]))
     price_records: pd.DataFrame | None = None       # chỉ nạp khi tra giá (bảng lớn)
 
     @classmethod
@@ -78,7 +71,9 @@ class Catalog:
             return cls(materials=table("materials"), suppliers=table("suppliers"),
                        supplier_materials=table("supplier_materials").drop(columns=["id"]),
                        vehicles=table("vehicles"), wall_systems=table("wall_systems"),
-                       aliases=table("material_aliases").drop(columns=["id"]))
+                       aliases=table("material_aliases").drop(columns=["id"]),
+                       relations=table("material_relations").drop(columns=["id"], errors="ignore"),
+                       families=table("material_families"), labor_rates=table("labor_rates").drop(columns=["id"]))
 
     @classmethod
     def from_csv(cls, folder: Path | str | None = None) -> "Catalog":
@@ -96,7 +91,36 @@ class Catalog:
             tables[name] = df
         return cls(materials=tables["materials"], suppliers=tables["suppliers"],
                    supplier_materials=tables["supplier_materials"], vehicles=tables["vehicles"],
-                   wall_systems=tables["wall_systems"], aliases=tables["material_aliases"])
+                   wall_systems=tables["wall_systems"], aliases=tables["material_aliases"],
+                   relations=tables["material_relations"], families=tables["material_families"],
+                   labor_rates=tables["labor_rates"])
+
+    # ------------------------------------------------------------------ họ vật liệu, nhân công
+    def wall_families(self) -> dict[str, str]:
+        """Họ vật liệu xây tường (bảng material_families, is_wall) -> tên hiển thị, theo sort_order."""
+        f = self.families
+        f = f[f.is_wall.astype(str).str.lower().isin(["true", "1"])].sort_values("sort_order")
+        return dict(zip(f.family_id, f.name))
+
+    def labor_rate(self, province: str | None = None, on: str | None = None) -> tuple[float | None, str]:
+        """Đơn giá nhân công đồng/công từ bảng labor_rates: tỉnh đã chọn (không chọn thì phải chỉ có một tỉnh),
+        bản công bố mới nhất có hiệu lực tới ngày on. Không xác định được một số thì trả None kèm lý do."""
+        r = self.labor_rates.dropna(subset=["rate_per_day"])
+        if province:
+            r = r[r.province == province]
+        if on:
+            r = r[pd.to_datetime(r.valid_from, errors="coerce").fillna(pd.Timestamp.min) <= pd.Timestamp(on)]
+        if r.empty:
+            return None, "Chưa có đơn giá nhân công" + (f" của {province}" if province else "") + " trong bảng labor_rates."
+        if r.province.nunique() > 1:
+            return None, "Bảng labor_rates có nhiều tỉnh (" + ", ".join(sorted(r.province.unique())) + "), cần chọn tỉnh."
+        latest = r[pd.to_datetime(r.valid_from, errors="coerce") == pd.to_datetime(r.valid_from, errors="coerce").max()]
+        latest = latest if len(latest) else r
+        if latest.rate_per_day.nunique() > 1:
+            return None, "Bảng labor_rates có nhiều bậc thợ cùng ngày hiệu lực, chưa chọn được một đơn giá."
+        row = latest.iloc[0]
+        kind = f", {row.data_kind}" if "data_kind" in row and row.data_kind != "ACTUAL" else ""
+        return float(row.rate_per_day), f"Đơn giá nhân công {row.rate_per_day:,.0f} đồng/công ({row.province}, bậc {row.grade}{kind})."
 
     # ------------------------------------------------------------------ phương án tường
     def wall_view(self) -> pd.DataFrame:

@@ -1,0 +1,24 @@
+ma,nhom,dieu_khoan,muc,cach_kiem
+QU-01,Định dạng và đơn vị,"File DWG hoặc DXF. Không nhận PDF, ảnh, DWF.",B,Đọc phần mở rộng; DWG chuyển sang DXF bằng ODA File Converter
+QU-02,Định dạng và đơn vị,"Hình vẽ trong model space, tỷ lệ 1:1, đơn vị mm.",B,Đọc $INSUNITS; không khai báo thì coi là mm và cảnh báo; kiểm chiều dày tường có thuộc dải 85–370 mm
+QU-03,Định dạng và đơn vị,Chữ tiếng Việt dùng Unicode hoặc TCVN3 (font .Vn…). Chưa hỗ trợ VNI.,B,Nhận mã theo tên font và ký tự; TCVN3 tự chuyển sang Unicode
+QU-04,Tổ chức mặt bằng,"Mỗi mặt bằng tầng có tiêu đề bằng chữ ""MẶT BẰNG …"" (TẦNG 1, TRỆT, LỬNG, LẦU 1…) đặt ngay dưới hình.",B,"Tìm chữ tiêu đề, khung tìm phía trên tiêu đề"
+QU-05,Tổ chức mặt bằng,Tên mặt bằng không trùng nhau trong một file; mặt bằng mái ghi rõ chữ MÁI.,B,Cảnh báo khi hai tiêu đề trùng tên
+QU-06,Tổ chức mặt bằng,"Cao độ sàn ghi trong tiêu đề, ví dụ ""(+3.30)"", hoặc ký hiệu cao độ ±0.000, +3.300 trong mặt bằng.",K,Đọc số cao độ; chiều cao tầng = cao độ tầng trên − tầng này
+QU-07,Tổ chức mặt bằng,"Các mặt bằng tầng dùng chung hệ trục (trục A, B…, 1, 2… cùng vị trí).",K,So vị trí cột và trục giữa các tầng
+QU-08,Layer,"Tường trên layer riêng, tên chứa TUONG, WALL hoặc XAY; cửa CUA, DOOR, WINDOW; trục TRUC, GRID; kích thước DIM, KICH THUOC; nội thất NOI THAT, FURN.",K,"Phân vai theo tên; không theo tên thì tự nhận layer tường bằng hình học, người dùng có thể chọn lại"
+QU-09,Tường,"Tường vẽ bằng hai nét liền song song, khoảng cách bằng chiều dày: 85–135 mm (lớp 110), 136–175 (150), 176–260 (220), 280–370 (330).",B,Ghép cặp nét theo chiều dày; chồng nhau tối thiểu 300 mm
+QU-10,Tường,Trong tường có hatch gạch chéo (hoặc tô đặc) giống nhau cho mọi tường xây.,K,"Ưu tiên cặp nét có hatch ở giữa; tường một nét + hatch nhận với độ tin cậy 0,6"
+QU-11,Tường,"Nét tường không nằm trong block có tên (block bàn ghế, thiết bị).",B,"Bỏ qua nét trong block có tên; block vô danh (*U, *X) vẫn đọc"
+QU-12,Tường,Tường thẳng. Tường cong không được bóc.,B,Báo cung tròn lớn trên layer tường
+QU-13,Tường,Tường bao khép kín quanh nhà ở mỗi tầng (cửa được coi là liền).,K,Kiểm tra vòng kín sau khi nối khe cửa
+QU-14,Cửa,"Cửa đi có cung cánh cửa (bán kính 450–1300 mm, góc 60–120°); cửa sổ có nét kính trong bề dày tường; hoặc block cửa tên bắt đầu D, CD (cửa đi), S, CS, W (cửa sổ).",K,"Nối khe tường ≤ 3600 mm khi có dấu hiệu cửa, ghi lỗ mở"
+QU-15,Cửa,"Có bảng thống kê cửa: ký hiệu, rộng, cao, số lượng; ký hiệu ghi cạnh cửa.",K,"Đọc bảng; không có thì chiều cao mặc định 2,2 m cửa đi, 1,4 m cửa sổ và cảnh báo"
+QU-16,Bộ phận khác trên mặt bằng kiến trúc,"Cột: hình chữ nhật kín, tô đặc hoặc gạch chéo hai đường, cạnh 200–600 mm.",K,Tìm hình kín nhỏ có tô; so vị trí qua các tầng
+QU-17,Bộ phận khác trên mặt bằng kiến trúc,"Cầu thang: nét bậc cách đều, mũi tên và chữ LÊN hoặc XUỐNG.",K,Loại thành thang khỏi tường; đếm bậc
+QU-18,Bộ phận khác trên mặt bằng kiến trúc,"Ô trống trên sàn (thông tầng, giếng trời) vẽ dấu chéo chữ X và ghi chữ.",K,Trừ khỏi diện tích sàn
+QU-19,Bộ phận khác trên mặt bằng kiến trúc,"Tên phòng ghi bằng chữ trong phòng (P.NGỦ, BẾP, WC, VỆ SINH, BAN CÔNG…).",K,Gán vùng phòng; xác định sàn cần chống thấm
+QU-20,Bộ phận khác trên mặt bằng kiến trúc,"Ghi chú vật liệu bằng chữ: loại gạch, mác vữa, chiều dày trát, ""sàn BTCT dày …"".",K,Mô hình ngôn ngữ đọc ghi chú; mọi con số phải có trong chữ của bản vẽ
+QU-21,Bản vẽ kết cấu (khi có),Mặt bằng kết cấu cùng hệ trục và tỷ lệ với mặt bằng kiến trúc.,B,Ghép theo trục
+QU-22,Bản vẽ kết cấu (khi có),"Cấu kiện ghi tên và tiết diện: C1 220×220, D1 220×300, sàn dày 100…",K,Đọc chữ cạnh cấu kiện
+QU-23,Bản vẽ kết cấu (khi có),Bảng thống kê thép là chữ hoặc bảng trong CAD (không phải ảnh dán).,K,"Đọc bảng, cộng theo đường kính"

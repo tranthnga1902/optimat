@@ -28,6 +28,7 @@ BRUTE_FORCE_LIMIT = 20_000
 class GroupSpace:
     group: WallGroup
     options: list[dict]      # mỗi phần tử: một cặp (vật liệu, nhà cung cấp) đã có đơn giá và cự ly
+    labor_rate: float = 0.0  # đồng/công từ bảng labor_rates; 0 khi chưa có (đã báo trong notes)
 
 
 def build_space(groups: list[WallGroup], cons: Constraints, catalog: Catalog,
@@ -37,6 +38,8 @@ def build_space(groups: list[WallGroup], cons: Constraints, catalog: Catalog,
     if vehicles.empty:
         raise ValueError("Không có loại xe nào thỏa tải trọng tối đa đã nhập.")
     order_date = cons.order_date or date.today().isoformat()
+    labor_rate, labor_note = catalog.labor_rate(cons.province, order_date)
+    notes.append(labor_note if labor_rate is not None else labor_note + " Chi phí nhân công chưa tính vào tổng chi phí.")
     spaces: list[GroupSpace] = []
     for g in groups:
         if g.net_area_m2 <= 0:
@@ -63,7 +66,10 @@ def build_space(groups: list[WallGroup], cons: Constraints, catalog: Catalog,
         if offers.empty:
             raise ValueError(f"Không có phương án tường đủ số liệu và có nhà cung cấp cho tường {g.wall_type}.")
         offers = offers.merge(systems.drop(columns=["data_kind"]), on="material_id", suffixes=("", "_ws"))
-        waste = offers.waste_pct.map(lambda v: 1 + v / 100 if pd.notna(v) else config.WASTE_FACTOR)
+        no_waste = sorted(offers.material_id[offers.waste_pct.isna()].unique())
+        if no_waste:
+            notes.append(f"Tường {g.wall_type}: {', '.join(no_waste)} chưa có hao hụt (waste_pct), khối lượng chưa cộng hao hụt.")
+        waste = offers.waste_pct.map(lambda v: 1 + v / 100 if pd.notna(v) else 1.0)
         offers = offers.assign(
             quantity=g.net_area_m2 * offers.qty_per_m2 * waste, date=order_date,
             distance_km=[road_distance_km(cons.site_lat, cons.site_lon, la, lo) for la, lo in zip(offers.lat, offers.lon)],
@@ -81,7 +87,7 @@ def build_space(groups: list[WallGroup], cons: Constraints, catalog: Catalog,
             offers = offers[~no_price]
         if offers.empty:
             raise ValueError(f"Chưa có giá cho vật liệu nào của tường {g.wall_type}.")
-        spaces.append(GroupSpace(g, offers.to_dict("records")))
+        spaces.append(GroupSpace(g, offers.to_dict("records"), labor_rate or 0.0))
     if price_model is None:
         notes.append("Chưa có mô hình giá trong thư mục models/, đang dùng giá trong danh mục.")
     return spaces, vehicles, notes
@@ -96,7 +102,7 @@ def evaluate(spaces: list[GroupSpace], vehicles: pd.DataFrame, picks: list[tuple
         material_cost = o["quantity"] * o["unit_price"]
         trips = max(1, math.ceil(area * o["weight_kg_per_m2"] / (v.payload_ton * 1000.0)))
         transport = trips * (v.base_fee + v.fee_per_km * o["distance_km"])
-        install = area * o["labor_day_per_m2"] * config.LABOR_RATE_PER_DAY
+        install = area * o["labor_day_per_m2"] * space.labor_rate
         total += material_cost + transport + install
         days = max(days, o["lead_time_days"] + math.ceil(trips / config.TRIPS_PER_DAY))
         if space.group.role == "envelope" or not envelope_exists:

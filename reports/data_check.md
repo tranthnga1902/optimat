@@ -1,23 +1,24 @@
-# Kiểm soát dữ liệu OptiMat AI (2026-10-14, nguồn csv)
+# Kiểm soát dữ liệu OptiMat AI (2026-10-19, nguồn csv)
 
-Kết quả: **ĐẠT** · 0 lỗi · 43 cảnh báo · 2 ghi chú
+Kết quả: **ĐẠT** · 0 lỗi · 44 cảnh báo · 2 ghi chú
 
 | Hạng mục | Số liệu |
 |---|---|
-| Vật liệu (vật liệu tường) | 75 (16) |
+| Vật liệu (vật liệu tường) | 93 (16) |
 | Phương án tường (đủ số liệu tối ưu) | 20 (2) |
 | Theo lớp tường: phương án / đủ số liệu | 110: 7/1, 150: 3/0, 220: 5/1, 330: 0/0 |
-| Tên gọi khác, quy tắc bóc tách | 240, 27 |
+| Tên gọi khác, quy tắc bóc tách | 277, 27 |
 | Nhà cung cấp, dòng giá đại lý (có giá) | 3, 13 (13) |
 | Vật liệu tường đã có giá | 5/16 |
 | Lịch sử giá (data/sample/prices_sample.csv): tổng / thật | 1248 / 0 |
 | Đáp án đo tay: bản vẽ, theo nhóm | 1, {'build': 1} |
 
-## Cảnh báo (43)
+## Cảnh báo (44)
 
 | Khu vực | Mục | Nội dung |
 |---|---|---|
 | dap_an | data/ground_truth | Chưa có bản vẽ nhóm test có đáp án đo tay: chưa có số sai số để báo cáo. |
+| dinh_muc_phan_tho | dinh_muc_phan_tho.csv | 22/22 dòng định mức còn trống, chờ tra TT 38/2026: công tác dùng các dòng này chưa ra vật liệu mua về. |
 | gia | 11 vật liệu tường | Chưa có giá đại lý nào: AAC02, ALC01, ALC02, GK01, GK04, GN02, GN03, PN01, TN01, TN02, TN03. |
 | gia | data/sample/prices_sample.csv | Chưa có dòng giá THẬT (ACTUAL): mô hình giá chỉ học trên dữ liệu mô phỏng, chưa dùng được để báo cáo độ chính xác. |
 | nguon_cung | SUP_A | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |

@@ -17,15 +17,22 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import ezdxf
+from ezdxf import disassemble
+from ezdxf import path as ezpath
+from ezdxf import units
 
 from .dwg_convert import DrawingError, convert_dwg_to_dxf
 from .encoding import to_unicode
 from .layer_classifier import LayerClass, apply_overrides, default_classification
 
-# $INSUNITS -> hệ số đổi sang mm. 0 = không khai báo: coi là mm (phổ biến ở bản vẽ Việt Nam).
-_UNIT_TO_MM = {0: 1.0, 1: 25.4, 2: 304.8, 4: 1.0, 5: 10.0, 6: 1000.0}
-MAX_BLOCK_DEPTH = 4
+# Quy tắc chung: mọi tọa độ lấy từ đối tượng phải đổi sang hệ tọa độ thế giới (WCS). Đối tượng 2D (ARC, CIRCLE, SOLID,
+# TEXT, HATCH...) ghi tọa độ theo hệ OCS của nó; block lật gương hoặc vẽ lật làm OCS khác WCS.
+MAX_BLOCK_DEPTH = 16
 HATCH_MIN_LINES = 8          # block có ít nhất chừng này nét cùng phương, cách đều, thì coi là hatch bị phá
+FLATTEN_MM = 10.0            # sai lệch tối đa khi chia đường cong (đường tròn, elip, spline, biên hatch) thành đoạn thẳng
+# Đối tượng chú thích hoặc không có hình trên mặt bằng: bỏ qua có chủ ý, không cảnh báo
+_IGNORED = {"DIMENSION", "ARC_DIMENSION", "LEADER", "MLEADER", "MULTILEADER", "TOLERANCE", "POINT", "XLINE", "RAY",
+            "VIEWPORT", "IMAGE", "WIPEOUT", "OLE2FRAME", "ATTDEF", "ACAD_TABLE", "SEQEND", "VERTEX"}
 
 
 @dataclass
@@ -145,6 +152,10 @@ class _Collector:
         self.segments: list[Segment] = []
         self.arcs: list[ArcItem] = []
         self.hatches: list[HatchItem] = []
+        self.texts: list[TextItem] = []
+        self.blocks: list[BlockRef] = []
+        self.warnings: list[str] = []
+        self.skipped: Counter = Counter()
 
     def seg(self, a, b, layer, kind="line", source=""):
         s = self.s
@@ -152,8 +163,14 @@ class _Collector:
 
     def arc(self, e, source=""):
         c, s = e.dxf.center, self.s
-        self.arcs.append(ArcItem(c.x * s, c.y * s, e.dxf.radius * s, e.dxf.start_angle, e.dxf.end_angle,
-                                 e.dxf.layer, source))
+        start, end = e.dxf.start_angle, e.dxf.end_angle
+        if e.dxf.extrusion.z < 0:
+            # cung lật (block lật gương): tâm, góc ghi theo hệ OCS; đổi sang WCS, chiều quay đảo nên đổi đầu cuối
+            c = e.ocs().to_wcs(c)
+            a, b = e.start_point, e.end_point
+            start = math.degrees(math.atan2(b.y - c.y, b.x - c.x)) % 360
+            end = math.degrees(math.atan2(a.y - c.y, a.x - c.x)) % 360
+        self.arcs.append(ArcItem(c.x * s, c.y * s, e.dxf.radius * s, start, end, e.dxf.layer, source))
 
     def polyline(self, e, source=""):
         try:
@@ -174,25 +191,63 @@ class _Collector:
             small = max(max(xs) - min(xs), max(ys) - min(ys)) * self.s <= 600 and len(pts) <= 8
         for a, b in pts:
             self.seg(a, b, e.dxf.layer, "small" if small else "line", source)
+        if getattr(e, "has_width", False):            # pline có bề rộng hiện thành dải tô đặc: thêm vùng tô đúng hình
+            mesh = disassemble.make_primitive(e, FLATTEN_MM / self.s).mesh
+            if mesh is not None:
+                faces = [[(v.x * self.s, v.y * self.s) for v in f] for f in mesh.faces_as_vertices()]
+                self.hatches.append(HatchItem("SOLID", e.dxf.layer, [f for f in faces if len(f) >= 3]))
 
     def solid(self, e, source=""):
-        s = self.s
-        pts = [(e.dxf.get(f"vtx{i}").x * s, e.dxf.get(f"vtx{i}").y * s) for i in range(4) if e.dxf.hasattr(f"vtx{i}")]
+        s, ocs = self.s, e.ocs()
+        vs = [ocs.to_wcs(e.dxf.get(f"vtx{i}")) for i in range(4) if e.dxf.hasattr(f"vtx{i}")]
+        pts = [(v.x * s, v.y * s) for v in vs]
         if len(pts) >= 3:
             self.hatches.append(HatchItem("SOLID", e.dxf.layer, [_convex_hull(pts)]))
 
     def hatch(self, e):
         s = self.s
         polygons = []
-        for path in e.paths:
-            if hasattr(path, "vertices"):
-                pts = [(v[0] * s, v[1] * s) for v in path.vertices]
-            else:
-                pts = [(edge.start[0] * s, edge.start[1] * s) for edge in path.edges if hasattr(edge, "start")]
+        for p in ezpath.from_hatch(e):                  # biên đã ở WCS, cạnh cong được chia nhỏ
+            pts = [(v.x * s, v.y * s) for v in p.flattening(FLATTEN_MM / s)]
             if len(pts) >= 3:
                 polygons.append(pts)
         if polygons:
             self.hatches.append(HatchItem(e.dxf.pattern_name, e.dxf.layer, polygons))
+
+    def curve(self, e, source=""):
+        """CIRCLE, ELLIPSE, SPLINE: chia thành đoạn thẳng ở WCS; hình kín nhỏ (cột tròn) đánh dấu "small" như polyline."""
+        pts = [(v.x, v.y) for v in disassemble.make_primitive(e, FLATTEN_MM / self.s).vertices()]
+        if len(pts) < 2:
+            return
+        xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+        closed = math.dist(pts[0], pts[-1]) * self.s < 1
+        small = closed and max(max(xs) - min(xs), max(ys) - min(ys)) * self.s <= 600
+        for a, b in zip(pts, pts[1:]):
+            self.seg(a, b, e.dxf.layer, "small" if small else "line", source)
+
+    def face(self, e, source=""):
+        """3DFACE: các cạnh nhìn thấy (đã ở WCS)."""
+        vs = [e.dxf.get(f"vtx{i}") for i in range(4)]
+        for i in range(4):
+            a, b = vs[i], vs[(i + 1) % 4]
+            if not e.is_invisible_edge(i) and a.distance(b) > 1e-9:
+                self.seg((a.x, a.y), (b.x, b.y), e.dxf.layer, "line", source)
+
+    def text(self, e):
+        raw = e.plain_text() if e.dxftype() == "MTEXT" else e.dxf.text
+        if not raw.strip():
+            return
+        raw = _clean_codes(raw)
+        style_name = e.dxf.get("style", "Standard")
+        styles = self.doc.styles
+        font = styles.get(style_name).dxf.get("font", None) if style_name in styles else None
+        text, enc = to_unicode(raw, font)
+        if enc == "vni":
+            self.warnings.append(f"Chữ dùng bảng mã VNI chưa được chuyển: {raw[:30]!r}")
+        # MTEXT ghi điểm chèn ở WCS; TEXT, ATTRIB ghi ở OCS
+        p = e.dxf.insert if e.dxftype() == "MTEXT" else e.ocs().to_wcs(e.dxf.insert)
+        h = e.dxf.get("char_height", 0) if e.dxftype() == "MTEXT" else e.dxf.get("height", 0)
+        self.texts.append(TextItem(text, p.x * self.s, p.y * self.s, e.dxf.layer, enc, (h or 0) * self.s))
 
     def walk(self, entities, source: str = "", depth: int = 0) -> None:
         for e in entities:
@@ -204,17 +259,42 @@ class _Collector:
                 self.polyline(e, source)
             elif t == "ARC":
                 self.arc(e, source)
+            elif t in ("CIRCLE", "ELLIPSE", "SPLINE"):
+                self.curve(e, source)
             elif t in ("SOLID", "TRACE"):
                 self.solid(e, source)
+            elif t == "3DFACE":
+                self.face(e, source)
             elif t == "HATCH":
                 self.hatch(e)
-            elif t == "INSERT" and depth < MAX_BLOCK_DEPTH:
-                self.insert(e, source, depth)
+            elif t in ("TEXT", "MTEXT"):
+                self.text(e)
+            elif t in ("INSERT", "MLINE"):
+                if depth < MAX_BLOCK_DEPTH:
+                    self.insert(e, source, depth)
+                else:
+                    self.skipped[f"block lồng quá {MAX_BLOCK_DEPTH} cấp"] += 1
+            elif t not in _IGNORED:
+                self.skipped[t] += 1
 
     def insert(self, e, source: str, depth: int) -> None:
+        if e.dxftype() == "INSERT" and e.mcount > 1:      # MINSERT: chèn thành mảng hàng × cột
+            for one in e.multi_insert():
+                self.insert(one, source, depth)
+            return
         try:
             children = list(e.virtual_entities())
         except Exception:
+            self.skipped[f"{e.dxftype()} không mở được"] += 1
+            return
+        if e.dxftype() == "INSERT":
+            p = e.ocs().to_wcs(e.dxf.insert)
+            self.blocks.append(BlockRef(e.dxf.name, p.x * self.s, p.y * self.s, e.dxf.layer,
+                                        {a.dxf.tag.upper(): a.dxf.text for a in e.attribs}))
+        for a in getattr(e, "attribs", []):             # chữ trong thuộc tính block (ký hiệu cao độ, tên phòng...)
+            self.text(a)
+        if e.dxftype() == "MLINE":
+            self.walk(children, source, depth + 1)
             return
         name = e.dxf.name
         lines = [(c.dxf.start.x, c.dxf.start.y, c.dxf.end.x, c.dxf.end.y) for c in children if c.dxftype() == "LINE"]
@@ -284,6 +364,68 @@ def mark_loose_hatch(segments: list[Segment]) -> int:
     return marked
 
 
+MISMATCH_WARNING = "Bản vẽ có thể bị đọc sai vị trí so với phần mềm CAD, cần kiểm tra lại trước khi đo bóc."
+_READ_TYPES = {"LINE", "LWPOLYLINE", "POLYLINE", "ARC", "CIRCLE", "ELLIPSE", "SPLINE", "SOLID", "TRACE", "3DFACE", "HATCH"}
+
+
+def geometry_mismatch(drawing: Drawing, tol_mm: float = 2 * FLATTEN_MM) -> dict[str, float]:
+    """Đối chiếu hình đã đọc với ezdxf (mở block và đổi tọa độ bằng đường riêng của ezdxf).
+
+    Mọi điểm đã đọc (đầu nét, đầu cung, đỉnh vùng tô, biên hatch) phải trùng một điểm ezdxf vẽ ra (lệch tối đa 1 mm),
+    và khung toàn bản vẽ phải khớp trong tol_mm. Trả {layer: số điểm lệch} và "*" (độ lệch khung, mm); rỗng là đọc đúng.
+    """
+    from ezdxf.math import BoundingBox2d
+    s = drawing.unit_scale
+
+    def flat(entities, depth=0):
+        for e in entities:
+            t = e.dxftype()
+            if t == "INSERT" and depth < MAX_BLOCK_DEPTH:
+                for one in e.multi_insert():
+                    yield from flat(one.virtual_entities(), depth + 1)
+            elif t == "MLINE":
+                yield from flat(e.virtual_entities(), depth + 1)
+            elif t in _READ_TYPES:
+                if getattr(e, "has_width", False):   # bộ đọc giữ cả nét tim của pline có bề rộng
+                    yield from e.virtual_entities()
+                yield e
+
+    ref_pts: set[tuple[int, int]] = set()
+    whole = BoundingBox2d()
+    for prim in disassemble.to_primitives(flat(drawing.doc.modelspace()), max_flattening_distance=FLATTEN_MM / s):
+        pts = [(v.x * s, v.y * s) for v in prim.vertices()]
+        whole.extend(pts)
+        ref_pts.update((round(x), round(y)) for x, y in pts)
+
+    def known(x, y):
+        rx, ry = round(x), round(y)
+        return any((rx + i, ry + j) in ref_pts for i in (-1, 0, 1) for j in (-1, 0, 1))
+
+    ours: list[tuple[str, float, float]] = []
+    for g in drawing.segments:
+        ours += [(g.layer, g.x1, g.y1), (g.layer, g.x2, g.y2)]
+    for c in drawing.arcs:
+        for ang in (c.start, c.end):
+            ours.append((c.layer, c.cx + c.r * math.cos(math.radians(ang)), c.cy + c.r * math.sin(math.radians(ang))))
+    for h in drawing.hatches:
+        if h.pattern != "*EXPLODED*":                 # khung bao lồi tự dựng, không phải điểm của bản vẽ
+            ours += [(h.layer, x, y) for poly in h.polygons for x, y in poly]
+    bad: dict[str, float] = {}
+    every = BoundingBox2d()
+    for layer, x, y in ours:
+        every.extend([(x, y)])
+        if not known(x, y):
+            bad[layer] = bad.get(layer, 0) + 1
+    if whole.has_data and every.has_data:
+        d = max(abs(whole.extmin.x - every.extmin.x), abs(whole.extmin.y - every.extmin.y),
+                abs(whole.extmax.x - every.extmax.x), abs(whole.extmax.y - every.extmax.y))
+    else:
+        d = 0.0 if whole.has_data == every.has_data else math.inf
+    if d > tol_mm:
+        bad["*"] = d
+    return bad
+
+
 def read_dxf(path: str, layer_overrides: dict[str, str] | None = None) -> Drawing:
     try:
         doc = ezdxf.readfile(path)
@@ -293,37 +435,21 @@ def read_dxf(path: str, layer_overrides: dict[str, str] | None = None) -> Drawin
     warnings: list[str] = []
 
     insunits = int(doc.header.get("$INSUNITS", 0) or 0)
-    scale = _UNIT_TO_MM.get(insunits, 1.0)
+    try:
+        scale = units.conversion_factor(insunits, units.MM) if insunits else 1.0
+    except (TypeError, ValueError):                    # mã ngoài bảng hoặc đơn vị không đổi được (độ, parsec...)
+        scale = 1.0
+        warnings.append(f"Mã đơn vị $INSUNITS = {insunits} không xác định, đang coi là mm.")
     if insunits == 0:
         warnings.append("Bản vẽ không khai báo đơn vị ($INSUNITS = 0), đang coi là mm.")
 
     col = _Collector(doc, scale)
     col.walk(msp)
     mark_loose_hatch(col.segments)
-
-    texts: list[TextItem] = []
-    for e in msp.query("TEXT MTEXT"):
-        raw = e.plain_text() if e.dxftype() == "MTEXT" else e.dxf.text
-        raw = _clean_codes(raw)
-        style_name = e.dxf.get("style", "Standard")
-        font = doc.styles.get(style_name).dxf.get("font", None) if style_name in doc.styles else None
-        text, enc = to_unicode(raw, font)
-        if enc == "vni":
-            warnings.append(f"Chữ dùng bảng mã VNI chưa được chuyển: {raw[:30]!r}")
-        p = e.dxf.insert
-        h = e.dxf.get("char_height", 0) if e.dxftype() == "MTEXT" else e.dxf.get("height", 0)
-        texts.append(TextItem(text, p.x * scale, p.y * scale, e.dxf.layer, enc, (h or 0) * scale))
-
-    blocks: list[BlockRef] = []
-    for e in msp.query("INSERT"):
-        p = e.dxf.insert
-        attribs = {a.dxf.tag.upper(): a.dxf.text for a in e.attribs}
-        blocks.append(BlockRef(e.dxf.name, p.x * scale, p.y * scale, e.dxf.layer, attribs))
-        for a in e.attribs:              # chữ trong thuộc tính block (ký hiệu cao độ, tên phòng...)
-            if a.dxf.text.strip():
-                ap = a.dxf.insert
-                text, enc = to_unicode(_clean_codes(a.dxf.text), None)
-                texts.append(TextItem(text, ap.x * scale, ap.y * scale, a.dxf.layer, enc, a.dxf.get("height", 0) * scale))
+    warnings += col.warnings
+    if col.skipped:
+        warnings.append("Đối tượng chưa đọc được (không dùng để nhận dạng): "
+                        + ", ".join(f"{t} ×{n}" for t, n in col.skipped.most_common()))
 
     layers = sorted({layer.dxf.name for layer in doc.layers})
     classes = apply_overrides(default_classification(layers), layer_overrides)
@@ -331,7 +457,17 @@ def read_dxf(path: str, layer_overrides: dict[str, str] | None = None) -> Drawin
     unknown = [name for name, c in classes.items() if c == LayerClass.UNKNOWN and name != "0"]
     if unknown:
         warnings.append("Layer chưa xác định vai trò: " + ", ".join(unknown[:8]) + (" ..." if len(unknown) > 8 else ""))
-    return Drawing(col.segments, texts, blocks, col.hatches, layers, classes, scale, warnings, col.arcs, user_walls, doc)
+    drawing = Drawing(col.segments, col.texts, col.blocks, col.hatches, layers, classes, scale, warnings, col.arcs,
+                      user_walls, doc)
+    bad = geometry_mismatch(drawing)
+    if bad:
+        msg = MISMATCH_WARNING
+        if "*" in bad:
+            msg += f" Khung bản vẽ lệch {bad.pop('*'):.0f} mm."
+        if bad:
+            msg += " Điểm không trùng hình gốc: " + ", ".join(f"{k} ×{v:.0f}" for k, v in Counter(bad).most_common(8))
+        warnings.append(msg)
+    return drawing
 
 
 def crop(drawing: Drawing, bbox: tuple[float, float, float, float]) -> Drawing:
@@ -345,7 +481,8 @@ def crop(drawing: Drawing, bbox: tuple[float, float, float, float]) -> Drawing:
     return Drawing(
         segments=segs, texts=[t for t in drawing.texts if inside(t.x, t.y)],
         blocks=[b for b in drawing.blocks if inside(b.x, b.y)], hatches=hatches, layers=drawing.layers,
-        layer_classes=drawing.layer_classes, unit_scale=drawing.unit_scale, warnings=[],
+        layer_classes=drawing.layer_classes, unit_scale=drawing.unit_scale,
+        warnings=[w for w in drawing.warnings if w.startswith(MISMATCH_WARNING)],   # mặt bằng nào cũng phải thấy
         arcs=[a for a in drawing.arcs if inside(a.cx, a.cy)], user_wall_layers=drawing.user_wall_layers, doc=drawing.doc)
 
 

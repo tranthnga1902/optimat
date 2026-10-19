@@ -119,9 +119,9 @@ def test_evaluate_and_survey(sample_dxf):
 
 def test_rule_targets_exist_in_catalog():
     """Mọi họ, mã vật liệu trong bộ quy tắc phải có trong danh mục, nếu không bóc tách ra mã không tra được giá."""
-    from optimat.catalog.repository import FAMILY_LABELS, Catalog
+    from optimat.catalog.repository import Catalog
     cat = Catalog.load()
-    known = set(FAMILY_LABELS) | set(cat.materials.material_id)
+    known = set(cat.wall_families()) | set(cat.materials.material_id)
     assert {t for r in load_rules() for t in r.target} <= known
 
 
@@ -144,11 +144,11 @@ def test_alias_falls_back_to_family_thickness(tmp_path):
     assert (w.material_id, w.wall_system_id) == ("AAC03", "W-AAC03-200")
 
 
-def test_bill_of_materials_prices_by_catalog_code(sample_dxf):
+def test_bill_of_materials_prices_by_catalog_code(sample_dxf, sample_openings):
     """Mã vật liệu nhận diện được tra thẳng ra giá trong danh mục; thiếu số liệu thì để trống và báo."""
     from optimat.catalog.pricing import bill_of_materials
     from optimat.catalog.repository import Catalog
-    groups = takeoff_from_file(sample_dxf, 3300).groups
+    groups = takeoff_from_file(sample_dxf, 3300, openings=sample_openings).groups
     bill = {(b.wall_type, b.kind): b for b in bill_of_materials(groups, Catalog.load())}
     brick = bill[("220", "main")]
     assert (brick.material_id, brick.unit) == ("GN01", "viên")
@@ -158,3 +158,12 @@ def test_bill_of_materials_prices_by_catalog_code(sample_dxf):
     mortar = bill[("220", "mortar")]
     assert mortar.material_id == "VU02" and mortar.quantity == pytest.approx(105.64 * 0.29 * 0.22, rel=1e-3)
     assert mortar.best_price is None and "giá" in mortar.missing
+
+
+def test_text_rules_match_whole_words():
+    # Sprint 1, câu 10: quy tắc chữ / layer so nguyên từ, không so chuỗi con
+    from optimat.drawing.material_rules import _best, load_rules
+    rules = load_rules()
+    assert _best(rules, "text", "tuong xay gach dat nung 220").rule_id == "T09"
+    assert _best(rules, "text", "dung gach be tong khi chung ap").target == ("AAC",)
+    assert _best(rules, "text", "kaac bao") is None             # "aac" nằm giữa từ khác: không khớp

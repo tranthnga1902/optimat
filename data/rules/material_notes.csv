@@ -1,0 +1,207 @@
+rule_id,pattern,material_id,ten,nguon,kiem_chung,ghi_chu
+N001,xi mang pcb30,XM01,"Xi măng PCB30, bao 50 kg",danh_muc,chua_kiem,tên gọi khác: xi măng PCB30
+N002,xi mang bao,XM01,"Xi măng PCB30, bao 50 kg",danh_muc,chua_kiem,tên gọi khác: xi măng bao
+N003,xi mang xay trat,XM01,"Xi măng PCB30, bao 50 kg",danh_muc,chua_kiem,tên gọi khác: xi măng xây trát
+N004,xm pcb30,XM01,"Xi măng PCB30, bao 50 kg",de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N005,pcb30,XM01,"Xi măng PCB30, bao 50 kg",de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N006,xi mang pcb40,XM02,"Xi măng PCB40, bao 50 kg",danh_muc,chua_kiem,tên gọi khác: xi măng PCB40
+N007,xi mang bao,XM02,"Xi măng PCB40, bao 50 kg",danh_muc,chua_kiem,tên gọi khác: xi măng bao
+N008,xi mang da dung,XM02,"Xi măng PCB40, bao 50 kg",danh_muc,chua_kiem,tên gọi khác: xi măng đa dụng
+N009,xm pcb40,XM02,"Xi măng PCB40, bao 50 kg",de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N010,pcb40,XM02,"Xi măng PCB40, bao 50 kg",de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N011,xi mang pc40,XM03,Xi măng PC40 rời,danh_muc,chua_kiem,tên gọi khác: xi măng PC40
+N012,xi mang roi,XM03,Xi măng PC40 rời,danh_muc,chua_kiem,tên gọi khác: xi măng rời
+N013,xi mang xa,XM03,Xi măng PC40 rời,danh_muc,chua_kiem,tên gọi khác: xi măng xá
+N014,pc40,XM03,Xi măng PC40 rời,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N015,cat vang,CA01,Cát vàng hạt to (đổ bê tông),danh_muc,chua_kiem,tên gọi khác: cát vàng
+N016,cat be tong,CA01,Cát vàng hạt to (đổ bê tông),danh_muc,chua_kiem,tên gọi khác: cát bê tông
+N017,cat hat to,CA01,Cát vàng hạt to (đổ bê tông),danh_muc,chua_kiem,tên gọi khác: cát hạt to
+N018,cat do be tong,CA01,Cát vàng hạt to (đổ bê tông),danh_muc,chua_kiem,tên gọi khác: cát đổ bê tông
+N019,cat xay,CA02,Cát vàng xây trát,danh_muc,chua_kiem,tên gọi khác: cát xây
+N020,cat trat,CA02,Cát vàng xây trát,danh_muc,chua_kiem,tên gọi khác: cát trát
+N021,cat vang hat min,CA02,Cát vàng xây trát,danh_muc,chua_kiem,tên gọi khác: cát vàng hạt mịn
+N022,cat xay to,CA02,Cát vàng xây trát,danh_muc,chua_kiem,tên gọi khác: cát xây tô
+N023,cat xay trat,CA02,Cát vàng xây trát,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N024,cat min,CA02,Cát vàng xây trát,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N025,cat den,CA03,Cát đen / cát san lấp,danh_muc,chua_kiem,tên gọi khác: cát đen
+N026,cat san lap,CA03,Cát đen / cát san lấp,danh_muc,chua_kiem,tên gọi khác: cát san lấp
+N027,cat nen,CA03,Cát đen / cát san lấp,danh_muc,chua_kiem,tên gọi khác: cát nền
+N028,cat dem,CA03,Cát đen / cát san lấp,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N029,cat lap,CA03,Cát đen / cát san lấp,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N030,cat nghien,CA04,Cát nghiền (cát nhân tạo),danh_muc,chua_kiem,tên gọi khác: cát nghiền
+N031,cat nhan tao,CA04,Cát nghiền (cát nhân tạo),danh_muc,chua_kiem,tên gọi khác: cát nhân tạo
+N032,cat xay,CA04,Cát nghiền (cát nhân tạo),danh_muc,chua_kiem,tên gọi khác: cát xay
+N033,da 1x2,DA01,Đá 1×2,danh_muc,ban_ve_build,tên gọi khác: đá 1x2
+N034,da 1×2,DA01,Đá 1×2,danh_muc,chua_kiem,tên gọi khác: đá 1×2
+N035,da dam 1x2,DA01,Đá 1×2,danh_muc,chua_kiem,tên gọi khác: đá dăm 1x2
+N036,da be tong,DA01,Đá 1×2,danh_muc,chua_kiem,tên gọi khác: đá bê tông
+N037,da 10x20,DA01,Đá 1×2,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N038,da 2x4,DA02,Đá 2×4,danh_muc,chua_kiem,tên gọi khác: đá 2x4
+N039,da dam 2x4,DA02,Đá 2×4,danh_muc,chua_kiem,tên gọi khác: đá dăm 2x4
+N040,da 4x6,DA03,Đá 4×6,danh_muc,chua_kiem,tên gọi khác: đá 4x6
+N041,da dam 4x6,DA03,Đá 4×6,danh_muc,chua_kiem,tên gọi khác: đá dăm 4x6
+N042,da 40x60,DA03,Đá 4×6,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N043,da mat,DA04,Đá mạt,danh_muc,chua_kiem,tên gọi khác: đá mạt
+N044,da mi,DA04,Đá mạt,danh_muc,chua_kiem,tên gọi khác: đá mi
+N045,mat da,DA04,Đá mạt,danh_muc,chua_kiem,tên gọi khác: mạt đá
+N046,da bui,DA04,Đá mạt,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N047,da hoc,DA05,Đá hộc,danh_muc,chua_kiem,tên gọi khác: đá hộc
+N048,da che,DA05,Đá hộc,danh_muc,chua_kiem,tên gọi khác: đá chẻ
+N049,be tong tuoi m150,BT01,Bê tông thương phẩm M150 (≈B12.5),danh_muc,chua_kiem,tên gọi khác: bê tông tươi M150
+N050,be tong thuong pham mac 150,BT01,Bê tông thương phẩm M150 (≈B12.5),danh_muc,chua_kiem,tên gọi khác: bê tông thương phẩm mác 150
+N051,be tong lot,BT01,Bê tông thương phẩm M150 (≈B12.5),danh_muc,chua_kiem,tên gọi khác: bê tông lót
+N052,m150,BT01,Bê tông thương phẩm M150 (≈B12.5),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N053,mac 150,BT01,Bê tông thương phẩm M150 (≈B12.5),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N054,#150,BT01,Bê tông thương phẩm M150 (≈B12.5),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N055,b12.5,BT01,Bê tông thương phẩm M150 (≈B12.5),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N056,be tong tuoi m200,BT02,Bê tông thương phẩm M200 (≈B15),danh_muc,chua_kiem,tên gọi khác: bê tông tươi M200
+N057,be tong thuong pham mac 200,BT02,Bê tông thương phẩm M200 (≈B15),danh_muc,chua_kiem,tên gọi khác: bê tông thương phẩm mác 200
+N058,b15,BT02,Bê tông thương phẩm M200 (≈B15),danh_muc,chua_kiem,tên gọi khác: B15
+N059,m200,BT02,Bê tông thương phẩm M200 (≈B15),de_xuat,ban_ve_build,cách ghi tắt trên bản vẽ
+N060,mac 200,BT02,Bê tông thương phẩm M200 (≈B15),de_xuat,ban_ve_build,cách ghi tắt trên bản vẽ
+N061,#200,BT02,Bê tông thương phẩm M200 (≈B15),de_xuat,ban_ve_build,cách ghi tắt trên bản vẽ
+N062,be tong tuoi m250,BT03,Bê tông thương phẩm M250 (≈B20),danh_muc,chua_kiem,tên gọi khác: bê tông tươi M250
+N063,be tong thuong pham mac 250,BT03,Bê tông thương phẩm M250 (≈B20),danh_muc,chua_kiem,tên gọi khác: bê tông thương phẩm mác 250
+N064,b20,BT03,Bê tông thương phẩm M250 (≈B20),danh_muc,chua_kiem,tên gọi khác: B20
+N065,m250,BT03,Bê tông thương phẩm M250 (≈B20),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N066,mac 250,BT03,Bê tông thương phẩm M250 (≈B20),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N067,#250,BT03,Bê tông thương phẩm M250 (≈B20),de_xuat,ban_ve_build,cách ghi tắt trên bản vẽ
+N068,btct m250,BT03,Bê tông thương phẩm M250 (≈B20),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N069,be tong tuoi m300,BT04,Bê tông thương phẩm M300 (≈B22.5),danh_muc,chua_kiem,tên gọi khác: bê tông tươi M300
+N070,be tong thuong pham mac 300,BT04,Bê tông thương phẩm M300 (≈B22.5),danh_muc,chua_kiem,tên gọi khác: bê tông thương phẩm mác 300
+N071,b22.5,BT04,Bê tông thương phẩm M300 (≈B22.5),danh_muc,chua_kiem,tên gọi khác: B22.5
+N072,m300,BT04,Bê tông thương phẩm M300 (≈B22.5),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N073,mac 300,BT04,Bê tông thương phẩm M300 (≈B22.5),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N074,#300,BT04,Bê tông thương phẩm M300 (≈B22.5),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N075,be tong chong tham,BT05,Bê tông M250 có phụ gia chống thấm,danh_muc,chua_kiem,tên gọi khác: bê tông chống thấm
+N076,be tong m250 phu gia chong tham,BT05,Bê tông M250 có phụ gia chống thấm,danh_muc,chua_kiem,tên gọi khác: bê tông M250 phụ gia chống thấm
+N077,phu gia chong tham,BT05,Bê tông M250 có phụ gia chống thấm,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N078,vua xay mac 50,VU01,Vữa xây mác 50 (trộn tại chỗ),danh_muc,chua_kiem,tên gọi khác: vữa xây mác 50
+N079,vua xi mang m50,VU01,Vữa xây mác 50 (trộn tại chỗ),danh_muc,chua_kiem,tên gọi khác: vữa xi măng M50
+N080,vua xm mac 50,VU01,Vữa xây mác 50 (trộn tại chỗ),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N081,vua mac 50,VU01,Vữa xây mác 50 (trộn tại chỗ),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N082,vua xm m50,VU01,Vữa xây mác 50 (trộn tại chỗ),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N083,vua xay mac 75,VU02,Vữa xây/trát mác 75 (trộn tại chỗ),danh_muc,chua_kiem,tên gọi khác: vữa xây mác 75
+N084,vua trat mac 75,VU02,Vữa xây/trát mác 75 (trộn tại chỗ),danh_muc,chua_kiem,tên gọi khác: vữa trát mác 75
+N085,vua xi mang m75,VU02,Vữa xây/trát mác 75 (trộn tại chỗ),danh_muc,chua_kiem,tên gọi khác: vữa xi măng M75
+N086,vua xm mac 75,VU02,Vữa xây/trát mác 75 (trộn tại chỗ),de_xuat,ban_ve_build,cách ghi tắt trên bản vẽ
+N087,vua mac 75,VU02,Vữa xây/trát mác 75 (trộn tại chỗ),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N088,vua xm m75,VU02,Vữa xây/trát mác 75 (trộn tại chỗ),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N089,vua xm #75,VU02,Vữa xây/trát mác 75 (trộn tại chỗ),de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N090,vua kho,VU03,Vữa khô trộn sẵn xây/trát,danh_muc,chua_kiem,tên gọi khác: vữa khô
+N091,vua tron san,VU03,Vữa khô trộn sẵn xây/trát,danh_muc,chua_kiem,tên gọi khác: vữa trộn sẵn
+N092,vua dong bao,VU03,Vữa khô trộn sẵn xây/trát,danh_muc,chua_kiem,tên gọi khác: vữa đóng bao
+N093,vua xay aac,VU04,Vữa xây chuyên dụng cho AAC,danh_muc,chua_kiem,tên gọi khác: vữa xây AAC
+N094,vua mach mong,VU04,Vữa xây chuyên dụng cho AAC,danh_muc,chua_kiem,tên gọi khác: vữa mạch mỏng
+N095,keo xay gach nhe,VU04,Vữa xây chuyên dụng cho AAC,danh_muc,chua_kiem,tên gọi khác: keo xây gạch nhẹ
+N096,vua xay gach be tong khi,VU04,Vữa xây chuyên dụng cho AAC,danh_muc,chua_kiem,tên gọi khác: vữa xây gạch bê tông khí
+N097,thep cuon,TH01,"Thép cuộn CB240-T, Φ6–Φ8",danh_muc,chua_kiem,tên gọi khác: thép cuộn
+N098,thep phi 6,TH01,"Thép cuộn CB240-T, Φ6–Φ8",danh_muc,chua_kiem,tên gọi khác: thép phi 6
+N099,thep phi 8,TH01,"Thép cuộn CB240-T, Φ6–Φ8",danh_muc,chua_kiem,tên gọi khác: thép phi 8
+N100,cb240-t,TH01,"Thép cuộn CB240-T, Φ6–Φ8",danh_muc,chua_kiem,tên gọi khác: CB240-T
+N101,thep tron,TH01,"Thép cuộn CB240-T, Φ6–Φ8",danh_muc,ban_ve_build,tên gọi khác: thép trơn
+N102,cb240,TH01,"Thép cuộn CB240-T, Φ6–Φ8",de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N103,thep tron tron,TH01,"Thép cuộn CB240-T, Φ6–Φ8",de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N104,thep van cb300,TH02,"Thép thanh vằn CB300-V, Φ10–Φ12",danh_muc,chua_kiem,tên gọi khác: thép vằn CB300
+N105,thep gan d10,TH02,"Thép thanh vằn CB300-V, Φ10–Φ12",danh_muc,chua_kiem,tên gọi khác: thép gân D10
+N106,thep gan d12,TH02,"Thép thanh vằn CB300-V, Φ10–Φ12",danh_muc,chua_kiem,tên gọi khác: thép gân D12
+N107,thep cay,TH02,"Thép thanh vằn CB300-V, Φ10–Φ12",danh_muc,chua_kiem,tên gọi khác: thép cây
+N108,cb300,TH02,"Thép thanh vằn CB300-V, Φ10–Φ12",de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N109,thep van cb400,TH03,"Thép thanh vằn CB400-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: thép vằn CB400
+N110,thep gan d14,TH03,"Thép thanh vằn CB400-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: thép gân D14
+N111,d16,TH03,"Thép thanh vằn CB400-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: D16
+N112,d18,TH03,"Thép thanh vằn CB400-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: D18
+N113,d20,TH03,"Thép thanh vằn CB400-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: D20
+N114,d22,TH03,"Thép thanh vằn CB400-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: D22
+N115,d25,TH03,"Thép thanh vằn CB400-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: D25
+N116,cb400,TH03,"Thép thanh vằn CB400-V, Φ14–Φ25",de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N117,thep van cb400 d10,TH07,"Thép thanh vằn CB400-V, Φ10–Φ12",danh_muc,chua_kiem,tên gọi khác: thép vằn CB400 D10
+N118,cb400 d12,TH07,"Thép thanh vằn CB400-V, Φ10–Φ12",danh_muc,chua_kiem,tên gọi khác: CB400 D12
+N119,thep van cb300 d14,TH08,"Thép thanh vằn CB300-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: thép vằn CB300 D14
+N120,d16,TH08,"Thép thanh vằn CB300-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: D16
+N121,d18,TH08,"Thép thanh vằn CB300-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: D18
+N122,d20,TH08,"Thép thanh vằn CB300-V, Φ14–Φ25",danh_muc,chua_kiem,tên gọi khác: D20
+N123,thep hop ma kem,TH04,Thép hộp mạ kẽm,danh_muc,chua_kiem,tên gọi khác: thép hộp mạ kẽm
+N124,sat hop,TH04,Thép hộp mạ kẽm,danh_muc,chua_kiem,tên gọi khác: sắt hộp
+N125,hop vuong,TH04,Thép hộp mạ kẽm,danh_muc,chua_kiem,tên gọi khác: hộp vuông
+N126,hop chu nhat,TH04,Thép hộp mạ kẽm,danh_muc,chua_kiem,tên gọi khác: hộp chữ nhật
+N127,coc be tong 200x200,CO01,Cọc BTCT vuông 200×200,danh_muc,chua_kiem,tên gọi khác: cọc bê tông 200x200
+N128,coc vuong 200,CO01,Cọc BTCT vuông 200×200,danh_muc,chua_kiem,tên gọi khác: cọc vuông 200
+N129,coc be tong 250x250,CO02,Cọc BTCT vuông 250×250,danh_muc,chua_kiem,tên gọi khác: cọc bê tông 250x250
+N130,coc vuong 250,CO02,Cọc BTCT vuông 250×250,danh_muc,chua_kiem,tên gọi khác: cọc vuông 250
+N131,coc ly tam d300,CO03,Cọc ly tâm dự ứng lực D300,danh_muc,chua_kiem,tên gọi khác: cọc ly tâm D300
+N132,coc phc d300,CO03,Cọc ly tâm dự ứng lực D300,danh_muc,chua_kiem,tên gọi khác: cọc PHC D300
+N133,coc ong,CO03,Cọc ly tâm dự ứng lực D300,danh_muc,chua_kiem,tên gọi khác: cọc ống
+N134,van phu phim,CP01,Ván khuôn phủ phim,danh_muc,chua_kiem,tên gọi khác: ván phủ phim
+N135,van khuon phu phim,CP01,Ván khuôn phủ phim,danh_muc,chua_kiem,tên gọi khác: ván khuôn phủ phim
+N136,van cop pha,CP01,Ván khuôn phủ phim,danh_muc,chua_kiem,tên gọi khác: ván cốp pha
+N137,coppha phu phim,CP01,Ván khuôn phủ phim,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N138,cop pha thep,CP02,Cốp pha thép (thuê),danh_muc,chua_kiem,tên gọi khác: cốp pha thép
+N139,van khuon thep,CP02,Cốp pha thép (thuê),danh_muc,chua_kiem,tên gọi khác: ván khuôn thép
+N140,thue cop pha,CP02,Cốp pha thép (thuê),danh_muc,chua_kiem,tên gọi khác: thuê cốp pha
+N141,luoi thep chong nut,PK01,Lưới thép chống nứt,danh_muc,chua_kiem,tên gọi khác: lưới thép chống nứt
+N142,luoi mat cao,PK01,Lưới thép chống nứt,danh_muc,chua_kiem,tên gọi khác: lưới mắt cáo
+N143,luoi to tuong,PK01,Lưới thép chống nứt,danh_muc,chua_kiem,tên gọi khác: lưới tô tường
+N144,luoi ma kem,PK01,Lưới thép chống nứt,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N145,rau thep,PK02,Râu thép liên kết tường – cột,danh_muc,chua_kiem,tên gọi khác: râu thép
+N146,bat neo tuong,PK02,Râu thép liên kết tường – cột,danh_muc,chua_kiem,tên gọi khác: bát neo tường
+N147,thep rau,PK02,Râu thép liên kết tường – cột,danh_muc,chua_kiem,tên gọi khác: thép râu
+N148,keo dan tam alc,PK03,"Keo / vữa mối nối tấm ALC, panel",danh_muc,chua_kiem,tên gọi khác: keo dán tấm ALC
+N149,vua moi noi panel,PK03,"Keo / vữa mối nối tấm ALC, panel",danh_muc,chua_kiem,tên gọi khác: vữa mối nối panel
+N150,keo xu ly moi noi,PK03,"Keo / vữa mối nối tấm ALC, panel",danh_muc,chua_kiem,tên gọi khác: keo xử lý mối nối
+N151,tam san alc,SA01,Tấm sàn ALC dày 100–150,danh_muc,chua_kiem,tên gọi khác: tấm sàn ALC
+N152,san be tong nhe,SA01,Tấm sàn ALC dày 100–150,danh_muc,chua_kiem,tên gọi khác: sàn bê tông nhẹ
+N153,tam san be tong khi,SA01,Tấm sàn ALC dày 100–150,danh_muc,chua_kiem,tên gọi khác: tấm sàn bê tông khí
+N154,ton san deck,SA02,"Tôn sàn deck 0,75–1,0 mm",danh_muc,chua_kiem,tên gọi khác: tôn sàn deck
+N155,ton do san,SA02,"Tôn sàn deck 0,75–1,0 mm",danh_muc,chua_kiem,tên gọi khác: tôn đổ sàn
+N156,san deck,SA02,"Tôn sàn deck 0,75–1,0 mm",danh_muc,chua_kiem,tên gọi khác: sàn deck
+N157,dam ppb,SA03,Dầm bê tông dự ứng lực (sàn dầm T),danh_muc,chua_kiem,tên gọi khác: dầm PPB
+N158,dam be tong du ung luc,SA03,Dầm bê tông dự ứng lực (sàn dầm T),danh_muc,chua_kiem,tên gọi khác: dầm bê tông dự ứng lực
+N159,dam chu t,SA03,Dầm bê tông dự ứng lực (sàn dầm T),danh_muc,chua_kiem,tên gọi khác: dầm chữ T
+N160,gach block san,SA04,Block bê tông rỗng cho sàn dầm T,danh_muc,chua_kiem,tên gọi khác: gạch block sàn
+N161,block san dam t,SA04,Block bê tông rỗng cho sàn dầm T,danh_muc,chua_kiem,tên gọi khác: block sàn dầm T
+N162,mang kho nong,CT01,Màng khò nóng gốc bitum,danh_muc,chua_kiem,tên gọi khác: màng khò nóng
+N163,mang bitum,CT01,Màng khò nóng gốc bitum,danh_muc,chua_kiem,tên gọi khác: màng bitum
+N164,mang chong tham kho,CT01,Màng khò nóng gốc bitum,danh_muc,chua_kiem,tên gọi khác: màng chống thấm khò
+N165,chong tham bitum,CT01,Màng khò nóng gốc bitum,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N166,mang bitum kho nong,CT01,Màng khò nóng gốc bitum,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N167,chong tham xi mang 2 thanh phan,CT02,Chống thấm gốc xi măng 2 thành phần,danh_muc,chua_kiem,tên gọi khác: chống thấm xi măng 2 thành phần
+N168,sikatop 107,CT02,Chống thấm gốc xi măng 2 thành phần,danh_muc,chua_kiem,tên gọi khác: SikaTop 107
+N169,mapelastic,CT02,Chống thấm gốc xi măng 2 thành phần,danh_muc,chua_kiem,tên gọi khác: Mapelastic
+N170,chong tham goc xi mang,CT02,Chống thấm gốc xi măng 2 thành phần,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N171,chong tham polyurethane,CT03,Chống thấm gốc polyurethane,danh_muc,chua_kiem,tên gọi khác: chống thấm polyurethane
+N172,chong tham pu,CT03,Chống thấm gốc polyurethane,danh_muc,chua_kiem,tên gọi khác: chống thấm PU
+N173,sikalastic,CT03,Chống thấm gốc polyurethane,danh_muc,chua_kiem,tên gọi khác: Sikalastic
+N174,chong tham goc pu,CT03,Chống thấm gốc polyurethane,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N175,polyurea,CT03,Chống thấm gốc polyurethane,de_xuat,chua_kiem,cách ghi tắt trên bản vẽ
+N176,bu long,LK01,"Bu lông, ốc vít liên kết",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N177,oc vit,LK01,"Bu lông, ốc vít liên kết",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N178,que han,LK02,Que hàn,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N179,son chong gi,LK03,Sơn chống gỉ,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N180,son chong ri,LK03,Sơn chống gỉ,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N181,day thep buoc,TH10,Dây thép buộc 1 ly,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N182,day buoc,TH10,Dây thép buộc 1 ly,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N183,kem buoc,TH10,Dây thép buộc 1 ly,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N184,mang tu dinh,CT04,Màng chống thấm tự dính,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N185,mang chong tham tu dinh,CT04,Màng chống thấm tự dính,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N186,bang can nuoc,CT05,Băng cản nước (waterstop),danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N187,waterstop,CT05,Băng cản nước (waterstop),danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N188,thanh truong no,CT06,Thanh trương nở,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N189,swellable,CT06,Thanh trương nở,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N190,phu gia be tong,PG01,"Phụ gia bê tông (dẻo, chống thấm, đông cứng nhanh)",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N191,phu gia deo,PG01,"Phụ gia bê tông (dẻo, chống thấm, đông cứng nhanh)",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N192,phu gia dong ket nhanh,PG01,"Phụ gia bê tông (dẻo, chống thấm, đông cứng nhanh)",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N193,sika latex,PG02,Phụ gia kết nối (Sika Latex),danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N194,phu gia ket noi,PG02,Phụ gia kết nối (Sika Latex),danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N195,vua khong co ngot,VU05,Vữa rót không co ngót (grout),danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N196,grout,VU05,Vữa rót không co ngót (grout),danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N197,con ke,PK04,Con kê bê tông 15/20/25/30 mm,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N198,luoi thuy tinh,PK05,Lưới thủy tinh chống nứt,danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N199,go xe,CP03,"Gỗ xẻ, ván khuôn gỗ",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N200,van khuon go,CP03,"Gỗ xẻ, ván khuôn gỗ",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N201,cay chong,CP04,"Cây chống thép, giàn giáo",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N202,gian giao,CP04,"Cây chống thép, giàn giáo",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N203,ty ren,CP05,"Ty ren, cùm, bu lông cốp pha",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N204,cum cop pha,CP05,"Ty ren, cùm, bu lông cốp pha",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)
+N205,be tong gach vo,BT06,"Bê tông gạch vỡ mác 50 (lót móng, nền)",danh_muc,ban_ve_build,tên gọi khác trong danh mục (thêm 19/10/2026)
+N206,bt gach vo,BT06,"Bê tông gạch vỡ mác 50 (lót móng, nền)",danh_muc,chua_kiem,tên gọi khác trong danh mục (thêm 19/10/2026)

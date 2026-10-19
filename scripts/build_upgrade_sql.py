@@ -88,10 +88,10 @@ def guarded(sql: str, label: str, errors: str) -> str:
 
 def main() -> None:
     tables = list(Base.metadata.sorted_tables)
-    out = ["-- Nâng cấp database optimat lên lược đồ hiện tại (19 bảng). Sinh tự động bởi scripts/build_upgrade_sql.py,",
+    out = [f"-- Nâng cấp database optimat lên lược đồ hiện tại ({len(tables)} bảng). Sinh tự động bởi scripts/build_upgrade_sql.py,",
            "-- không sửa tay. Không xóa bảng hay dữ liệu; chạy lại nhiều lần được.",
            "-- DBeaver: kết nối database optimat, mở file này, chạy cả script bằng Alt+X.",
-           "-- Sau file này chạy sql/03_materials.sql để nạp hoặc cập nhật danh mục 75 vật liệu.", "",
+           "-- Sau file này chạy sql/03_materials.sql (danh mục 93 vật liệu, họ vật liệu) rồi sql/05_rules.sql (bộ quy tắc).", "",
            "SET client_encoding = 'UTF8';",
            "SET client_min_messages = warning;   -- ẩn thông báo 'đã có, bỏ qua'; chỉ hiện cảnh báo cần xử lý", "",
            "-- ===================== 1. Bảng còn thiếu =====================", ""]

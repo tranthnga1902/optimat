@@ -1,12 +1,40 @@
--- Nâng cấp database optimat lên lược đồ hiện tại (19 bảng). Sinh tự động bởi scripts/build_upgrade_sql.py,
+-- Nâng cấp database optimat lên lược đồ hiện tại (26 bảng). Sinh tự động bởi scripts/build_upgrade_sql.py,
 -- không sửa tay. Không xóa bảng hay dữ liệu; chạy lại nhiều lần được.
 -- DBeaver: kết nối database optimat, mở file này, chạy cả script bằng Alt+X.
--- Sau file này chạy sql/03_materials.sql để nạp hoặc cập nhật danh mục 75 vật liệu.
+-- Sau file này chạy sql/03_materials.sql (danh mục 93 vật liệu, họ vật liệu) rồi sql/05_rules.sql (bộ quy tắc).
 
 SET client_encoding = 'UTF8';
 SET client_min_messages = warning;   -- ẩn thông báo 'đã có, bỏ qua'; chỉ hiện cảnh báo cần xử lý
 
 -- ===================== 1. Bảng còn thiếu =====================
+
+CREATE TABLE IF NOT EXISTS convention_clauses (
+	id SERIAL NOT NULL, 
+	ma VARCHAR(16) NOT NULL, 
+	nhom VARCHAR(64) NOT NULL, 
+	dieu_khoan TEXT NOT NULL, 
+	muc VARCHAR(1) NOT NULL, 
+	cach_kiem TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT ck_convention_clauses_muc CHECK (muc IN ('B', 'K')), 
+	CONSTRAINT convention_clauses_ma_key UNIQUE (ma)
+);
+
+CREATE TABLE IF NOT EXISTS drawing_concepts (
+	id SERIAL NOT NULL, 
+	ma VARCHAR(16) NOT NULL, 
+	khai_niem VARCHAR(64) NOT NULL, 
+	qu VARCHAR(16), 
+	tin_hieu VARCHAR(16) NOT NULL, 
+	mau VARCHAR(128) NOT NULL, 
+	vai_tro VARCHAR(16) NOT NULL, 
+	rong_mm FLOAT, 
+	cao_mm FLOAT, 
+	ghi_chu TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT ck_drawing_concepts_signal CHECK (tin_hieu IN ('layer', 'block')), 
+	CONSTRAINT drawing_concepts_ma_key UNIQUE (ma)
+);
 
 CREATE TABLE IF NOT EXISTS labor_rates (
 	id SERIAL NOT NULL, 
@@ -20,12 +48,49 @@ CREATE TABLE IF NOT EXISTS labor_rates (
 	CONSTRAINT ck_labor_rates_data_kind CHECK (data_kind IN ('ACTUAL', 'SAMPLE', 'SYNTHETIC'))
 );
 
+CREATE TABLE IF NOT EXISTS material_families (
+	family_id VARCHAR(32) NOT NULL, 
+	name VARCHAR(255) NOT NULL, 
+	sort_order INTEGER NOT NULL, 
+	is_wall BOOLEAN DEFAULT 'false' NOT NULL, 
+	PRIMARY KEY (family_id)
+);
+
 CREATE TABLE IF NOT EXISTS material_groups (
 	group_id VARCHAR(64) NOT NULL, 
 	sort_order INTEGER NOT NULL, 
 	name VARCHAR(255) NOT NULL, 
 	description TEXT DEFAULT '' NOT NULL, 
 	PRIMARY KEY (group_id)
+);
+
+CREATE TABLE IF NOT EXISTS material_notes (
+	id SERIAL NOT NULL, 
+	rule_id VARCHAR(32) NOT NULL, 
+	pattern VARCHAR(255) NOT NULL, 
+	material_id VARCHAR(32) NOT NULL, 
+	ten VARCHAR(255), 
+	nguon VARCHAR(32), 
+	kiem_chung VARCHAR(32), 
+	ghi_chu TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT material_notes_rule_id_key UNIQUE (rule_id)
+);
+
+CREATE TABLE IF NOT EXISTS material_rules (
+	id SERIAL NOT NULL, 
+	rule_id VARCHAR(32) NOT NULL, 
+	signal VARCHAR(16) NOT NULL, 
+	pattern VARCHAR(255) NOT NULL, 
+	target VARCHAR(255), 
+	element VARCHAR(32), 
+	width_mm FLOAT, 
+	height_mm FLOAT, 
+	priority INTEGER DEFAULT '0' NOT NULL, 
+	note TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT ck_material_rules_signal CHECK (signal IN ('text', 'hatch', 'layer', 'block')), 
+	CONSTRAINT material_rules_rule_id_key UNIQUE (rule_id)
 );
 
 CREATE TABLE IF NOT EXISTS model_versions (
@@ -38,6 +103,30 @@ CREATE TABLE IF NOT EXISTS model_versions (
 	file_path VARCHAR(1024) NOT NULL, 
 	is_active BOOLEAN DEFAULT 'false' NOT NULL, 
 	PRIMARY KEY (version)
+);
+
+CREATE TABLE IF NOT EXISTS room_rules (
+	id SERIAL NOT NULL, 
+	rule_id VARCHAR(32) NOT NULL, 
+	pattern VARCHAR(255) NOT NULL, 
+	kind VARCHAR(16) NOT NULL, 
+	note TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT room_rules_rule_id_key UNIQUE (rule_id)
+);
+
+CREATE TABLE IF NOT EXISTS rough_norms (
+	id SERIAL NOT NULL, 
+	work_code VARCHAR(32) NOT NULL, 
+	variant VARCHAR(32), 
+	material_id VARCHAR(64), 
+	material_name VARCHAR(255), 
+	qty FLOAT, 
+	qty_unit VARCHAR(64), 
+	norm_code VARCHAR(64), 
+	source VARCHAR(255), 
+	note TEXT, 
+	PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS standards (
@@ -162,7 +251,8 @@ CREATE TABLE IF NOT EXISTS materials (
 	data_note TEXT, 
 	PRIMARY KEY (material_id), 
 	CONSTRAINT ck_materials_data_kind CHECK (data_kind IN ('ACTUAL', 'SAMPLE', 'SYNTHETIC')), 
-	FOREIGN KEY("group") REFERENCES material_groups (group_id)
+	FOREIGN KEY("group") REFERENCES material_groups (group_id), 
+	FOREIGN KEY(family) REFERENCES material_families (family_id)
 );
 
 CREATE TABLE IF NOT EXISTS projects (
@@ -173,6 +263,10 @@ CREATE TABLE IF NOT EXISTS projects (
 	site_lat FLOAT, 
 	site_lon FLOAT, 
 	floor_height_mm FLOAT, 
+	door_width_mm FLOAT, 
+	door_height_mm FLOAT, 
+	window_width_mm FLOAT, 
+	window_height_mm FLOAT, 
 	budget FLOAT, 
 	deadline_days FLOAT, 
 	max_vehicle_ton FLOAT, 
@@ -340,6 +434,24 @@ CREATE TABLE IF NOT EXISTS optimization_runs (
 
 -- ===================== 2. Cột còn thiếu =====================
 
+-- convention_clauses
+ALTER TABLE convention_clauses ADD COLUMN IF NOT EXISTS ma VARCHAR(16);
+ALTER TABLE convention_clauses ADD COLUMN IF NOT EXISTS nhom VARCHAR(64);
+ALTER TABLE convention_clauses ADD COLUMN IF NOT EXISTS dieu_khoan TEXT;
+ALTER TABLE convention_clauses ADD COLUMN IF NOT EXISTS muc VARCHAR(1);
+ALTER TABLE convention_clauses ADD COLUMN IF NOT EXISTS cach_kiem TEXT;
+
+-- drawing_concepts
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS ma VARCHAR(16);
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS khai_niem VARCHAR(64);
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS qu VARCHAR(16);
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS tin_hieu VARCHAR(16);
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS mau VARCHAR(128);
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS vai_tro VARCHAR(16);
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS rong_mm FLOAT;
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS cao_mm FLOAT;
+ALTER TABLE drawing_concepts ADD COLUMN IF NOT EXISTS ghi_chu TEXT;
+
 -- labor_rates
 ALTER TABLE labor_rates ADD COLUMN IF NOT EXISTS province VARCHAR(64);
 ALTER TABLE labor_rates ADD COLUMN IF NOT EXISTS grade VARCHAR(32);
@@ -348,10 +460,35 @@ ALTER TABLE labor_rates ADD COLUMN IF NOT EXISTS valid_from DATE;
 ALTER TABLE labor_rates ADD COLUMN IF NOT EXISTS source VARCHAR(1024) DEFAULT '' NOT NULL;
 ALTER TABLE labor_rates ADD COLUMN IF NOT EXISTS data_kind VARCHAR(16) DEFAULT 'ACTUAL' NOT NULL;
 
+-- material_families
+ALTER TABLE material_families ADD COLUMN IF NOT EXISTS name VARCHAR(255);
+ALTER TABLE material_families ADD COLUMN IF NOT EXISTS sort_order INTEGER;
+ALTER TABLE material_families ADD COLUMN IF NOT EXISTS is_wall BOOLEAN DEFAULT 'false' NOT NULL;
+
 -- material_groups
 ALTER TABLE material_groups ADD COLUMN IF NOT EXISTS sort_order INTEGER;
 ALTER TABLE material_groups ADD COLUMN IF NOT EXISTS name VARCHAR(255);
 ALTER TABLE material_groups ADD COLUMN IF NOT EXISTS description TEXT DEFAULT '' NOT NULL;
+
+-- material_notes
+ALTER TABLE material_notes ADD COLUMN IF NOT EXISTS rule_id VARCHAR(32);
+ALTER TABLE material_notes ADD COLUMN IF NOT EXISTS pattern VARCHAR(255);
+ALTER TABLE material_notes ADD COLUMN IF NOT EXISTS material_id VARCHAR(32);
+ALTER TABLE material_notes ADD COLUMN IF NOT EXISTS ten VARCHAR(255);
+ALTER TABLE material_notes ADD COLUMN IF NOT EXISTS nguon VARCHAR(32);
+ALTER TABLE material_notes ADD COLUMN IF NOT EXISTS kiem_chung VARCHAR(32);
+ALTER TABLE material_notes ADD COLUMN IF NOT EXISTS ghi_chu TEXT;
+
+-- material_rules
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS rule_id VARCHAR(32);
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS signal VARCHAR(16);
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS pattern VARCHAR(255);
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS target VARCHAR(255);
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS element VARCHAR(32);
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS width_mm FLOAT;
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS height_mm FLOAT;
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS priority INTEGER DEFAULT '0' NOT NULL;
+ALTER TABLE material_rules ADD COLUMN IF NOT EXISTS note TEXT;
 
 -- model_versions
 ALTER TABLE model_versions ADD COLUMN IF NOT EXISTS target VARCHAR(32);
@@ -361,6 +498,23 @@ ALTER TABLE model_versions ADD COLUMN IF NOT EXISTS contains_synthetic BOOLEAN D
 ALTER TABLE model_versions ADD COLUMN IF NOT EXISTS metrics JSONB;
 ALTER TABLE model_versions ADD COLUMN IF NOT EXISTS file_path VARCHAR(1024);
 ALTER TABLE model_versions ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT 'false' NOT NULL;
+
+-- room_rules
+ALTER TABLE room_rules ADD COLUMN IF NOT EXISTS rule_id VARCHAR(32);
+ALTER TABLE room_rules ADD COLUMN IF NOT EXISTS pattern VARCHAR(255);
+ALTER TABLE room_rules ADD COLUMN IF NOT EXISTS kind VARCHAR(16);
+ALTER TABLE room_rules ADD COLUMN IF NOT EXISTS note TEXT;
+
+-- rough_norms
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS work_code VARCHAR(32);
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS variant VARCHAR(32);
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS material_id VARCHAR(64);
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS material_name VARCHAR(255);
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS qty FLOAT;
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS qty_unit VARCHAR(64);
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS norm_code VARCHAR(64);
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS source VARCHAR(255);
+ALTER TABLE rough_norms ADD COLUMN IF NOT EXISTS note TEXT;
 
 -- standards
 ALTER TABLE standards ADD COLUMN IF NOT EXISTS code VARCHAR(64);
@@ -437,7 +591,7 @@ ALTER TABLE materials ADD COLUMN IF NOT EXISTS lambda_w_mk FLOAT;
 ALTER TABLE materials ADD COLUMN IF NOT EXISTS labor_days_per_m2 FLOAT;
 ALTER TABLE materials ADD COLUMN IF NOT EXISTS data_kind VARCHAR(16) DEFAULT 'ACTUAL' NOT NULL;
 ALTER TABLE materials ADD COLUMN IF NOT EXISTS subgroup VARCHAR(128);
-ALTER TABLE materials ADD COLUMN IF NOT EXISTS family VARCHAR(32);
+ALTER TABLE materials ADD COLUMN IF NOT EXISTS family VARCHAR(32) REFERENCES material_families (family_id);
 ALTER TABLE materials ADD COLUMN IF NOT EXISTS usage_text VARCHAR(255);
 ALTER TABLE materials ADD COLUMN IF NOT EXISTS usage_role VARCHAR(128);
 ALTER TABLE materials ADD COLUMN IF NOT EXISTS tier INTEGER;
@@ -466,6 +620,10 @@ ALTER TABLE projects ADD COLUMN IF NOT EXISTS address VARCHAR(512) DEFAULT '' NO
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS site_lat FLOAT;
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS site_lon FLOAT;
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS floor_height_mm FLOAT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS door_width_mm FLOAT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS door_height_mm FLOAT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS window_width_mm FLOAT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS window_height_mm FLOAT;
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS budget FLOAT;
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS deadline_days FLOAT;
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS max_vehicle_ton FLOAT;
@@ -571,7 +729,30 @@ ALTER TABLE optimization_runs ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH
 
 -- ===================== 3. Cột được phép để trống =====================
 
+ALTER TABLE convention_clauses ALTER COLUMN cach_kiem DROP NOT NULL;
+ALTER TABLE drawing_concepts ALTER COLUMN qu DROP NOT NULL;
+ALTER TABLE drawing_concepts ALTER COLUMN rong_mm DROP NOT NULL;
+ALTER TABLE drawing_concepts ALTER COLUMN cao_mm DROP NOT NULL;
+ALTER TABLE drawing_concepts ALTER COLUMN ghi_chu DROP NOT NULL;
 ALTER TABLE labor_rates ALTER COLUMN valid_from DROP NOT NULL;
+ALTER TABLE material_notes ALTER COLUMN ten DROP NOT NULL;
+ALTER TABLE material_notes ALTER COLUMN nguon DROP NOT NULL;
+ALTER TABLE material_notes ALTER COLUMN kiem_chung DROP NOT NULL;
+ALTER TABLE material_notes ALTER COLUMN ghi_chu DROP NOT NULL;
+ALTER TABLE material_rules ALTER COLUMN target DROP NOT NULL;
+ALTER TABLE material_rules ALTER COLUMN element DROP NOT NULL;
+ALTER TABLE material_rules ALTER COLUMN width_mm DROP NOT NULL;
+ALTER TABLE material_rules ALTER COLUMN height_mm DROP NOT NULL;
+ALTER TABLE material_rules ALTER COLUMN note DROP NOT NULL;
+ALTER TABLE room_rules ALTER COLUMN note DROP NOT NULL;
+ALTER TABLE rough_norms ALTER COLUMN variant DROP NOT NULL;
+ALTER TABLE rough_norms ALTER COLUMN material_id DROP NOT NULL;
+ALTER TABLE rough_norms ALTER COLUMN material_name DROP NOT NULL;
+ALTER TABLE rough_norms ALTER COLUMN qty DROP NOT NULL;
+ALTER TABLE rough_norms ALTER COLUMN qty_unit DROP NOT NULL;
+ALTER TABLE rough_norms ALTER COLUMN norm_code DROP NOT NULL;
+ALTER TABLE rough_norms ALTER COLUMN source DROP NOT NULL;
+ALTER TABLE rough_norms ALTER COLUMN note DROP NOT NULL;
 ALTER TABLE standards ALTER COLUMN valid_from DROP NOT NULL;
 ALTER TABLE standards ALTER COLUMN valid_to DROP NOT NULL;
 ALTER TABLE suppliers ALTER COLUMN dealer_type DROP NOT NULL;
@@ -631,6 +812,10 @@ ALTER TABLE materials ALTER COLUMN data_note DROP NOT NULL;
 ALTER TABLE projects ALTER COLUMN site_lat DROP NOT NULL;
 ALTER TABLE projects ALTER COLUMN site_lon DROP NOT NULL;
 ALTER TABLE projects ALTER COLUMN floor_height_mm DROP NOT NULL;
+ALTER TABLE projects ALTER COLUMN door_width_mm DROP NOT NULL;
+ALTER TABLE projects ALTER COLUMN door_height_mm DROP NOT NULL;
+ALTER TABLE projects ALTER COLUMN window_width_mm DROP NOT NULL;
+ALTER TABLE projects ALTER COLUMN window_height_mm DROP NOT NULL;
 ALTER TABLE projects ALTER COLUMN budget DROP NOT NULL;
 ALTER TABLE projects ALTER COLUMN deadline_days DROP NOT NULL;
 ALTER TABLE projects ALTER COLUMN max_vehicle_ton DROP NOT NULL;
@@ -685,10 +870,58 @@ UPDATE price_records SET transport_included = 'UNKNOWN' WHERE transport_included
 -- ===================== 5. Ràng buộc =====================
 
 DO $$ BEGIN
+  EXECUTE 'ALTER TABLE convention_clauses ADD CONSTRAINT ck_convention_clauses_muc CHECK (muc IN (''B'', ''K''))';
+EXCEPTION
+  WHEN duplicate_object OR duplicate_table THEN NULL;
+  WHEN check_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc ck_convention_clauses_muc: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
+END $$;
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE convention_clauses ADD CONSTRAINT convention_clauses_ma_key UNIQUE (ma)';
+EXCEPTION
+  WHEN duplicate_object OR duplicate_table THEN NULL;
+  WHEN unique_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc convention_clauses_ma_key: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
+END $$;
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE drawing_concepts ADD CONSTRAINT ck_drawing_concepts_signal CHECK (tin_hieu IN (''layer'', ''block''))';
+EXCEPTION
+  WHEN duplicate_object OR duplicate_table THEN NULL;
+  WHEN check_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc ck_drawing_concepts_signal: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
+END $$;
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE drawing_concepts ADD CONSTRAINT drawing_concepts_ma_key UNIQUE (ma)';
+EXCEPTION
+  WHEN duplicate_object OR duplicate_table THEN NULL;
+  WHEN unique_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc drawing_concepts_ma_key: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
+END $$;
+DO $$ BEGIN
   EXECUTE 'ALTER TABLE labor_rates ADD CONSTRAINT ck_labor_rates_data_kind CHECK (data_kind IN (''ACTUAL'', ''SAMPLE'', ''SYNTHETIC''))';
 EXCEPTION
   WHEN duplicate_object OR duplicate_table THEN NULL;
   WHEN check_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc ck_labor_rates_data_kind: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
+END $$;
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE material_notes ADD CONSTRAINT material_notes_rule_id_key UNIQUE (rule_id)';
+EXCEPTION
+  WHEN duplicate_object OR duplicate_table THEN NULL;
+  WHEN unique_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc material_notes_rule_id_key: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
+END $$;
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE material_rules ADD CONSTRAINT ck_material_rules_signal CHECK (signal IN (''text'', ''hatch'', ''layer'', ''block''))';
+EXCEPTION
+  WHEN duplicate_object OR duplicate_table THEN NULL;
+  WHEN check_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc ck_material_rules_signal: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
+END $$;
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE material_rules ADD CONSTRAINT material_rules_rule_id_key UNIQUE (rule_id)';
+EXCEPTION
+  WHEN duplicate_object OR duplicate_table THEN NULL;
+  WHEN unique_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc material_rules_rule_id_key: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
+END $$;
+DO $$ BEGIN
+  EXECUTE 'ALTER TABLE room_rules ADD CONSTRAINT room_rules_rule_id_key UNIQUE (rule_id)';
+EXCEPTION
+  WHEN duplicate_object OR duplicate_table THEN NULL;
+  WHEN unique_violation THEN RAISE WARNING 'Chưa thêm được ràng buộc room_rules_rule_id_key: dữ liệu cũ vi phạm, sửa dữ liệu rồi chạy lại';
 END $$;
 DO $$ BEGIN
   EXECUTE 'ALTER TABLE standards ADD CONSTRAINT standards_code_key UNIQUE (code)';
@@ -826,6 +1059,8 @@ END $$;
 -- ===================== 6. Chỉ mục =====================
 
 CREATE INDEX IF NOT EXISTS ix_labor_rates_province ON labor_rates (province);
+CREATE INDEX IF NOT EXISTS ix_material_notes_material_id ON material_notes (material_id);
+CREATE INDEX IF NOT EXISTS ix_rough_norms_work_code ON rough_norms (work_code);
 CREATE INDEX IF NOT EXISTS ix_audit_logs_action ON audit_logs (action);
 CREATE INDEX IF NOT EXISTS ix_projects_user_id ON projects (user_id);
 CREATE INDEX IF NOT EXISTS ix_material_aliases_alias ON material_aliases (alias);
@@ -874,6 +1109,22 @@ WHERE p.data_kind = 'ACTUAL';
 
 -- ===================== 8. Kiểm tra: kết quả rỗng nghĩa là database đã đủ =====================
 WITH expected(table_name, column_name, udt_name) AS (VALUES
+  ('convention_clauses', 'id', 'int4'),
+  ('convention_clauses', 'ma', 'varchar'),
+  ('convention_clauses', 'nhom', 'varchar'),
+  ('convention_clauses', 'dieu_khoan', 'text'),
+  ('convention_clauses', 'muc', 'varchar'),
+  ('convention_clauses', 'cach_kiem', 'text'),
+  ('drawing_concepts', 'id', 'int4'),
+  ('drawing_concepts', 'ma', 'varchar'),
+  ('drawing_concepts', 'khai_niem', 'varchar'),
+  ('drawing_concepts', 'qu', 'varchar'),
+  ('drawing_concepts', 'tin_hieu', 'varchar'),
+  ('drawing_concepts', 'mau', 'varchar'),
+  ('drawing_concepts', 'vai_tro', 'varchar'),
+  ('drawing_concepts', 'rong_mm', 'float8'),
+  ('drawing_concepts', 'cao_mm', 'float8'),
+  ('drawing_concepts', 'ghi_chu', 'text'),
   ('labor_rates', 'id', 'int4'),
   ('labor_rates', 'province', 'varchar'),
   ('labor_rates', 'grade', 'varchar'),
@@ -881,10 +1132,32 @@ WITH expected(table_name, column_name, udt_name) AS (VALUES
   ('labor_rates', 'valid_from', 'date'),
   ('labor_rates', 'source', 'varchar'),
   ('labor_rates', 'data_kind', 'varchar'),
+  ('material_families', 'family_id', 'varchar'),
+  ('material_families', 'name', 'varchar'),
+  ('material_families', 'sort_order', 'int4'),
+  ('material_families', 'is_wall', 'bool'),
   ('material_groups', 'group_id', 'varchar'),
   ('material_groups', 'sort_order', 'int4'),
   ('material_groups', 'name', 'varchar'),
   ('material_groups', 'description', 'text'),
+  ('material_notes', 'id', 'int4'),
+  ('material_notes', 'rule_id', 'varchar'),
+  ('material_notes', 'pattern', 'varchar'),
+  ('material_notes', 'material_id', 'varchar'),
+  ('material_notes', 'ten', 'varchar'),
+  ('material_notes', 'nguon', 'varchar'),
+  ('material_notes', 'kiem_chung', 'varchar'),
+  ('material_notes', 'ghi_chu', 'text'),
+  ('material_rules', 'id', 'int4'),
+  ('material_rules', 'rule_id', 'varchar'),
+  ('material_rules', 'signal', 'varchar'),
+  ('material_rules', 'pattern', 'varchar'),
+  ('material_rules', 'target', 'varchar'),
+  ('material_rules', 'element', 'varchar'),
+  ('material_rules', 'width_mm', 'float8'),
+  ('material_rules', 'height_mm', 'float8'),
+  ('material_rules', 'priority', 'int4'),
+  ('material_rules', 'note', 'text'),
   ('model_versions', 'version', 'varchar'),
   ('model_versions', 'target', 'varchar'),
   ('model_versions', 'trained_at', 'timestamptz'),
@@ -893,6 +1166,21 @@ WITH expected(table_name, column_name, udt_name) AS (VALUES
   ('model_versions', 'metrics', 'jsonb'),
   ('model_versions', 'file_path', 'varchar'),
   ('model_versions', 'is_active', 'bool'),
+  ('room_rules', 'id', 'int4'),
+  ('room_rules', 'rule_id', 'varchar'),
+  ('room_rules', 'pattern', 'varchar'),
+  ('room_rules', 'kind', 'varchar'),
+  ('room_rules', 'note', 'text'),
+  ('rough_norms', 'id', 'int4'),
+  ('rough_norms', 'work_code', 'varchar'),
+  ('rough_norms', 'variant', 'varchar'),
+  ('rough_norms', 'material_id', 'varchar'),
+  ('rough_norms', 'material_name', 'varchar'),
+  ('rough_norms', 'qty', 'float8'),
+  ('rough_norms', 'qty_unit', 'varchar'),
+  ('rough_norms', 'norm_code', 'varchar'),
+  ('rough_norms', 'source', 'varchar'),
+  ('rough_norms', 'note', 'text'),
   ('standards', 'standard_id', 'int4'),
   ('standards', 'code', 'varchar'),
   ('standards', 'title', 'text'),
@@ -991,6 +1279,10 @@ WITH expected(table_name, column_name, udt_name) AS (VALUES
   ('projects', 'site_lat', 'float8'),
   ('projects', 'site_lon', 'float8'),
   ('projects', 'floor_height_mm', 'float8'),
+  ('projects', 'door_width_mm', 'float8'),
+  ('projects', 'door_height_mm', 'float8'),
+  ('projects', 'window_width_mm', 'float8'),
+  ('projects', 'window_height_mm', 'float8'),
   ('projects', 'budget', 'float8'),
   ('projects', 'deadline_days', 'float8'),
   ('projects', 'max_vehicle_ton', 'float8'),
@@ -1085,7 +1377,7 @@ WITH expected(table_name, column_name, udt_name) AS (VALUES
   ('optimization_runs', 'tool_calls', 'jsonb'),
   ('optimization_runs', 'excluded_materials', 'jsonb'),
   ('optimization_runs', 'created_at', 'timestamptz')),
-expected_con(table_name, con_name) AS (VALUES ('labor_rates', 'ck_labor_rates_data_kind'), ('standards', 'standards_code_key'), ('suppliers', 'ck_suppliers_data_kind'), ('suppliers', 'ck_suppliers_latlon'), ('suppliers', 'ck_suppliers_price_public'), ('users', 'ck_users_role'), ('users', 'users_email_key'), ('vehicles', 'ck_vehicles_data_kind'), ('materials', 'ck_materials_data_kind'), ('material_aliases', 'material_aliases_alias_material_id_key'), ('material_relations', 'ck_material_relations_type'), ('material_relations', 'material_relations_material_id_related_material_id_rela_f54c'), ('price_records', 'ck_price_records_basis'), ('price_records', 'ck_price_records_data_kind'), ('price_records', 'ck_price_records_positive'), ('price_records', 'ck_price_records_price_level'), ('price_records', 'ck_price_records_supplier'), ('supplier_materials', 'ck_supplier_materials_basis'), ('supplier_materials', 'ck_supplier_materials_data_kind'), ('supplier_materials', 'ck_supplier_materials_price_complete'), ('supplier_materials', 'ck_supplier_materials_price_level'), ('supplier_materials', 'supplier_materials_supplier_id_material_id_key'), ('wall_systems', 'ck_wall_systems_data_kind'), ('labor_rates', 'ix_labor_rates_province'), ('audit_logs', 'ix_audit_logs_action'), ('projects', 'ix_projects_user_id'), ('material_aliases', 'ix_material_aliases_alias'), ('material_relations', 'ix_material_relations_material_id'), ('price_records', 'ix_price_records_lookup'), ('price_records', 'uq_price_records_dedup'), ('project_files', 'ix_project_files_project_id'), ('wall_systems', 'ix_wall_systems_material_id'), ('takeoff_results', 'ix_takeoff_results_project_id'), ('optimization_runs', 'ix_optimization_runs_project_id'))
+expected_con(table_name, con_name) AS (VALUES ('convention_clauses', 'ck_convention_clauses_muc'), ('convention_clauses', 'convention_clauses_ma_key'), ('drawing_concepts', 'ck_drawing_concepts_signal'), ('drawing_concepts', 'drawing_concepts_ma_key'), ('labor_rates', 'ck_labor_rates_data_kind'), ('material_notes', 'material_notes_rule_id_key'), ('material_rules', 'ck_material_rules_signal'), ('material_rules', 'material_rules_rule_id_key'), ('room_rules', 'room_rules_rule_id_key'), ('standards', 'standards_code_key'), ('suppliers', 'ck_suppliers_data_kind'), ('suppliers', 'ck_suppliers_latlon'), ('suppliers', 'ck_suppliers_price_public'), ('users', 'ck_users_role'), ('users', 'users_email_key'), ('vehicles', 'ck_vehicles_data_kind'), ('materials', 'ck_materials_data_kind'), ('material_aliases', 'material_aliases_alias_material_id_key'), ('material_relations', 'ck_material_relations_type'), ('material_relations', 'material_relations_material_id_related_material_id_rela_f54c'), ('price_records', 'ck_price_records_basis'), ('price_records', 'ck_price_records_data_kind'), ('price_records', 'ck_price_records_positive'), ('price_records', 'ck_price_records_price_level'), ('price_records', 'ck_price_records_supplier'), ('supplier_materials', 'ck_supplier_materials_basis'), ('supplier_materials', 'ck_supplier_materials_data_kind'), ('supplier_materials', 'ck_supplier_materials_price_complete'), ('supplier_materials', 'ck_supplier_materials_price_level'), ('supplier_materials', 'supplier_materials_supplier_id_material_id_key'), ('wall_systems', 'ck_wall_systems_data_kind'), ('labor_rates', 'ix_labor_rates_province'), ('material_notes', 'ix_material_notes_material_id'), ('rough_norms', 'ix_rough_norms_work_code'), ('audit_logs', 'ix_audit_logs_action'), ('projects', 'ix_projects_user_id'), ('material_aliases', 'ix_material_aliases_alias'), ('material_relations', 'ix_material_relations_material_id'), ('price_records', 'ix_price_records_lookup'), ('price_records', 'uq_price_records_dedup'), ('project_files', 'ix_project_files_project_id'), ('wall_systems', 'ix_wall_systems_material_id'), ('takeoff_results', 'ix_takeoff_results_project_id'), ('optimization_runs', 'ix_optimization_runs_project_id'))
 SELECT 'THIEU COT' AS van_de, e.table_name, e.column_name AS ten, e.udt_name AS can_co, NULL AS dang_co
 FROM expected e LEFT JOIN information_schema.columns c
   ON c.table_schema = 'public' AND c.table_name = e.table_name AND c.column_name = e.column_name

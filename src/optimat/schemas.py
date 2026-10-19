@@ -55,8 +55,16 @@ class OpeningItem(BaseModel):
     evidence: str = ""              # dấu hiệu nhận ra: block D1, cung cánh cửa, nét kính
 
 
+class OpeningDefaults(BaseModel):
+    """Kích thước cửa của dự án (bảng projects): dùng khi block cửa không ghi kích thước. Trống thì lỗ mở chưa trừ."""
+    door_width_mm: Optional[float] = None
+    door_height_mm: Optional[float] = None
+    window_width_mm: Optional[float] = None
+    window_height_mm: Optional[float] = None
+
+
 class TakeoffResult(BaseModel):
-    floor_height_mm: float
+    floor_height_mm: Optional[float] = None     # trống: chưa có chiều cao tầng, chưa tính diện tích
     walls: list[WallSegment]
     groups: list[WallGroup]
     openings_count: int
@@ -75,8 +83,8 @@ class PlanTakeoff(BaseModel):
     """Kết quả đo bóc của một mặt bằng trong file nhiều mặt bằng."""
     name: str
     level_m: Optional[float] = None         # cao độ sàn đọc từ bản vẽ
-    height_mm: float
-    height_source: str                      # nhập tay | cao độ tầng trên | mặc định
+    height_mm: Optional[float] = None
+    height_source: str                      # nhập tay | cao độ tầng trên | chưa có
     bbox: list[float]                       # x0, y0, x1, y1 (mm, tọa độ bản vẽ)
     result: TakeoffResult
 
@@ -90,6 +98,7 @@ class Constraints(BaseModel):
     excluded_materials: list[str] = Field(default_factory=list)   # họ vật liệu (CLAY_SOLID...) hoặc mã (GN01)
     keep_design_material: bool = False          # True: giữ phương án tường theo thiết kế, chỉ tối ưu nhà cung cấp và xe
     order_date: Optional[str] = None            # YYYY-MM-DD, mặc định hôm nay
+    province: Optional[str] = None              # tỉnh để tra đơn giá nhân công (bảng labor_rates)
 
 
 class GroupChoice(BaseModel):
