@@ -28,7 +28,7 @@ L29,Cây xanh,QU-08,layer,cay,IGNORE,,,"tên layer chứa ""CÂY"" (nha_pho, 105
 L30,Nét khuất,QU-08,layer,hidden,IGNORE,,,"layer HIDDEN (nha_dan, block AVE_RENDER)"
 L31,Cấp thoát nước,QU-08,layer,water,IGNORE,,,"layer WATER-COLD (nha_dan)"
 L33,Hatch,QU-08,layer,hach,IGNORE,,,"hatch viết không dấu: HACH, 4HACH (nha_pho); sau L05 nên layer HACHTUONG vẫn là tường"
-L34,Hatch vật liệu,QU-08,layer,vat lieu,IGNORE,,,"layer VATLIEU (nha_dan, 576 hatch); hatch vẫn được đọc để gán vật liệu"
+L34,Hatch,QU-08,layer,vat lieu,IGNORE,,,"layer VATLIEU (nha_dan, 576 hatch); hatch vẫn được đọc để gán vật liệu"
 L35,Trục,QU-07,layer,tim,ANNOTATION,,,"đường tim, trục tim: layer TIM (nha_pho)"
 L36,Dầm,QU-22,layer,beam,BEAM,,,"layer BEAM, S-BEAM (ket_cau); THEPDAM thuộc L28 thép"
 L37,Dầm,QU-22,layer,dam,BEAM,,,"tên layer chứa ""DẦM"""
@@ -52,9 +52,9 @@ B03,Cửa sổ,QU-14,block,S,window,,,"kích thước lấy từ block, quy tắ
 B04,Cửa sổ,QU-14,block,CS,window,,,"kích thước lấy từ block, quy tắc block hoặc thông số cửa của dự án (bảng projects)"
 B05,Cửa sổ,QU-14,block,W,window,,,"kích thước lấy từ block, quy tắc block hoặc thông số cửa của dự án (bảng projects)"
 B06,Cửa đi,QU-14,block,CUA_CHINH_,door,,,"block cửa chính (nha_pho); kích thước theo thông số cửa của dự án"
-B07,Ký hiệu trục,QU-07,block,815,ANNOTATION,,,"đầu trục: vòng tròn + thuộc tính NO = A, B, 1–5 (nha_dan, 55 lần trên layer COLUMN); không phải cột"
+B07,Trục,QU-07,block,815,ANNOTATION,,,"đầu trục: vòng tròn + thuộc tính NO = A, B, 1–5 (nha_dan, 55 lần trên layer COLUMN); không phải cột"
 B08,Cao độ,QU-06,block,COS-MB,ANNOTATION,,,ký hiệu cao độ mặt bằng (nha_dan)
-B09,Ký hiệu trục,QU-07,block,KHT,ANNOTATION,,,đầu trục (nha_pho)
+B09,Trục,QU-07,block,KHT,ANNOTATION,,,đầu trục (nha_pho)
 B10,Mũi tên,QU-08,block,MUI-TEN,ANNOTATION,,,mũi tên chỉ hướng (nha_dan)
 B11,Kích thước,QU-08,block,_OBLIQUE,ANNOTATION,,,nét gạch chéo đầu đường kích thước của AutoCAD
 B12,Nội thất,QU-11,block,SOFA,IGNORE,,,"SOFA, SOFA4150 (nha_dan)"
@@ -69,7 +69,7 @@ B20,Ánh sáng render,QU-08,block,AVE_RENDER,IGNORE,,,block ánh sáng render c�
 B21,Ánh sáng render,QU-08,block,AVE_GLOBAL,IGNORE,,,block ánh sáng render của AutoCAD
 B22,Cửa đi,QU-14,block,CUA DI,door,,,"CUA DI (thư viện mẫu hay dùng); block động *U… đọc theo tên gốc"
 B23,Cửa sổ,QU-14,block,CUA SO,window,,,"Cua So (thư viện mẫu hay dùng); block động *U… đọc theo tên gốc"
-B24,Ký hiệu trục,QU-07,block,KHTRUC,ANNOTATION,,,"đầu trục (thư viện mẫu hay dùng)"
+B24,Trục,QU-07,block,KHTRUC,ANNOTATION,,,"đầu trục (thư viện mẫu hay dùng)"
 B25,Cao độ,QU-06,block,COT SAN,ANNOTATION,,,"cốt sàn ±0.00 (thư viện mẫu hay dùng); không phải cột"
 B26,Mặt cắt,QU-08,block,MAT CAT LON,ANNOTATION,,,"ký hiệu mặt cắt (thư viện mẫu hay dùng)"
 B27,Mặt cắt,QU-08,block,MAT CAT NHO,ANNOTATION,,,"ký hiệu mặt cắt (thư viện mẫu hay dùng)"
@@ -77,8 +77,8 @@ B28,Khung tên,QU-08,block,KHUNG TEN,ANNOTATION,,,"thư viện mẫu hay dùng"
 B29,Khung tên,QU-08,block,KHUNGA3-CADFULL,ANNOTATION,,,"thư viện mẫu hay dùng"
 B30,Kích thước,QU-08,block,_ARCHTICK,ANNOTATION,,,"nét đầu đường kích thước của AutoCAD"
 B31,Kích thước,QU-08,block,ARROWS,ANNOTATION,,,"thư viện mẫu hay dùng"
-B32,"Chữ, ghi chú",QU-08,block,LH,IGNORE,,,"dòng chữ quảng cáo (thư viện mẫu hay dùng)"
-B33,"Chữ, ghi chú",QU-08,block,MONDP,IGNORE,,,"logo (thư viện mẫu hay dùng)"
+B32,"Quảng cáo, logo",QU-08,block,LH,IGNORE,,,"dòng chữ quảng cáo (thư viện mẫu hay dùng)"
+B33,"Quảng cáo, logo",QU-08,block,MONDP,IGNORE,,,"logo (thư viện mẫu hay dùng)"
 B34,Thiết bị,QU-11,block,THOAT,IGNORE,,,"phễu thu sàn (thư viện mẫu hay dùng)"
 B35,Thiết bị,QU-11,block,BET,IGNORE,,,"bệt vệ sinh (thư viện mẫu hay dùng)"
 B36,Thiết bị,QU-11,block,MB-XIBET,IGNORE,,,"thư viện mẫu hay dùng"
@@ -110,4 +110,4 @@ B61,Nội thất,QU-11,block,BANTHO,IGNORE,,,"bàn thờ (thư viện mẫu hay 
 B62,Cây xanh,QU-11,block,PLANT_,IGNORE,,,"PLANT_2, PLANT_107… (thư viện mẫu hay dùng)"
 B63,Xe,QU-11,block,CAR5 P,IGNORE,,,"thư viện mẫu hay dùng"
 B64,Xe,QU-11,block,MB-XEMAY,IGNORE,,,"thư viện mẫu hay dùng"
-B65,Khung tên,QU-08,block,LAYER,ANNOTATION,,,"bảng chú giải layer (thư viện mẫu hay dùng)"
+B65,Chú giải layer,QU-08,block,LAYER,ANNOTATION,,,"bảng chú giải layer (thư viện mẫu hay dùng)"
