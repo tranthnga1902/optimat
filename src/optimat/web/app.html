@@ -57,6 +57,11 @@ main.full { padding: 0; }
 .steps a.done { background: var(--accent-soft); color: var(--accent-deep); border-color: transparent; font-weight: 600; }
 .steps a[aria-current="step"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
 .card { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.symgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.sym { border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; background: var(--card); }
+.symimg { height: 170px; display: grid; place-items: center; background: var(--bg); border-bottom: 1px solid var(--rule2); color: var(--ink); padding: 10px; text-align: center; }
+.symimg svg { width: 100%; height: 100%; } .symimg svg * { vector-effect: non-scaling-stroke; stroke-width: 1.2px; }
+.symbody { padding: 12px; display: flex; flex-direction: column; gap: 6px; overflow-wrap: anywhere; }
 .card h2 { margin: 0; font-size: 16px; }
 .row { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; }
 .row > .card { flex: 1 1 320px; }
@@ -504,6 +509,21 @@ async function openTable(name) {
   });
 }
 
+// hình minh họa ký hiệu layer theo vai trò (layer không có hình riêng như block)
+const ROLE_GLYPH = {
+  WALL: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><path d="M5 22H95M5 38H95"/><path d="M12 38l16-16M26 38l16-16M40 38l16-16M54 38l16-16M68 38l16-16M82 38l13-13" opacity=".5"/></svg>`,
+  OPENING: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><path d="M5 50H30M70 50H95M5 56H30M70 56H95"/><path d="M30 50V12"/><path d="M30 12A38 38 0 0 1 68 50" stroke-dasharray="3 3"/></svg>`,
+  ANNOTATION: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><path d="M10 40H90M10 32V48M90 32V48M6 44l8-8M86 44l8-8"/><text x="50" y="28" font-size="12" text-anchor="middle" fill="currentColor" stroke="none">1200</text></svg>`,
+  IGNORE: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><rect x="25" y="10" width="50" height="40" rx="4" stroke-dasharray="4 3"/><path d="M33 18l34 24M67 18L33 42" opacity=".6"/></svg>`,
+  COLUMN: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><path d="M5 22H38M62 22H95M5 38H38M62 38H95"/><rect x="38" y="18" width="24" height="24" fill="currentColor" fill-opacity=".35"/></svg>`,
+  BEAM: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><rect x="8" y="16" width="14" height="14" fill="currentColor" fill-opacity=".35"/><rect x="78" y="16" width="14" height="14" fill="currentColor" fill-opacity=".35"/><path d="M22 19H78M22 27H78" stroke-dasharray="6 3"/></svg>`,
+  SLAB: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><rect x="10" y="10" width="80" height="40"/><path d="M10 10l80 40M90 10L10 50" opacity=".5"/></svg>`,
+  STAIR: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><rect x="10" y="10" width="80" height="40"/><path d="M22 10V50M34 10V50M46 10V50M58 10V50M70 10V50"/><path d="M16 30H84M78 25l6 5-6 5"/></svg>`,
+  LINTEL: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><path d="M5 50H30M70 50H95M30 50V20M70 50V20"/><rect x="22" y="12" width="56" height="8" fill="currentColor" fill-opacity=".35"/></svg>`,
+  FOUNDATION: `<svg viewBox="0 0 100 60" fill="none" stroke="currentColor"><path d="M42 5V30M58 5V30"/><path d="M20 30H80V44H20Z" fill="currentColor" fill-opacity=".35"/><path d="M12 52H88" stroke-dasharray="4 3"/></svg>`,
+};
+const ROLE_VI = { WALL: "tường", OPENING: "cửa", door: "cửa đi", window: "cửa sổ", ANNOTATION: "ghi chú", IGNORE: "bỏ qua",
+  COLUMN: "cột", BEAM: "dầm", SLAB: "sàn", STAIR: "cầu thang", LINTEL: "lanh tô", FOUNDATION: "móng" };
 const OBJ_NAME = { tuong: "Tường", loai_bo: "Cặp nét bị loại", cua: "Cửa", door: "Cửa đi", window: "Cửa sổ" };
 async function viewConcepts(main) {
   main.className = "";
@@ -511,13 +531,17 @@ async function viewConcepts(main) {
     <a class="btn" href="/api/concepts/csv" style="display:inline-flex;align-items:center;text-decoration:none">Tải concepts.csv</a></div><div id="body" class="muted">Đang tải…</div>`;
   let d;
   try { d = await api("/api/concepts"); } catch (err) { $("body").innerHTML = `<div class="note">${esc(err.message)}</div>`; return; }
-  const sig = d.signals, nLayer = sig.filter((s) => s.tin_hieu === "layer").length;
+  const sig = d.signals, nLayer = sig.filter((s) => s.tin_hieu === "layer").length, bad = d.conflicts || {};
+  // nhóm phần thô: tường, cửa (trừ lỗ mở) và bộ phận bê tông; còn lại là ghi chú hoặc bỏ qua khi bóc
+  const group = (s) => ["WALL", "OPENING", "door", "window", ...(d.rough_roles || [])].includes(s.vai_tro) ? "tho" : s.vai_tro === "ANNOTATION" ? "ghi" : "bo";
+  const nRough = sig.filter((s) => group(s) === "tho").length;
   const opt = (vals) => vals.map((v) => `<option>${esc(v)}</option>`).join("");
   $("body").className = "";
   $("body").innerHTML = `${d.editable ? `<div class="note" style="margin-bottom:14px">Đang sửa trực tiếp trong PostgreSQL. Lệnh <code>python scripts/init_db.py --reload-rules</code> nạp lại từ <code>data/rules/concepts.csv</code> và xóa các sửa đổi ở đây: tải concepts.csv, chép đè file đó trước khi nạp lại.</div>`
       : `<div class="note" style="margin-bottom:14px">Chưa kết nối PostgreSQL (DATABASE_URL), đang đọc <code>data/rules/concepts.csv</code>: chỉ xem được. Đặt DATABASE_URL rồi chạy <code>python scripts/init_db.py --reload-rules</code> để quản lý tại đây.</div>`}
     <div class="tiles"><div class="tile"><div class="k">Ký hiệu layer</div><div class="v">${nLayer}</div><div class="s">tên layer → vai trò</div></div>
       <div class="tile"><div class="k">Ký hiệu block</div><div class="v">${sig.length - nLayer}</div><div class="s">tiền tố tên block → đối tượng</div></div>
+      <div class="tile ${Object.keys(bad).length ? "bad" : "ok"}"><div class="k">Phần thô</div><div class="v">${nRough}</div><div class="s">${Object.keys(bad).length ? `${Object.keys(bad).length} ký hiệu trùng` : "không có ký hiệu trùng"}</div></div>
       <div class="tile"><div class="k">Khái niệm</div><div class="v">${new Set(sig.map((s) => s.khai_niem)).size}</div><div class="s">nguồn: ${esc(d.source)}</div></div></div>
     ${d.editable ? `<div class="card"><h2 id="ftitle">Thêm ký hiệu</h2><form id="cf" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end">
       <label class="f">Mã <input name="ma" required maxlength="16" pattern="[A-Za-z0-9_\\-]+" placeholder="L36, B22"></label>
@@ -531,19 +555,39 @@ async function viewConcepts(main) {
       <label class="f" style="grid-column:1/-1">Ghi chú <input name="ghi_chu"></label>
       <div class="filters"><button class="btn primary" type="submit">Lưu</button><button class="btn" type="button" id="cancel">Hủy</button><span id="fmsg" class="small" role="status"></span></div></form></div>` : ""}
     <div class="card"><div class="filters"><h2 style="margin-right:auto">${sig.length} ký hiệu</h2>
+      <label>Nhóm <select id="fg"><option value="tho">phần thô</option><option value="ghi">ghi chú</option><option value="bo">bỏ qua khi bóc</option><option value="">tất cả</option></select></label>
       <label>Tín hiệu <select id="ft"><option value="">tất cả</option><option>layer</option><option>block</option></select></label>
-      <label>Tìm <input id="fq" type="search" placeholder="mã, khái niệm, mẫu"></label></div>
-      <div class="tw"><table><thead><tr><th>Mã</th><th>Khái niệm</th><th>Tín hiệu</th><th>Mẫu</th><th>Vai trò</th><th>QU</th><th>Ghi chú</th>${d.editable ? "<th></th>" : ""}</tr></thead><tbody id="rows"></tbody></table></div></div>
+      <label>Khái niệm <select id="fk"><option value="">tất cả</option>${opt([...new Set(sig.map((s) => s.khai_niem))].sort())}</select></label>
+      <label>Bản vẽ mẫu <select id="fm"><option value="">tất cả</option><option value="1">có khớp</option><option value="0">chưa khớp</option></select></label>
+      <label>Tìm <input id="fq" type="search" placeholder="mã, khái niệm, mẫu, tên layer/block"></label><span id="fn" class="small muted"></span></div>
+      <p id="smsg" class="small muted">Đang đọc bản vẽ mẫu trong data/drawings để vẽ hình ký hiệu (lần đầu ~20 s)…</p>
+      <div id="rows" class="symgrid"></div></div>
     <div class="card"><h2>Thử trên bản vẽ</h2><p class="muted small">Chạy nhận diện với bảng ký hiệu hiện hành, liệt kê từng đối tượng và các layer chưa có ký hiệu.</p>
       <div class="filters"><input id="tf" type="file" accept=".dxf,.dwg" aria-label="Chọn bản vẽ"><button class="btn primary" id="tb" type="button">Nhận diện</button></div><div id="tr"></div></div>`;
+  let samples = null;
+  const sampleOf = (s) => samples && samples[s.ma] || { matches: [], svg: null };
+  const pic = (s) => s.tin_hieu === "layer" ? (ROLE_GLYPH[s.vai_tro] || ROLE_GLYPH.IGNORE)
+    : sampleOf(s).svg || `<span class="small muted">${samples ? "chưa thấy block này trong bản vẽ mẫu" : "đang tải hình…"}</span>`;
   const draw = () => {
-    const t = $("ft").value, q = $("fq").value.trim().toLowerCase();
-    $("rows").innerHTML = sig.filter((s) => (!t || s.tin_hieu === t) && (!q || [s.ma, s.khai_niem, s.mau, s.ghi_chu].join(" ").toLowerCase().includes(q)))
-      .map((s) => `<tr><td><b>${esc(s.ma)}</b></td><td>${esc(s.khai_niem)}</td><td>${esc(s.tin_hieu)}</td><td><code>${esc(s.mau)}</code></td><td>${esc(s.vai_tro)}</td><td>${esc(s.qu)}</td><td class="small">${esc(s.ghi_chu || "")}</td>${d.editable
-        ? `<td style="white-space:nowrap"><button class="btn" type="button" data-edit="${esc(s.ma)}">Sửa</button> <button class="btn" type="button" data-del="${esc(s.ma)}">Xóa</button></td>` : ""}</tr>`).join("")
-      || `<tr><td colspan="8" class="muted">Không có ký hiệu nào.</td></tr>`;
+    const g = $("fg").value, t = $("ft").value, k = $("fk").value, m = $("fm").value, q = $("fq").value.trim().toLowerCase();
+    const list = sig.filter((s) => (!g || group(s) === g) && (!t || s.tin_hieu === t) && (!k || s.khai_niem === k)
+      && (!m || !samples || String(+(sampleOf(s).matches.length > 0)) === m)
+      && (!q || [s.ma, s.khai_niem, s.mau, s.ghi_chu, ...sampleOf(s).matches].join(" ").toLowerCase().includes(q)));
+    $("fn").textContent = `${list.length} thẻ`;
+    $("rows").innerHTML = list.map((s) => { const sm = sampleOf(s); return `<article class="sym">
+      <div class="symimg" title="${s.tin_hieu === "layer" ? "Hình minh họa vai trò " + esc(s.vai_tro) : esc(sm.matches[0] || "")}">${pic(s)}</div>
+      <div class="symbody"><div><b>${esc(s.ma)}</b> · ${esc(s.khai_niem)}</div>
+        <div>${pill(s.tin_hieu === "layer" ? "info" : "warn", s.tin_hieu)} ${pill(group(s) === "tho" ? "ok" : group(s) === "ghi" ? "info" : "bad", ROLE_VI[s.vai_tro] || s.vai_tro)} <span class="small muted">${esc(s.qu)}</span></div>
+        <div class="small">${s.tin_hieu === "layer" ? "Tên layer chứa" : "Tên block bắt đầu"} <code>${esc(s.mau)}</code>${s.rong_mm || s.cao_mm ? ` · ${s.rong_mm ?? "?"}×${s.cao_mm ?? "?"} mm` : ""}</div>
+        <div class="small muted">${samples ? (sm.matches.length ? `Khớp ${sm.matches.length} trong bản vẽ mẫu: ${esc(sm.matches.slice(0, 4).join(", "))}${sm.matches.length > 4 ? "…" : ""}` : "Chưa khớp layer/block nào trong bản vẽ mẫu") : ""}</div>
+        ${s.ghi_chu ? `<div class="small muted">${esc(s.ghi_chu)}</div>` : ""}
+        ${bad[s.ma] ? `<div class="small" style="color:var(--bad-ink);background:var(--bad-bg);padding:6px 8px;border-radius:6px">Trùng: ${esc(bad[s.ma])}</div>` : ""}
+        ${d.editable ? `<div class="filters"><button class="btn" type="button" data-edit="${esc(s.ma)}">Sửa</button><button class="btn" type="button" data-copy="${esc(s.ma)}">Nhân bản</button><button class="btn" type="button" data-del="${esc(s.ma)}">Xóa</button></div>` : ""}
+      </div></article>`; }).join("") || `<p class="muted">Không có ký hiệu nào.</p>`;
   };
-  ["ft", "fq"].forEach((id) => $(id).addEventListener("input", draw)); draw();
+  api("/api/concepts/samples").then((r) => { samples = r; $("smsg").textContent = "Hình block vẽ lại từ block đầu tiên khớp trong data/drawings/thu_vien, data/drawings/build; layer là hình minh họa theo vai trò."; draw(); })
+    .catch((err) => { samples = {}; $("smsg").textContent = `Không đọc được bản vẽ mẫu: ${err.message}`; draw(); });
+  ["fg", "ft", "fk", "fm", "fq"].forEach((id) => $(id).addEventListener("input", draw)); draw();
   if (d.editable) {
     const f = $("cf"); let editing = null;
     const roles = () => { f.vai_tro.innerHTML = opt(f.tin_hieu.value === "layer" ? d.layer_roles : d.block_roles); };
@@ -569,8 +613,9 @@ async function viewConcepts(main) {
       } catch (err) { $("fmsg").innerHTML = pill("bad", err.message); }
     });
     $("rows").addEventListener("click", async (e) => {
-      const ed = e.target.dataset.edit, del = e.target.dataset.del;
+      const ed = e.target.dataset.edit, del = e.target.dataset.del, cp = e.target.dataset.copy;
       if (ed) fill(sig.find((s) => s.ma === ed));
+      if (cp) fill({ ...sig.find((s) => s.ma === cp), ma: "" });
       if (del && confirm(`Xóa ký hiệu ${del}? Bản vẽ đọc sau sẽ không còn nhận theo ký hiệu này.`)) {
         try { await api(`/api/concepts/${encodeURIComponent(del)}`, { method: "DELETE" }); viewConcepts(main); } catch (err) { alert(err.message); }
       }

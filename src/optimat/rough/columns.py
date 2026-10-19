@@ -1,8 +1,9 @@
 """Cột bê tông cốt thép trên mặt bằng kiến trúc (đặc tả mục 3.4).
 
 Nhận cột: vùng tô đặc (hatch SOLID; bản vẽ xuất qua phần mềm xem nhanh tách hatch thành nhiều tam giác) được tô lên
-lưới, gộp các mảnh liền nhau, giữ vùng gần chữ nhật có hai cạnh trong config.COLUMN_SIDE_MM. Người dùng thêm, bớt cột
-trên trang kiểm tra.
+lưới, gộp các mảnh liền nhau, giữ vùng gần chữ nhật có hai cạnh trong config.COLUMN_SIDE_MM; hatch mọi mẫu trên layer
+có ký hiệu vai trò COLUMN cũng được tô. Thêm cột theo ký hiệu (data/rules/concepts.csv, vai trò COLUMN): nét trên layer cột
+hoặc trong block cột, các nét nối đầu nhau thành một hình. Người dùng thêm, bớt cột trên trang kiểm tra.
     chiều cao cột (m)   = H - dày sàn (chưa nhập dày sàn thì lấy H, có cảnh báo)
     bê tông cột (m³)    = Σ rộng × dài tiết diện × chiều cao cột
     cốp pha cột (m²)    = Σ 2 × (rộng + dài) × chiều cao cột
@@ -17,6 +18,7 @@ from pydantic import BaseModel
 from scipy import ndimage
 
 from .. import config
+from ..drawing.concepts import layer_role, match_block_signal
 from .materials import _fmt
 from .models import ProjectParams, WorkItem
 from .walls import _work
@@ -30,7 +32,7 @@ class Column(BaseModel):
     y: float
     b_mm: float                  # cạnh theo phương x
     h_mm: float                  # cạnh theo phương y
-    source: str = "hatch"        # hatch | manual
+    source: str = "hatch"        # hatch | signal (ký hiệu layer/block cột) | manual
     keep: bool = True
 
     def rect(self) -> tuple[float, float, float, float]:
@@ -51,11 +53,58 @@ def _inside(poly: list[tuple[float, float]], X: np.ndarray, Y: np.ndarray) -> np
     return out
 
 
-def detect_columns(drawing, cell: float = CELL_MM) -> list[Column]:
+def _column_layers(drawing) -> set[str]:
+    return {n for n in drawing.layers if layer_role(n) == "COLUMN"}
+
+
+def signal_columns(drawing) -> list[Column]:
+    """Cột theo ký hiệu: nét (không tính nét hatch bị phá) trên layer cột hoặc trong block cột; nét nối đầu nhau gộp
+    thành một hình, giữ hình có hai cạnh khung bao trong config.COLUMN_SIDE_MM."""
     lo, hi = config.COLUMN_SIDE_MM
+    layers, blocks = _column_layers(drawing), {}
+    def is_col(seg) -> bool:
+        if seg.layer in layers:
+            return True
+        if seg.source and seg.source not in blocks:     # block lồng: "ngoài/trong", xét block trong cùng
+            sig = match_block_signal(seg.source.rsplit("/", 1)[-1])
+            blocks[seg.source] = bool(sig and sig.vai_tro == "COLUMN")
+        return bool(seg.source) and blocks[seg.source]
+    segs = [s for s in drawing.segments if s.kind != "hatch" and is_col(s)]
+    parent: dict = {}
+    def find(k):
+        while parent.setdefault(k, k) != k:
+            parent[k] = k = parent[parent[k]]
+        return k
+    key = lambda x, y: (round(x), round(y))
+    for s in segs:
+        parent[find(key(s.x1, s.y1))] = find(key(s.x2, s.y2))
+    boxes: dict = {}
+    for s in segs:
+        b = boxes.setdefault(find(key(s.x1, s.y1)), [s.x1, s.y1, s.x1, s.y1])
+        b[:] = [min(b[0], s.x1, s.x2), min(b[1], s.y1, s.y2), max(b[2], s.x1, s.x2), max(b[3], s.y1, s.y2)]
+    out = []
+    for x0, y0, x1, y1 in boxes.values():
+        if lo <= min(x1 - x0, y1 - y0) and max(x1 - x0, y1 - y0) <= hi:
+            out.append(Column(id="", x=round((x0 + x1) / 2, 1), y=round((y0 + y1) / 2, 1),
+                              b_mm=round((x1 - x0) / 10) * 10, h_mm=round((y1 - y0) / 10) * 10, source="signal"))
+    return out
+
+
+def detect_columns(drawing, cell: float = CELL_MM) -> list[Column]:
+    """Cột từ vùng tô đặc, cộng cột theo ký hiệu không trùng cột đã có."""
+    out = _fill_columns(drawing, cell)
+    for c in signal_columns(drawing):
+        if not any(abs(c.x - o.x) < (c.b_mm + o.b_mm) / 2 and abs(c.y - o.y) < (c.h_mm + o.h_mm) / 2 for o in out):
+            out.append(c.model_copy(update={"id": f"C{len(out) + 1}"}))
+    return out
+
+
+def _fill_columns(drawing, cell: float) -> list[Column]:
+    lo, hi = config.COLUMN_SIDE_MM
+    col_layers = _column_layers(drawing)
     polys = []
     for h in drawing.hatches:
-        if h.pattern.upper() != "SOLID":
+        if h.pattern.upper() != "SOLID" and h.layer not in col_layers:
             continue
         for p in h.polygons:
             xs, ys = [q[0] for q in p], [q[1] for q in p]

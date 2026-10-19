@@ -9,8 +9,7 @@ from __future__ import annotations
 
 from enum import Enum
 
-from .concepts import match_layer
-from .encoding import normalize
+from .concepts import ROUGH_ROLES, layer_role
 
 
 class LayerClass(str, Enum):
@@ -26,8 +25,9 @@ def default_classification(layer_names: list[str]) -> dict[str, LayerClass]:
     mọi kết quả đều có thể bị người dùng ghi đè."""
     result: dict[str, LayerClass] = {}
     for name in layer_names:
-        signal = match_layer(normalize(name).replace("_", " ").replace("-", " "))
-        result[name] = LayerClass(signal.vai_tro) if signal else LayerClass.UNKNOWN
+        role = layer_role(name)
+        # cột, dầm, thang... không phải tường: nhận tường bỏ qua như trước, bóc phần thô đọc vai trò riêng
+        result[name] = LayerClass.IGNORE if role in ROUGH_ROLES else LayerClass(role) if role else LayerClass.UNKNOWN
     return result
 
 

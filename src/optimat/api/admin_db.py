@@ -177,6 +177,8 @@ def _validate(name: str, row: dict, conn) -> None:
         allowed = concepts.LAYER_ROLES if row.get("tin_hieu") == "layer" else concepts.BLOCK_ROLES
         if row.get("vai_tro") not in allowed:
             raise HTTPException(422, f"Vai trò của {row.get('tin_hieu')} phải là {' | '.join(allowed)}.")
+        if bad := concepts.new_conflicts(row):
+            raise HTTPException(422, "Ký hiệu " + "; ".join(bad) + ".")
 
 
 def _write(name: str, action: str, body: dict | None, row_id: int | None) -> dict:

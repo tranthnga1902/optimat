@@ -27,7 +27,7 @@ from .. import config
 from ..catalog.repository import Catalog
 from ..data_check import run_checks
 from ..db.session import get_database_url
-from ..drawing import concepts, dwg_convert
+from ..drawing import concept_samples, concepts, dwg_convert
 from ..drawing.dwg_convert import DrawingError
 from ..drawing.dxf_reader import read_drawing
 from ..drawing.encoding import normalize
@@ -370,7 +370,8 @@ def concepts_list() -> dict:
     return {"source": "postgresql" if get_database_url() else "csv", "editable": bool(get_database_url()),
             "layer_roles": concepts.LAYER_ROLES, "block_roles": concepts.BLOCK_ROLES,
             "clauses": [{"ma": c.ma, "nhom": c.nhom} for c in concepts.load_clauses()],
-            "signals": [asdict(s) for s in concepts.load_signals()]}
+            "signals": [asdict(s) for s in concepts.load_signals()], "conflicts": concepts.conflicts(),
+            "rough_roles": concepts.ROUGH_ROLES}
 
 
 @app.post("/api/concepts")
@@ -380,6 +381,8 @@ def concept_create(body: ConceptIn) -> dict:
     with _concept_session() as session:
         if session.query(DrawingConcept).filter_by(ma=body.ma).first():
             raise HTTPException(409, f"Mã {body.ma} đã có.")
+        if bad := concepts.new_conflicts(body.model_dump()):
+            raise HTTPException(409, "Ký hiệu " + "; ".join(bad) + ".")
         row = DrawingConcept(**body.model_dump())
         session.add(row)
         session.commit()
@@ -396,6 +399,8 @@ def concept_update(ma: str, body: ConceptIn) -> dict:
             raise HTTPException(404, f"Không có ký hiệu {ma}.")
         if body.ma != row.ma and session.query(DrawingConcept).filter_by(ma=body.ma).first():
             raise HTTPException(409, f"Mã {body.ma} đã có.")
+        if bad := concepts.new_conflicts({**body.model_dump(), "ma": ma}):   # so ở vị trí cũ của ký hiệu đang sửa
+            raise HTTPException(409, "Ký hiệu " + "; ".join(bad) + ".")
         for k, v in body.model_dump().items():
             setattr(row, k, v)
         session.commit()
@@ -413,6 +418,12 @@ def concept_delete(ma: str) -> dict:
         session.commit()
         concepts.load_signals.cache_clear()
         return {"deleted": ma}
+
+
+@app.get("/api/concepts/samples")
+def concepts_samples() -> dict:
+    """Hình mẫu từng ký hiệu (block vẽ lại từ bản vẽ mẫu) và tên block/layer thật khớp; lần đầu đọc bản vẽ mẫu ~20–40 s."""
+    return concept_samples.samples()
 
 
 @app.get("/api/concepts/csv", response_class=PlainTextResponse)

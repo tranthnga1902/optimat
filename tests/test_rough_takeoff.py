@@ -90,3 +90,11 @@ def test_duplicate_plan_names_kept_apart():
 def test_no_plans_warns():
     res = compute_rough(RoughRequest(plans=[]), Catalog.from_csv(None))
     assert not res.works and "Không tìm thấy mặt bằng" in res.warnings[0]
+
+
+def test_found_rough_parts_warn_until_entered():
+    p = plan("Tầng 2", False).model_copy(update={"found": {"STAIR": ["layer CAUTHANG"], "FOUNDATION": ["layer MONG"]}})
+    warns = compute_rough(RoughRequest(params=FULL, plans=[p]), Catalog.from_csv(None)).warnings
+    assert any("cầu thang (layer CAUTHANG)" in w for w in warns) and any("móng (layer MONG)" in w for w in warns)
+    p2 = plan("Trệt", True).model_copy(update={"found": {"STAIR": ["layer CAUTHANG"]}})     # đã nhập thang: không nhắc
+    assert not any("cầu thang (layer" in w for w in compute_rough(RoughRequest(params=FULL, plans=[p2]), Catalog.from_csv(None)).warnings)

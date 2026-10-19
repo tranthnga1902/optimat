@@ -122,6 +122,13 @@ def _check_rules(cat: Catalog, out: list[Finding]) -> None:
                 re.compile(r.pattern)
             except re.error as exc:
                 out.append(Finding("error", "quy_tac", r.rule_id, f"Biểu thức chính quy lỗi: {exc}."))
+    from .drawing import concepts
+    signals = concepts.load_signals()
+    for ma, n in Counter(s.ma for s in signals).items():
+        if n > 1:
+            out.append(Finding("error", "ky_hieu", ma, f"Mã ký hiệu lặp {n} lần."))
+    for ma, msg in concepts.conflicts(signals).items():
+        out.append(Finding("error", "ky_hieu", ma, f"Ký hiệu {msg}."))
 
 
 def _check_rough_norms(cat: Catalog, out: list[Finding]) -> dict:

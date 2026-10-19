@@ -732,7 +732,7 @@ function roughValues() { try { return JSON.parse(localStorage.getItem(RP_KEY) ||
 function planParams(i) {
   const p = DATA.plans[i];
   return (PLANP[i] = PLANP[i] || { is_ground: !!(p.plan && p.plan.is_ground),
-    cols: (p.columns || []).map((c) => ({ ...c, keep: true, source: "hatch" })) });
+    cols: (p.columns || []).map((c) => ({ ...c, keep: true, source: c.source || "hatch" })) });
 }
 function projectParams() {
   const v = roughValues(), out = { steel_kg_per_m3: {}, ground_layers: [] };
@@ -757,7 +757,7 @@ function roughRequest() {
       walls: st.walls.map(({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited }) => ({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited })),
       openings: st.openings.map(({ id, wall, kind, w, h, keep, src }) => ({ id, wall, kind, w, h, keep, src })),
       columns: pp.cols.map(({ id, x, y, b_mm, h_mm, keep, source }) => ({ id, x, y, b_mm, h_mm, keep, source })),
-      stairs: stair, labels: p.labels || [] };
+      stairs: stair, labels: p.labels || [], found: p.found || {} };
   }) };
 }
 function scheduleRough() {

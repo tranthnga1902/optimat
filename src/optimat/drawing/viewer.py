@@ -18,6 +18,7 @@ from .render import DrawingRenderer
 from .material_rules import _best, load_rules, rule_label
 from ..rough.areas import room_labels
 from ..rough.columns import detect_columns
+from ..rough.takeoff import rough_parts
 
 TEMPLATE = Path(__file__).with_name("viewer_template.html")          # trang 5 bước (giải thích thuật toán)
 REVIEW_TEMPLATE = Path(__file__).with_name("review_app.html")       # trang Kiểm tra bóc tách (sửa, bổ sung, xác nhận)
@@ -86,8 +87,11 @@ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: d
         "warnings": result.warnings,
         "unmatched": result.unmatched,
         "rule_hits": result.rule_hits,
-        # phần thô: cột nhận từ vùng tô đặc và tên phòng (WC, ban công) để tính chống thấm; cùng hệ tọa độ trang
-        "columns": [{"id": c.id, "x": tx(c.x), "y": ty(c.y), "b_mm": c.b_mm, "h_mm": c.h_mm} for c in detect_columns(drawing)],
+        # phần thô: cột (vùng tô đặc, ký hiệu cột), tên phòng (WC, ban công) để tính chống thấm, bộ phận phần thô thấy
+        # theo ký hiệu (dầm, thang, móng...) để nhắc nhập; cùng hệ tọa độ trang
+        "columns": [{"id": c.id, "x": tx(c.x), "y": ty(c.y), "b_mm": c.b_mm, "h_mm": c.h_mm, "source": c.source}
+                    for c in detect_columns(drawing)],
+        "found": rough_parts(drawing),
         "labels": [{"kind": k, "text": t, "x": tx(x), "y": ty(y)} for k, t, x, y in room_labels(drawing)],
     }
 

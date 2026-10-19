@@ -289,14 +289,14 @@ class _Collector:
             return
         if e.dxftype() == "INSERT":
             p = e.ocs().to_wcs(e.dxf.insert)
-            self.blocks.append(BlockRef(e.dxf.name, p.x * self.s, p.y * self.s, e.dxf.layer,
+            self.blocks.append(BlockRef(block_name(e), p.x * self.s, p.y * self.s, e.dxf.layer,
                                         {a.dxf.tag.upper(): a.dxf.text for a in e.attribs}))
         for a in getattr(e, "attribs", []):             # chữ trong thuộc tính block (ký hiệu cao độ, tên phòng...)
             self.text(a)
         if e.dxftype() == "MLINE":
             self.walk(children, source, depth + 1)
             return
-        name = e.dxf.name
+        name = block_name(e) if e.dxftype() == "INSERT" else e.dxf.name
         lines = [(c.dxf.start.x, c.dxf.start.y, c.dxf.end.x, c.dxf.end.y) for c in children if c.dxftype() == "LINE"]
         if _is_hatch_like(lines):
             for x1, y1, x2, y2 in lines:
@@ -307,6 +307,20 @@ class _Collector:
             self.walk(rest, name, depth + 1)
             return
         self.walk(children, name if not source else f"{source}/{name}", depth + 1)
+
+
+def block_name(e) -> str:
+    """Tên block; block động lưu thành block ẩn danh *U… thì lấy tên block gốc (xdata AcDbBlockRepBTag)."""
+    name = e.dxf.name
+    doc = getattr(e, "doc", None)
+    if name.startswith("*") and doc is not None:
+        try:
+            rec = doc.blocks.get(name).block_record
+            handle = next(v for c, v in rec.get_xdata("AcDbBlockRepBTag") if c == 1005)
+            return doc.entitydb[handle].dxf.name
+        except Exception:     # không phải block động (bảng, kích thước…): giữ tên ẩn danh
+            pass
+    return name
 
 
 def _clean_codes(raw: str) -> str:

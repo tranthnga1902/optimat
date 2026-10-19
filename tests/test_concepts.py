@@ -27,7 +27,7 @@ def test_block_signals():
 
 def test_layer_signals_from_build():
     role = lambda n: concepts.match_layer(n).vai_tro
-    assert role("column") == role("cot") == role("4hach") == "IGNORE"
+    assert role("column") == role("cot") == "COLUMN" and role("4hach") == "IGNORE"
     assert role("hachtuong") == "WALL"            # ký hiệu tường đứng trước "hach"
     # layer tường của nha_pho (OK_NET_MANH, NET_THAY có cặp nét tường): không gán ký hiệu, để hình học tự nhận
     assert concepts.match_layer("ok net manh") is None and concepts.match_layer("net thay") is None
@@ -85,3 +85,53 @@ def test_review_payload_has_conventions(sample_dxf):
     assert "error" not in conv and len(conv["checks"]) == 23
     assert {c["trang_thai"] for c in conv["checks"]} <= {"dat", "vi_pham", "chua_kiem", "khong_ap_dung"}
     assert "function convHtml" in build_review_html()
+
+
+def test_concept_samples_draw_block_and_list_layers(monkeypatch):
+    from optimat import config
+    from optimat.drawing import concept_samples
+    monkeypatch.setattr(concept_samples, "SAMPLE_DIRS", (config.DATA_DIR / "sample",))
+    concept_samples._scan.cache_clear()
+    try:
+        r = concept_samples.samples()
+    finally:
+        concept_samples._scan.cache_clear()
+    assert r["B01"]["svg"].startswith("<svg") and r["B01"]["matches"] == ["D1 (sample_floor)"]
+    assert "KICHTHUOC (sample_floor)" in r["L08"]["matches"] and r["L08"]["svg"] is None
+
+
+def test_concepts_csv_has_no_duplicate_or_shadowed_signal():
+    signals = concepts.load_signals()
+    assert len({s.ma for s in signals}) == len(signals) and concepts.conflicts() == {}
+
+
+def test_conflicts_and_new_conflicts():
+    S = concepts.Signal
+    sig = (S("L1", "Chữ", "QU-08", "layer", "chu", "ANNOTATION"), S("L2", "Ghi chú", "QU-08", "layer", "ghi chu", "ANNOTATION"),
+           S("B1", "Cửa", "QU-14", "block", "D", "door"), S("B2", "Cửa", "QU-14", "block", "d", "door"))
+    assert set(concepts.conflicts(sig)) == {"L2", "B2"}
+    row = {"ma": "LX", "khai_niem": "Kích thước", "qu": "QU-08", "tin_hieu": "layer", "mau": "dim abc", "vai_tro": "ANNOTATION"}
+    assert concepts.new_conflicts(row) and concepts.new_conflicts({**row, "mau": "xyzq"}) == []
+
+
+def test_rough_roles():
+    assert concepts.layer_role("PTK_Be tong") == "COLUMN" and concepts.layer_role("CAUTHANG") == "STAIR"
+    assert concepts.layer_role("DUONGTHANG") is None and concepts.layer_role("THEPDAM") == "IGNORE"
+    assert concepts.match_block_signal("815").vai_tro == "ANNOTATION"        # đầu trục, không phải cột
+    assert concepts.match_block_signal("Cot San").vai_tro == "ANNOTATION"    # cốt sàn ±0.00
+    from optimat.drawing.layer_classifier import LayerClass, default_classification
+    assert default_classification(["COT", "TUONG"]) == {"COT": LayerClass.IGNORE, "TUONG": LayerClass.WALL}
+
+
+def test_dynamic_block_reads_original_name():
+    import ezdxf
+    from optimat.drawing.dxf_reader import block_name
+    doc = ezdxf.new()
+    doc.blocks.new("CUA DI").add_line((0, 0), (900, 0))
+    anon = doc.blocks.new_anonymous_block("U")
+    anon.add_line((0, 0), (900, 0))
+    doc.appids.new("AcDbBlockRepBTag")
+    anon.block_record.set_xdata("AcDbBlockRepBTag", [(1070, 1), (1005, doc.blocks.get("CUA DI").block_record.dxf.handle)])
+    ins = doc.modelspace().add_blockref(anon.name, (0, 0))
+    assert anon.name.startswith("*U") and block_name(ins) == "CUA DI"
+    assert block_name(doc.modelspace().add_blockref("CUA DI", (0, 0))) == "CUA DI"

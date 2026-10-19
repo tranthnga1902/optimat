@@ -54,3 +54,18 @@ def test_manual_and_removed_columns():
     cot = {w.element: w.quantity for w in works if w.code == "COT"}
     assert cot == {"1 cột 220×220": pytest.approx(0.145, abs=1e-3), "1 cột 300×300": pytest.approx(0.27)}
     assert columns_from_dicts(None) == []
+
+
+def test_signal_columns_from_column_layer():
+    from optimat.drawing.dxf_reader import Segment
+    from optimat.rough.columns import signal_columns
+    def rect(x, y, b, h, layer):
+        p = [(x, y), (x + b, y), (x + b, y + h), (x, y + h)]
+        return [Segment(*p[i], *p[(i + 1) % 4], layer, "small") for i in range(4)]
+    d = Drawing(segments=rect(0, 0, 220, 300, "COT") + rect(1000, 0, 220, 220, "TUONG") + rect(2000, 0, 2000, 220, "COT"),
+                texts=[], blocks=[], hatches=[], layers=["COT", "TUONG"], layer_classes={}, unit_scale=1.0, warnings=[])
+    cols = signal_columns(d)       # chỉ hình cỡ cột trên layer cột; tường và dải dài bị bỏ
+    assert [(c.b_mm, c.h_mm, c.x, c.y, c.source) for c in cols] == [(220, 300, 110, 150, "signal")]
+    both = detect_columns(Drawing(segments=d.segments, texts=[], blocks=[], hatches=[HatchItem("SOLID", "0", [[(0, 0), (220, 0), (220, 300), (0, 300)]])],
+                                  layers=d.layers, layer_classes={}, unit_scale=1.0, warnings=[]))
+    assert len(both) == 1 and both[0].source == "hatch"     # cột tô đặc trùng cột ký hiệu: giữ một

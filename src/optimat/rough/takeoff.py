@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from .. import config
 from ..catalog.repository import Catalog, default_catalog
+from ..drawing.concepts import layer_role, match_block_signal
 from ..drawing.encoding import normalize
 from ..drawing.review import ReviewOpening, ReviewWall
 from .areas import PlanParams, area_works, plan_geometry, room_labels
@@ -41,6 +42,28 @@ class PlanInput(PlanParams):
     stairs: list[Stair] = Field(default_factory=list)
     labels: list[RoomLabel] = Field(default_factory=list)
     wall_systems: dict[str, Optional[str]] = Field(default_factory=dict)   # tường -> phương án tường đã quy đổi
+    found: dict[str, list[str]] = Field(default_factory=dict)   # vai trò phần thô (ngoài cột) -> layer/block thấy trên mặt bằng
+
+
+# bộ phận phần thô thấy theo ký hiệu nhưng chưa bóc tự động: nhắc người dùng nhập
+FOUND_HINT = {"BEAM": ("dầm", "đang suy dầm từ tường và cột, kiểm tra hoặc nhập dầm"),
+              "STAIR": ("cầu thang", "nhập thông số cầu thang để bóc"),
+              "SLAB": ("sàn", "kiểm tra dày sàn trong thông số công trình"),
+              "LINTEL": ("lanh tô", "kiểm tra thông số lanh tô"),
+              "FOUNDATION": ("móng", "nhập móng trong thông số công trình")}
+
+
+def rough_parts(drawing) -> dict[str, list[str]]:
+    """Bộ phận phần thô (trừ cột, đã nhận hình) có trên bản vẽ theo ký hiệu layer/block (data/rules/concepts.csv)."""
+    found: dict[str, list[str]] = {}
+    used = {s.layer for s in drawing.segments} | {h.layer for h in drawing.hatches} | {b.layer for b in drawing.blocks}
+    for n in sorted(used):
+        if (r := layer_role(n)) in FOUND_HINT:
+            found.setdefault(r, []).append(f"layer {n}")
+    for n in sorted({b.name for b in drawing.blocks}):
+        if (s := match_block_signal(n)) and s.vai_tro in FOUND_HINT:
+            found.setdefault(s.vai_tro, []).append(f"block {n}")
+    return found
 
 
 class RoughRequest(BaseModel):
@@ -88,6 +111,11 @@ def compute_rough(req: RoughRequest, catalog: Catalog | None = None) -> RoughRes
     elif not any(p.is_ground for p in req.plans):
         warnings.append("Chưa xác định tầng trệt: chưa tính nền tầng trệt (đệm cát, bê tông lót).")
     for p in req.plans:
+        for role, names in p.found.items():
+            label, hint = FOUND_HINT.get(role, (role, "kiểm tra"))
+            if (role == "STAIR" and p.stairs) or (role == "BEAM" and p.beams is not None):
+                continue
+            warnings.append(f"{p.name}: bản vẽ có {label} ({', '.join(names[:3])}): {hint}.")
         if not p.height_mm:
             warnings.append(f"{p.name}: chưa có chiều cao tầng, chưa tính phần thô của mặt bằng này.")
             continue
@@ -168,7 +196,7 @@ def rough_from_drawing(drawing, params: ProjectParams | None = None, floor_heigh
         sub = crop(drawing, p.bbox) if p.name != "Toàn bộ bản vẽ" else drawing
         walls, openings, systems = review_input_from_takeoff(p.result)
         out.append(PlanInput(name=p.name, is_ground=(i == g), height_mm=p.height_mm, walls=walls, openings=openings,
-                             wall_systems=systems, columns=detect_columns(sub),
+                             wall_systems=systems, columns=detect_columns(sub), found=rough_parts(sub),
                              labels=[RoomLabel(kind=k, text=t, x=x, y=y) for k, t, x, y in room_labels(sub)]))
     return RoughRequest(file=file, params=params or ProjectParams(), plans=out)
 

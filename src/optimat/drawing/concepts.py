@@ -16,12 +16,15 @@ from pathlib import Path
 from typing import Optional
 
 from .. import config
+from .encoding import normalize
 
 QU_FILE = config.DATA_DIR / "rules" / "quy_uoc.csv"
 CONCEPTS_FILE = config.DATA_DIR / "rules" / "concepts.csv"
-LAYER_ROLES = ("WALL", "OPENING", "ANNOTATION", "IGNORE")
+# bộ phận phần thô: nhận đường nét không phải tường (lớp layer coi như IGNORE), bóc phần thô dùng riêng (rough/)
+ROUGH_ROLES = ("COLUMN", "BEAM", "SLAB", "STAIR", "LINTEL", "FOUNDATION")
+LAYER_ROLES = ("WALL", "OPENING", "ANNOTATION", "IGNORE") + ROUGH_ROLES
 OPENING_KINDS = ("door", "window")
-BLOCK_ROLES = OPENING_KINDS + ("ANNOTATION", "IGNORE")   # block không phải cửa: cột, cao độ, trục, nội thất
+BLOCK_ROLES = OPENING_KINDS + ("ANNOTATION", "IGNORE") + ROUGH_ROLES   # block không phải cửa: cột, cao độ, trục, nội thất
 
 
 @dataclass(frozen=True)
@@ -42,7 +45,7 @@ class Signal:
     qu: str              # điều khoản quy ước định nghĩa ký hiệu này
     tin_hieu: str        # layer | block
     mau: str             # layer: chuỗi con của tên đã bỏ dấu, chữ thường; block: tiền tố tên (D -> D1, D12)
-    vai_tro: str         # layer: WALL | OPENING | ANNOTATION | IGNORE; block: door | window
+    vai_tro: str         # layer: WALL | OPENING | ANNOTATION | IGNORE; block: door | window; cả hai: ROUGH_ROLES
     rong_mm: Optional[float] = None
     cao_mm: Optional[float] = None
     ghi_chu: str = ""
@@ -83,6 +86,34 @@ def load_signals(path: str | None = None) -> tuple[Signal, ...]:
     return tuple(out)
 
 
+def conflicts(signals=None) -> dict[str, str]:
+    """Ký hiệu trùng hoặc không bao giờ được dùng, theo đúng cách so khớp: layer B nằm sau layer A mà mẫu của A là chuỗi
+    con của mẫu B (mọi layer khớp B đều khớp A trước); block trùng mẫu (không phân biệt hoa thường)."""
+    signals = load_signals() if signals is None else signals
+    out: dict[str, str] = {}
+    for i, b in enumerate(signals):
+        for a in signals[:i]:
+            if a.tin_hieu != b.tin_hieu or a.ma == b.ma:
+                continue
+            if b.tin_hieu == "layer" and (a.mau in b.mau or a.mau.replace(" ", "") in b.mau.replace(" ", "")):
+                out[b.ma] = f"không bao giờ được dùng: {a.ma} (mẫu \"{a.mau}\", {a.vai_tro}) đứng trước và khớp mọi layer của nó"
+            elif b.tin_hieu == "block" and a.mau.upper() == b.mau.upper():
+                out[b.ma] = f"trùng mẫu block với {a.ma} ({a.vai_tro})"
+            else:
+                continue
+            break
+    return out
+
+
+def new_conflicts(row: dict) -> list[str]:
+    """Xung đột mới sinh ra khi thêm (mã mới, xếp cuối) hoặc sửa (giữ vị trí theo mã) một ký hiệu."""
+    new = Signal(**{k: row.get(k) for k in Signal.__dataclass_fields__})
+    old = load_signals()
+    signals = [new if x.ma == new.ma else x for x in old] + ([] if any(x.ma == new.ma for x in old) else [new])
+    before = conflicts(old)
+    return [f"{ma} {msg}" for ma, msg in conflicts(signals).items() if before.get(ma) != msg]
+
+
 def clause(ma: str) -> Clause:
     return next(c for c in load_clauses() if c.ma == ma)
 
@@ -98,6 +129,12 @@ def match_layer(normalized: str) -> Optional[Signal]:
         if s.mau in normalized or s.mau.replace(" ", "") in compact:
             return s
     return None
+
+
+def layer_role(name: str) -> Optional[str]:
+    """Vai trò ký hiệu của một tên layer gốc (chưa chuẩn hóa)."""
+    s = match_layer(normalize(name).replace("_", " ").replace("-", " "))
+    return s.vai_tro if s else None
 
 
 def block_signals() -> list[Signal]:
