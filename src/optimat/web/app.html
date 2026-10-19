@@ -160,7 +160,7 @@ const ROUTES = {
   "dang-nhap": { role: null }, "do-boc": { role: "user", title: "Hồ sơ và đo bóc" }, "vat-lieu": { role: "user", title: "Vật liệu và giá" },
   "toi-uu": { role: "user", title: "Phương án tối ưu" }, "phan-tho": { role: "user", title: "Phần thô" }, "kiem-soat": { role: "admin", title: "Kiểm soát dữ liệu" },
   "danh-muc": { role: "admin", title: "Vật liệu và phương án tường" }, "gia": { role: "admin", title: "Giá và nhà cung cấp" },
-  "mo-hinh": { role: "admin", title: "Mô hình và cấu hình" }, "nhan-dien": { role: "admin", title: "Ký hiệu nhận diện bản vẽ" },
+  "mo-hinh": { role: "admin", title: "Mô hình và cấu hình" }, "nhan-dien": { role: "admin", title: "Ký hiệu nhận diện bản vẽ" }, "co-so-du-lieu": { role: "admin", title: "Cơ sở dữ liệu" },
 };
 const route = () => { const r = location.hash.replace(/^#/, ""); return ROUTES[r] ? r : (store.get("optimat-role", null) === "admin" ? "kiem-soat" : store.get("optimat-role", null) ? "do-boc" : "dang-nhap"); };
 window.addEventListener("hashchange", render);
@@ -170,7 +170,7 @@ function renderNav() {
   if (!nav) return;
   const n = confirmedPlans().length;
   const items = role === "admin"
-    ? [["kiem-soat", "Kiểm soát dữ liệu"], ["danh-muc", "Vật liệu, phương án tường"], ["gia", "Giá, nhà cung cấp"], ["nhan-dien", "Ký hiệu nhận diện"], ["mo-hinh", "Mô hình, cấu hình"]]
+    ? [["kiem-soat", "Kiểm soát dữ liệu"], ["danh-muc", "Vật liệu, phương án tường"], ["gia", "Giá, nhà cung cấp"], ["nhan-dien", "Ký hiệu nhận diện"], ["co-so-du-lieu", "Cơ sở dữ liệu"], ["mo-hinh", "Mô hình, cấu hình"]]
     : [["do-boc", "Hồ sơ và đo bóc"], ["vat-lieu", "Vật liệu và giá", n ? `${n} mặt bằng` : ""], ["phan-tho", "Phần thô", store.get("optimat-rough", null) ? "đã tính" : ""],
        ["toi-uu", "Phương án tối ưu"]];
   nav.className = "side " + role;
@@ -190,7 +190,7 @@ function render() {
   root.innerHTML = `<div class="shell"><nav id="nav" aria-label="Menu"></nav><main id="main"></main></div>`;
   renderNav();
   ({ "do-boc": viewTakeoff, "vat-lieu": viewBill, "phan-tho": viewRough, "toi-uu": viewOptimize, "kiem-soat": viewDataCheck,
-     "danh-muc": viewCatalog, "gia": viewOffers, "mo-hinh": viewModels, "nhan-dien": viewConcepts })[r]($("main"));
+     "danh-muc": viewCatalog, "gia": viewOffers, "mo-hinh": viewModels, "nhan-dien": viewConcepts, "co-so-du-lieu": viewDatabase })[r]($("main"));
 }
 
 // ------------------------------------------------------------------ đăng nhập (chọn vai trò; chưa có xác thực)
@@ -427,6 +427,83 @@ async function viewModels(main) {
 }
 
 // ------------------------------------------------------------------ quản trị: ký hiệu nhận diện bản vẽ (bảng drawing_concepts)
+// ------------------------------------------------------------------ quản trị cơ sở dữ liệu (api/admin_db.py)
+async function viewDatabase(main) {
+  main.className = "";
+  main.innerHTML = `<div class="head"><div><h1>Cơ sở dữ liệu</h1><p>26 bảng PostgreSQL theo cụm. Sửa trực tiếp 6 bảng quy tắc nhận dạng; danh mục vật liệu, phương án tường sửa ở <code>data/catalog/materials_master.xlsx</code>.</p></div></div>
+    <div id="body" class="muted">Đang tải…</div><div id="tbl"></div>`;
+  let d;
+  try { d = await api("/api/admin/db"); } catch (err) { $("body").innerHTML = `<div class="note">${esc(err.message)}</div>`; return; }
+  const all = d.clusters.flatMap((c) => c.tables), sum = all.reduce((a, t) => a + (t.rows || 0), 0);
+  const status = d.connected
+    ? `<div class="note" style="margin-bottom:14px;background:var(--ok-bg, #E3F3EA);color:var(--ok-ink, #1F5A3D)">Đã kết nối PostgreSQL ${esc(d.server || "")}: <code>${esc(d.url)}</code>. Sửa ở đây ghi thẳng vào database và nhật ký <code>audit_logs</code>.</div>`
+    : `<div class="note" style="margin-bottom:14px">${d.url ? `Không kết nối được <code>${esc(d.url)}</code>: ${esc(d.error || "")}.` : "Chưa có DATABASE_URL."}
+       Đang đọc file CSV: chỉ xem được. Cách kết nối: chép <code>.env.example</code> thành <code>.env</code>, sửa mật khẩu, chạy
+       <code>python scripts/init_db.py</code> (tạo bảng, nạp dữ liệu) rồi khởi động lại máy chủ.</div>`;
+  $("body").className = "";
+  $("body").innerHTML = `${status}
+    <div class="tiles"><div class="tile"><div class="k">Nguồn</div><div class="v">${d.connected ? "PostgreSQL" : "CSV"}</div><div class="s">${d.connected ? "đọc và ghi" : "chỉ xem"}</div></div>
+      <div class="tile"><div class="k">Bảng</div><div class="v">${all.length}</div><div class="s">${all.filter((t) => t.rows === null).length} bảng chưa có dữ liệu nguồn</div></div>
+      <div class="tile"><div class="k">Dòng</div><div class="v">${sum.toLocaleString("vi-VN")}</div><div class="s">${all.filter((t) => t.editable).length} bảng sửa được</div></div></div>
+    ${d.clusters.map((c) => `<div class="card"><h2>${esc(c.name)}</h2><div class="tw"><table><thead><tr><th>Bảng</th><th>Mô tả</th><th class="n">Dòng</th><th></th></tr></thead><tbody>${
+      c.tables.map((t) => `<tr><td><code>${esc(t.name)}</code></td><td class="small">${esc(t.doc)}</td><td class="n">${t.rows == null ? "—" : t.rows.toLocaleString("vi-VN")}</td>
+        <td style="white-space:nowrap"><button class="btn" type="button" data-open="${esc(t.name)}">${t.editable ? "Xem, sửa" : "Xem"}</button></td></tr>`).join("")
+    }</tbody></table></div></div>`).join("")}`;
+  main.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => openTable(b.dataset.open)));
+}
+
+async function openTable(name) {
+  const box = $("tbl");
+  box.innerHTML = `<div class="card muted">Đang tải ${esc(name)}…</div>`;
+  box.scrollIntoView({ behavior: "smooth", block: "start" });
+  let t;
+  try { t = await api(`/api/admin/tables/${encodeURIComponent(name)}`); } catch (err) { box.innerHTML = `<div class="card"><div class="note">${esc(err.message)}</div></div>`; return; }
+  const cols = t.columns.filter((c) => c.name !== "id"), key = t.key[0];
+  const input = (c) => `<label class="f">${esc(c.name)}${c.nullable ? "" : " *"}<input name="${esc(c.name)}" ${["integer", "float", "bigint"].includes(c.type) ? 'type="number" step="any"' : ""} ${c.nullable ? "" : "required"}></label>`;
+  box.innerHTML = `<div class="card"><div class="filters"><h2 style="margin-right:auto"><code>${esc(name)}</code> · ${t.total.toLocaleString("vi-VN")} dòng${t.total > t.rows.length ? ` (hiện ${t.rows.length})` : ""}</h2>
+      <label>Tìm <input id="tq" type="search" placeholder="lọc mọi cột"></label>
+      ${t.editable ? `<a class="btn" href="/api/admin/tables/${encodeURIComponent(name)}/csv" style="display:inline-flex;align-items:center;text-decoration:none">Tải CSV</a>` : ""}</div>
+    ${t.editable ? `<p class="small muted">Lệnh <code>init_db.py --reload-rules</code> nạp lại từ file CSV và xóa sửa đổi ở đây: tải CSV, chép đè file trong <code>data/rules</code> trước khi nạp lại.</p>
+      <form id="rf" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end;margin-bottom:14px">${cols.map(input).join("")}
+        <div class="filters"><button class="btn primary" type="submit" id="rsave">Thêm dòng</button><button class="btn" type="button" id="rcancel">Hủy</button><span id="rmsg" class="small" role="status"></span></div></form>` : ""}
+    <div class="tw"><table><thead><tr>${t.columns.map((c) => `<th>${esc(c.name)}</th>`).join("")}${t.editable ? "<th></th>" : ""}</tr></thead><tbody id="trows"></tbody></table></div></div>`;
+  const rows = t.rows, cell = (v) => v == null ? "" : typeof v === "object" ? JSON.stringify(v) : String(v);
+  const draw = () => {
+    const q = $("tq").value.trim().toLowerCase();
+    $("trows").innerHTML = rows.filter((r) => !q || t.columns.some((c) => cell(r[c.name]).toLowerCase().includes(q)))
+      .map((r) => `<tr>${t.columns.map((c) => `<td class="small">${esc(cell(r[c.name]))}</td>`).join("")}${t.editable
+        ? `<td style="white-space:nowrap"><button class="btn" type="button" data-edit="${esc(r[key])}">Sửa</button> <button class="btn" type="button" data-del="${esc(r[key])}">Xóa</button></td>` : ""}</tr>`).join("")
+      || `<tr><td colspan="${t.columns.length + 1}" class="muted">Không có dòng nào.</td></tr>`;
+  };
+  $("tq").addEventListener("input", draw); draw();
+  if (!t.editable) return;
+  let editing = null;
+  const form = $("rf"), reset = () => { editing = null; form.reset(); $("rsave").textContent = "Thêm dòng"; $("rmsg").textContent = ""; };
+  $("rcancel").addEventListener("click", reset);
+  $("trows").addEventListener("click", async (e) => {
+    const ed = e.target.closest("[data-edit]"), del = e.target.closest("[data-del]");
+    if (ed) {
+      const r = rows.find((x) => String(x[key]) === ed.dataset.edit);
+      editing = r[key];
+      cols.forEach((c) => { form.elements[c.name].value = r[c.name] == null ? "" : r[c.name]; });
+      $("rsave").textContent = `Lưu dòng ${editing}`; form.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else if (del && confirm(`Xóa dòng ${del.dataset.del} của ${name}?`)) {
+      try { await api(`/api/admin/tables/${encodeURIComponent(name)}/${del.dataset.del}`, { method: "DELETE" }); openTable(name); }
+      catch (err) { alert(err.message); }
+    }
+  });
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const body = Object.fromEntries(cols.map((c) => [c.name, form.elements[c.name].value]));
+    $("rmsg").textContent = "Đang lưu…";
+    try {
+      await api(`/api/admin/tables/${encodeURIComponent(name)}${editing == null ? "" : "/" + editing}`,
+        { method: editing == null ? "POST" : "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      openTable(name);
+    } catch (err) { $("rmsg").textContent = err.message; }
+  });
+}
+
 const OBJ_NAME = { tuong: "Tường", loai_bo: "Cặp nét bị loại", cua: "Cửa", door: "Cửa đi", window: "Cửa sổ" };
 async function viewConcepts(main) {
   main.className = "";

@@ -13,3 +13,4 @@ reports/data_check.json
 *.kiem_tra.html
 *.khai_niem.html
 *.khai_niem.json
+.env

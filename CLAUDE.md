@@ -7,7 +7,7 @@ Kế hoạch 15 tuần và danh sách việc nằm trong `PLAN.md`. Trao đổi 
 ## Lệnh
 
 ```powershell
-pytest                                                        # 134 bài; 146 bài khi có OPTIMAT_TEST_DATABASE_URL (đặt PYTHONIOENCODING=utf8)
+pytest                                                        # 135 bài; 148 bài khi có OPTIMAT_TEST_DATABASE_URL (đặt PYTHONIOENCODING=utf8)
 python scripts/check_data.py [--strict]                       # kiểm soát dữ liệu; 0 lỗi mới commit (hook .githooks/pre-commit)
 python scripts/survey_drawings.py <thư mục hoặc file bản vẽ>     # thống kê layer, hatch, block, ghi chú chưa có quy tắc
 python scripts/evaluate_takeoff.py                            # so kết quả bóc tách với data/ground_truth
@@ -24,7 +24,7 @@ python scripts/build_upgrade_sql.py                           # sinh lại sql/0
 uvicorn optimat.api.main:app --reload --app-dir src           # giao diện chung /app, trang kiểm tra /ui/takeoff, tài liệu /docs
 ```
 
-Biến môi trường: `DATABASE_URL` (PostgreSQL: danh mục, họ vật liệu, đơn giá nhân công, quy tắc, định mức đều đọc từ database;
+Biến môi trường (đặt trong file `.env` ở thư mục gốc, chép từ `.env.example`, không vào Git; pytest bỏ qua `.env`): `DATABASE_URL` (PostgreSQL: danh mục, họ vật liệu, đơn giá nhân công, quy tắc, định mức đều đọc từ database;
 không đặt thì đọc CSV trong `data/catalog`, `data/rules` — chỉ dùng cho kiểm thử),
 `OPTIMAT_TEST_DATABASE_URL` (database kiểm thử riêng, bị xóa bảng mỗi lần chạy),
 `OPTIMAT_CATALOG_OVERLAY` (thư mục CSV đè lên data/catalog khi không có PostgreSQL; conftest đặt `data/sample/catalog` = số MẪU),
@@ -92,6 +92,9 @@ Luồng: bản vẽ DWG/DXF -> nhận diện tường -> đo bóc -> tìm nguồ
 - `src/optimat/agent/`: trích ràng buộc từ câu tiếng Việt (Ollama, dự phòng bằng regex), luồng điều phối.
 - `src/optimat/api/`: FastAPI. `src/optimat/web/app.html`: giao diện chung `/app` (theo `docs/mockup/`), không có bước build;
   người dùng: đo bóc (nhúng `/ui/takeoff`), vật liệu và giá, tối ưu + trợ lý; quản trị: kiểm soát dữ liệu, danh mục, giá, mô hình.
+  Quản trị cơ sở dữ liệu (`api/admin_db.py`, trang `/app#co-so-du-lieu`): trạng thái kết nối, số dòng 26 bảng; sửa, thêm, xóa
+  6 bảng quy tắc khi có PostgreSQL (kiểm mã vật liệu, biểu thức chính quy, vai trò; ghi `audit_logs`; tải CSV để đồng bộ về
+  `data/rules` trước `--reload-rules`). Danh mục vật liệu không sửa trên web (nguồn duy nhất `materials_master.xlsx`).
   Trang kiểm tra ghi mặt bằng đã chốt vào localStorage `optimat-confirmed` để `/app` gộp các tầng (bản chính thức: `takeoff_results`).
 - `src/optimat/data_check.py` + `scripts/check_data.py` + `/api/data/check`: kiểm soát dữ liệu (lỗi chặn commit, cảnh báo, ghi chú).
   Quy trình: `docs/QUY_TRINH_DU_LIEU.md`. Tài liệu, mẫu thu thập, mockup: `docs/`. Bản vẽ thật: `data/drawings/build/` (không vào git).

@@ -2,5 +2,7 @@
 # Kiểm soát dữ liệu và kiểm thử trước mỗi commit. Bật: git config core.hooksPath .githooks
 # Bỏ qua một lần (không khuyến khích): git commit --no-verify
 PY=${PYTHON:-python}
+# kiểm các file sắp commit (data/catalog, data/rules), không kiểm database trong .env
+export OPTIMAT_NO_DOTENV=1
 $PY scripts/check_data.py --quiet || { echo "Dữ liệu có lỗi: xem reports/data_check.md"; exit 1; }
 $PY -m pytest -q -x || { echo "Kiểm thử chưa đạt."; exit 1; }

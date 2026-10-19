@@ -6,6 +6,16 @@ DATA_DIR = ROOT / "data"
 CATALOG_DIR = DATA_DIR / "catalog"
 MODELS_DIR = ROOT / "models"
 
+# Biến môi trường cục bộ (DATABASE_URL, OPENAI_API_KEY...) trong file .env ở thư mục gốc, không đưa lên Git.
+# Biến đã đặt sẵn trong môi trường thắng file .env.
+_ENV = ROOT / ".env"
+import os as _os
+if _ENV.exists() and not _os.environ.get("OPTIMAT_NO_DOTENV"):   # pytest đặt cờ này: kiểm thử không dùng database thật
+    for _line in _ENV.read_text(encoding="utf-8").splitlines():
+        _k, _eq, _v = _line.strip().partition("=")
+        if _eq and _k and not _k.startswith("#"):
+            _os.environ.setdefault(_k.strip(), _v.strip().strip('"').strip("'"))
+
 # ---- Nhận diện bản vẽ ----
 # Ký hiệu nhận dạng theo Quy ước bản vẽ v1.0 (tên layer -> vai trò, tiền tố block cửa)
 # nằm trong data/rules/concepts.csv; 23 điều khoản QU trong data/rules/quy_uoc.csv (drawing/concepts.py).

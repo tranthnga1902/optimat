@@ -7,6 +7,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 # Danh mục thật còn trống số liệu của nhiều phương án tường: kiểm thử tối ưu dùng thêm số MẪU (data/sample/catalog).
+# kiểm thử không đọc .env (DATABASE_URL thật); database kiểm thử đặt riêng bằng OPTIMAT_TEST_DATABASE_URL
+os.environ["OPTIMAT_NO_DOTENV"] = "1"
 if not os.environ.get("OPTIMAT_CATALOG_OVERLAY"):
     os.environ["OPTIMAT_CATALOG_OVERLAY"] = str(ROOT / "data/sample/catalog")
 

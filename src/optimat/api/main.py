@@ -18,6 +18,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from fastapi.encoders import jsonable_encoder
 
+from .admin_db import router as admin_router
 from ..agent.llm import ParsedConstraints, llm_available, parse_constraints
 from ..agent.orchestrator import run_agent
 from ..agent.pipeline import run_pipeline
@@ -41,6 +42,7 @@ from ..rough.takeoff import RoughRequest, RoughResult, compute_rough, rough_from
 from ..schemas import Constraints, OpeningDefaults, OptimizeResult, PlanTakeoff, TakeoffResult, WallGroup
 
 app = FastAPI(title="OptiMat AI", version="0.1.0")
+app.include_router(admin_router)     # quản trị cơ sở dữ liệu (api/admin_db.py)
 # Cho phép giao diện React chạy ở cổng khác gọi vào khi phát triển.
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://localhost:3000"],
                    allow_methods=["*"], allow_headers=["*"])
