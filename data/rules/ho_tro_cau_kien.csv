@@ -1,0 +1,22 @@
+cau_kien,hinh_bieu_dien,trang_thai,dieu_kien,kiem_thu
+Tường xây,Cặp nét song song trên mặt bằng kiến trúc,supported,"Chiều cao tầng, phương án tường",tests/test_rough_walls.py::test_full_params; tests/test_rough_walls.py::test_missing_params_warn_not_guess
+Cột,Vùng tô đặc / layer cột trên mặt bằng kiến trúc,supported,,tests/test_rough_columns.py::test_detect_columns_from_solid_fills; tests/test_rough_columns.py::test_manual_and_removed_columns
+Dầm,Ký hiệu D…/ĐK… + cặp nét trên mặt bằng kết cấu,supported,Tiết diện ghi chữ hoặc mặt cắt dầm,tests/test_rough_structural.py::test_read_structural_beams_and_foundations; tests/test_rough_beams.py::test_beam_missing_section_and_manual_override
+Dầm,Suy từ tường + cột,conditional,Dầm suy luôn cần người dùng duyệt,
+Móng đơn,Ký hiệu M… + chi tiết móng,conditional,Móng coi là khối hộp; móng bậc/vát sửa tay,
+"Móng băng, móng cọc",Bất kỳ,not_supported,Chưa có quy ước,
+Sàn,Đường bao phòng kín trên mặt bằng kiến trúc,supported,Dày sàn,tests/test_rough_areas.py::test_upper_floor_works; tests/test_rough_areas.py::test_open_outline_gives_no_area
+Cầu thang bản,"Nhập tay theo quy ước Stair (số bậc, rộng vế, rộng bậc, chiếu nghỉ, dầm thang)",supported,Dày bản thang,tests/test_rough_secondary.py::test_stair_with_landing_beam; tests/test_rough_secondary.py::test_stair_con_not_supported
+"Cầu thang cốn, xoắn",Bất kỳ,not_supported,Ghi Not supported,
+Cầu thang,Tự nhận trên bản vẽ,not_supported,Chưa đọc mặt bằng thang,
+Lanh tô,Theo lỗ cửa trên tường xây,supported,"Cao lanh tô, gối; lỗ sát đáy dầm không tính lanh tô",tests/test_rough_secondary.py::test_lintel_not_double_counted_with_beam; tests/test_rough_secondary.py::test_lintel_kept_when_below_beam
+Lanh tô,Ký hiệu LT… trên bản vẽ kết cấu,conditional,Chỉ lấy cao lanh tô từ tiết diện ghi chữ,
+Giằng tường,Nhập vào mặt bằng kiến trúc (members),supported,Tiết diện giằng; trừ khỏi khối xây,tests/test_rough_secondary.py::test_tie_deducted_from_masonry; tests/test_rough_secondary.py::test_tie_without_depth_left_blank
+Giằng tường,Ký hiệu GT… + cặp nét trên mặt bằng kết cấu,conditional,Chưa gắn tầng nên chưa trừ khỏi khối xây,
+Sê nô,Ký hiệu SN… + cặp nét + tiết diện ghi chữ,conditional,Tiết diện chữ nhật quy ước,
+Mái bê tông,Nhập diện tích + dày (roofs),supported,Có thể thay sàn trên của một mặt bằng,tests/test_rough_secondary.py::test_concrete_roof_replaces_slab; tests/test_rough_secondary.py::test_frame_roof_not_supported
+"Mái khung (vì kèo, xà gồ, tôn, ngói)",Bất kỳ,not_supported,Hạng mục điều kiện,
+Cốt thép,Bảng thống kê thép đã chuẩn hóa (TEXT/MTEXT),supported,"Có cột đường kính, chiều dài cắt, số thanh",tests/test_rough_rebar.py::test_read_schedule_and_kg; tests/test_rough_rebar.py::test_no_schedule_leaves_steel_blank
+Cốt thép,Hàm lượng kg/m³ người dùng nhập,conditional,Ước tính; cần review,
+Cốt thép,ACAD_TABLE chưa phá,not_supported,Phá bảng thành TEXT/MTEXT,
+"Cốt thép triển khai tự do, tự suy từ hình vẽ",Bất kỳ,not_supported,Không suy thép từ hình vẽ,

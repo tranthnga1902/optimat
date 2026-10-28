@@ -1,0 +1,5 @@
+vehicle_id,name,payload_ton,base_fee,fee_per_km,data_kind
+VEH_1T25,Xe tải 1.25 tấn,1.25,250000,12000,SAMPLE
+VEH_2T5,Xe tải 2.5 tấn,2.5,350000,15000,SAMPLE
+VEH_5T,Xe tải 5 tấn,5,550000,20000,SAMPLE
+VEH_8T,Xe tải 8 tấn,8,750000,26000,SAMPLE

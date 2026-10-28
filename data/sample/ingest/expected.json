@@ -1,0 +1,91 @@
+{
+  "01_hop_le_mm.dxf": {
+    "status": "ok",
+    "codes": []
+  },
+  "02_thieu_don_vi.dxf": {
+    "status": "ok",
+    "codes": [
+      "NO_UNITS"
+    ]
+  },
+  "03_don_vi_met.dxf": {
+    "status": "ok",
+    "codes": []
+  },
+  "04_sai_ty_le.dxf": {
+    "status": "ok",
+    "codes": [
+      "SCALE_SUSPECT"
+    ]
+  },
+  "05_dimlfac_ghi_de.dxf": {
+    "status": "ok",
+    "codes": [
+      "DIMLFAC",
+      "DIM_TEXT_MISMATCH"
+    ]
+  },
+  "06_xref.dxf": {
+    "status": "ok",
+    "codes": [
+      "XREF"
+    ]
+  },
+  "07_nhieu_layout.dxf": {
+    "status": "ok",
+    "codes": [
+      "MULTI_LAYOUT"
+    ]
+  },
+  "08_font_vni_spline.dxf": {
+    "status": "ok",
+    "codes": [
+      "FONT_UNSUPPORTED",
+      "UNSUPPORTED_ENTITY"
+    ]
+  },
+  "09_modelspace_rong.dxf": {
+    "status": "failed",
+    "codes": [
+      "EMPTY_MODEL",
+      "MULTI_LAYOUT"
+    ]
+  },
+  "10_dxf_hong.dxf": {
+    "status": "failed",
+    "codes": [
+      "EMPTY_MODEL",
+      "FONT_MISSING",
+      "NO_UNITS",
+      "RECOVERED"
+    ]
+  },
+  "11_dwg_hong.dwg": {
+    "status": "failed",
+    "codes": [
+      "CONVERSION_FAILED"
+    ]
+  },
+  "12_pdf_doi_ten.dxf": {
+    "status": "rejected",
+    "codes": [
+      "UPLOAD_REJECTED"
+    ]
+  },
+  "13_nhi_phan.dxf": {
+    "status": "ok",
+    "codes": []
+  },
+  "14_block_long_sau.dxf": {
+    "status": "ok",
+    "codes": []
+  },
+  "15_khong_header_chu_insunits.dxf": {
+    "status": "ok",
+    "codes": [
+      "FONT_MISSING",
+      "NO_UNITS"
+    ]
+  }
+}

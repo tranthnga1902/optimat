@@ -5,7 +5,7 @@ Hai file định nghĩa, sửa bằng Excel, không viết cứng trong mã:
     data/rules/concepts.csv   ký hiệu nhận dạng: tên layer -> vai trò (QU-08), tiền tố block -> cửa đi / cửa sổ (QU-14)
                               hoặc đối tượng không phải cửa (cột, cao độ, trục, nội thất: ANNOTATION / IGNORE)
 Thứ tự dòng trong concepts.csv là thứ tự ưu tiên: dòng khớp đầu tiên thắng (layer "CUA_TUONG" là cửa).
-Kiểm tra từng điều khoản trên một bản vẽ: drawing/convention_check.py; trang quan sát: drawing/concept_view.py.
+Kiểm tra từng điều khoản trên một bản vẽ: drawing/convention_check.py.
 """
 from __future__ import annotations
 

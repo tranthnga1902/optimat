@@ -10,7 +10,8 @@ from .. import config
 from . import concepts
 from .encoding import normalize
 
-SAMPLE_DIRS = (config.DATA_DIR / "drawings" / "thu_vien", config.DATA_DIR / "drawings" / "build", config.DATA_DIR / "sample")
+# thứ tự là thứ tự ưu tiên hình: thư viện mẫu trước bản vẽ thật; không dùng data/sample (block giả của bản vẽ thử)
+SAMPLE_DIRS = (config.DATA_DIR / "drawings" / "thu_vien", config.DATA_DIR / "drawings" / "build")
 DRAWN = {"LINE", "ARC", "CIRCLE", "ELLIPSE", "LWPOLYLINE", "POLYLINE", "SPLINE", "SOLID"}   # bỏ chữ, hatch
 
 
@@ -20,6 +21,8 @@ def _scan() -> tuple[dict[str, tuple[str, list]], dict[str, str]]:
     shortcut: thêm bản vẽ mẫu mới cần khởi động lại máy chủ để quét lại."""
     import ezdxf
     from ezdxf import disassemble
+
+    from .dxf_reader import original_block_name
     blocks: dict[str, tuple[str, list]] = {}
     layers: dict[str, str] = {}
     for path in sorted(p for d in SAMPLE_DIRS if d.exists() for p in d.glob("*.dxf")):
@@ -29,14 +32,18 @@ def _scan() -> tuple[dict[str, tuple[str, list]], dict[str, str]]:
             continue
         for layer in doc.layers:
             layers.setdefault(layer.dxf.name, path.stem)
-        for blk in doc.blocks:
-            if blk.name.startswith("*") or blk.name.upper() in blocks:
+        # block động: lấy hình của bản chèn thật (*U…, một trạng thái hiển thị), không lấy định nghĩa gốc
+        # (vẽ chồng mọi trạng thái); mỗi tên gốc lấy bản ẩn danh đầu tiên
+        anon = {b.name: original_block_name(doc, b.name) for b in doc.blocks if b.name.startswith("*")}
+        for blk in sorted(doc.blocks, key=lambda b: not b.name.startswith("*")):
+            name = anon.get(blk.name, blk.name)
+            if name.startswith("*") or name.upper() in blocks:
                 continue
             ents = (e for e in disassemble.recursive_decompose(blk) if e.dxftype() in DRAWN)
             lines = [[(round(v.x, 1), round(v.y, 1)) for v in p.vertices()] for p in disassemble.to_primitives(ents)]
             lines = [ln for ln in lines if len(ln) > 1]
             if lines:
-                blocks[blk.name.upper()] = (path.stem, lines)
+                blocks[name.upper()] = (path.stem, lines)
     return blocks, layers
 
 
@@ -51,14 +58,21 @@ def _svg(lines: list) -> str:
             f'fill="none" stroke="currentColor">{pts}</svg>')
 
 
+def block_svg(name: str) -> str | None:
+    """Hình một block trong bản vẽ mẫu theo tên (không phân biệt hoa thường), để người dùng chọn làm hình minh họa."""
+    hit = _scan()[0].get(name.upper())
+    return _svg(hit[1]) if hit else None
+
+
 def samples() -> dict[str, dict]:
     """Mã ký hiệu → {matches: tên block/layer khớp trong bản vẽ mẫu, svg: hình block đầu tiên (chỉ ký hiệu block)}."""
     blocks, layers = _scan()
     out: dict[str, dict] = {}
     for s in concepts.load_signals():
         if s.tin_hieu == "block":
-            names = sorted(n for n in blocks if re.fullmatch(rf"{re.escape(s.mau.upper())}\d*", n)
-                           and concepts.match_block_signal(n) == s)
+            order = {n: i for i, n in enumerate(blocks)}      # theo SAMPLE_DIRS: thư viện mẫu trước
+            names = sorted((n for n in blocks if re.fullmatch(rf"{re.escape(s.mau.upper())}\d*", n)
+                            and concepts.match_block_signal(n) == s), key=order.get)
             out[s.ma] = {"matches": [f"{n} ({blocks[n][0]})" for n in names],
                          "svg": _svg(blocks[names[0]][1]) if names else None}
         else:

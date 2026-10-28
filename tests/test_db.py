@@ -14,23 +14,43 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 URL = os.environ.get("OPTIMAT_TEST_DATABASE_URL")
 pytestmark = pytest.mark.skipif(not URL, reason="chưa đặt OPTIMAT_TEST_DATABASE_URL")
+SAMPLE_SUPPLY = ("suppliers", "supplier_materials", "vehicles")      # danh mục thật chưa có giá đại lý, phương tiện
 
 
 @pytest.fixture(scope="module")
 def seeded_db(sample_prices):
+    """Danh mục thật + đại lý, giá đại lý, phương tiện MẪU (data/sample/catalog) + lịch sử giá mẫu."""
+    from sqlalchemy import create_engine
     env = {**os.environ, "DATABASE_URL": URL}
-    subprocess.run([sys.executable, str(ROOT / "scripts/init_db.py"), "--reset", "--prices", sample_prices],
-                   check=True, env=env)
+    subprocess.run([sys.executable, str(ROOT / "scripts/init_db.py"), "--reset"], check=True, env=env)
+    engine = create_engine(URL)
+    for name in SAMPLE_SUPPLY:
+        df = pd.read_csv(ROOT / "data/sample/catalog" / f"{name}.csv", dtype={"supplier_id": str, "material_id": str})
+        for col in {"supplier_materials": ("collected_at", "price_date")}.get(name, ()):
+            df[col] = pd.to_datetime(df[col]).dt.date
+        df.to_sql(name, engine, if_exists="append", index=False)
+    engine.dispose()
+    subprocess.run([sys.executable, str(ROOT / "scripts/init_db.py"), "--prices", sample_prices], check=True, env=env)
     return URL
+
+
+def csv_catalog():
+    """Bản CSV tương ứng seeded_db: danh mục data/catalog, nguồn cung lấy từ bộ mẫu."""
+    from optimat.catalog.repository import Catalog
+    cat, sample = Catalog.from_csv(), Catalog.from_csv(ROOT / "data/sample/catalog")
+    for name in SAMPLE_SUPPLY:
+        setattr(cat, name, getattr(sample, name))
+    return cat
 
 
 def test_catalog_from_db_matches_csv(seeded_db):
     from optimat.catalog.repository import Catalog
-    db, csv = Catalog.from_db(seeded_db), Catalog.from_csv()
+    db, csv = Catalog.from_db(seeded_db), csv_catalog()
     for name in ("materials", "suppliers", "vehicles"):
         a = getattr(db, name).sort_values(getattr(db, name).columns[0]).reset_index(drop=True)
         b = getattr(csv, name).sort_values(getattr(csv, name).columns[0]).reset_index(drop=True)
-        pd.testing.assert_frame_equal(a[b.columns], b, check_dtype=False)
+        blank = lambda df: df.astype(object).where(df.notna(), None).map(lambda v: v if v is None else float(v) if isinstance(v, (int, float)) else str(v))  # None = NaN, ngày = chuỗi
+        pd.testing.assert_frame_equal(blank(a[b.columns]), blank(b), check_dtype=False)
     assert len(db.supplier_materials) == len(csv.supplier_materials)
 
 
@@ -41,7 +61,7 @@ def test_optimize_same_result_from_db(seeded_db, sample_dxf, monkeypatch):
     from optimat.schemas import Constraints
     groups = takeoff_from_file(sample_dxf, 3300).groups
     cons = Constraints(max_vehicle_ton=2.5)
-    from_csv = optimize(groups, cons, Catalog.from_csv(), None, method="brute")
+    from_csv = optimize(groups, cons, csv_catalog(), None, method="brute")
     monkeypatch.setenv("DATABASE_URL", seeded_db)
     from_db = optimize(groups, cons, Catalog.load(), None, method="brute")
     assert [(s.total_cost, s.supply_days, s.u_value) for s in from_db.solutions] == \
@@ -298,7 +318,7 @@ def test_takeoff_reads_project_params(seeded_db, tmp_path, monkeypatch):
     assert post(project_id="999999").status_code == 404
 
 
-def test_concepts_admin_crud(seeded_db, monkeypatch):
+def test_concepts_admin_crud(seeded_db, monkeypatch, login_admin):
     """Quản trị sửa bảng drawing_concepts: thêm, sửa, xóa; nhận diện dùng ngay ký hiệu mới (không cần khởi động lại)."""
     from fastapi.testclient import TestClient
 
@@ -307,14 +327,17 @@ def test_concepts_admin_crud(seeded_db, monkeypatch):
     monkeypatch.setenv("DATABASE_URL", seeded_db)
     concepts.load_signals.cache_clear()
     client = TestClient(app)
-    body = {"ma": "l99", "khai_niem": "Cầu thang", "qu": "QU-17", "tin_hieu": "layer", "mau": "CẦU_THANG", "vai_tro": "IGNORE"}
+    assert client.post("/api/concepts", json={"ma": "l98"}).status_code == 401      # chưa đăng nhập
+    login_admin(client, seeded_db)
+    # mẫu chưa có trong concepts.csv (L38 "cau thang" đã có sẵn, thêm trùng bị chặn)
+    body = {"ma": "l99", "khai_niem": "Bồn hoa", "qu": "QU-17", "tin_hieu": "layer", "mau": "BỒN_HOA", "vai_tro": "IGNORE"}
     row = client.post("/api/concepts", json=body).json()
-    assert row["ma"] == "L99" and row["mau"] == "cau thang"
-    assert client.get("/api/concepts").json()["editable"] and concepts.match_layer("cau thang 2").ma == "L99"
+    assert row["ma"] == "L99" and row["mau"] == "bon hoa"
+    assert client.get("/api/concepts").json()["editable"] and concepts.match_layer("bon hoa 2").ma == "L99"
     assert client.post("/api/concepts", json=body).status_code == 409
     assert client.put("/api/concepts/L99", json={**body, "vai_tro": "ANNOTATION"}).json()["vai_tro"] == "ANNOTATION"
-    assert concepts.match_layer("cau thang").vai_tro == "ANNOTATION"
-    assert client.delete("/api/concepts/L99").status_code == 200 and concepts.match_layer("cau thang") is None
+    assert concepts.match_layer("bon hoa").vai_tro == "ANNOTATION"
+    assert client.delete("/api/concepts/L99").status_code == 200 and concepts.match_layer("bon hoa") is None
     assert client.delete("/api/concepts/L99").status_code == 404
     monkeypatch.delenv("DATABASE_URL")
     concepts.load_signals.cache_clear()

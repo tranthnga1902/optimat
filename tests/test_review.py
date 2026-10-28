@@ -46,8 +46,6 @@ def test_review_edits_remove_add_and_height(sample_dxf):
 
 def test_review_api(sample_dxf):
     client = TestClient(app)
-    page = client.get("/ui/takeoff")
-    assert page.status_code == 200 and "Kiểm tra bóc tách" in page.text
     with open(sample_dxf, "rb") as f:
         view = client.post("/api/takeoff/view", files={"file": ("sample_floor.dxf", f, "application/dxf")})
     assert view.status_code == 200

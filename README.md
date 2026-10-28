@@ -56,7 +56,7 @@ Chưa cài thì vẫn dùng được file `.dxf`; tải `.dwg` lên sẽ nhận 
 
 ## Giao diện chung và kiểm soát dữ liệu
 
-`/app` theo bố cục mockup (`docs/mockup/`), hai vai trò:
+Giao diện web `frontend/` (React, Next.js), hai vai trò:
 
 - **Người dùng**: Hồ sơ và đo bóc (trang Kiểm tra bóc tách nhúng trong khung) → Vật liệu và giá (gộp các mặt bằng đã
   xác nhận, gạch + vữa, giá trong database) → Phương án tối ưu (ràng buộc, trợ lý trích ràng buộc từ câu tiếng Việt, NSGA-II).
@@ -80,8 +80,13 @@ python -m optimat.predict.train --data data/sample/prices_sample.csv --out model
 #    hoặc lấy dữ liệu từ bảng price_records trong PostgreSQL:
 python -m optimat.predict.train --from-db --out models
 
-# 3. Chạy hệ thống: giao diện chung http://localhost:8000/app, tài liệu API http://localhost:8000/docs
+# 3. Chạy hệ thống: API http://localhost:8000 (tài liệu /docs)
 uvicorn optimat.api.main:app --reload --app-dir src
+
+# 4. Giao diện web (Next.js 16, React 19, Tailwind CSS 4), cửa sổ khác: http://localhost:3000
+cd frontend
+npm install   # lần đầu
+npm run dev
 ```
 
 Chạy thử cả luồng bằng Python:
@@ -148,7 +153,7 @@ và nên có `source`, `data_kind`.
 6. **Lưu trữ**: các bảng người dùng, dự án, kết quả đo bóc, nhật ký đã có nhưng API chưa ghi vào; cần nối API
    với các bảng này, thêm trình thu thập giá ghi vào `supplier_materials` và `price_records`, và dùng Alembic
    để quản lý thay đổi lược đồ.
-7. **Giao diện**: ứng dụng React gọi vào API này.
+7. **Giao diện**: `frontend/` (Next.js 16, React 19, Tailwind CSS 4) gọi vào API này qua `/api`; xem `frontend/README.md`.
 8. **Đối chiếu BOQ** từ file Excel.
 
 ## Bóc tách vật liệu bằng quy tắc

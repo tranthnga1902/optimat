@@ -18,17 +18,26 @@ WORKS = {
     "DAM": ("Bê tông dầm", "m³"),
     "SAN": ("Bê tông sàn", "m³"),
     "CAU_THANG": ("Bê tông cầu thang", "m³"),
+    "GIANG_TUONG": ("Bê tông giằng tường", "m³"),
+    "SE_NO": ("Bê tông sê nô", "m³"),
+    "MAI": ("Bê tông mái", "m³"),
     "MONG": ("Bê tông móng", "m³"),
     "BE_TONG_LOT": ("Bê tông lót", "m³"),
+    "DAO_DAT": ("Đào đất hố móng", "m³"),
+    "DAP_DAT": ("Đắp đất hố móng", "m³"),
     "NEN_DEM_CAT": ("Đệm cát nền", "m³"),
     "CAN_NEN": ("Cán nền", "m²"),
     "CHONG_THAM": ("Chống thấm", "m²"),
     "COT_THEP": ("Cốt thép", "tấn"),
     "COP_PHA": ("Cốp pha", "m²"),
 }
-CONCRETE_WORKS = ("LANH_TO", "COT", "DAM", "SAN", "CAU_THANG", "MONG")
-# Cấu kiện nhận hàm lượng thép riêng (kg thép / m³ bê tông)
-STEEL_ELEMENTS = {"LANH_TO": "lanh tô", "COT": "cột", "DAM": "dầm", "SAN": "sàn", "CAU_THANG": "cầu thang", "MONG": "móng"}
+CONCRETE_WORKS = ("LANH_TO", "COT", "DAM", "SAN", "CAU_THANG", "GIANG_TUONG", "SE_NO", "MAI", "MONG")
+# Cấu kiện nhận hàm lượng thép riêng (kg thép / m³ bê tông) và nhận dòng bảng thống kê thép
+STEEL_ELEMENTS = {"LANH_TO": "lanh tô", "COT": "cột", "DAM": "dầm", "SAN": "sàn", "CAU_THANG": "cầu thang",
+                  "GIANG_TUONG": "giằng tường", "SE_NO": "sê nô", "MAI": "mái", "MONG": "móng"}
+# Vai trò ký hiệu cấu kiện (data/rules/ky_hieu_cau_kien.csv) -> mã công tác bê tông
+ROLE_WORK = {"COLUMN": "COT", "BEAM": "DAM", "FOUNDATION": "MONG", "SLAB": "SAN", "LINTEL": "LANH_TO", "STAIR": "CAU_THANG",
+             "WALL_TIE": "GIANG_TUONG", "GUTTER": "SE_NO", "ROOF": "MAI"}
 
 
 class GroundLayer(BaseModel):
@@ -37,15 +46,42 @@ class GroundLayer(BaseModel):
     thickness_mm: float
 
 
+class FootingTier(BaseModel):
+    """Một lớp (bậc) của móng, kể từ dưới lên: khối hộp dài × rộng × cao; có top_* thì mặt trên thu lại (lớp vát)."""
+    length_mm: float
+    width_mm: float
+    height_mm: float
+    top_length_mm: Optional[float] = None
+    top_width_mm: Optional[float] = None
+
+
 class FoundationItem(BaseModel):
-    """Một loại móng nhập tay (Quy ước B3 chưa có công thức móng): n khối dài × rộng × cao, hoặc thể tích có sẵn."""
+    """Một loại móng: n khối dài × rộng × cao, hoặc các lớp (tiers), hoặc thể tích có sẵn (rough/foundations.py)."""
     name: str                                       # M1, móng băng trục A...
     count: int = 1
+    kind: Optional[Literal["don", "bang"]] = None    # móng đơn | móng băng (dài = chiều dài băng đã trừ phần giao)
     length_mm: Optional[float] = None
     width_mm: Optional[float] = None
     height_mm: Optional[float] = None
+    tiers: list[FootingTier] = Field(default_factory=list)   # có lớp thì thắng dài × rộng × cao
     volume_m3: Optional[float] = None               # nhập thẳng thể tích một khối (thắng kích thước)
     lean_thickness_mm: Optional[float] = None       # bê tông lót dưới móng, cùng mặt bằng móng
+    bottom_level_mm: Optional[float] = None         # cao độ mặt dưới khối móng (trên lớp lót) so với ±0.000
+    neck_b_mm: Optional[float] = None               # tiết diện cổ móng (phần chôn dưới đất được trừ khi đắp lại)
+    neck_h_mm: Optional[float] = None
+    positions: list[tuple[float, float]] = Field(default_factory=list)   # tâm từng khối (mm, tọa độ mặt bằng móng)
+    plan: Optional[str] = None                      # mặt bằng móng chứa positions (để cắt giằng qua móng)
+    source: str = ""                                # truy ngược: file, hình chi tiết, mặt cắt đã đọc
+
+
+class RoofItem(BaseModel):
+    """Một mái nhập tay. Chỉ mái bê tông có phương pháp đo bóc (S08-03); mái khung (vì kèo, xà gồ, tôn, ngói) ghi
+    Not supported, không trả số."""
+    name: str = "Mái"
+    kind: Literal["be_tong", "khung"]
+    area_m2: Optional[float] = None                 # diện tích bản mái theo mặt nghiêng
+    thickness_mm: Optional[float] = None
+    replaces_slab_of: Optional[str] = None          # mái này là sàn trên của mặt bằng đó: bỏ công tác sàn của mặt bằng
 
 
 class ProjectParams(BaseModel):
@@ -69,6 +105,10 @@ class ProjectParams(BaseModel):
     steel_kg_per_m3: dict[str, float] = Field(default_factory=dict)      # LANH_TO, COT, DAM, SAN, CAU_THANG, MONG
     steel_schedule_t: dict[str, float] = Field(default_factory=dict)     # tấn thép theo bảng thống kê, thắng hàm lượng
     foundations: list[FoundationItem] = Field(default_factory=list)
+    natural_ground_level_mm: Optional[float] = None  # cốt đất tự nhiên so với ±0.000 (đào móng)
+    excavation_margin_mm: Optional[float] = None    # mở rộng đáy hố đào mỗi bên so với mép lót (thi công)
+    excavation_slope: Optional[float] = None        # hệ số mái taluy m (rộng / cao); 0 = vách đứng
+    roofs: list[RoofItem] = Field(default_factory=list)
     ground_layers: list[GroundLayer] = Field(default_factory=list)
 
 
@@ -83,9 +123,11 @@ class WorkItem(BaseModel):
     variant: Optional[str] = None                   # chiều dày trát, mác bê tông, mã vật liệu chống thấm...
     wall_system_id: Optional[str] = None            # công tác xây: phương án tường (định mức gạch, vữa)
     steel_element: Optional[str] = None             # công tác cốt thép: cấu kiện (COT, DAM...)
-    formwork_of: Optional[str] = None               # công tác cốp pha: cấu kiện (LANH_TO, COT, DAM, SAN, CAU_THANG, MONG)
+    formwork_of: Optional[str] = None               # công tác cốp pha: cấu kiện (mã công tác bê tông)
     formula: str = ""                               # công thức đã thay số, để người dùng kiểm tra
     source: str = "auto"                            # auto (tính từ bản vẽ) | manual (người dùng nhập)
+    basis: Optional[str] = None                     # cốt thép, mái: bang_thong_ke | ham_luong | not_supported
+    evidence: list[str] = Field(default_factory=list)   # chỗ lấy số trên bản vẽ (bảng, dòng, tọa độ, layer)
     missing: list[str] = Field(default_factory=list)
 
 

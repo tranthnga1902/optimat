@@ -1,0 +1,14 @@
+/* giữ nguyên kiểu thẻ ký hiệu của app.html cũ */
+.symgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.sym { border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; background: var(--card); }
+.symimg { height: 170px; display: grid; place-items: center; background: var(--bg); border-bottom: 1px solid var(--rule2); color: var(--ink); padding: 10px; text-align: center; }
+.symimg svg, .symimg img { width: 100%; height: 100%; object-fit: contain; }
+.symimg img { background: #fff; border-radius: 6px; }   /* hình tải lên không đổi màu theo nền tối */
+.picbox { display: flex; flex-direction: column; gap: 8px; padding: 10px; border: 1px dashed var(--rule); border-radius: 8px; }
+.symimg svg * { vector-effect: non-scaling-stroke; stroke-width: 1.2px; }
+.chip { display: inline-flex; align-items: center; border: 1px solid var(--rule); border-radius: 99px; margin: 2px 2px 2px 0; overflow: hidden; font-family: ui-monospace, monospace; }
+.chip.bad { border-color: var(--bad-ink); background: var(--bad-bg); }
+.chip button { font: inherit; border: 0; background: none; color: var(--ink); padding: 3px 8px; min-height: 28px; cursor: pointer; }
+.chip button.del { color: var(--muted); border-left: 1px solid var(--rule2); padding: 3px 7px; }
+.chip button:hover { background: var(--accent-soft); }
+.symbody { padding: 12px; display: flex; flex-direction: column; gap: 6px; overflow-wrap: anywhere; }

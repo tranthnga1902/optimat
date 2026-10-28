@@ -4,7 +4,7 @@
     python scripts/check_data.py --strict     # coi cảnh báo như lỗi (dùng trước khi chốt số liệu báo cáo)
 
 Mã thoát: 0 = không có lỗi, 1 = có lỗi (hoặc có cảnh báo khi --strict). Hook pre-commit trong .githooks gọi script này.
-Đặt DATABASE_URL để kiểm tra database; không đặt thì kiểm tra các file CSV trong data/catalog.
+Kiểm tra trực tiếp PostgreSQL; cần DATABASE_URL (có thể đặt trong .env).
 """
 import argparse
 import json
@@ -23,7 +23,11 @@ def main() -> int:
     parser.add_argument("--quiet", action="store_true", help="chỉ in dòng kết quả")
     parser.add_argument("--out-dir", default=str(ROOT / "reports"), help="thư mục ghi báo cáo (mặc định reports/)")
     args = parser.parse_args()
-    report = run_checks()
+    try:
+        report = run_checks()
+    except RuntimeError as exc:
+        print(f"Không thể kiểm soát dữ liệu: {exc}", file=sys.stderr)
+        return 1
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     (out / "data_check.md").write_text(to_markdown(report), encoding="utf8")

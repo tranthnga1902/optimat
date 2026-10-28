@@ -1,14 +1,1 @@
 supplier_id,material_id,base_price,product_url,collected_at,data_kind,price_level,price_date
-SUP_A,GN01,1350,https://example.com/sup-a/gach-dat-nung,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_A,AAC01,1780000,https://example.com/sup-a/aac-100,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_A,AAC03,1800000,https://example.com/sup-a/aac-200,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_B,GK03,5200,https://example.com/sup-b/gach-be-tong-100,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_B,GK02,8900,https://example.com/sup-b/gach-be-tong-200,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_B,AAC01,1850000,https://example.com/sup-b/aac-100,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_B,AAC03,1860000,https://example.com/sup-b/aac-200,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_B,GN01,1420,https://example.com/sup-b/gach-dat-nung,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_C,GK03,4900,https://example.com/sup-c/gach-be-tong-100,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_C,GK02,8500,https://example.com/sup-c/gach-be-tong-200,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_C,AAC01,1920000,https://example.com/sup-c/aac-100,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_C,AAC03,1950000,https://example.com/sup-c/aac-200,2026-10-01,SAMPLE,DEALER,2026-10-01
-SUP_C,GN01,1400,https://example.com/sup-c/gach-dat-nung,2026-10-01,SAMPLE,DEALER,2026-10-01

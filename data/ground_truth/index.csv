@@ -1,2 +1,2 @@
-drawing_file,split,floor_height_mm,note
-data/sample/sample_floor.dxf,build,3300,Mặt bằng mẫu tự tạo. Thay bằng bản vẽ thật. split: build = dùng để xây quy tắc; test = chỉ dùng để đo sai số
+drawing_file,split,floor_height_mm,door_width_mm,door_height_mm,window_width_mm,window_height_mm,note
+data/sample/sample_floor.dxf,build,3300,900,2200,1200,1400,Mặt bằng mẫu tự tạo. Thay bằng bản vẽ thật. split: build = dùng để xây quy tắc; test = chỉ dùng để đo sai số

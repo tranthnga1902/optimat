@@ -6,12 +6,13 @@ có ký hiệu vai trò COLUMN cũng được tô. Thêm cột theo ký hiệu (
 hoặc trong block cột, các nét nối đầu nhau thành một hình. Người dùng thêm, bớt cột trên trang kiểm tra.
     chiều cao cột (m)   = H - dày sàn (chưa nhập dày sàn thì lấy H, có cảnh báo)
     bê tông cột (m³)    = Σ rộng × dài tiết diện × chiều cao cột
-    cốp pha cột (m²)    = Σ 2 × (rộng + dài) × chiều cao cột
+    cốp pha cột (m²)    = Σ 2 × (rộng + dài) × chiều cao cột − Σ rộng dầm × (cao dầm − dày sàn) mỗi đầu dầm gác vào cột
+Cột kiến trúc (role = "kien_truc", cột trang trí, ốp): không tính bê tông, cốp pha.
 Phần trục tim tường đi qua cột được trừ khỏi khối xây (column_overlaps).
 """
 from __future__ import annotations
 
-from typing import Optional
+from typing import Literal, Optional
 
 import numpy as np
 from pydantic import BaseModel
@@ -34,6 +35,7 @@ class Column(BaseModel):
     h_mm: float                  # cạnh theo phương y
     source: str = "hatch"        # hatch | signal (ký hiệu layer/block cột) | manual
     keep: bool = True
+    role: Optional[Literal["ket_cau", "kien_truc"]] = None    # trống: chưa phân biệt, tính như cột kết cấu
 
     def rect(self) -> tuple[float, float, float, float]:
         return self.x - self.b_mm / 2, self.y - self.h_mm / 2, self.x + self.b_mm / 2, self.y + self.h_mm / 2
@@ -176,24 +178,48 @@ def column_overlaps(columns: list[Column], walls) -> dict[str, float]:
     return out
 
 
+def _beam_end_area(c: Column, beams, params: ProjectParams) -> float:
+    """m² mặt cột bị đầu dầm che (không ghép cốp pha): đầu dầm nằm trong cột hoặc chạm mặt cột (±2 mm)."""
+    slab = params.slab_thickness_mm
+    x0, y0, x1, y1 = c.rect()
+    area = 0.0
+    for b in beams or []:
+        w, d = b.b_mm or params.beam_width_mm, b.d_mm or params.beam_depth_mm
+        if not b.keep or None in (w, d, slab) or d <= slab:
+            continue
+        for x, y in ((b.x1, b.y1), (b.x2, b.y2)):
+            if x0 - 2 <= x <= x1 + 2 and y0 - 2 <= y <= y1 + 2:
+                area += w * (d - slab) / 1e6
+    return area
+
+
 def column_works(plan: str, columns: list[Column], height_mm: float,
-                 params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
-    kept = [c for c in columns if c.keep]
-    if not kept:
-        return [], []
+                 params: ProjectParams, beams=None) -> tuple[list[WorkItem], list[str]]:
+    kept = [c for c in columns if c.keep and c.role != "kien_truc"]
     warnings = []
+    arch = [c.id for c in columns if c.keep and c.role == "kien_truc"]
+    if arch:
+        warnings.append(f"{plan}: {len(arch)} cột kiến trúc ({', '.join(arch[:5])}) không tính bê tông, cốp pha.")
+    if not kept:
+        return [], warnings
     slab = params.slab_thickness_mm
     if slab is None:
         warnings.append(f"{plan}: chưa nhập dày sàn, chiều cao cột lấy bằng chiều cao tầng {height_mm:.0f} mm.")
     hc = (height_mm - (slab or 0.0)) / 1000
+    if hc <= 0:
+        warnings.append(f"{plan}: xung đột cao độ: dày sàn {slab:.0f} mm không nhỏ hơn chiều cao tầng {height_mm:.0f} mm, chưa tính cột.")
+        return [], warnings
     works = []
     for b, h in sorted({(c.b_mm, c.h_mm) for c in kept}):
-        n = sum(1 for c in kept if (c.b_mm, c.h_mm) == (b, h))
+        group = [c for c in kept if (c.b_mm, c.h_mm) == (b, h)]
+        n = len(group)
+        hole = sum(_beam_end_area(c, beams, params) for c in group)
         label = f"{n} cột {b:.0f}×{h:.0f}"
         works.append(_work("COT", n * b * h / 1e6 * hc, plan=plan, element=label,
                            formula=f"{n} × {_fmt(b / 1000)} m × {_fmt(h / 1000)} m × {_fmt(hc)} m"))
-        works.append(_work("COP_PHA", n * 2 * (b + h) / 1000 * hc, plan=plan, element=f"cốp pha {label}", formwork_of="COT",
-                           formula=f"{n} × 2 × ({_fmt(b / 1000)} + {_fmt(h / 1000)}) m × {_fmt(hc)} m"))
+        works.append(_work("COP_PHA", n * 2 * (b + h) / 1000 * hc - hole, plan=plan, element=f"cốp pha {label}", formwork_of="COT",
+                           formula=f"{n} × 2 × ({_fmt(b / 1000)} + {_fmt(h / 1000)}) m × {_fmt(hc)} m"
+                                   + (f" − {_fmt(hole)} m² đầu dầm gác vào" if hole else "")))
     return works, warnings
 
 

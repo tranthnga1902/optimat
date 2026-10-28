@@ -115,30 +115,10 @@ INSERT INTO "materials" ("material_id", "group", "subgroup", "name", "family", "
 INSERT INTO "materials" ("material_id", "group", "subgroup", "name", "family", "usage_text", "usage_role", "tier", "unit", "purchase_unit", "unit_conversion", "length_mm", "width_mm", "height_mm", "price_priority", "needs_lambda", "lambda_w_mk", "lambda_source", "unit_weight_kg", "weight_source", "transport_volume_m3", "waste_pct", "waste_source", "standards_text", "reference_brands", "tech_notes", "data_note", "data_kind") VALUES ('CP05', 'phan_tho', 'Thép, cọc & cốp pha', 'Ty ren, cùm, bu lông cốp pha', NULL, 'Biện pháp thi công (luân chuyển)', 'FRAME; FLOOR', 3, 'bộ', NULL, NULL, NULL, NULL, NULL, 'C', 'False', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Thêm 19/10/2026 từ Danh mục vật liệu phần thô (mục 38); thông số chưa có nguồn, để trống', 'ACTUAL');
 INSERT INTO "materials" ("material_id", "group", "subgroup", "name", "family", "usage_text", "usage_role", "tier", "unit", "purchase_unit", "unit_conversion", "length_mm", "width_mm", "height_mm", "price_priority", "needs_lambda", "lambda_w_mk", "lambda_source", "unit_weight_kg", "weight_source", "transport_volume_m3", "waste_pct", "waste_source", "standards_text", "reference_brands", "tech_notes", "data_note", "data_kind") VALUES ('CP06', 'phan_tho', 'Thép, cọc & cốp pha', 'Đinh các loại', NULL, 'Cốp pha gỗ', 'FRAME; FLOOR', 3, 'kg', NULL, NULL, NULL, NULL, NULL, 'C', 'False', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Thêm 19/10/2026 từ Danh mục vật liệu phần thô (mục 39); thông số chưa có nguồn, để trống', 'ACTUAL');
 
--- suppliers: 3 dòng
-INSERT INTO "suppliers" ("supplier_id", "name", "province", "lat", "lon", "lead_time_days", "data_kind") VALUES ('SUP_A', 'Nhà phân phối A (Hà Đông)', 'Ha Noi', 20.9714, 105.7788, 2, 'SAMPLE');
-INSERT INTO "suppliers" ("supplier_id", "name", "province", "lat", "lon", "lead_time_days", "data_kind") VALUES ('SUP_B', 'Nhà phân phối B (Thanh Trì)', 'Ha Noi', 20.9366, 105.844, 1, 'SAMPLE');
-INSERT INTO "suppliers" ("supplier_id", "name", "province", "lat", "lon", "lead_time_days", "data_kind") VALUES ('SUP_C', 'Nhà phân phối C (Hoài Đức)', 'Ha Noi', 21.03, 105.7, 3, 'SAMPLE');
+-- suppliers: 0 dòng
 
--- supplier_materials: 13 dòng
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_A', 'GN01', 1350, 'https://example.com/sup-a/gach-dat-nung', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_A', 'AAC01', 1780000, 'https://example.com/sup-a/aac-100', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_A', 'AAC03', 1800000, 'https://example.com/sup-a/aac-200', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_B', 'GK03', 5200, 'https://example.com/sup-b/gach-be-tong-100', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_B', 'GK02', 8900, 'https://example.com/sup-b/gach-be-tong-200', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_B', 'AAC01', 1850000, 'https://example.com/sup-b/aac-100', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_B', 'AAC03', 1860000, 'https://example.com/sup-b/aac-200', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_B', 'GN01', 1420, 'https://example.com/sup-b/gach-dat-nung', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_C', 'GK03', 4900, 'https://example.com/sup-c/gach-be-tong-100', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_C', 'GK02', 8500, 'https://example.com/sup-c/gach-be-tong-200', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_C', 'AAC01', 1920000, 'https://example.com/sup-c/aac-100', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_C', 'AAC03', 1950000, 'https://example.com/sup-c/aac-200', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
-INSERT INTO "supplier_materials" ("supplier_id", "material_id", "base_price", "product_url", "collected_at", "data_kind", "price_level", "price_date") VALUES ('SUP_C', 'GN01', 1400, 'https://example.com/sup-c/gach-dat-nung', '2026-10-01', 'SAMPLE', 'DEALER', '2026-10-01');
+-- supplier_materials: 0 dòng
 
--- vehicles: 4 dòng
-INSERT INTO "vehicles" ("vehicle_id", "name", "payload_ton", "base_fee", "fee_per_km", "data_kind") VALUES ('VEH_1T25', 'Xe tải 1.25 tấn', 1.25, 250000, 12000, 'SAMPLE');
-INSERT INTO "vehicles" ("vehicle_id", "name", "payload_ton", "base_fee", "fee_per_km", "data_kind") VALUES ('VEH_2T5', 'Xe tải 2.5 tấn', 2.5, 350000, 15000, 'SAMPLE');
-INSERT INTO "vehicles" ("vehicle_id", "name", "payload_ton", "base_fee", "fee_per_km", "data_kind") VALUES ('VEH_5T', 'Xe tải 5 tấn', 5, 550000, 20000, 'SAMPLE');
-INSERT INTO "vehicles" ("vehicle_id", "name", "payload_ton", "base_fee", "fee_per_km", "data_kind") VALUES ('VEH_8T', 'Xe tải 8 tấn', 8, 750000, 26000, 'SAMPLE');
+-- vehicles: 0 dòng
 
 -- labor_rates: 0 dòng

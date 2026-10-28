@@ -14,3 +14,7 @@ reports/data_check.json
 *.khai_niem.html
 *.khai_niem.json
 .env
+data/uploads/
+deploy/duckdns.env
+deploy/duckdns.log
+deploy/logs/

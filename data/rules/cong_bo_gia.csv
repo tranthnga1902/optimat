@@ -1,0 +1,27 @@
+rule_id,pattern,exclude,bulletin_unit,material_id,price_factor,note
+CBG01,^xi mang bao .*pcb ?30,xanh|vo pp,tan,XM01,1,
+CBG02,^xi mang bao .*pcb ?40,xanh|vo pp,tan,XM02,1,
+CBG03,^xi mang roi pc ?40,,tan,XM03,1,
+CBG04,^cat vang,,m3,CA01,1,công bố không tách cát vàng đổ bê tông / xây trát: gán CA01
+CBG05,^cat (den|san nen|san lap),,m3,CA03,1,
+CBG06,^da 1x2,,m3,DA01,1,
+CBG07,^da 2x4,,m3,DA02,1,
+CBG08,^da 4x6,,m3,DA03,1,
+CBG09,"^da (0x0[.,]5|mat)",,m3,DA04,1,đá 0x0.5 là đá mạt
+CBG10,^thep cuon.*(cb ?240|d ?6|f ?6|phi ?6),cb ?300|van,kg,TH01,1000,giá kg đổi sang tấn
+CBG11,^thep thanh.*\bd ?1[02]\b.*(cb ?300|gr ?40|sd ?295),cb ?400,kg,TH02,1000,giá kg đổi sang tấn
+CBG12,^thep thanh.*\bd ?1[02]\b.*cb ?400,,kg,TH07,1000,giá kg đổi sang tấn
+CBG13,^thep thanh.*\bd ?(1[4-9]|2[0-5])\b.*(cb ?300|gr ?40|sd ?295),cb ?400,kg,TH08,1000,giá kg đổi sang tấn
+CBG14,^thep thanh.*\bd ?(1[4-9]|2[0-5])\b.*cb ?400,,kg,TH03,1000,giá kg đổi sang tấn
+CBG15,^gach .*be tong.*220x105x60,rong,vien,GK01,1,
+CBG16,chung ap.*aac.*day 100 ?mm,,m3,AAC01,1,
+CBG17,chung ap.*aac.*day 150 ?mm,,m3,AAC02,1,
+CBG18,chung ap.*aac.*day 200 ?mm,,m3,AAC03,1,
+CBG19,"^-? ?ton pu .*0[.,]4[05] ?mm",,m2,MA02,1,
+CBG20,^vua (xay dung .*mortar|xi mang (xay|trat) m),,tan,VU03,1,vữa khô đóng bao / jumbo
+CBG21,chong tham goc xi mang 2 thanh phan,,kg,CT02,1,
+CBG22,mang chong tham tu dinh,,m2,CT04,1,
+CBG23,bang can nuoc,,m|md,CT05,1,
+CBG24,(thanh|gioang) truong no,,m|md,CT06,1,
+CBG25,latex,,lit,PG02,1,
+CBG26,^-? ?xa go c,,kg,TH05,1,

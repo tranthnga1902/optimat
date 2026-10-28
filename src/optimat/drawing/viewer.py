@@ -1,15 +1,6 @@
-"""Trang xem trực quan quá trình bóc tách một bản vẽ.
-
-    python scripts/view_takeoff.py data/drawings/build/H01_T1.dxf --height 3300
-
-Trang HTML tự chứa (mở bằng trình duyệt, không cần mạng ngoài phông chữ): vẽ lại bản vẽ và cho xem
-từng bước của luồng đo bóc thật (cùng mã với API): nét và layer, cặp nét thành tường, trừ lỗ mở,
-gán vật liệu, bảng khối lượng. Trang chỉ hiển thị, không tính lại gì.
-"""
+"""Dữ liệu cho trang Kiểm tra bóc tách (/do-boc của frontend): bản vẽ, kết quả đo bóc từng mặt bằng, vật liệu chọn được.
+Chỉ gom kết quả đo bóc thật (cùng mã với API), không tính lại gì."""
 from __future__ import annotations
-
-import json
-from pathlib import Path
 
 from ..catalog.repository import Catalog, default_catalog
 from ..schemas import PlanTakeoff, TakeoffResult
@@ -19,9 +10,6 @@ from .material_rules import _best, load_rules, rule_label
 from ..rough.areas import room_labels
 from ..rough.columns import detect_columns
 from ..rough.takeoff import rough_parts
-
-TEMPLATE = Path(__file__).with_name("viewer_template.html")          # trang 5 bước (giải thích thuật toán)
-REVIEW_TEMPLATE = Path(__file__).with_name("review_app.html")       # trang Kiểm tra bóc tách (sửa, bổ sung, xác nhận)
 
 
 def _r(v: float) -> float:
@@ -57,6 +45,7 @@ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: d
     return {
         "file": file_name,
         "height_mm": result.floor_height_mm,
+        "length_rule": result.length_rule,
         "size": [_r(max(xs) - x0), _r(y1 - min(ys))],
         "layers": [{"name": n, "role": result.layer_classes.get(n, "UNKNOWN")} for n in layer_names],
         "segs": [[tx(s.x1), ty(s.y1), tx(s.x2), ty(s.y2), index[s.layer], 1 if s.kind == "hatch" else 0]
@@ -180,21 +169,3 @@ def convention_summary(drawing: Drawing, plans: list, file_name: str) -> dict:
     return {"trong_quy_uoc": r.trong_quy_uoc,
             "checks": [c.model_dump(include={"ma", "muc", "nhom", "dieu_khoan", "trang_thai", "ket_qua", "bang_chung"})
                        for c in r.checks]}
-
-
-def _embed(template: Path, payload: dict | None) -> str:
-    html = template.read_text(encoding="utf8")
-    if payload is None:
-        return html
-    data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    return html.replace("/*__DATA__*/null", data, 1)
-
-
-def build_viewer_html(drawing: Drawing, result, file_name: str) -> str:
-    """Trang 5 bước, dữ liệu nhúng sẵn."""
-    return _embed(TEMPLATE, view_payload(drawing, result, file_name))
-
-
-def build_review_html(drawing: Drawing | None = None, result=None, file_name: str = "") -> str:
-    """Trang Kiểm tra bóc tách. Không truyền bản vẽ: trang rỗng để chạy trong API (tải file lên)."""
-    return _embed(REVIEW_TEMPLATE, None if drawing is None else view_payload(drawing, result, file_name))

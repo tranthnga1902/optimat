@@ -62,7 +62,9 @@ Bóc toàn bộ phần thô ra công tác và vật liệu mua về, chia 17 spr
   cốp pha, cốt thép theo hàm lượng, móng nhập tay, gộp tầng, API, agent, kiểm soát định mức, tab "Phần thô".
 - [ ] Tra TT 38/2026 điền `data/rules/dinh_muc_phan_tho.csv` (22 dòng đang trống) và hao hụt trong `materials_master.xlsx`.
 - [ ] Thêm 4 mã còn thiếu vào danh mục (dây thép buộc, đinh, con kê, gỗ xẻ) khi nga đồng ý.
-- [ ] Đọc dầm từ bản vẽ kết cấu (S4b.5); nhận thang và đếm bậc tự động (S4c.1–2).
+- [x] Đọc dầm từ bản vẽ kết cấu (S4b.5, 21/10; cả hình chi tiết móng, dầm).
+- [ ] Nhận thang và đếm bậc tự động (S4c.1–2).
+- Từ 21/10 làm theo lộ trình S01–S08 (bảng trong `SPRINTS.md`).
 - [ ] Giảng viên duyệt: trừ dầm khỏi chiều cao tường, công thức thang, cốp pha sàn có trừ đáy dầm hay không.
 
 ## Tuần 3–4: Bản vẽ và dữ liệu (19/10–01/11)

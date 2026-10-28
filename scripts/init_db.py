@@ -61,7 +61,7 @@ def main() -> None:
     print(f"Đã có {len(Base.metadata.tables)} bảng:", ", ".join(t.name for t in Base.metadata.sorted_tables))
     for table in CATALOG_TABLES:
         load_table(engine, table, ROOT / "data/catalog" / f"{table}.csv",
-                   date_cols={"supplier_materials": ("collected_at", "price_date"), "labor_rates": ("valid_from",)}.get(table, ()))
+                   date_cols={"suppliers": ("collected_at",), "supplier_materials": ("collected_at", "price_date"), "labor_rates": ("valid_from",)}.get(table, ()))
     if args.reload_rules:
         from sqlalchemy import text
         with engine.begin() as conn:

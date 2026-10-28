@@ -15,7 +15,7 @@ Trạng thái: ✅ xong · 🔄 đang làm · ⬜ chưa làm
 | S3a | Đường bao và phòng | `rough/areas.py`: tô tường lên lưới, đóng khe ở chỗ cột, tìm phòng; tên phòng theo `room_rules.csv` | Hộp mẫu sai số < 0,5%; nhận phòng WC | ✅ |
 | S3b | Sàn, cán nền, nền, chống thấm | Sàn trừ ô trống, cán nền theo diện tích sử dụng, nền trệt theo lớp, chống thấm WC + cổ tường, ban công nhập tay | Test cho tầng trệt và tầng trên; đường bao hở thì báo và cho nhập tay diện tích | ✅ |
 | S4a | Cột | Nhận cột trên mặt bằng (hatch đặc, ô chữ nhật nhỏ), tiết diện, chiều cao; m³, cốp pha; trừ cột trong tường | Test cột mẫu; đếm cột trên bản vẽ build | ✅ |
-| S4b | Dầm | Đọc dầm từ bản vẽ kết cấu nếu có; không có thì suy theo tường và cột để người dùng duyệt; m³, cốp pha | Test dầm suy từ tường; cảnh báo khi phải suy | 🔄 còn đọc bản vẽ kết cấu |
+| S4b | Dầm | Đọc dầm từ bản vẽ kết cấu nếu có; không có thì suy theo tường và cột để người dùng duyệt; m³, cốp pha | Test dầm suy từ tường; cảnh báo khi phải suy | ✅ (21/10: đọc cả hình chi tiết móng, dầm) |
 | S4c | Cầu thang | Vùng thang (đã loại khỏi tường), số bậc, bề rộng vế; m³ bản thang + bậc | Test thang mẫu | 🔄 còn nhận thang tự động |
 | S4d | Cốp pha tổng | Cộng cốp pha lanh tô, cột, dầm, sàn, thang | Một dòng cốp pha mỗi cấu kiện, có công thức | ✅ |
 | S5a | Cốt thép | Tấn thép = m³ bê tông × hàm lượng từng cấu kiện; dây buộc | Thiếu hàm lượng cấu kiện nào thì cấu kiện đó trống | ✅ |
@@ -29,6 +29,32 @@ Trạng thái: ✅ xong · 🔄 đang làm · ⬜ chưa làm
 | S9 | Đọc bản vẽ theo khái niệm của Quy ước v1.0 | `data/rules/quy_uoc.csv` (23 điều khoản QU), `data/rules/concepts.csv` (ký hiệu nhận dạng), kiểm tra quy ước (A4), gắn nguồn cho từng kết quả, trang quan sát định nghĩa và đối chiếu | Phân vai layer không đổi sau khi chuyển quy tắc sang CSV; mỗi điều khoản QU có kết quả đạt / vi phạm / chưa kiểm kèm bằng chứng; chạy được trên 3 bản vẽ build | ✅ |
 | S10 | Cơ sở dữ liệu xác định vật liệu | Danh mục 93 vật liệu (thêm 18 vật liệu phần thô), bảng `material_notes`, `drawing_concepts`, `convention_clauses`, quy tắc so nguyên từ, file Excel đối chiếu | Nhận đúng vật liệu phần thô từ ghi chú bản vẽ; ≥ 90% đúng và 0 gán nhầm trên bản vẽ test | 🔄 chờ bản vẽ build, test |
 
+## Lộ trình S01–S08 (từ 21/10/2026, mã yêu cầu `S02-01`…)
+
+Đánh số hai chữ số, khác lộ trình S0–S10 ở trên (S04 ≠ S4). Đặc tả, review nằm trong `docs/`.
+
+| Sprint | Nội dung | Tài liệu | Trạng thái |
+|---|---|---|---|
+| S01 | (chưa có ghi chép trong kho) | | ⬜ cần bổ sung |
+| S02 | Tiếp nhận hồ sơ CAD: kiểm file, hash/phiên bản, DWG→DXF có log, inventory JSON, trang `/tiep-nhan` | `docs/review/S02_codex_review_prompt*.md` | 🔄 chờ Codex review vòng 2 |
+| S03 | Hồ sơ chuẩn hóa: ComponentRegistry + EvidenceRef, mapping kiến trúc–kết cấu, trang `/mapping` | `docs/review/S03_codex_review_prompt.md` | ✅ |
+| S04 | Tường + lỗ mở: `length_rule` tim/thông thủy, cửa trừ một lần | `docs/review/S04_codex_review_prompt.md` | ✅ đã sửa theo Codex review (21/10) |
+| S05–S06 | Móng, đất, cột, dầm, sàn | `docs/boc-mong-cot-dam-san.md`, `docs/codex-review-S05-S06.md` | ✅ |
+| S07–S08 | Cốt thép theo bảng thống kê, BOQ Excel, cấu kiện phụ | `docs/S07_S08_thep_BOQ_cau_kien_phu.md`, `docs/codex_review_S07_S08.md` | ✅ |
+
+## Lộ trình Admin AD-01–AD-06 (từ 22/10/2026, 6 sprint × 2 tuần)
+
+Kế hoạch quản trị OptiMat AI v2.0, mã yêu cầu `AD01-01`…; giao diện mẫu tham khảo `OptiMat_Admin_UI_Demo.html` (ngoài kho, số liệu minh họa).
+
+| Sprint | Nội dung | Trạng thái |
+|---|---|---|
+| AD-01 | Nền tảng admin: menu nhóm + thu gọn, 403/404/lỗi, đăng nhập và phân quyền (`api/auth.py`), người dùng, dự án, tổng quan, phân trang, audit log (`api/admin_ops.py`; trang `/tong-quan`, `/nguoi-dung`, `/du-an`) | ✅ 23/10 (chưa có toast chung; API người dùng thường chưa bắt đăng nhập) |
+| AD-02 | Hồ sơ CAD theo dự án và phiên bản, mapping layer, phiên bản hóa + kiểm thử quy tắc, đối tượng chưa khớp | ⬜ cần thêm bảng phiên bản quy tắc |
+| AD-03 | Vật liệu, định mức (bản nháp → phát hành), BOQ theo dự án, duyệt và hiệu chỉnh tách khỏi kết quả gốc, xuất Excel | ⬜ trái với quyết định "danh mục chỉ sửa ở materials_master.xlsx": cần chốt lại |
+| AD-04 | Nhà cung cấp, giá theo ngày/khu vực/nguồn, import CSV có kiểm tra, lịch sử giá | ⬜ (đã có CRUD `suppliers`, `supplier_materials`) |
+| AD-05 | XGBoost (phiên bản, kích hoạt, rollback), cấu hình NSGA-II, giám sát và trace Agent, chi phí API | ⬜ cần ghi `optimization_runs`, chi phí LLM |
+| AD-06 | Báo cáo, audit log có lọc, kiểm thử E2E, tài liệu, nghiệm thu | ⬜ |
+
 ## Việc còn mở
 
 Mỗi bước làm xong trong một lần ngồi, có test riêng. Bước nào đụng tới lược đồ cơ sở dữ liệu thì dừng hỏi nga trước.
@@ -38,7 +64,7 @@ Mỗi bước làm xong trong một lần ngồi, có test riêng. Bước nào 
 - ✅ S4b.2 Suy dầm theo tường và cột: đoạn tường nối hai cột thành dầm chờ duyệt, tiết diện để trống kèm cảnh báo "dầm suy"
 - ✅ S4b.3 Dầm tính tới mép cột (trừ phần giao cột–dầm)
 - ✅ S4b.4 Nối cao dầm vào `wall_works`: trừ dầm khỏi khối xây, bỏ cảnh báo "chưa có cao dầm" khi đã có dầm
-- ⬜ S4b.5 Đọc dầm từ bản vẽ kết cấu (lớp dầm, ghi chú kiểu `D220x300`) nếu có; chưa có bản vẽ mẫu thì test bằng bản vẽ giả
+- ✅ S4b.5 Đọc dầm từ bản vẽ kết cấu: ký hiệu D…/ĐK… + cặp nét, tiết diện ghi chữ (`ĐK2 300X500`); test bản vẽ giả + ket_cau.dxf (21/10/2026); tiết diện dầm, kích thước móng từ hình chi tiết (`drawing/dimensions.py`)
 
 ### S4c Cầu thang 🔄
 - ⬜ S4c.1 Lấy vùng thang đã loại khỏi tường lúc nhận dạng thành `StairRegion`

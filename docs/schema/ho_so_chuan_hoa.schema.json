@@ -1,0 +1,572 @@
+{
+  "$defs": {
+    "Component": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "occurrences": {
+          "items": {
+            "$ref": "#/$defs/Occurrence"
+          },
+          "title": "Occurrences",
+          "type": "array"
+        },
+        "details": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "title": "Details",
+          "type": "array"
+        },
+        "size_sources": {
+          "items": {
+            "$ref": "#/$defs/SizeValue"
+          },
+          "title": "Size Sources",
+          "type": "array"
+        },
+        "size": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Size",
+          "type": "object"
+        },
+        "rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Rules",
+          "type": "array"
+        },
+        "confidence": {
+          "default": "cao",
+          "title": "Confidence",
+          "type": "string"
+        },
+        "needs_confirmation": {
+          "default": false,
+          "title": "Needs Confirmation",
+          "type": "boolean"
+        },
+        "status": {
+          "default": "tu_dong",
+          "enum": [
+            "tu_dong",
+            "xac_nhan",
+            "loai_bo"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "kind",
+        "name"
+      ],
+      "title": "Component",
+      "type": "object"
+    },
+    "EvidenceRef": {
+      "description": "Nơi lấy một thông tin: file, layout, handle đối tượng CAD, khung (mm bản vẽ, WCS) và quy tắc đã khớp.",
+      "properties": {
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "layout": {
+          "default": "Model",
+          "title": "Layout",
+          "type": "string"
+        },
+        "handle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Handle"
+        },
+        "bbox": {
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Bbox",
+          "type": "array"
+        },
+        "rule": {
+          "title": "Rule",
+          "type": "string"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file",
+        "bbox",
+        "rule"
+      ],
+      "title": "EvidenceRef",
+      "type": "object"
+    },
+    "Floor": {
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "names": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Names",
+          "type": "array"
+        },
+        "elevation_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Elevation M"
+        },
+        "views": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Views",
+          "type": "array"
+        }
+      },
+      "required": [
+        "key",
+        "names"
+      ],
+      "title": "Floor",
+      "type": "object"
+    },
+    "Issue": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "xung_dot_kich_thuoc",
+            "thieu_chi_tiet",
+            "chi_tiet_khong_dung",
+            "lech_phien_ban",
+            "da_tang",
+            "trung_tang",
+            "tang_khong_khop",
+            "ty_le"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "component": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Component"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "message"
+      ],
+      "title": "Issue",
+      "type": "object"
+    },
+    "LayerMap": {
+      "properties": {
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "layer": {
+          "title": "Layer",
+          "type": "string"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "rule": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rule"
+        }
+      },
+      "required": [
+        "file",
+        "layer",
+        "role"
+      ],
+      "title": "LayerMap",
+      "type": "object"
+    },
+    "Occurrence": {
+      "description": "Một lần ký hiệu xuất hiện trên mặt bằng.",
+      "properties": {
+        "view": {
+          "title": "View",
+          "type": "string"
+        },
+        "sheet_type": {
+          "title": "Sheet Type",
+          "type": "string"
+        },
+        "floors": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Floors",
+          "type": "array"
+        },
+        "x_mm": {
+          "title": "X Mm",
+          "type": "number"
+        },
+        "y_mm": {
+          "title": "Y Mm",
+          "type": "number"
+        },
+        "axis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Axis"
+        },
+        "drawn_width_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Drawn Width Mm"
+        },
+        "evidence": {
+          "$ref": "#/$defs/EvidenceRef"
+        }
+      },
+      "required": [
+        "view",
+        "sheet_type",
+        "floors",
+        "x_mm",
+        "y_mm",
+        "evidence"
+      ],
+      "title": "Occurrence",
+      "type": "object"
+    },
+    "SizeValue": {
+      "properties": {
+        "values": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Values",
+          "type": "object"
+        },
+        "source": {
+          "enum": [
+            "chu",
+            "mat_cat",
+            "chi_tiet",
+            "nguoi_dung"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/EvidenceRef"
+        }
+      },
+      "required": [
+        "values",
+        "source",
+        "evidence"
+      ],
+      "title": "SizeValue",
+      "type": "object"
+    },
+    "Unmatched": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "ky_hieu",
+            "tieu_de",
+            "layer"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvidenceRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "title": "Unmatched",
+      "type": "object"
+    },
+    "ViewInfo": {
+      "properties": {
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "sheet_type": {
+          "title": "Sheet Type",
+          "type": "string"
+        },
+        "sheet_name": {
+          "title": "Sheet Name",
+          "type": "string"
+        },
+        "floors": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Floors",
+          "type": "array"
+        },
+        "scale": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Scale"
+        },
+        "origin": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Origin"
+        },
+        "evidence": {
+          "$ref": "#/$defs/EvidenceRef"
+        }
+      },
+      "required": [
+        "file",
+        "title",
+        "sheet_type",
+        "sheet_name",
+        "floors",
+        "scale",
+        "origin",
+        "evidence"
+      ],
+      "title": "ViewInfo",
+      "type": "object"
+    }
+  },
+  "description": "Hồ sơ chuẩn hóa: lược đồ JSON xuất ở docs/schema/ho_so_chuan_hoa.schema.json.",
+  "properties": {
+    "files": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Files",
+      "type": "array"
+    },
+    "sheets": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Sheets",
+      "type": "array"
+    },
+    "views": {
+      "items": {
+        "$ref": "#/$defs/ViewInfo"
+      },
+      "title": "Views",
+      "type": "array"
+    },
+    "floors": {
+      "items": {
+        "$ref": "#/$defs/Floor"
+      },
+      "title": "Floors",
+      "type": "array"
+    },
+    "layers": {
+      "items": {
+        "$ref": "#/$defs/LayerMap"
+      },
+      "title": "Layers",
+      "type": "array"
+    },
+    "components": {
+      "items": {
+        "$ref": "#/$defs/Component"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/Issue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "unmatched": {
+      "items": {
+        "$ref": "#/$defs/Unmatched"
+      },
+      "title": "Unmatched",
+      "type": "array"
+    },
+    "revisions": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Revisions",
+      "type": "object"
+    },
+    "confidence_rules": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Confidence Rules",
+      "type": "array"
+    }
+  },
+  "required": [
+    "files",
+    "sheets",
+    "views",
+    "floors",
+    "layers",
+    "components",
+    "issues",
+    "unmatched"
+  ],
+  "title": "Registry",
+  "type": "object"
+}

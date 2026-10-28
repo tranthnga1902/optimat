@@ -46,3 +46,10 @@ def test_non_wall_layers_ignored(sample_dxf):
 def test_encoding():
     assert tcvn3_to_unicode("T­êng g¹ch") == "Tường gạch"
     assert normalize("Tường Gạch Đặc") == "tuong gach dac"
+
+
+def test_openings_recorded(sample_dxf, sample_openings):
+    from optimat.drawing.dxf_reader import read_drawing
+    from optimat.drawing.takeoff import compute_takeoff
+    result = compute_takeoff(read_drawing(sample_dxf), 3300, openings=sample_openings)
+    assert [o.name for o in result.openings] == ["D1", "S1"] and all(o.wall_id for o in result.openings)

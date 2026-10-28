@@ -1,0 +1,6 @@
+# Caddy tự xin và gia hạn HTTPS (Let's Encrypt). Next.js (3000) chuyển /api sang FastAPI (8000).
+# Caddy mặc định không giới hạn kích thước tải lên và không cắt yêu cầu chạy lâu (DWG lớn, NSGA-II).
+{$DUCKDNS_DOMAIN}.duckdns.org {
+	encode gzip
+	reverse_proxy 127.0.0.1:3000
+}

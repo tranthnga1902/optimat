@@ -146,9 +146,9 @@ CREATE TABLE IF NOT EXISTS suppliers (
 	supplier_id VARCHAR(64) NOT NULL, 
 	name VARCHAR(255) NOT NULL, 
 	province VARCHAR(64) NOT NULL, 
-	lat FLOAT NOT NULL, 
-	lon FLOAT NOT NULL, 
-	lead_time_days FLOAT NOT NULL, 
+	lat FLOAT, 
+	lon FLOAT, 
+	lead_time_days FLOAT, 
 	data_kind VARCHAR(16) DEFAULT 'ACTUAL' NOT NULL, 
 	dealer_type VARCHAR(64), 
 	brands TEXT, 
@@ -755,6 +755,9 @@ ALTER TABLE rough_norms ALTER COLUMN source DROP NOT NULL;
 ALTER TABLE rough_norms ALTER COLUMN note DROP NOT NULL;
 ALTER TABLE standards ALTER COLUMN valid_from DROP NOT NULL;
 ALTER TABLE standards ALTER COLUMN valid_to DROP NOT NULL;
+ALTER TABLE suppliers ALTER COLUMN lat DROP NOT NULL;
+ALTER TABLE suppliers ALTER COLUMN lon DROP NOT NULL;
+ALTER TABLE suppliers ALTER COLUMN lead_time_days DROP NOT NULL;
 ALTER TABLE suppliers ALTER COLUMN dealer_type DROP NOT NULL;
 ALTER TABLE suppliers ALTER COLUMN brands DROP NOT NULL;
 ALTER TABLE suppliers ALTER COLUMN address DROP NOT NULL;

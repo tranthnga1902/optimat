@@ -1,0 +1,4 @@
+supplier_id,name,province,lat,lon,lead_time_days,data_kind
+SUP_A,Nhà phân phối A (Hà Đông),Ha Noi,20.9714,105.7788,2,SAMPLE
+SUP_B,Nhà phân phối B (Thanh Trì),Ha Noi,20.9366,105.8440,1,SAMPLE
+SUP_C,Nhà phân phối C (Hoài Đức),Ha Noi,21.0300,105.7000,3,SAMPLE

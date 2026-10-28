@@ -63,6 +63,11 @@ def build_space(groups: list[WallGroup], cons: Constraints, catalog: Catalog,
         if (systems.data_kind == "SAMPLE").any():
             notes.append(f"Tường {g.wall_type}: có phương án dùng SỐ MẪU, không dùng để báo cáo.")
         offers = catalog.offers(systems.material_id.tolist())
+        incomplete = offers[offers[["lat", "lon", "lead_time_days"]].isna().any(axis=1)]
+        if len(incomplete):
+            notes.append(f"Tường {g.wall_type}: bỏ qua đại lý chưa có tọa độ hoặc thời gian cung ứng: "
+                         + ", ".join(sorted(incomplete.supplier_id.unique())) + ".")
+            offers = offers.drop(incomplete.index)
         if offers.empty:
             raise ValueError(f"Không có phương án tường đủ số liệu và có nhà cung cấp cho tường {g.wall_type}.")
         offers = offers.merge(systems.drop(columns=["data_kind"]), on="material_id", suffixes=("", "_ws"))

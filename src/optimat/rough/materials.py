@@ -220,6 +220,8 @@ def materials_for_works(works: list[WorkItem], params: ProjectParams, catalog: C
     bill = _Bill(catalog)
     view = catalog.wall_view().set_index("wall_system_id") if not catalog.wall_systems.empty else pd.DataFrame()
     for w in works:
+        if w.basis == "not_supported":
+            continue                      # cấu kiện chưa có quy ước: không sinh vật liệu, đã báo trong công tác
         q = w.quantity
         via = f"{w.code} {'?' if q is None else _fmt(q)} {w.unit}"
         if q is None:
@@ -239,7 +241,8 @@ def materials_for_works(works: list[WorkItem], params: ProjectParams, catalog: C
         elif w.code == "BE_TONG_LOT":
             bill.concrete(params.lean_concrete_grade, params.concrete_supply, q, w, norms)
         elif w.code == "COT_THEP":
-            bill.add(None, STEEL_NAME, "tấn", q, w, via, ["bảng thống kê thép để chia nhóm đường kính"])
+            bill.add(None, STEEL_NAME, "tấn", q, w, via,
+                     [] if w.basis == "bang_thong_ke" else ["bảng thống kê thép để chia nhóm đường kính"])
             for n in norms_for("COT_THEP", None, norms):
                 bill.norm_line(n, q, w, via)
         elif w.code == "CHONG_THAM":

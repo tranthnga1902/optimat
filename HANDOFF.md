@@ -30,6 +30,8 @@ kiểm soát dữ liệu (`scripts/check_data.py`, `/api/data/check`, hook pre-c
 mockup), bản vẽ thật trong `data/drawings/build/`, kho git có sẵn lịch sử. Quy trình: `docs/QUY_TRINH_DU_LIEU.md`.
 
 Các mục bên dưới là bản bàn giao 09/10, giữ để tra cứu; chỗ nào khác với mục 0 thì theo mục 0.
+Đã lỗi thời (21/10/2026), theo `CLAUDE.md`: mô hình ngôn ngữ là OpenAI qua API (không phải Qwen/Ollama), 26 bảng (không phải 19),
+phạm vi bóc toàn bộ phần thô; số bài kiểm thử và câu lệnh mở đầu ở mục 4, 9 không còn đúng. Tiến độ: `SPRINTS.md`, `NHAT_KY.md`.
 
 ## 1. Đề tài
 
@@ -91,7 +93,6 @@ Bản vẽ DWG/DXF -> đọc và phân loại layer -> nhận diện tường ->
 
 **Chưa có**
 
-- Giao diện React (đã có mockup 2 vai trò admin và user, có bản đồ quãng đường tới cửa hàng).
 - Đăng nhập, phân quyền; API ghi vào các bảng `users`, `projects`, `project_files`, `takeoff_results`, `optimization_runs`.
 - Trình thu thập giá; OSRM và bản đồ; LangGraph; đối chiếu dự toán Excel.
 - Dữ liệu thật: mọi dữ liệu đi kèm đều là mẫu (`SAMPLE`) hoặc mô phỏng (`SYNTHETIC`).
@@ -156,7 +157,7 @@ Cần cài thêm khi dùng: ODA File Converter (đọc DWG), Ollama và `ollama 
 4. Nhập đáp án đo tay (build 3–5 bộ, test 5–10 bộ), chạy `evaluate_takeoff.py`. Chỉ chỉnh quy tắc theo nhóm build.
 5. Thu thập giá thật vào `price_records`, nạp 123 tiêu chuẩn, thêm đặc trưng giá kỳ trước, huấn luyện lại.
 6. API ghi dự án và kết quả vào database; đăng nhập và phân quyền.
-7. Giao diện React theo mockup; bản đồ quãng đường (OSRM).
+7. Bản đồ quãng đường (OSRM) trên giao diện Next.js (`frontend/`).
 8. Chạy thử Ollama thật; chuyển luồng agent sang LangGraph.
 9. Thực nghiệm, viết báo cáo.
 

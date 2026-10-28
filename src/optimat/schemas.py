@@ -11,7 +11,8 @@ class WallSegment(BaseModel):
     layer: str
     thickness_class: str            # "110" | "150" | "220" | "330"
     thickness_mm: Optional[float] = None   # khoảng cách đo được giữa hai nét
-    length_mm: float
+    length_mm: float                # theo trục tim
+    net_length_mm: Optional[float] = None   # thông thủy giữa các mặt tường giao (walls.net_lengths)
     x1: float
     y1: float
     x2: float
@@ -33,7 +34,7 @@ class WallSegment(BaseModel):
 class WallGroup(BaseModel):
     wall_type: str                  # lớp chiều dày
     role: str                       # "envelope" (bao che) | "partition" (ngăn)
-    length_m: float
+    length_m: float                 # theo quy tắc chiều dài đã chọn (TakeoffResult.length_rule)
     gross_area_m2: float
     opening_area_m2: float
     net_area_m2: float
@@ -65,6 +66,7 @@ class OpeningDefaults(BaseModel):
 
 class TakeoffResult(BaseModel):
     floor_height_mm: Optional[float] = None     # trống: chưa có chiều cao tầng, chưa tính diện tích
+    length_rule: str = "tim"                    # quy tắc chiều dài của groups: tim | thong_thuy
     walls: list[WallSegment]
     groups: list[WallGroup]
     openings_count: int

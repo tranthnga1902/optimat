@@ -91,7 +91,10 @@ def test_text_without_thickness_only_nearby(tmp_path):
     result = takeoff_from_file(_make(tmp_path, build), 3300)
     near = [w for w in result.walls if w.material_family == "CMU_HOLLOW|CMU_SOLID"]
     assert len(near) == 1 and max(near[0].y1, near[0].y2) < 1000
-    assert result.groups[0].design_material_share == pytest.approx(0.5)
+    # nhóm tách theo vật liệu: một nửa chiều dài có vật liệu, nửa kia thành nhóm chưa rõ vật liệu
+    known = [g for g in result.groups if g.design_material_id]
+    assert len(result.groups) == 2 and len(known) == 1 and known[0].design_material_share == pytest.approx(1.0)
+    assert known[0].length_m == pytest.approx(sum(g.length_m for g in result.groups) / 2, rel=0.01)
 
 
 def test_unmatched_signals_reported_not_guessed(tmp_path):

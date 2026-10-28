@@ -1,4 +1,4 @@
-"""Giao diện chung (/app) và kiểm soát dữ liệu (scripts/check_data.py, /api/data/check)."""
+"""API dữ liệu cho giao diện và kiểm soát dữ liệu (scripts/check_data.py, /api/data/check)."""
 import os
 import subprocess
 import sys
@@ -15,10 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 client = TestClient(app)
 
 
-def test_app_page_and_admin_endpoints():
-    assert client.get("/", follow_redirects=False).headers["location"] == "/app"
-    page = client.get("/app").text
-    assert "OptiMat AI" in page and "/api/data/check" in page and "/ui/takeoff" in page
+def test_admin_endpoints():
     offers = client.get("/api/data/offers").json()
     assert offers and {"material_id", "material_name", "data_kind"} <= set(offers[0])
     assert "loaded" in client.get("/api/models").json()
@@ -36,22 +33,30 @@ def test_real_catalog_has_no_structural_errors():
 
 
 def test_broken_references_are_errors():
-    cat = Catalog.from_csv()
+    cat = Catalog.from_csv(ROOT / "data/sample/catalog")      # danh mục thật chưa có giá đại lý
     cat.supplier_materials = cat.supplier_materials.assign(material_id="MAT_CLAY_220")      # mã cũ
     cat.wall_systems = cat.wall_systems.copy()
     cat.wall_systems.loc[0, "mortar_material_id"] = "VU99"
     rep = run_checks(cat)
     errors = {(f["area"], f["message"][:20]) for f in rep["findings"] if f["level"] == "error"}
     assert not rep["ok"] and any(a == "nguon_cung" for a, _ in errors) and any(a == "phuong_an_tuong" for a, _ in errors)
-    assert client.get("/api/data/check").json()["counts"]["error"] == 0
+    assert client.get("/api/data/check").status_code == 503
+
+
+def test_data_check_requires_database(monkeypatch):
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    response = client.get("/api/data/check")
+    assert response.status_code == 503
+    assert "PostgreSQL" in response.json()["detail"]
 
 
 def test_check_data_script_exit_codes(tmp_path):
-    ok = subprocess.run([sys.executable, str(ROOT / "scripts/check_data.py"), "--quiet", "--out-dir", str(tmp_path)],
-                        capture_output=True, text=True, encoding="utf-8", env={**os.environ, "PYTHONIOENCODING": "utf-8"})
-    assert ok.returncode == 0 and "lỗi" in ok.stdout and (tmp_path / "data_check.md").exists()
-    strict = subprocess.run([sys.executable, str(ROOT / "scripts/check_data.py"), "--quiet", "--strict", "--out-dir", str(tmp_path)], capture_output=True)
-    assert strict.returncode == 1                       # còn cảnh báo (số liệu trống, giá mẫu) thì chưa được chốt báo cáo
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
+    env.pop("DATABASE_URL", None)
+    result = subprocess.run([sys.executable, str(ROOT / "scripts/check_data.py"), "--quiet", "--out-dir", str(tmp_path)],
+                            capture_output=True, text=True, encoding="utf-8", env=env)
+    assert result.returncode == 1 and "PostgreSQL" in result.stderr
+    assert not (tmp_path / "data_check.md").exists()
 
 
 def test_concepts_admin_csv_mode(sample_dxf, monkeypatch):
@@ -69,4 +74,44 @@ def test_concepts_admin_csv_mode(sample_dxf, monkeypatch):
     with open(sample_dxf, "rb") as fh:
         r = client.post("/api/concepts/try", files={"file": ("mau.dxf", fh)}).json()
     assert sum(o["loai"] == "tuong" for o in r["rows"]) == 5 and isinstance(r["unknown_layers"], list)
-    assert "viewConcepts" in client.get("/app").text
+
+
+def test_concept_images_upload_block_reset(tmp_path, monkeypatch):
+    from optimat.api import main
+    monkeypatch.setattr(main, "IMG_DIR", tmp_path / "hinh")
+    monkeypatch.setattr(main.concept_samples, "block_svg", lambda n: "<svg/>" if n == "CUA DI" else None)
+    png = b"\x89PNG\r\n\x1a\n" + b"0" * 20
+    r = client.put("/api/concepts/images/cua_di-door", files={"file": ("a.png", png, "image/png")})
+    assert r.status_code == 200 and r.json()["url"].startswith("/api/concepts/images/cua_di-door?v=")
+    assert client.get("/api/concepts").json()["images"]["cua_di-door"] == r.json()["url"]
+    g = client.get("/api/concepts/images/cua_di-door")
+    assert g.content == png and "default-src 'none'" in g.headers["content-security-policy"]
+    # đổi sang block: hình cũ khác định dạng bị thay
+    assert client.put("/api/concepts/images/cua_di-door/block", json={"block": "CUA DI"}).status_code == 200
+    assert [f.name for f in (tmp_path / "hinh").iterdir()] == ["cua_di-door.svg"]
+    assert client.put("/api/concepts/images/cua_di-door/block", json={"block": "KHONG"}).status_code == 404
+    # nội dung không khớp đuôi, khóa lạ, đuôi lạ đều bị chặn
+    assert client.put("/api/concepts/images/x", files={"file": ("a.png", b"GIF89a", "image/png")}).status_code == 400
+    assert client.put("/api/concepts/images/a.b", files={"file": ("a.png", png, "image/png")}).status_code == 400
+    assert client.put("/api/concepts/images/X Y", files={"file": ("a.png", png, "image/png")}).status_code == 400
+    assert client.put("/api/concepts/images/x", files={"file": ("a.exe", png, "image/png")}).status_code == 400
+    assert client.delete("/api/concepts/images/cua_di-door").status_code == 200
+    assert client.get("/api/concepts/images/cua_di-door").status_code == 404
+
+
+def test_catalog_reference_comes_from_data():
+    """Ô chọn trên giao diện không fix cứng: họ vật liệu, lớp tường, mác bê tông, vật liệu chống thấm lấy từ dữ liệu."""
+    from optimat import config
+    from optimat.rough.norms import variants_of
+    ref = client.get("/api/catalog/reference").json()
+    cat = Catalog.load()
+    assert [f["id"] for f in ref["families"]] == list(cat.families.sort_values("sort_order").family_id)
+    assert [c["id"] for c in ref["wall_classes"]] == list(config.WALL_THICKNESS_CLASSES)
+    assert ref["concrete_grades"] == variants_of("BE_TONG_TRON")
+    assert [m["id"] for m in ref["waterproof_materials"]] == variants_of("CHONG_THAM")
+    assert len(ref["vehicles"]) == len(cat.vehicles) and ref["data_kinds"] == ["ACTUAL", "SAMPLE", "SYNTHETIC"]
+    rule = client.get("/api/admin/tables/material_rules").json()
+    assert any(c["comment"] for c in rule["columns"])          # cách điền cột lấy từ lược đồ database
+    tables = [t for c in client.get("/api/admin/db").json()["clusters"] for t in c["tables"]]
+    assert {t["name"] for t in tables if t["kind"] == "rule"} == {"material_rules", "material_notes", "drawing_concepts",
+                                                                 "convention_clauses", "room_rules", "rough_norms"}

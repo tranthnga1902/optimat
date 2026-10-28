@@ -16,12 +16,14 @@ import re
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 
+import numpy as np
+
 from .dxf_reader import Drawing
 from .encoding import normalize
 
 PLAN_WORDS = ("mat bang",)
 EXCLUDE_WORDS = ("ket cau", "da kieng", "giang", "mong cot", "co cot", "cot ", "bo tri thep", "tran", "mong", "mai", "dinh vi", "tong the", "dien", "nuoc", "cap ", "thoat",
-                 "lat ", "bo tri", "coc", "dam", "thep", "san ", "chieu sang", "chong set", "phoi canh")
+                 "lat ", "bo tri", "coc", "dam", "thep", "san ", "chieu sang", "chong set", "phoi canh", "cau thang")
 HEADING_WORDS = ("mat bang", "mat cat", "mat dung", "mat tien", "mat ben", "chi tiet", "phoi canh", "so do", "trich")
 FRAME_LAYER_WORDS = ("khung", "frame", "title", "border", "truc", "grid", "axis", "dim", "kich thuoc", "defpoints")
 CELL_MM = 1000.0
@@ -42,7 +44,8 @@ class PlanRegion:
 
 
 def _is_plan_title(text: str) -> bool:
-    t = " " + normalize(text) + " "
+    # "sân thượng" bỏ dấu thành "san thuong", trùng từ loại "san " (mặt bằng sàn kết cấu)
+    t = " " + normalize(text).replace("san thuong", "san-thuong") + " "
     return any(w in t for w in PLAN_WORDS) and not any(w in t for w in EXCLUDE_WORDS)
 
 
@@ -54,7 +57,7 @@ def _level(text: str) -> float | None:
     return -value if m.group(1) == "-" else value
 
 
-def _clusters(drawing: Drawing, window: tuple[float, float, float, float]):
+def _clusters(drawing: Drawing, window: tuple[float, float, float, float], max_line: float = MAX_CLUSTER_LINE_MM):
     """Cụm nét trong khung: ô lưới 1 m có nét, nối các ô kề nhau. Bỏ nét hatch, khung, trục, nét quá dài."""
     wx0, wy0, wx1, wy1 = window
     cells: dict[tuple[int, int], int] = defaultdict(int)
@@ -64,7 +67,7 @@ def _clusters(drawing: Drawing, window: tuple[float, float, float, float]):
         if not (wx0 <= s.x1 <= wx1 and wy0 <= s.y1 <= wy1 and wx0 <= s.x2 <= wx1 and wy0 <= s.y2 <= wy1):
             continue
         length = math.hypot(s.x2 - s.x1, s.y2 - s.y1)
-        if length > MAX_CLUSTER_LINE_MM:
+        if length > max_line:
             continue
         steps = max(1, int(length / CELL_MM))
         for k in range(steps + 1):
@@ -110,26 +113,34 @@ def _window(t, others) -> tuple[float, float, float, float]:
 
 
 FRAME_MIN_MM = 20000.0
+FRAME_PARTNER_SHARE = 0.3       # nét song song cách 40–400 mm phủ từ tỷ lệ này chiều dài trở lên: là tường, không phải khung
 
 
 def _frame_lines(drawing: Drawing):
     """Nét thẳng đứng hoặc nằm ngang rất dài, không có nét song song đi kèm ở khoảng cách chiều dày tường:
-    viền khung bản vẽ, viền khung tên. Dùng làm giới hạn khung tìm mặt bằng."""
+    viền khung bản vẽ, viền khung tên. Dùng làm giới hạn khung tìm mặt bằng.
+    Nét đi kèm tính cả các đoạn ngắn: mặt tường dài 22 m có mặt kia bị cửa cắt thành nhiều đoạn vẫn là tường
+    (trước đây chỉ so với nét dài khác, mặt bằng nhà ống bị cắt cụt ở chính bức tường dọc nhà)."""
+    axis = {"h": [], "v": []}            # (tọa độ ngang trục, đầu, cuối) của mọi đoạn thẳng đứng / nằm ngang
     longs = []
     for s in drawing.segments:
         if s.kind != "line":
             continue
         dx, dy = s.x2 - s.x1, s.y2 - s.y1
-        if math.hypot(dx, dy) >= FRAME_MIN_MM and (abs(dx) < 1 or abs(dy) < 1):
-            longs.append(s)
+        if abs(dx) < 1 or abs(dy) < 1:
+            vertical = abs(dx) < 1
+            axis["v" if vertical else "h"].append((s.x1, min(s.y1, s.y2), max(s.y1, s.y2)) if vertical
+                                                  else (s.y1, min(s.x1, s.x2), max(s.x1, s.x2)))
+            if math.hypot(dx, dy) >= FRAME_MIN_MM:
+                longs.append(("v" if vertical else "h", *axis["v" if vertical else "h"][-1]))
+    arr = {k: np.array(v, dtype=float).reshape(-1, 3) for k, v in axis.items()}
     out = []
-    for s in longs:
-        vertical = abs(s.x2 - s.x1) < 1
-        partner = any(o is not s and (abs(o.x2 - o.x1) < 1) == vertical and
-                      40 < (abs(o.x1 - s.x1) if vertical else abs(o.y1 - s.y1)) < 400 for o in longs)
-        if not partner:
-            out.append(("v", s.x1, min(s.y1, s.y2), max(s.y1, s.y2)) if vertical
-                       else ("h", s.y1, min(s.x1, s.x2), max(s.x1, s.x2)))
+    for kind, c, a, b in longs:
+        o = arr[kind]
+        gap = np.abs(o[:, 0] - c)
+        overlap = np.clip(np.minimum(o[:, 2], b) - np.maximum(o[:, 1], a), 0, None)
+        if overlap[(gap > 40) & (gap < 400)].sum() < FRAME_PARTNER_SHARE * (b - a):
+            out.append((kind, c, a, b))
     return out
 
 
@@ -178,13 +189,65 @@ def find_plans(drawing: Drawing) -> list[PlanRegion]:
                 level, source = 0.0, "tầng 1 coi là ±0.000"
         name = re.sub(r"\s+", " ", t.text).strip()
         plans.append(PlanRegion(name, t.x, t.y, bbox, level, source if level is not None else "", weight))
-    # QU-05: tên mặt bằng là khóa ở trang kiểm tra, /app, file đáp án, phần thô; hai tiêu đề trùng thì đánh số thêm
+    _levels_from_chain(drawing, plans)
+    # QU-05: tên mặt bằng là khóa ở trang kiểm tra, giao diện web, file đáp án, phần thô; hai tiêu đề trùng thì đánh số thêm
     seen: dict[str, int] = {}
     for p in plans:
         seen[p.name] = seen.get(p.name, 0) + 1
         if seen[p.name] > 1:
             p.title, p.name = p.name, f"{p.name} ({seen[p.name]})"
     return plans
+
+
+def floor_order(title: str) -> int | None:
+    """Thứ tự tầng theo tiêu đề: trệt / tầng 1 = 0, lầu n = n, tầng n = n - 1; sân thượng = -2 (tầng trên lầu cao nhất);
+    lửng, tầng hầm, không rõ: None."""
+    t = normalize(title)
+    if re.search(r"\b(lung|ham|ngam)\b", t):
+        return None
+    if re.search(r"\btret\b", t):
+        return 0
+    if m := re.search(r"\blau\s*(\d+)\b", t):
+        return int(m.group(1))
+    if m := re.search(r"\btang\s*(\d+)\b", t):
+        return int(m.group(1)) - 1
+    if "san thuong" in t:
+        return -2
+    return None
+
+
+def level_chain(drawing: Drawing) -> list[float]:
+    """Chuỗi cao độ sàn ghi trên bản vẽ (thường ở mặt cắt, mặt đứng): từ ±0.000 đi lên, mỗi bước chọn cao độ ghi nhiều
+    lần nhất trong khoảng 2,4–6 m phía trên. Rỗng khi không có ±0.000 hoặc không đi lên được."""
+    counts = Counter(v for t in drawing.texts if LEVEL_RE.search(t.text) and (v := _level(t.text)) is not None)
+    if not counts.get(0.0):
+        return []
+    chain = [0.0]
+    while True:
+        nxt = [(n, v) for v, n in counts.items() if chain[-1] + 2.4 <= v <= chain[-1] + 6.0 and n >= 2]
+        if not nxt:
+            return chain if len(chain) > 1 else []
+        chain.append(max(nxt)[1])
+
+
+def _levels_from_chain(drawing: Drawing, plans: list[PlanRegion]) -> None:
+    """Mặt bằng chưa có cao độ (tiêu đề không ghi, trong mặt bằng không có ký hiệu): lấy theo thứ tự tầng trong
+    chuỗi cao độ của bản vẽ. Chỉ khi mọi mặt bằng có cao độ đều khớp chuỗi (lệch ≤ 0,1 m: cốt hoàn thiện / kết cấu)."""
+    if all(p.level_m is not None for p in plans):
+        return
+    chain = level_chain(drawing)
+    order = {id(p): floor_order(p.title or p.name) for p in plans}
+    tops = [o for o in order.values() if o is not None and o >= 0]
+    for p in plans:
+        if order[id(p)] == -2:
+            order[id(p)] = max(tops) + 1 if tops else None
+    known = [(order[id(p)], p.level_m) for p in plans if p.level_m is not None and order[id(p)] is not None]
+    if not chain or any(o >= len(chain) or abs(chain[o] - v) > 0.1 for o, v in known):
+        return
+    for p in plans:
+        o = order[id(p)]
+        if p.level_m is None and o is not None and o < len(chain):
+            p.level_m, p.level_source = chain[o], f"chuỗi cao độ của bản vẽ, tầng thứ {o} (kiểm tra)"
 
 
 def floor_heights(plans: list[PlanRegion]) -> dict[int, float]:
@@ -200,6 +263,16 @@ def floor_heights(plans: list[PlanRegion]) -> dict[int, float]:
             if 2400 <= h <= 6000:
                 out[i] = round(h)
     return out
+
+
+VIEW_START_WORDS = ("mat cat", "mat dung", "mat tien", "mat ben", "chi tiet", "trich doan")
+
+
+def has_only_views(drawing: Drawing) -> bool:
+    """File không có tiêu đề mặt bằng tầng nhưng có tiêu đề mặt cắt, mặt đứng, chi tiết ("MẶT CẮT A-A", "CHI TIẾT
+    CẦU THANG"): nét trên đó không phải tường mặt bằng, không đo cả bản vẽ như một mặt bằng."""
+    return not any(_is_plan_title(t.text) for t in drawing.texts) and any(
+        normalize(t.text).strip().startswith(VIEW_START_WORDS) for t in drawing.texts)
 
 
 def has_only_other_plans(drawing: Drawing) -> bool:

@@ -34,13 +34,10 @@ def test_rough_rejects_bad_input(sample_dxf):
     assert bad.status_code == 422
 
 
-def test_review_page_has_rough_tab_and_payload_has_columns(sample_dxf):
+def test_view_payload_has_columns(sample_dxf):
     from optimat.drawing.dxf_reader import read_drawing
     from optimat.drawing.takeoff import takeoff_plans
     from optimat.drawing.viewer import view_payload
-    page = client.get("/ui/takeoff").text
-    assert 'data-tab="rough"' in page and "/api/takeoff/rough" in page
     d = read_drawing(sample_dxf)
     p = view_payload(d, takeoff_plans(d, 3300), "mau.dxf", cad=False)["plans"][0]
     assert "columns" in p and "labels" in p and "is_ground" in p["plan"]
-    assert "phan-tho" in client.get("/app").text

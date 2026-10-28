@@ -11,38 +11,48 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Literal, Optional
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
+from fastapi.responses import FileResponse, PlainTextResponse, RedirectResponse, Response
 from pydantic import BaseModel, Field, model_validator
+from sqlalchemy.exc import SQLAlchemyError
 
+from fastapi.concurrency import run_in_threadpool
 from fastapi.encoders import jsonable_encoder
 
 from .admin_db import router as admin_router
+from .admin_ops import router as admin_ops_router
+from .auth import require_admin, router as auth_router
+from .mapping import router as mapping_router
 from ..agent.llm import ParsedConstraints, llm_available, parse_constraints
 from ..agent.orchestrator import run_agent
 from ..agent.pipeline import run_pipeline
 from ..catalog.pricing import BillLine, bill_of_materials
 from .. import config
 from ..catalog.repository import Catalog
-from ..data_check import run_checks
+from ..data_check import DATA_KINDS, run_checks
 from ..db.session import get_database_url
 from ..drawing import concept_samples, concepts, dwg_convert
 from ..drawing.dwg_convert import DrawingError
 from ..drawing.dxf_reader import read_drawing
 from ..drawing.encoding import normalize
+from ..drawing.ingest import ingest_file
 from ..drawing.objects import list_objects
 from ..drawing.review import ReviewPlan, ReviewResult, compute_review, save_review
 from ..drawing.takeoff import takeoff_from_file, takeoff_plans, takeoff_plans_from_file
-from ..drawing.viewer import build_review_html, material_options, view_payload
+from ..drawing.viewer import material_options, view_payload
 from ..optimize.problem import optimize
 from ..predict.cost_model import MaterialPriceModel
-from ..rough.models import ProjectParams
+from ..rough.models import STEEL_ELEMENTS, ProjectParams
+from ..rough.norms import variants_of
 from ..rough.takeoff import RoughRequest, RoughResult, compute_rough, rough_from_drawing, save_rough
 from ..schemas import Constraints, OpeningDefaults, OptimizeResult, PlanTakeoff, TakeoffResult, WallGroup
 
 app = FastAPI(title="OptiMat AI", version="0.1.0")
 app.include_router(admin_router)     # quản trị cơ sở dữ liệu (api/admin_db.py)
+app.include_router(auth_router)      # đăng nhập, phân quyền (api/auth.py)
+app.include_router(admin_ops_router) # tổng quan, người dùng, dự án (api/admin_ops.py)
+app.include_router(mapping_router)   # hồ sơ chuẩn hóa kiến trúc–kết cấu (api/mapping.py)
 # Cho phép giao diện React chạy ở cổng khác gọi vào khi phát triển.
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://localhost:3000"],
                    allow_methods=["*"], allow_headers=["*"])
@@ -90,7 +100,8 @@ def _project_inputs(project_id: int | None, floor_height_mm: float | None) -> tu
 
 @app.post("/api/takeoff", response_model=TakeoffResult)
 async def takeoff(file: UploadFile = File(...), floor_height_mm: float | None = Form(None),
-                  layer_overrides: str | None = Form(None), project_id: int | None = Form(None)) -> TakeoffResult:
+                  layer_overrides: str | None = Form(None), project_id: int | None = Form(None),
+                  length_rule: str = Form("tim")) -> TakeoffResult:
     """Nhận .dxf hoặc .dwg. layer_overrides: chuỗi JSON dạng {"tên layer": "WALL"} để ghi đè vai trò layer."""
     suffix = Path(file.filename or "").suffix.lower()
     if suffix not in (".dxf", ".dwg"):
@@ -104,15 +115,11 @@ async def takeoff(file: UploadFile = File(...), floor_height_mm: float | None = 
         path = Path(tmp) / f"upload{suffix}"
         path.write_bytes(await file.read())
         try:
-            return takeoff_from_file(str(path), height, overrides, openings)
+            return takeoff_from_file(str(path), height, overrides, openings, length_rule)
+        except ValueError as exc:  # quy tắc chiều dài sai
+            raise HTTPException(422, str(exc)) from exc
         except DrawingError as exc:  # thiếu ODA File Converter, file hỏng, định dạng sai
             raise HTTPException(422, str(exc)) from exc
-
-
-@app.get("/ui/takeoff", response_class=HTMLResponse)
-def review_page() -> str:
-    """Trang Kiểm tra bóc tách: bản vẽ bên trái, danh sách nhận dạng bên phải; sửa, bổ sung rồi xác nhận."""
-    return build_review_html()
 
 
 @app.post("/api/takeoff/view")
@@ -155,12 +162,18 @@ def takeoff_confirm(plan: ReviewPlan) -> ReviewResult:
 @app.post("/api/takeoff/rough/auto")
 async def takeoff_rough_auto(file: UploadFile = File(...), floor_height_mm: float | None = Form(None),
                              params: str | None = Form(None), layer_overrides: str | None = Form(None),
-                             project_id: int | None = Form(None)) -> dict:
+                             project_id: int | None = Form(None), structural_file: UploadFile | None = File(None),
+                             structural_scale: float | None = Form(None)) -> dict:
     """Bóc phần thô từ nhận dạng tự động. params: chuỗi JSON thông số công trình (ProjectParams), trống được.
+    structural_file: bản vẽ kết cấu (mặt bằng móng, dầm) nếu tách file; structural_scale: hệ số đổi số đo trên mặt bằng
+    kết cấu ra mm thật (mặt bằng vẽ phóng to 2 lần: 0.5); trống: tự suy từ đường kích thước.
     Trả {"request": đầu vào đã dựng (tường, cửa, cột, tên phòng từng mặt bằng) để sửa, "result": bảng phần thô}."""
     suffix = Path(file.filename or "").suffix.lower()
-    if suffix not in (".dxf", ".dwg"):
+    s_suffix = Path(structural_file.filename or "").suffix.lower() if structural_file else ""
+    if suffix not in (".dxf", ".dwg") or (structural_file and s_suffix not in (".dxf", ".dwg")):
         raise HTTPException(400, "Chỉ nhận file .dxf hoặc .dwg.")
+    if structural_scale is not None and not structural_scale > 0:
+        raise HTTPException(400, "structural_scale phải lớn hơn 0.")
     try:
         overrides = json.loads(layer_overrides) if layer_overrides else None
         project = ProjectParams(**json.loads(params)) if params else ProjectParams()
@@ -169,13 +182,19 @@ async def takeoff_rough_auto(file: UploadFile = File(...), floor_height_mm: floa
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / f"upload{suffix}"
         path.write_bytes(await file.read())
+        structural = None
         try:
             drawing = read_drawing(str(path), overrides)
+            if structural_file:
+                s_path = Path(tmp) / f"structural{s_suffix}"
+                s_path.write_bytes(await structural_file.read())
+                structural = read_drawing(str(s_path))
         except DrawingError as exc:
             raise HTTPException(422, str(exc)) from exc
     catalog = Catalog.load()
     height, openings = _project_inputs(project_id, floor_height_mm)
-    req = rough_from_drawing(drawing, project, height, catalog, file.filename or path.name, openings)
+    req = rough_from_drawing(drawing, project, height, catalog, file.filename or path.name, openings, structural,
+                             structural_scale)
     try:
         result = compute_rough(req, catalog)
     except ValueError as exc:
@@ -197,6 +216,18 @@ def takeoff_rough(req: RoughRequest) -> RoughResult:
     return result
 
 
+@app.post("/api/takeoff/rough/excel")
+def takeoff_rough_excel(req: RoughRequest) -> Response:
+    """BOQ phần thô ra Excel (tổng, theo tầng, theo cấu kiện, cốt thép, vật liệu, cảnh báo, phạm vi hỗ trợ); không lưu."""
+    from ..rough.boq import boq_bytes
+    try:
+        result = compute_rough(req)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    return Response(boq_bytes(result, req), media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    headers={"Content-Disposition": 'attachment; filename="boq_phan_tho.xlsx"'})
+
+
 @app.get("/api/catalog/wall-materials")
 def wall_materials() -> dict:
     """Vật liệu tường và phương án tường trong danh mục: mã dùng chung cho bóc tách, tối ưu và tra giá.
@@ -209,6 +240,24 @@ def wall_materials() -> dict:
     return {"materials": material_options(catalog), "wall_systems": systems}
 
 
+@app.get("/api/catalog/reference")
+def catalog_reference() -> dict:
+    """Danh sách tra cứu cho các ô chọn trên giao diện (không fix cứng ở web): họ vật liệu, loại xe (bảng material_families,
+    vehicles), mác bê tông và vật liệu chống thấm (biến thể trong rough_norms); lớp tường theo dải chiều dày bộ nhận dạng dùng."""
+    catalog = Catalog.load()
+    fam = catalog.families.sort_values("sort_order")
+    veh = catalog.vehicles.sort_values("payload_ton")
+    return {
+        "families": [{"id": r.family_id, "name": r.name, "is_wall": str(r.is_wall).lower() in ("true", "1")} for r in fam.itertuples()],
+        "vehicles": [{"id": r.vehicle_id, "name": r.name, "payload_ton": float(r.payload_ton)} for r in veh.itertuples()],
+        "wall_classes": [{"id": k, "min_mm": lo, "max_mm": hi} for k, (lo, hi) in config.WALL_THICKNESS_CLASSES.items()],
+        "concrete_grades": variants_of("BE_TONG_TRON"),
+        "waterproof_materials": [{"id": m, "name": catalog.material_name(m) or m} for m in variants_of("CHONG_THAM")],
+        "steel_elements": [{"code": k, "name": v} for k, v in STEEL_ELEMENTS.items()],
+        "data_kinds": list(DATA_KINDS),
+    }
+
+
 @app.post("/api/price/bill", response_model=list[BillLine])
 def price_bill(req: BillRequest) -> list[BillLine]:
     """Bảng vật liệu theo thiết kế (gạch + vữa) và giá đang có, cho các nhóm tường đã chốt."""
@@ -217,7 +266,8 @@ def price_bill(req: BillRequest) -> list[BillLine]:
 
 @app.post("/api/takeoff/plans", response_model=list[PlanTakeoff])
 async def takeoff_plans_api(file: UploadFile = File(...), floor_height_mm: float | None = Form(None),
-                        layer_overrides: str | None = Form(None), project_id: int | None = Form(None)) -> list[PlanTakeoff]:
+                        layer_overrides: str | None = Form(None), project_id: int | None = Form(None),
+                        length_rule: str = Form("tim")) -> list[PlanTakeoff]:
     """File có nhiều mặt bằng: tách theo tiêu đề "MẶT BẰNG TẦNG ..." và đo bóc từng mặt bằng.
     Chiều cao tầng suy từ cao độ sàn trên bản vẽ khi không nhập. Danh sách rỗng: file không có mặt bằng kiến trúc."""
     suffix = Path(file.filename or "").suffix.lower()
@@ -232,7 +282,9 @@ async def takeoff_plans_api(file: UploadFile = File(...), floor_height_mm: float
         path = Path(tmp) / f"upload{suffix}"
         path.write_bytes(await file.read())
         try:
-            return takeoff_plans_from_file(str(path), height, overrides, openings)
+            return takeoff_plans_from_file(str(path), height, overrides, openings, length_rule)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
         except DrawingError as exc:
             raise HTTPException(422, str(exc)) from exc
 
@@ -280,25 +332,40 @@ async def agent_run(file: UploadFile = File(...), message: str = Form(""), floor
     return jsonable_encoder(out)
 
 
-# ------------------------------------------------------------------ giao diện chung và quản trị dữ liệu
-APP_HTML = Path(__file__).resolve().parents[1] / "web" / "app.html"
+# ------------------------------------------------------------------ tiếp nhận hồ sơ CAD (S02)
 
 
+@app.post("/api/ingest")
+async def ingest(files: list[UploadFile] = File(...), store: bool = Form(True)) -> list[dict]:
+    """Nhận nhiều .dxf/.dwg: kiểm tra, lưu theo hash kèm phiên bản, chuyển DWG, trả bản kiểm kê từng file.
+    File sai được trả status "rejected"/"failed" kèm cảnh báo, không làm hỏng cả lô."""
+    if len(files) > config.MAX_UPLOAD_FILES:
+        raise HTTPException(400, f"Mỗi lần gửi tối đa {config.MAX_UPLOAD_FILES} file.")
+    limit = int(config.MAX_UPLOAD_MB * 1024 * 1024)
+    out = []
+    for f in files:
+        data = await f.read(limit + 1)    # đọc dư 1 byte để biết file vượt giới hạn mà không nạp hết vào bộ nhớ
+        out.append(await run_in_threadpool(ingest_file, f.filename or "", data, f.content_type,
+                                           config.UPLOAD_DIR if store else None))
+    return out
+
+
+# ------------------------------------------------------------------ quản trị dữ liệu
+# giao diện web là frontend/ (Next.js); máy chủ này chỉ phục vụ API
 @app.get("/", include_in_schema=False)
 def home() -> RedirectResponse:
-    return RedirectResponse("/app")
-
-
-@app.get("/app", response_class=HTMLResponse)
-def app_page() -> str:
-    """Giao diện chung (theo mockup): người dùng (bóc tách, vật liệu và giá, tối ưu, trợ lý) và quản trị (kiểm soát dữ liệu)."""
-    return APP_HTML.read_text(encoding="utf8")
+    return RedirectResponse("/docs")
 
 
 @app.get("/api/data/check")
 def data_check() -> dict:
     """Kiểm soát dữ liệu: lỗi cấu trúc, số liệu còn trống, dữ liệu mẫu, giá cũ, đáp án đo tay. Chỉ đọc."""
-    return run_checks()
+    if not get_database_url():
+        raise HTTPException(503, "Kiểm soát dữ liệu cần kết nối PostgreSQL (DATABASE_URL).")
+    try:
+        return run_checks()
+    except SQLAlchemyError as exc:
+        raise HTTPException(503, "Không kết nối hoặc đọc được PostgreSQL.") from exc
 
 
 @app.get("/api/data/offers")
@@ -311,6 +378,14 @@ def data_offers() -> list[dict]:
                         "data_kind", "product_url", "maps_url", "province") if c in rows.columns]
     rows = rows[keep].assign(material_name=rows.material_id.map(names))
     return jsonable_encoder(rows.astype(object).where(rows.notna(), None).to_dict("records"))
+
+
+@app.get("/api/data/suppliers")
+def data_suppliers() -> dict:
+    """Danh bạ đại lý cho trang Đại lý (bản đồ, danh sách, chi tiết). Sửa qua /api/admin/tables/suppliers khi có PostgreSQL."""
+    s = Catalog.load().suppliers
+    return {"editable": bool(get_database_url()),
+            "rows": jsonable_encoder(s.astype(object).where(s.notna(), None).to_dict("records"))}
 
 
 @app.get("/api/models")
@@ -371,10 +446,10 @@ def concepts_list() -> dict:
             "layer_roles": concepts.LAYER_ROLES, "block_roles": concepts.BLOCK_ROLES,
             "clauses": [{"ma": c.ma, "nhom": c.nhom} for c in concepts.load_clauses()],
             "signals": [asdict(s) for s in concepts.load_signals()], "conflicts": concepts.conflicts(),
-            "rough_roles": concepts.ROUGH_ROLES}
+            "rough_roles": concepts.ROUGH_ROLES, "images": _concept_images()}
 
 
-@app.post("/api/concepts")
+@app.post("/api/concepts", dependencies=[Depends(require_admin)])
 def concept_create(body: ConceptIn) -> dict:
     """Thêm ký hiệu vào cuối bảng (ưu tiên thấp nhất trong cùng loại tín hiệu)."""
     from ..db.models import DrawingConcept
@@ -389,7 +464,7 @@ def concept_create(body: ConceptIn) -> dict:
         return _concept_changed(row)
 
 
-@app.put("/api/concepts/{ma}")
+@app.put("/api/concepts/{ma}", dependencies=[Depends(require_admin)])
 def concept_update(ma: str, body: ConceptIn) -> dict:
     """Sửa một ký hiệu, giữ nguyên vị trí ưu tiên."""
     from ..db.models import DrawingConcept
@@ -407,7 +482,7 @@ def concept_update(ma: str, body: ConceptIn) -> dict:
         return _concept_changed(row)
 
 
-@app.delete("/api/concepts/{ma}")
+@app.delete("/api/concepts/{ma}", dependencies=[Depends(require_admin)])
 def concept_delete(ma: str) -> dict:
     from ..db.models import DrawingConcept
     with _concept_session() as session:
@@ -418,6 +493,90 @@ def concept_delete(ma: str) -> dict:
         session.commit()
         concepts.load_signals.cache_clear()
         return {"deleted": ma}
+
+
+# hình minh họa người dùng đặt cho từng đối tượng (thẻ trên trang): file trong data/rules/hinh_ky_hieu, tên = khóa thẻ
+IMG_DIR = config.DATA_DIR / "rules" / "hinh_ky_hieu"
+IMG_TYPES = {".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp"}
+IMG_MAX_BYTES = 2 * 1024 * 1024
+
+
+def _image_key(key: str) -> str:
+    import re
+    if not re.fullmatch(r"[a-z0-9_-]{1,80}", key):
+        raise HTTPException(400, "Khóa hình chỉ gồm chữ thường không dấu, số, _ và -.")
+    return key
+
+
+def _image_file(key: str) -> Optional[Path]:
+    return next((IMG_DIR / f"{key}{ext}" for ext in IMG_TYPES if (IMG_DIR / f"{key}{ext}").exists()), None)
+
+
+def _concept_images() -> dict:
+    """Khóa thẻ → đường dẫn hình (kèm thời điểm sửa để trình duyệt không dùng bản cũ)."""
+    if not IMG_DIR.exists():
+        return {}
+    return {f.stem: f"/api/concepts/images/{f.stem}?v={int(f.stat().st_mtime)}" for f in IMG_DIR.iterdir() if f.suffix in IMG_TYPES}
+
+
+def _save_image(key: str, ext: str, data: bytes) -> dict:
+    IMG_DIR.mkdir(parents=True, exist_ok=True)
+    for old in IMG_TYPES:                       # mỗi thẻ một hình: bỏ hình cũ khác định dạng
+        (IMG_DIR / f"{key}{old}").unlink(missing_ok=True)
+    (IMG_DIR / f"{key}{ext}").write_bytes(data)
+    return {"key": key, "url": _concept_images()[key]}
+
+
+@app.get("/api/concepts/images/{key}")
+def concept_image(key: str) -> FileResponse:
+    path = _image_file(_image_key(key))
+    if path is None:
+        raise HTTPException(404, f"Chưa có hình {key}.")
+    # SVG tải lên có thể chứa mã: cấm chạy mã khi mở trực tiếp; trang hiển thị bằng <img> nên không chạy mã
+    return FileResponse(path, media_type=IMG_TYPES[path.suffix],
+                        headers={"Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'",
+                                 "X-Content-Type-Options": "nosniff"})
+
+
+@app.put("/api/concepts/images/{key}", dependencies=[Depends(require_admin)])
+async def concept_image_upload(key: str, file: UploadFile = File(...)) -> dict:
+    """Tải hình minh họa (SVG, PNG, JPG, WEBP, tối đa 2 MB) cho một thẻ ký hiệu."""
+    key = _image_key(key)
+    ext = Path(file.filename or "").suffix.lower().replace(".jpeg", ".jpg")
+    if ext not in IMG_TYPES:
+        raise HTTPException(400, "Chỉ nhận hình .svg, .png, .jpg, .webp.")
+    data = await file.read(IMG_MAX_BYTES + 1)
+    if len(data) > IMG_MAX_BYTES:
+        raise HTTPException(413, "Hình lớn hơn 2 MB.")
+    ok = {".png": data.startswith(b"\x89PNG"), ".jpg": data.startswith(b"\xff\xd8"),
+          ".webp": data[:4] == b"RIFF" and data[8:12] == b"WEBP", ".svg": b"<svg" in data[:4096]}[ext]
+    if not ok:
+        raise HTTPException(400, f"Nội dung file không phải hình {ext}.")
+    return _save_image(key, ext, data)
+
+
+class ImageFromBlock(BaseModel):
+    block: str = Field(min_length=1, max_length=128)
+
+
+@app.put("/api/concepts/images/{key}/block", dependencies=[Depends(require_admin)])
+def concept_image_from_block(key: str, body: ImageFromBlock) -> dict:
+    """Dùng hình một block trong bản vẽ mẫu (data/drawings) làm hình minh họa của thẻ."""
+    key = _image_key(key)
+    svg = concept_samples.block_svg(body.block)
+    if svg is None:
+        raise HTTPException(404, f"Không có block {body.block} trong bản vẽ mẫu.")
+    return _save_image(key, ".svg", svg.encode("utf8"))
+
+
+@app.delete("/api/concepts/images/{key}", dependencies=[Depends(require_admin)])
+def concept_image_delete(key: str) -> dict:
+    """Bỏ hình đã đặt, thẻ quay về hình tự động."""
+    path = _image_file(_image_key(key))
+    if path is None:
+        raise HTTPException(404, f"Chưa có hình {key}.")
+    path.unlink()
+    return {"deleted": key}
 
 
 @app.get("/api/concepts/samples")

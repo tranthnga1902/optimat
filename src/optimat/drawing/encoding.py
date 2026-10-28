@@ -1,11 +1,17 @@
 """Chuyển chữ tiếng Việt mã cũ trong bản vẽ về Unicode.
 
-Hiện hỗ trợ TCVN3 (ABC, các font .VnTime, .VnArial, vn*.shx). Bảng VNI chưa có.
+Hỗ trợ:
+- TCVN3 (ABC, các font .VnTime, .VnArial, vn*.shx): mỗi chữ có dấu là một ký tự.
+- VNI-Windows (font VNI-…): nguyên âm + ký tự dấu đứng sau ("MAËT BAÈNG" = MẶT BẰNG).
+- VH (font VHArial, VHAvan, VHelvCn…): chữ gốc ă â ê ô ơ ư đ là một ký tự, dấu thanh đứng sau
+  ("MÀÛT BÀÒNG TÁÖNG" = MẶT BẰNG TẦNG). Không tìm được tài liệu gốc; bảng dưới suy từ chữ trên bản vẽ
+  Mau_nha_25x5 (28/10/2026), các ký tự chưa thấy trên bản vẽ để nguyên.
 LƯU Ý: bảng ánh xạ cần được kiểm tra lại trên chính các bản vẽ bạn thu thập;
 font SHX tự chế của từng công ty có thể dùng bảng mã riêng.
 """
 from __future__ import annotations
 
+import re
 import unicodedata
 
 _TCVN3_LOWER = {
@@ -30,27 +36,104 @@ _TCVN3 = {**_TCVN3_LOWER, **_TCVN3_UPPER}
 _TCVN3_MARKERS = set("µ¸¶·¹¨»¾¼½©®ª«¬­")
 
 
-def detect_encoding(font_name: str | None, text: str = "") -> str:
-    """Trả về 'tcvn3', 'vni' hoặc 'unicode' dựa trên tên font, dự phòng bằng nội dung."""
+_ACUTE, _GRAVE, _HOOK, _TILDE, _DOT = "́", "̀", "̉", "̃", "̣"
+_CIRC, _BREVE = "̂", "̆"
+_VOWELS = set("aeiouyAEIOUY")
+
+
+def _pairs(table: dict[str, str]) -> dict[str, str]:
+    """Bảng chữ hoa -> thêm chữ thường tương ứng."""
+    return {**table, **{k.lower(): v.lower() for k, v in table.items()}}
+
+
+# VNI-Windows: ký tự dấu ghép vào nguyên âm đứng trước; Ô, Ö, Ñ... là chữ đứng riêng
+_VNI_MARK = _pairs({"Ù": _ACUTE, "Ø": _GRAVE, "Û": _HOOK, "Õ": _TILDE, "Ï": _DOT,
+                    "Â": _CIRC, "Á": _CIRC + _ACUTE, "À": _CIRC + _GRAVE, "Å": _CIRC + _HOOK,
+                    "Ã": _CIRC + _TILDE, "Ä": _CIRC + _DOT,
+                    "Ê": _BREVE, "É": _BREVE + _ACUTE, "È": _BREVE + _GRAVE, "Ú": _BREVE + _HOOK,
+                    "Ü": _BREVE + _TILDE, "Ë": _BREVE + _DOT})
+_VNI_CHAR = _pairs({"Ñ": "Đ", "Ö": "Ư", "Ô": "Ơ", "Ò": "Ị", "Ó": "Ỉ", "Æ": "Ĩ"})
+
+# VH: chữ gốc một ký tự, dấu thanh đứng sau (mỗi nhóm nguyên âm một dãy ký tự dấu riêng)
+_VH_CHAR = _pairs({"À": "Ă", "Á": "Â", "Â": "Đ", "Ã": "Ê", "Ä": "Ô", "Å": "Ơ", "Æ": "Ư", "Ê": "Í", "Ë": "Ị"})
+_VH_MARK = _pairs({"Ì": _GRAVE, "Í": _HOOK, "Î": _TILDE, "Ï": _ACUTE,        # sau a e i o u y ơ ư
+                   "Ò": _GRAVE, "Ó": _HOOK, "Ô": _TILDE, "Õ": _ACUTE,        # sau ă (Ó, Ô suy theo dãy, chưa thấy)
+                   "Ö": _GRAVE, "Ø": _HOOK, "Ù": _TILDE, "Ú": _ACUTE,        # sau â ê ô
+                   "Û": _DOT, "Ü": _DOT})
+
+# Ký tự không bao giờ có trong tiếng Việt Unicode: có chúng (và không có chữ Unicode tiếng Việt) là mã cũ
+_LEGACY = set("ÄÅÆËÎÏÑÖØÛÜäåæëîïñöøûü")
+_UNICODE_VI = re.compile("[ĂăĐđƠơƯưẠ-ỹ]")
+_VNI_SIGN = re.compile("[AEIOUYaeiouy][ÂÁÀÅÃÄÊÉÈÚÜËÙØÛÕÏâáàåãäêéèúüëùøûõï]|[Ññ]|[Öö][ÔôÙØÛÕÏùøûõï]")
+_VH_SIGN = re.compile("[AEIOUYaeiouy][ÌÍÎìíî]|Â[A-Z0-9]")
+# chữ gốc VH + dấu thanh: VNI không có cặp này; nguyên âm đôi VH (iã = iê, uä = uô) lại giống dấu VNI nên cặp này tính 2
+_VH_PAIR = re.compile("[ÀÁÃÄÅÆàáãäåæ][ÌÍÎÏÒÓÔÕÖØÙÚÛÜìíîïòóôõöøùúûü]")
+
+
+def legacy_kind(text: str) -> str | None:
+    """'vni' hoặc 'vh' khi nội dung là chữ mã cũ (đếm các cặp nguyên âm + dấu đặc trưng), không thì None."""
+    if not any(ch in _LEGACY for ch in text) or _UNICODE_VI.search(text):
+        return None
+    vni = len(_VNI_SIGN.findall(text))
+    vh = len(_VH_SIGN.findall(text)) + 2 * len(_VH_PAIR.findall(text))
+    if vni == vh == 0:
+        return None
+    return "vni" if vni > vh else "vh"
+
+
+def detect_encoding(font_name: str | None, text: str = "", hint: str | None = None) -> str:
+    """Trả về 'tcvn3', 'vni', 'vh' hoặc 'unicode' dựa trên tên font, dự phòng bằng nội dung.
+    hint: bảng mã cũ đoán trên mọi chữ cùng kiểu chữ (legacy_kind), dùng khi tên font và chính dòng chữ không đủ.
+    Font TCVN3 mà chữ không có ký tự đặc trưng TCVN3 nhưng rõ là VNI/VH (bản vẽ đổi font giữa chừng): theo nội dung."""
     font = (font_name or "").lower()
     if font.startswith(".vn") or (font.startswith("vn") and font.endswith(".shx")):
+        if text and not any(ch in _TCVN3_MARKERS for ch in text) and (kind := legacy_kind(text)):
+            return kind
         return "tcvn3"
     if font.startswith("vni"):
         return "vni"
+    if font.startswith("vh"):
+        return "vh"
     if any(ch in _TCVN3_MARKERS for ch in text):
         return "tcvn3"
-    return "unicode"
+    if _UNICODE_VI.search(text):
+        return "unicode"
+    return legacy_kind(text) or (hint if any(ord(ch) > 127 for ch in text) else None) or "unicode"
 
 
 def tcvn3_to_unicode(text: str) -> str:
     return "".join(_TCVN3.get(ch, ch) for ch in text)
 
 
-def to_unicode(text: str, font_name: str | None = None) -> tuple[str, str]:
-    """Trả về (chuỗi Unicode, bảng mã đã nhận). VNI chưa hỗ trợ: giữ nguyên và báo 'vni'."""
-    enc = detect_encoding(font_name, text)
+def _compose(text: str, chars: dict[str, str], marks: dict[str, str]) -> str:
+    """Ký tự dấu ghép vào chữ đứng trước nếu đó là nguyên âm; không thì đổi theo bảng chữ đứng riêng."""
+    out: list[str] = []
+    for ch in text:
+        base = unicodedata.normalize("NFD", out[-1])[0] if out else ""
+        if ch in marks and (base in _VOWELS or base in "ƠơƯư"):
+            out[-1] = unicodedata.normalize("NFC", out[-1] + marks[ch])
+        else:
+            out.append(chars.get(ch, ch))
+    return "".join(out)
+
+
+def vni_to_unicode(text: str) -> str:
+    return _compose(text, _VNI_CHAR, _VNI_MARK)
+
+
+def vh_to_unicode(text: str) -> str:
+    return _compose(text, _VH_CHAR, _VH_MARK)
+
+
+def to_unicode(text: str, font_name: str | None = None, hint: str | None = None) -> tuple[str, str]:
+    """Trả về (chuỗi Unicode, bảng mã đã nhận)."""
+    enc = detect_encoding(font_name, text, hint)
     if enc == "tcvn3":
         return tcvn3_to_unicode(text), enc
+    if enc == "vni":
+        return vni_to_unicode(text), enc
+    if enc == "vh":
+        return vh_to_unicode(text), enc
     return text, enc
 
 

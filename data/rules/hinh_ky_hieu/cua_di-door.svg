@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 110" fill="none" stroke="#222" stroke-width="2">
+<!-- cửa đi 1 cánh trên mặt bằng: tường hai bên khe cửa, cánh cửa mở 90°, cung quỹ đạo nét đứt -->
+<path d="M5 90H40M120 90H155M5 104H40M120 104H155M40 90V104M120 90V104" stroke-width="2.5"/>
+<path d="M40 90V10" stroke-width="3"/>
+<path d="M40 10A80 80 0 0 1 120 90" stroke-dasharray="5 4"/>
+</svg>

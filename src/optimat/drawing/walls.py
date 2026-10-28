@@ -473,6 +473,37 @@ def extend_corners(walls: list[WallSegment]) -> int:
     return joined
 
 
+LENGTH_RULES = ("tim", "thong_thuy")   # tim: theo trục tim (mặc định); thong_thuy: giữa các mặt tường giao
+
+
+def net_lengths(walls: list[tuple[str, float, float, float, float, float]]) -> dict[str, float]:
+    """Chiều dài thông thủy (mm) của từng tường (id, x1, y1, x2, y2, dày): mỗi đầu nằm trong thân một tường không song
+    song thì bớt đoạn từ đầu đó tới mặt tường kia, đo dọc trục tường này. Góc L đã kéo tới giao trục tim bớt nửa dày tường kia; tường ngăn đã
+    dừng ở mặt tường bao không bớt. Mỗi đầu chỉ bớt theo một tường (tường bớt nhiều nhất)."""
+    out = {}
+    for wid, x1, y1, x2, y2, _t in walls:
+        L = math.hypot(x2 - x1, y2 - y1)
+        cut = 0.0
+        for ex, ey in ((x1, y1), (x2, y2)):
+            best = 0.0
+            for oid, a1, b1, a2, b2, t in walls:
+                lo = math.hypot(a2 - a1, b2 - b1)
+                if oid == wid or lo == 0 or L == 0:
+                    continue
+                ux, uy = (a2 - a1) / lo, (b2 - b1) / lo
+                if abs(ux * (x2 - x1) / L + uy * (y2 - y1) / L) > 0.9:
+                    continue
+                along = (ex - a1) * ux + (ey - b1) * uy
+                off = abs((ex - a1) * (-uy) + (ey - b1) * ux)
+                if -t / 2 - 1 <= along <= lo + t / 2 + 1 and off < t / 2 - 1:
+                    # khoảng vuông góc tới mặt tường kia đổi ra khoảng dọc trục tường này theo góc giao (xiên 45°: × √2)
+                    sin = abs(ux * (y2 - y1) / L - uy * (x2 - x1) / L)
+                    best = max(best, (t / 2 - off) / sin)
+            cut += best
+        out[wid] = max(0.0, L - cut)
+    return out
+
+
 # ---------------------------------------------------------------- khe cửa
 
 @dataclass

@@ -20,6 +20,11 @@ if _ENV.exists() and not _os.environ.get("OPTIMAT_NO_DOTENV"):   # pytest đặt
 # Ký hiệu nhận dạng theo Quy ước bản vẽ v1.0 (tên layer -> vai trò, tiền tố block cửa)
 # nằm trong data/rules/concepts.csv; 23 điều khoản QU trong data/rules/quy_uoc.csv (drawing/concepts.py).
 
+# Tiếp nhận hồ sơ CAD (drawing/ingest.py): dung lượng tối đa mỗi file tải lên, file lưu theo hash ở UPLOAD_DIR
+MAX_UPLOAD_MB = 50
+MAX_UPLOAD_FILES = 20             # số file tối đa mỗi lần gửi /api/ingest (xử lý tuần tự, ~30 s với file 20 MB)
+UPLOAD_DIR = DATA_DIR / "uploads"
+
 # Lớp chiều dày tường (mm): tên lớp -> (nhỏ nhất, lớn nhất) của khoảng cách hai nét song song.
 # Dải đủ rộng để nhận cả tường 100 (lớp 110), 200 (lớp 220), 300 (lớp 330) gặp trên bản vẽ thật.
 WALL_THICKNESS_CLASSES = {"110": (85, 135), "150": (136, 175), "220": (176, 260), "330": (280, 370)}

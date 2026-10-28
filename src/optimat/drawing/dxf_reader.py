@@ -11,6 +11,7 @@ Bản vẽ thật thường không sạch: nét tường nằm trong block, hatc
 from __future__ import annotations
 
 import math
+import re
 import tempfile
 from collections import Counter
 from dataclasses import dataclass, field
@@ -22,7 +23,7 @@ from ezdxf import path as ezpath
 from ezdxf import units
 
 from .dwg_convert import DrawingError, convert_dwg_to_dxf
-from .encoding import to_unicode
+from .encoding import legacy_kind, to_unicode
 from .layer_classifier import LayerClass, apply_overrides, default_classification
 
 # Quy tắc chung: mọi tọa độ lấy từ đối tượng phải đổi sang hệ tọa độ thế giới (WCS). Đối tượng 2D (ARC, CIRCLE, SOLID,
@@ -156,6 +157,17 @@ class _Collector:
         self.blocks: list[BlockRef] = []
         self.warnings: list[str] = []
         self.skipped: Counter = Counter()
+        self.style_hint = self._style_hints()
+
+    def _style_hints(self) -> dict[str, str]:
+        """Bảng mã cũ (VNI, VH) của từng kiểu chữ, đoán trên toàn bộ chữ cùng kiểu: chữ ngắn ("LEÂ THÒ") một mình
+        không đủ dấu hiệu."""
+        texts: dict[str, list[str]] = {}
+        for layout in [self.doc.modelspace(), *self.doc.blocks]:
+            for e in layout.query("TEXT MTEXT"):
+                raw = e.plain_text() if e.dxftype() == "MTEXT" else e.dxf.text
+                texts.setdefault(e.dxf.get("style", "Standard").lower(), []).append(raw)
+        return {k: kind for k, v in texts.items() if (kind := legacy_kind(" ".join(v)))}
 
     def seg(self, a, b, layer, kind="line", source=""):
         s = self.s
@@ -241,9 +253,7 @@ class _Collector:
         style_name = e.dxf.get("style", "Standard")
         styles = self.doc.styles
         font = styles.get(style_name).dxf.get("font", None) if style_name in styles else None
-        text, enc = to_unicode(raw, font)
-        if enc == "vni":
-            self.warnings.append(f"Chữ dùng bảng mã VNI chưa được chuyển: {raw[:30]!r}")
+        text, enc = to_unicode(raw, font, self.style_hint.get(style_name.lower()))
         # MTEXT ghi điểm chèn ở WCS; TEXT, ATTRIB ghi ở OCS
         p = e.dxf.insert if e.dxftype() == "MTEXT" else e.ocs().to_wcs(e.dxf.insert)
         h = e.dxf.get("char_height", 0) if e.dxftype() == "MTEXT" else e.dxf.get("height", 0)
@@ -309,10 +319,8 @@ class _Collector:
         self.walk(children, name if not source else f"{source}/{name}", depth + 1)
 
 
-def block_name(e) -> str:
-    """Tên block; block động lưu thành block ẩn danh *U… thì lấy tên block gốc (xdata AcDbBlockRepBTag)."""
-    name = e.dxf.name
-    doc = getattr(e, "doc", None)
+def original_block_name(doc, name: str) -> str:
+    """Block động lưu thành block ẩn danh *U…: tên block gốc (xdata AcDbBlockRepBTag); không phải thì giữ tên."""
     if name.startswith("*") and doc is not None:
         try:
             rec = doc.blocks.get(name).block_record
@@ -321,6 +329,11 @@ def block_name(e) -> str:
         except Exception:     # không phải block động (bảng, kích thước…): giữ tên ẩn danh
             pass
     return name
+
+
+def block_name(e) -> str:
+    """Tên block của một INSERT, block động lấy tên gốc."""
+    return original_block_name(getattr(e, "doc", None), e.dxf.name)
 
 
 def _clean_codes(raw: str) -> str:
@@ -440,6 +453,21 @@ def geometry_mismatch(drawing: Drawing, tol_mm: float = 2 * FLATTEN_MM) -> dict[
     return bad
 
 
+def declared_insunits(doc, path: str) -> int:
+    """$INSUNITS mà file thật sự ghi. File thiếu HEADER hoặc bản R12 không có biến này thì ezdxf tự điền 6 (mét),
+    làm bản vẽ bị nhân 1000 mà không ai biết: trường hợp đó trả 0 (không khai báo).
+    Chỉ tìm biến (mã nhóm 9) trong mục HEADER, không tìm cả file: chữ "$INSUNITS" trong TEXT không được tính."""
+    data = Path(path).read_bytes()
+    if data.startswith(b"AutoCAD Binary DXF"):
+        start = data.find(b"HEADER\x00")
+        declared = start >= 0 and b"$INSUNITS\x00" in data[start:data.find(b"ENDSEC\x00", start)]
+    else:
+        head = re.search(rb"^\s*2\s*\r?\n\s*HEADER\s*$", data, re.M)
+        end = data.find(b"ENDSEC", head.end()) if head else -1
+        declared = bool(head) and re.search(rb"^\s*9\s*\r?\n\s*\$INSUNITS\s*$", data[head.end():end], re.M) is not None
+    return int(doc.header.get("$INSUNITS", 0) or 0) if declared else 0
+
+
 def read_dxf(path: str, layer_overrides: dict[str, str] | None = None) -> Drawing:
     try:
         doc = ezdxf.readfile(path)
@@ -448,7 +476,7 @@ def read_dxf(path: str, layer_overrides: dict[str, str] | None = None) -> Drawin
     msp = doc.modelspace()
     warnings: list[str] = []
 
-    insunits = int(doc.header.get("$INSUNITS", 0) or 0)
+    insunits = declared_insunits(doc, path)
     try:
         scale = units.conversion_factor(insunits, units.MM) if insunits else 1.0
     except (TypeError, ValueError):                    # mã ngoài bảng hoặc đơn vị không đổi được (độ, parsec...)

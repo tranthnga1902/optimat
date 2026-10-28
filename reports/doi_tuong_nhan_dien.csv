@@ -92,13 +92,13 @@ data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,loai_bo,,,110,,,,,-88490,11
 data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,loai_bo,,,110,,,,,-86740,117407,-87540,117407,,,,,bậc thang / lan can
 data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,loai_bo,,,110,,,,,-86690,118657,-86690,119157,,,,,bậc thang / lan can
 data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Nội thất,SOFA,VATLIEU,,,,,,-94159,118376,,,IGNORE,,,,ký hiệu B12
-data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-93340,121857,,,IGNORE,,,,ký hiệu B07
-data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-88440,121857,,,IGNORE,,,,ký hiệu B07
-data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-84540,121857,,,IGNORE,,,,ký hiệu B07
-data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-82340,121857,,,IGNORE,,,,ký hiệu B07
-data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-79340,121857,,,IGNORE,,,,ký hiệu B07
-data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-77575,120257,,,IGNORE,,,,ký hiệu B07
-data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cột,815,COLUMN,,,,,,-77575,116257,,,IGNORE,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Trục,815,COLUMN,,,,,,-93340,121857,,,ANNOTATION,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Trục,815,COLUMN,,,,,,-88440,121857,,,ANNOTATION,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Trục,815,COLUMN,,,,,,-84540,121857,,,ANNOTATION,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Trục,815,COLUMN,,,,,,-82340,121857,,,ANNOTATION,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Trục,815,COLUMN,,,,,,-79340,121857,,,ANNOTATION,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Trục,815,COLUMN,,,,,,-77575,120257,,,ANNOTATION,,,,ký hiệu B07
+data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Trục,815,COLUMN,,,,,,-77575,116257,,,ANNOTATION,,,,ký hiệu B07
 data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-90135,118400,,,ANNOTATION,,,,ký hiệu B08
 data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-92458,118144,,,ANNOTATION,,,,ký hiệu B08
 data/drawings/build/nha_dan.dxf,MẶT BẰNG LẦU 1,Cao độ,COS-MB,0,,,,,,-87044,116740,,,ANNOTATION,,,,ký hiệu B08
@@ -143,3 +143,4 @@ data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W3,NET_T
 data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W4,CHU_KT,110,109,2.57,,,582407,-112740,584972,-112604,envelope,,,0.6,
 data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W5,OK_NET_MANH,150,141,0.77,,,583969,-119546,583969,-118781,envelope,,,0.5,
 data/drawings/build/nha_pho.dxf,mặt bằng tầng 3 (+6.60) (2),tuong,W6,THAY,110,110,0.55,,,581366,-119546,581366,-119001,envelope,,,0.6,
+data/drawings/thu_vien/thu_vien_mau_hay_dung.dxf,MẶT BẰNG,Cây xanh,PLANT_107,0,,,,,,28502,-16659,,,IGNORE,,,,ký hiệu B62

@@ -212,18 +212,13 @@ def _check_supply(cat: Catalog, out: list[Finding], today: date) -> dict:
 
 
 def _price_records_summary(out: list[Finding]) -> dict:
-    """Lịch sử giá: bảng price_records khi có PostgreSQL, không thì file mô phỏng đi kèm."""
-    if get_database_url():
-        with get_engine().connect() as conn:
-            df = pd.read_sql_query("SELECT data_kind, price_level, count(*) AS n, max(date) AS last FROM price_records "
-                                   "GROUP BY 1, 2 ORDER BY 1, 2", conn)
-        source = "price_records"
-    else:
-        path = config.DATA_DIR / "sample" / "prices_sample.csv"
-        raw = pd.read_csv(path) if path.exists() else pd.DataFrame(columns=["data_kind", "date"])
-        raw["price_level"] = raw.get("price_level", "DEALER")
-        df = raw.groupby(["data_kind", "price_level"]).agg(n=("date", "size"), last=("date", "max")).reset_index()
-        source = "data/sample/prices_sample.csv"
+    """Lịch sử giá chỉ đọc từ PostgreSQL."""
+    if not get_database_url():
+        return {"nguon": "price_records", "dong": 0, "that": 0, "chi_tiet": []}
+    with get_engine().connect() as conn:
+        df = pd.read_sql_query("SELECT data_kind, price_level, count(*) AS n, max(date) AS last FROM price_records "
+                               "GROUP BY 1, 2 ORDER BY 1, 2", conn)
+    source = "price_records"
     actual = int(df[df.data_kind == "ACTUAL"].n.sum()) if len(df) else 0
     if actual == 0:
         out.append(Finding("warning", "gia", source, "Chưa có dòng giá THẬT (ACTUAL): mô hình giá chỉ học trên dữ liệu mô phỏng, "
@@ -250,6 +245,8 @@ def _check_ground_truth(cat: Catalog, out: list[Finding]) -> dict:
 
 
 def run_checks(catalog: Catalog | None = None, today: date | None = None) -> dict:
+    if catalog is None and not get_database_url():
+        raise RuntimeError("Kiểm soát dữ liệu cần kết nối PostgreSQL (DATABASE_URL).")
     cat = catalog or Catalog.load()
     today = today or date.today()
     out: list[Finding] = []

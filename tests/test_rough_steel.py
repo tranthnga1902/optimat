@@ -2,7 +2,8 @@
 import pytest
 
 from optimat.rough.models import WORKS, FoundationItem, ProjectParams, WorkItem
-from optimat.rough.steel import foundation_works, steel_works
+from optimat.rough.foundations import foundation_works
+from optimat.rough.steel import steel_works
 
 
 def work(code, qty, plan="T1"):

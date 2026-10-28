@@ -15,3 +15,4 @@ psycopg[binary]>=3.1
 pytest>=8.0
 httpx>=0.27
 openpyxl>=3.1          # đọc/ghi Excel: scripts/build_materials_sql.py, scripts/build_material_check_xlsx.py
+pdfplumber>=0.11      # đọc bảng PDF công bố giá: scripts/import_price_bulletin.py

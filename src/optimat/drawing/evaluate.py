@@ -18,6 +18,7 @@ from pathlib import Path
 import pandas as pd
 
 from .. import config
+from ..schemas import OpeningDefaults
 from .dxf_reader import read_drawing
 from .encoding import normalize
 from .layer_classifier import LayerClass
@@ -34,8 +35,19 @@ def evaluate(gt_dir: Path | str | None = None, root: Path | str | None = None) -
     truth = pd.read_csv(gt_dir / "walls.csv", dtype={"wall_type": str})
     rows = []
     for item in index.itertuples():
-        result = takeoff_from_file(str(root / item.drawing_file), float(item.floor_height_mm))
-        got = {g.wall_type: g for g in result.groups}
+        sizes = {c: float(getattr(item, c)) for c in ("door_width_mm", "door_height_mm", "window_width_mm", "window_height_mm")
+                 if pd.notna(getattr(item, c, None))}
+        result = takeoff_from_file(str(root / item.drawing_file), float(item.floor_height_mm),
+                                   openings=OpeningDefaults(**sizes))
+        # đáp án ghi theo lớp tường: cộng các nhóm cùng lớp (khác vai trò, khác phương án), vật liệu lấy theo dài lớn nhất
+        got = {}
+        for g in sorted(result.groups, key=lambda g: -g.length_m):
+            if g.wall_type in got:
+                a = got[g.wall_type]
+                got[g.wall_type] = a.model_copy(update={"length_m": a.length_m + g.length_m,
+                                                        "net_area_m2": a.net_area_m2 + g.net_area_m2})
+            else:
+                got[g.wall_type] = g
         expected = truth[truth.drawing_file == item.drawing_file]
         for t in expected.itertuples():
             g = got.get(t.wall_type)

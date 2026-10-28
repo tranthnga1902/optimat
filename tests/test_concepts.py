@@ -62,7 +62,6 @@ BUILD = __import__("pathlib").Path(__file__).resolve().parents[1] / "data" / "dr
 
 @pytest.mark.skipif(not (BUILD / "nha_pho.dxf").exists() or not (BUILD / "ket_cau.dxf").exists(), reason="cần bản vẽ build")
 def test_analyze_build_drawings():
-    from optimat.drawing.concept_view import build_concept_html
     from optimat.drawing.convention_check import analyze
     r = analyze(str(BUILD / "nha_pho.dxf"))
     by = {c.ma: c for c in r.checks}
@@ -70,7 +69,6 @@ def test_analyze_build_drawings():
     assert by["QU-05"].trang_thai == "vi_pham" and "(2)" in by["QU-05"].bang_chung[0]   # hai tiêu đề "tầng 3"
     assert by["QU-08"].trang_thai == "vi_pham"            # tường trên layer không theo tên: đoán bằng hình học
     assert all(w.nguon == "hinh_hoc" for p in r.plans for w in p.walls)
-    assert "QU-05" in build_concept_html(r)
     k = analyze(str(BUILD / "ket_cau.dxf"))
     assert k.trong_quy_uoc is None and not k.plans        # file kết cấu: không áp dụng, không kết luận "trong quy ước"
 
@@ -79,12 +77,11 @@ def test_review_payload_has_conventions(sample_dxf):
     # S9.8: trang kiểm tra nhận kết quả đối chiếu quy ước cùng dữ liệu bản vẽ, tab Cảnh báo hiển thị vi phạm
     from optimat.drawing.dxf_reader import read_drawing
     from optimat.drawing.takeoff import takeoff_plans
-    from optimat.drawing.viewer import build_review_html, view_payload
+    from optimat.drawing.viewer import view_payload
     d = read_drawing(sample_dxf)
     conv = view_payload(d, takeoff_plans(d, 3300), "mau.dxf", cad=False)["conventions"]
     assert "error" not in conv and len(conv["checks"]) == 23
     assert {c["trang_thai"] for c in conv["checks"]} <= {"dat", "vi_pham", "chua_kiem", "khong_ap_dung"}
-    assert "function convHtml" in build_review_html()
 
 
 def test_concept_samples_draw_block_and_list_layers(monkeypatch):

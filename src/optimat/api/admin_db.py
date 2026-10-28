@@ -1,11 +1,11 @@
-"""Quản trị cơ sở dữ liệu trên trang /app (vai trò quản trị viên).
+"""Quản trị cơ sở dữ liệu cho trang /co-so-du-lieu của frontend (vai trò quản trị viên).
 
     GET    /api/admin/db                       nguồn dữ liệu, trạng thái kết nối, số dòng 26 bảng theo cụm
     GET    /api/admin/tables/{bảng}            cột và dòng của một bảng (tối đa MAX_ROWS)
-    POST   /api/admin/tables/{bảng}            thêm dòng            ┐ chỉ 6 bảng quy tắc (EDITABLE),
-    PUT    /api/admin/tables/{bảng}/{id}       sửa dòng             │ chỉ khi có PostgreSQL (DATABASE_URL);
-    DELETE /api/admin/tables/{bảng}/{id}       xóa dòng             ┘ mỗi lần sửa ghi audit_logs
-    GET    /api/admin/tables/{bảng}/csv        bảng hiện hành dạng file data/rules/*.csv để chép đè trước --reload-rules
+    POST   /api/admin/tables/{bảng}            thêm dòng            ┐ chỉ 6 bảng quy tắc (EDITABLE) và 2 bảng đại lý
+    PUT    /api/admin/tables/{bảng}/{khóa}     sửa dòng             │ (DEALER_TABLES), chỉ khi có PostgreSQL (DATABASE_URL);
+    DELETE /api/admin/tables/{bảng}/{khóa}     xóa dòng             ┘ mỗi lần sửa ghi audit_logs
+    GET    /api/admin/tables/{bảng}/csv        bảng hiện hành dạng file CSV nguồn (data/rules, data/catalog) để chép đè trước khi nạp lại
 
 Danh mục vật liệu, phương án tường sửa ở data/catalog/materials_master.xlsx (một nguồn), không sửa ở đây.
 """
@@ -14,23 +14,29 @@ from __future__ import annotations
 import csv
 import io
 import re
+from datetime import date
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import PlainTextResponse
-from sqlalchemy import Boolean, Float, Integer, func, select, text
+from sqlalchemy import Boolean, Date, Float, Integer, func, select, text
 from sqlalchemy.exc import DBAPIError, IntegrityError
 
 from .. import config
 from ..db.models import Base
 from ..db.session import get_database_url, get_engine
+from .auth import audit, require_admin
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_admin)])   # mọi API ở đây chỉ dành cho quản trị viên
 MAX_ROWS = 2000
+HIDDEN = {"password_hash"}   # không bao giờ trả ra trang quản trị
 RULES = config.DATA_DIR / "rules"
 # bảng quy tắc sửa được -> file CSV nguồn (cùng tên cột, trừ id)
 EDITABLE = {"material_rules": "material_rules.csv", "material_notes": "material_notes.csv", "room_rules": "room_rules.csv",
             "rough_norms": "dinh_muc_phan_tho.csv", "drawing_concepts": "concepts.csv", "convention_clauses": "quy_uoc.csv"}
+# quản lý đại lý: nhà cung cấp và giá đại lý -> file data/catalog/*.csv (nguồn init_db.py nạp khi bảng trống)
+DEALER_TABLES = {"suppliers": "suppliers.csv", "supplier_materials": "supplier_materials.csv"}
+WRITABLE = {**EDITABLE, **DEALER_TABLES}
 CLUSTERS = {
     "Danh mục vật liệu": ["material_groups", "material_families", "materials", "wall_systems", "material_relations",
                           "material_aliases", "standards", "material_standards"],
@@ -59,8 +65,16 @@ def _csv_path(name: str):
     return p if p.exists() else None
 
 
+def _source_file(name: str) -> str:
+    return f"data/rules/{EDITABLE[name]}" if name in EDITABLE else f"data/catalog/{DEALER_TABLES[name]}"
+
+
 def _clear_caches(name: str) -> None:
-    """Lần đọc bản vẽ / bóc tách sau dùng ngay quy tắc vừa sửa."""
+    """Lần đọc bản vẽ / bóc tách / tra giá sau dùng ngay dữ liệu vừa sửa."""
+    if name in DEALER_TABLES:
+        from ..catalog.repository import default_catalog
+        default_catalog.cache_clear()
+        return
     from ..drawing import concepts, material_notes, material_rules
     from ..rough import areas, norms
     {"material_rules": material_rules.load_rules, "material_notes": material_notes.load_note_rules,
@@ -92,8 +106,11 @@ def db_overview() -> dict:
             counts[name] = len(pd.read_csv(p, dtype=str)) if p else None
     listed = {n for names in CLUSTERS.values() for n in names}
     clusters = {**CLUSTERS, "Khác": [n for n in Base.metadata.tables if n not in listed]}
-    out["clusters"] = [{"name": c, "tables": [{"name": n, "rows": counts.get(n), "editable": n in EDITABLE and out["connected"],
-                                               "doc": (Base.metadata.tables[n].comment or _doc(n))}
+    out["clusters"] = [{"name": c, "tables": [{"name": n, "rows": counts.get(n), "editable": n in WRITABLE and out["connected"],
+                                               "doc": (Base.metadata.tables[n].comment or _doc(n)),
+                                               "title": Base.metadata.tables[n].info.get("title"),
+                                               "kind": "rule" if n in EDITABLE else "dealer" if n in DEALER_TABLES else None,
+                                               "source_file": _source_file(n) if n in WRITABLE else None}
                                               for n in names if n in Base.metadata.tables]}
                        for c, names in clusters.items() if names]
     return out
@@ -108,7 +125,7 @@ def _doc(name: str) -> str:
 
 def _columns(t) -> list[dict]:
     return [{"name": c.name, "type": str(c.type).split("(")[0].lower(), "nullable": bool(c.nullable),
-             "key": bool(c.primary_key)} for c in t.columns]
+             "key": bool(c.primary_key), "comment": c.comment} for c in t.columns if c.name not in HIDDEN]
 
 
 @router.get("/api/admin/tables/{name}")
@@ -118,10 +135,10 @@ def table_rows(name: str) -> dict:
     if get_database_url():
         try:
             with get_engine().connect() as conn:
-                rows = [dict(r._mapping) for r in conn.execute(select(t).order_by(*t.primary_key.columns).limit(MAX_ROWS))]
+                rows = [{k: v for k, v in r._mapping.items() if k not in HIDDEN} for r in conn.execute(select(t).order_by(*t.primary_key.columns).limit(MAX_ROWS))]
                 total = conn.execute(select(func.count()).select_from(t)).scalar()
             return {"name": name, "source": "postgresql", "columns": _columns(t), "key": pk, "rows": rows, "total": total,
-                    "editable": name in EDITABLE}
+                    "editable": name in WRITABLE, "source_file": _source_file(name) if name in WRITABLE else None}
         except DBAPIError as exc:
             raise HTTPException(503, f"Không đọc được PostgreSQL: {str(exc.orig).splitlines()[0]}") from exc
     p = _csv_path(name)
@@ -135,11 +152,12 @@ def table_rows(name: str) -> dict:
             "editable": False}
 
 
-def _coerce(t, body: dict) -> dict:
-    """Giá trị từ biểu mẫu (chuỗi) -> kiểu của cột; ô trống -> NULL. Cột lạ và khóa chính bị bỏ qua."""
+def _coerce(t, body: dict, insert: bool) -> dict:
+    """Giá trị từ biểu mẫu (chuỗi) -> kiểu của cột; ô trống -> NULL. Cột lạ bị bỏ qua; khóa chính chỉ nhận khi thêm
+    dòng và là mã nhập tay (supplier_id), không đổi khi sửa vì bảng khác tham chiếu tới."""
     out = {}
     for c in t.columns:
-        if c.primary_key or c.name not in body:
+        if c.name not in body or (c.primary_key and (not insert or isinstance(c.type, Integer))):
             continue
         v = body[c.name]
         if v is None or (isinstance(v, str) and v.strip() == ""):
@@ -154,10 +172,12 @@ def _coerce(t, body: dict) -> dict:
                 out[c.name] = int(str(v).strip())
             elif isinstance(c.type, Float):
                 out[c.name] = float(str(v).strip().replace(",", "."))
+            elif isinstance(c.type, Date):
+                out[c.name] = date.fromisoformat(str(v).strip()[:10])
             else:
                 out[c.name] = str(v).strip()
         except ValueError as exc:
-            raise HTTPException(422, f"Cột {c.name}: {v!r} không phải số.") from exc
+            raise HTTPException(422, f"Cột {c.name}: {v!r} không đúng kiểu {str(c.type).lower()}.") from exc
     return out
 
 
@@ -181,24 +201,29 @@ def _validate(name: str, row: dict, conn) -> None:
             raise HTTPException(422, "Ký hiệu " + "; ".join(bad) + ".")
 
 
-def _write(name: str, action: str, body: dict | None, row_id: int | None) -> dict:
+def _write(name: str, action: str, body: dict | None, row_id: str | None, user: dict | None = None) -> dict:
+    if name not in WRITABLE:
+        raise HTTPException(403, f"Bảng {name} không sửa trên trang quản trị (danh mục sửa ở materials_master.xlsx).")
     if not get_database_url():
         raise HTTPException(409, "Chưa kết nối PostgreSQL (DATABASE_URL trong .env): chỉ xem được. Sửa file "
-                                 f"data/rules/{EDITABLE.get(name, '')} bằng Excel.")
-    if name not in EDITABLE:
-        raise HTTPException(403, f"Bảng {name} không sửa trên trang quản trị (danh mục sửa ở materials_master.xlsx).")
+                                 f"{_source_file(name)} bằng Excel.")
     t = _table(name)
-    pk = t.c.id
+    pk = next(iter(t.primary_key.columns))
+    if row_id is not None and isinstance(pk.type, Integer):
+        try:
+            row_id = int(row_id)
+        except ValueError as exc:
+            raise HTTPException(404, f"Không có dòng {row_id} trong {name}.") from exc
     try:
         with get_engine().begin() as conn:
             if action != "insert" and conn.execute(select(pk).where(pk == row_id)).first() is None:
-                raise HTTPException(404, f"Không có dòng id {row_id} trong {name}.")
+                raise HTTPException(404, f"Không có dòng {pk.name} = {row_id} trong {name}.")
             if action == "delete":
                 old = dict(conn.execute(select(t).where(pk == row_id)).first()._mapping)
                 conn.execute(t.delete().where(pk == row_id))
                 row = old
             else:
-                values = _coerce(t, body or {})
+                values = _coerce(t, body or {}, action == "insert")
                 if action == "update":
                     current = dict(conn.execute(select(t).where(pk == row_id)).first()._mapping)
                     _validate(name, {**current, **values}, conn)
@@ -207,9 +232,8 @@ def _write(name: str, action: str, body: dict | None, row_id: int | None) -> dic
                     _validate(name, values, conn)
                     row_id = conn.execute(t.insert().values(**values).returning(pk)).scalar()
                 row = dict(conn.execute(select(t).where(pk == row_id)).first()._mapping)
-            conn.execute(Base.metadata.tables["audit_logs"].insert().values(
-                action=f"admin_{action}", detail={"table": name, "id": row_id, "row": {k: (str(v) if v is not None else None)
-                                                                                   for k, v in row.items()}}))
+            audit(conn, f"admin_{action}", user, {"table": name, "id": row_id,
+                                                  "row": {k: (str(v) if v is not None else None) for k, v in row.items()}})
     except IntegrityError as exc:
         raise HTTPException(422, f"Vi phạm ràng buộc dữ liệu: {str(exc.orig).splitlines()[0]}") from exc
     except DBAPIError as exc:
@@ -219,25 +243,25 @@ def _write(name: str, action: str, body: dict | None, row_id: int | None) -> dic
 
 
 @router.post("/api/admin/tables/{name}")
-def row_create(name: str, body: dict) -> dict:
-    return _write(name, "insert", body, None)
+def row_create(name: str, body: dict, user: dict | None = Depends(require_admin)) -> dict:
+    return _write(name, "insert", body, None, user)
 
 
 @router.put("/api/admin/tables/{name}/{row_id}")
-def row_update(name: str, row_id: int, body: dict) -> dict:
-    return _write(name, "update", body, row_id)
+def row_update(name: str, row_id: str, body: dict, user: dict | None = Depends(require_admin)) -> dict:
+    return _write(name, "update", body, row_id, user)
 
 
 @router.delete("/api/admin/tables/{name}/{row_id}")
-def row_delete(name: str, row_id: int) -> dict:
-    return _write(name, "delete", None, row_id)
+def row_delete(name: str, row_id: str, user: dict | None = Depends(require_admin)) -> dict:
+    return _write(name, "delete", None, row_id, user)
 
 
 @router.get("/api/admin/tables/{name}/csv", response_class=PlainTextResponse)
 def table_csv(name: str) -> PlainTextResponse:
-    """Bảng hiện hành dạng file data/rules/*.csv (bỏ cột id): chép đè file đó để init_db.py --reload-rules
-    không xóa các sửa đổi trên trang quản trị."""
-    if name not in EDITABLE:
+    """Bảng hiện hành dạng file CSV nguồn (bỏ cột id): chép đè file đó để lần nạp lại (init_db.py --reload-rules
+    với quy tắc, --reset với đại lý) không xóa các sửa đổi trên trang quản trị."""
+    if name not in WRITABLE:
         raise HTTPException(403, f"Bảng {name} không xuất CSV ở đây.")
     data = table_rows(name)
     cols = [c["name"] for c in data["columns"] if c["name"] != "id"]
@@ -247,4 +271,4 @@ def table_csv(name: str) -> PlainTextResponse:
     for r in data["rows"]:
         w.writerow({k: ("" if r.get(k) is None else f"{r[k]:g}" if isinstance(r.get(k), float) else r.get(k)) for k in cols})
     return PlainTextResponse(buf.getvalue(), media_type="text/csv; charset=utf-8",
-                             headers={"Content-Disposition": f'attachment; filename="{EDITABLE[name]}"'})
+                             headers={"Content-Disposition": f'attachment; filename="{WRITABLE[name]}"'})

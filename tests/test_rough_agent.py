@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 from optimat.agent.orchestrator import run_agent
 from optimat.agent.pipeline import run_pipeline
 from optimat.api.main import app
+from optimat.catalog.repository import Catalog
 from optimat.data_check import run_checks
 from optimat.rough.models import ProjectParams
 
@@ -42,7 +43,7 @@ def test_agent_api_rough_params(sample_dxf):
 
 
 def test_data_check_reports_blank_norms():
-    rep = run_checks()
+    rep = run_checks(Catalog.load())   # danh mục CSV: không có catalog thì run_checks đòi PostgreSQL
     rough = [f for f in rep["findings"] if f["area"] == "dinh_muc_phan_tho"]
     assert rep["counts"]["error"] == 0 and any("còn trống" in f["message"] for f in rough)
     assert rep["summary"]["dinh_muc_phan_tho"]["dong"] > 0
