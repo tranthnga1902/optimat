@@ -134,6 +134,31 @@ def test_gap_door_with_arc_and_block_subtracted_once(tmp_path):
     assert all(o.wall_id for o in r.openings) and r.openings[0].evidence
 
 
+def test_gap_door_without_height_listed_not_subtracted(tmp_path):
+    """Dự án chưa nhập cao cửa (B7): cửa nhận từ khe vẫn vào danh sách (rộng theo khe, cao trống), không trừ;
+    trang kiểm tra nhập cao thì trừ. Lanh tô chỉ cần rộng lỗ nên vẫn tính."""
+    from optimat.catalog.repository import Catalog
+    from optimat.rough.models import ProjectParams
+    from optimat.rough.walls import review_input_from_takeoff, wall_works
+    doc = _doc()
+    msp = doc.modelspace()
+    _wall(msp, 0, 0, 6000, 0, 220, gaps=[(2000, 2900)])
+    msp.add_arc((2000, 110), 900, 0, 90, dxfattribs={"layer": "CUA"})
+    r = takeoff_from_file(_save(doc, tmp_path, "khe_khong_cao"), 3000)
+    assert [(o.width_mm, o.height_mm, bool(o.wall_id)) for o in r.openings] == [(900, None, True)]
+    assert r.openings_count == 0 and _groups(r)["220"].opening_area_m2 == 0
+    assert any("chưa có kích thước" in w for w in r.warnings)
+    walls, ops, systems = review_input_from_takeoff(r)
+    params = ProjectParams(lintel_height_mm=200, lintel_bearing_mm=200, beam_depth_mm=0)
+    works, warns = wall_works("T1", 3000, walls, ops, params, Catalog.load(), systems)
+    lintel = next(w for w in works if w.code == "LANH_TO")
+    _close(lintel.quantity, (0.9 + 0.4) * 0.22 * 0.2)
+    assert any("chưa có chiều cao" in w for w in warns)
+    ops[0].h = 2200    # người dùng nhập cao trên trang kiểm tra
+    xay = lambda ws: next(w for w in ws if w.code == "XAY").quantity
+    _close(xay(works) - xay(wall_works("T1", 3000, walls, ops, params, Catalog.load(), systems)[0]), 0.9 * 2.2 * 0.22)
+
+
 def test_no_height_no_area(tmp_path):
     doc = _doc()
     _box(doc.modelspace(), 5000, 12000, 220)

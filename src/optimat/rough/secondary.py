@@ -135,7 +135,7 @@ def lintel_under_beam(works: list[WorkItem], plan: str, height_mm: float, walls,
     skipped = []
     for o in openings:
         w = by_id.get(o.wall)
-        if not o.keep or w is None or o.h + lt <= h_wall:
+        if not o.keep or w is None or o.h is None or o.h + lt <= h_wall:
             continue
         thick, _ = _thickness_m(systems.get(w.id), w.cls, view)
         v = (o.w + 2 * bearing) / 1000 * thick * lt / 1000

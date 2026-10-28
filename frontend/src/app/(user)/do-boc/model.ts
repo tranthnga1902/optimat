@@ -5,7 +5,7 @@ export type Material = { id: string; name?: string; label: string; family: strin
 export type Family = { id: string; label: string };
 export type RawWall = { id: string; cls: string; role?: string; x1: number; y1: number; x2: number; y2: number; mat?: string | null; fam?: string | null;
   cand?: string[]; masonry: boolean; conf: number; layer?: string; src?: string; rule?: string | null };
-export type RawOpening = { name?: string; x: number; y: number; w: number; h: number; wall?: string | null; kind?: string; ev?: string | null };
+export type RawOpening = { name?: string; x: number; y: number; w: number; h: number | null; wall?: string | null; kind?: string; ev?: string | null };
 export type Column = { id: string; x: number; y: number; b_mm: number; h_mm: number; source?: string };
 export type Plan = {
   plan: { name: string; height_source?: string | null; is_ground?: boolean };
@@ -25,7 +25,7 @@ export type Data = {
 export type Wall = { id: string; cls: string; role: string; x1: number; y1: number; x2: number; y2: number; reason: string | null; mat: string | null;
   fam: string | null; cand: string[]; masonry: boolean; conf: number; layer?: string; msrc?: string; rule?: string | null;
   keep: boolean; src: string; edited: boolean };
-export type Opening = { id: string; wall: string; kind: string; w: number; h: number; ev?: string | null; x: number; y: number; keep: boolean; src: string;
+export type Opening = { id: string; wall: string; kind: string; w: number; h: number | null; ev?: string | null; x: number; y: number; keep: boolean; src: string;
   edited?: boolean; reason?: string | null };
 export type PlanState = { height_mm: number; length_rule: string; walls: Wall[]; openings: Opening[]; seq: number };
 export type PlanCol = Column & { keep: boolean; source: string };
@@ -86,7 +86,7 @@ export function compute(S: PlanState) {
   const len = S.length_rule === "thong_thuy" ? netLengths(S.walls.filter((w) => w.keep))
     : Object.fromEntries(S.walls.map((w) => [w.id, wallLen(w)]));
   const openArea: Record<string, number> = {};
-  for (const o of S.openings) if (o.keep && ids.has(o.wall)) openArea[o.wall] = (openArea[o.wall] || 0) + o.w * Math.min(o.h, H) / 1e6;
+  for (const o of S.openings) if (o.keep && ids.has(o.wall) && o.h != null) openArea[o.wall] = (openArea[o.wall] || 0) + o.w * Math.min(o.h, H) / 1e6;
   // lỗ mở một tường không vượt diện tích tường (như review.py)
   for (const id in openArea) openArea[id] = Math.min(openArea[id], len[id] * H / 1000);
   const groups: Record<string, Omit<Group, "gross" | "net" | "mat" | "share">> = {};
@@ -155,7 +155,7 @@ export const base = (D: Data, P: Plan) => (D.file || "ban_ve").replace(/\.[^.]+$
 export function csvText(D: Data, S: PlanState) {
   const c = compute(S), rows: (string | number)[][] = [["muc", "id", "loai", "vai_tro", "dai_m", "dien_tich_thuc_m2", "vat_lieu", "phuong_an_tuong", "nguon", "giu"]];
   for (const w of S.walls) rows.push(["tuong", w.id, w.cls, w.role, (c.len[w.id] ?? wallLen(w)).toFixed(3), w.keep && w.masonry ? Math.max(0, (c.len[w.id] ?? wallLen(w)) * S.height_mm / 1000 - (c.openArea[w.id] || 0)).toFixed(2) : "", w.mat || "", (w.mat && sysOf(D, w.mat, w.cls)) || "", w.src, w.keep ? 1 : 0]);
-  for (const o of S.openings) rows.push(["lo_mo", o.id, o.kind, o.wall, (o.w / 1000).toFixed(3), (o.w * Math.min(o.h, S.height_mm) / 1e6).toFixed(2), "", "", o.src, o.keep ? 1 : 0]);
+  for (const o of S.openings) rows.push(["lo_mo", o.id, o.kind, o.wall, (o.w / 1000).toFixed(3), o.h == null ? "" : (o.w * Math.min(o.h, S.height_mm) / 1e6).toFixed(2), "", "", o.src, o.keep ? 1 : 0]);
   for (const g of c.groups) rows.push(["tong_hop", "", g.cls, g.role, g.L.toFixed(3), g.net.toFixed(2), g.mat || "", (g.mat && sysOf(D, g.mat, g.cls)) || "", "", 1]);
   return "﻿" + rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
 }

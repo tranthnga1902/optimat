@@ -149,11 +149,11 @@ def compute_takeoff(drawing: Drawing, floor_height_mm: float | None = None,
     no_size: list[str] = []
     for o in gap_openings:
         name = "Cửa đi" if o.kind == "door" else "Cửa sổ"
+        # thiếu chiều cao: vẫn giữ trong danh sách (đã biết rộng, tường) để trang kiểm tra nhập cao; chưa trừ
         if o.height_mm is None:
             no_size.append(f"{name} ({o.evidence})")
-            continue
-        w = wall_by_id[o.wall_id]
-        w.opening_area_m2 += o.width_mm * min(o.height_mm, height or o.height_mm) / 1e6
+        else:
+            wall_by_id[o.wall_id].opening_area_m2 += o.width_mm * min(o.height_mm, height or o.height_mm) / 1e6
         opening_items.append(OpeningItem(name=name, x=o.x, y=o.y,
                                          width_mm=round(o.width_mm), height_mm=o.height_mm, wall_id=o.wall_id,
                                          kind=o.kind, evidence=o.evidence))
@@ -192,7 +192,7 @@ def compute_takeoff(drawing: Drawing, floor_height_mm: float | None = None,
                         + ", ".join(merged) + ".")
     if no_size:
         warnings.append(f"{len(no_size)} lỗ mở chưa có kích thước (block không ghi, dự án chưa nhập kích thước cửa), "
-                        "chưa được trừ: " + ", ".join(no_size) + ".")
+                        "chưa được trừ; cửa nhận từ khe tường vẫn có trong danh sách để nhập chiều cao: " + ", ".join(no_size) + ".")
 
     nets = net_lengths([(w.wall_id, w.x1, w.y1, w.x2, w.y2, w.thickness_mm or float(w.thickness_class)) for w in walls])
     for w in walls:
@@ -236,7 +236,7 @@ def compute_takeoff(drawing: Drawing, floor_height_mm: float | None = None,
     for w in walls:
         w.role = roles[w.wall_id]
     return TakeoffResult(floor_height_mm=height, length_rule=length_rule, walls=walls, groups=groups,
-                         openings_count=sum(1 for o in opening_items if o.wall_id), openings=opening_items, warnings=warnings,
+                         openings_count=sum(1 for o in opening_items if o.wall_id and o.height_mm is not None), openings=opening_items, warnings=warnings,
                          layer_classes={name: c.value for name, c in drawing.layer_classes.items()},
                          rule_hits=rule_hits, unmatched=unmatched, wall_layers=sorted(wall_layers),
                          auto_wall_layers=auto, wall_layer_scores=scores,

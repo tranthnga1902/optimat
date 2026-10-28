@@ -78,7 +78,8 @@ def wall_works(plan: str, height_mm: float, walls: list[ReviewWall], openings: l
         t, t_note = _thickness_m(system, cls, view)
         length = sum(math.hypot(w.x2 - w.x1, w.y2 - w.y1) for w in members) / 1000
         ops = [o for w in members for o in by_wall.get(w.id, [])]
-        open_area = sum(o.w * min(o.h, h_wall) for o in ops) / 1e6
+        no_h = [o.id for o in ops if o.h is None]
+        open_area = sum(o.w * min(o.h, h_wall) for o in ops if o.h is not None) / 1e6
         lintel = sum((o.w + 2 * (params.lintel_bearing_mm or 0)) / 1000 * t * (params.lintel_height_mm or 0) / 1000
                      for o in ops) if lintel_ok else 0.0
         # cốp pha lanh tô: đáy dưới lỗ cửa (rộng lỗ × dày tường) + hai thành suốt chiều dài lanh tô
@@ -93,6 +94,8 @@ def wall_works(plan: str, height_mm: float, walls: list[ReviewWall], openings: l
                    + (f" − {_fmt(lintel)} m³ lanh tô" if lintel else "") + (f" − {_fmt(columns)} m³ cột" if columns else ""))
         missing = [] if system else ["phương án tường (vật liệu xây)"]
         works.append(_work("XAY", volume, plan=plan, element=label, wall_system_id=system, formula=formula, missing=missing))
+        if no_h:   # lanh tô chỉ cần rộng lỗ nên vẫn tính; diện tích lỗ cần cao
+            warnings.append(f"{plan}, {label}: {len(no_h)} lỗ mở chưa có chiều cao ({', '.join(no_h)}), khối xây và trát chưa trừ các lỗ này.")
         if ops and not lintel_ok:
             warnings.append(f"{plan}, {label}: chưa nhập {', '.join(lintel_missing)}, khối xây chưa trừ lanh tô.")
         faces = [("mặt trong", 1), ("mặt ngoài", 1)] if role == "envelope" else [("hai mặt", 2)]

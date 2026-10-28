@@ -57,7 +57,7 @@ Luồng: bản vẽ DWG/DXF -> nhận diện tường -> đo bóc -> tìm nguồ
   Chiều cao tầng và kích thước cửa là thông số dự án (bảng `projects`: `floor_height_mm`, `door_/window_width_mm`,
   `door_/window_height_mm`), truyền vào đo bóc qua `OpeningDefaults` và `project_id` (Form) của các API đo bóc; không có số
   mặc định (Quy ước B7). Kích thước cửa: thuộc tính block → quy tắc block → thông số dự án; thiếu thì không trừ lỗ mở đó và
-  cảnh báo. Thiếu chiều cao tầng (nhập tay, cao độ sàn, dự án) thì `groups` rỗng, `height_source` = "chưa có".
+  cảnh báo; cửa nhận từ khe tường thiếu cao vẫn giữ trong danh sách (cao trống) để trang kiểm tra nhập. Thiếu chiều cao tầng (nhập tay, cao độ sàn, dự án) thì `groups` rỗng, `height_source` = "chưa có".
   `material_rules.py` gán vật liệu theo thiết kế từ ghi chú, hatch, layer, block; `evaluate.py` chấm điểm và khảo sát;
   `render.py` vẽ lại bản vẽ gốc như phần mềm CAD (ezdxf drawing → SVG: màu ACI, kiểu nét, chữ TCVN3 đổi Unicode,
   hatch, kích thước, block; nền đen, nét 1 px) làm nền trang kiểm tra, cắt theo từng mặt bằng + trang "Toàn bộ bản vẽ"

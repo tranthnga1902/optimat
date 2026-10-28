@@ -81,7 +81,7 @@ export function OpeningList({ S, selected, onSelect, change, onDelete }: { S: Pl
   if (!S.openings.length) return <div className={s.empty}>Chưa có lỗ mở. Chọn &quot;Thêm cửa&quot; rồi bấm lên tường để thêm.</div>;
   return <>{S.openings.map((o) => {
     const w = byId[o.wall], on = o.keep && w && w.keep;
-    const size = (f: "w" | "h") => (el: HTMLInputElement) => { change(o.id, f, el.value); return String(Math.round(Math.max(100, Number(el.value) || o[f]))); };
+    const size = (f: "w" | "h") => (el: HTMLInputElement) => { change(o.id, f, el.value); return String(Math.round(Math.max(100, Number(el.value) || o[f] || 0))); };
     return (
       <div key={o.id} data-id={o.id} className={`${s.row} ${on ? "" : s.off} ${o.id === selected ? s.sel : ""}`} onClick={pickRow(onSelect, o.id)}>
         <input type="checkbox" checked={o.keep} onChange={(e) => change(o.id, "keep", e.target.checked)} aria-label={`Giữ lỗ mở ${o.id}`} />
@@ -89,12 +89,12 @@ export function OpeningList({ S, selected, onSelect, change, onDelete }: { S: Pl
         <span className={s.rmain}>
           <select aria-label="Loại cửa" value={o.kind} onChange={(e) => change(o.id, "kind", e.target.value)}>{Object.keys(KIND).map((k) => <option key={k} value={k}>{KIND[k]}</option>)}</select>
           <ChangeInput type="number" value={String(Math.round(o.w))} step={50} min={100} aria-label="Rộng (mm)" onCommit={size("w")} /> ×
-          <ChangeInput type="number" value={String(Math.round(o.h))} step={50} min={100} aria-label="Cao (mm)" onCommit={size("h")} />
+          <ChangeInput type="number" value={o.h == null ? "" : String(Math.round(o.h))} placeholder="nhập cao" step={50} min={100} aria-label="Cao (mm)" onCommit={size("h")} />
           {tag("", `tường ${o.wall}`)}
           {o.src === "manual" ? tag(s.man, "thêm tay") : o.ev ? tag("", o.ev) : null}
           {o.src === "manual" && <button className={s.x} type="button" aria-label="Xóa lỗ mở" onClick={() => onDelete(o.id)}>×</button>}
         </span>
-        <span className={s.rnum}>{fmt(o.w * Math.min(o.h, S.height_mm) / 1e6)} m²</span>
+        <span className={s.rnum}>{o.h == null ? "chưa trừ" : `${fmt(o.w * Math.min(o.h, S.height_mm) / 1e6)} m²`}</span>
       </div>
     );
   })}</>;

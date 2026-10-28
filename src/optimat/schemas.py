@@ -45,12 +45,12 @@ class WallGroup(BaseModel):
 
 
 class OpeningItem(BaseModel):
-    """Một lỗ mở (block cửa) và tường mà nó đã được trừ vào; wall_id trống là chưa trừ."""
+    """Một lỗ mở (block cửa) và tường chứa nó; wall_id hoặc height_mm trống là chưa trừ."""
     name: str
     x: float
     y: float
     width_mm: float
-    height_mm: float
+    height_mm: Optional[float] = None      # None: dự án chưa nhập chiều cao cửa (Quy ước B7), người dùng nhập trên trang kiểm tra
     wall_id: Optional[str] = None
     kind: str = "block"             # block | door | window
     evidence: str = ""              # dấu hiệu nhận ra: block D1, cung cánh cửa, nét kính

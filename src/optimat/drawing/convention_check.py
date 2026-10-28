@@ -139,7 +139,8 @@ def opening_elements(result, drawing: Drawing) -> list[Element]:
             src, why = "hinh_hoc", ev or "không rõ dấu hiệu"
         extra = [] if o.wall_id else ["chưa gắn vào tường nào, không trừ"]
         if o.kind in ("door", "window") and not ev.startswith("block"):
-            extra.append(f"cao {o.height_mm:.0f} mm theo thông số cửa của dự án (chưa đọc bảng thống kê cửa, QU-15)")
+            extra.append("chưa có chiều cao, không trừ" if o.height_mm is None
+                         else f"cao {o.height_mm:.0f} mm theo thông số cửa của dự án (chưa đọc bảng thống kê cửa, QU-15)")
         out.append(Element(id=f"O{i}", khai_niem=name, nguon=src, qu="QU-14",
                            ly_do="; ".join([why] + extra) + f"; rộng {o.width_mm:.0f} mm", hinh=[round(o.x, 1), round(o.y, 1)]))
     return out

@@ -42,7 +42,7 @@ class ReviewOpening(BaseModel):
     wall: Optional[str] = None
     kind: str = "door"                        # door | window | block
     w: float                                  # rộng (mm)
-    h: float                                  # cao (mm)
+    h: Optional[float] = None                 # cao (mm); trống: chưa trừ lỗ mở (Quy ước B7)
     keep: bool = True
     src: str = "auto"
     ev: Optional[str] = None                  # truy vết: dấu hiệu nhận ra cửa (block D1, cung cánh cửa, nét kính)
@@ -105,6 +105,9 @@ def compute_review(plan: ReviewPlan, catalog: Catalog | None = None) -> ReviewRe
             continue
         if o.wall not in ids:
             warnings.append(f"Lỗ mở {o.id} không gắn với tường nào đang giữ, không trừ.")
+            continue
+        if o.h is None:
+            warnings.append(f"Lỗ mở {o.id} chưa có chiều cao, không trừ.")
             continue
         open_area[o.wall] = open_area.get(o.wall, 0.0) + o.w * min(o.h, H) / 1e6
     for wid, area in open_area.items():
