@@ -141,3 +141,27 @@ def test_ket_cau_build_drawing():
     assert sizes["M1"] == (1350, 1700, 700, 100) and sizes["M2"] == (1300, 1700, 700, 100)
     d1 = [b for b in st.beams["MẶT BẰNG DẦM SÀN LẦU 1"] if b.id == "D1"]
     assert d1 and all((b.b_mm, b.d_mm) == (200, 350) for b in d1)
+
+
+def test_unlabeled_beam_pairs_same_width():
+    # bộ 46: ký hiệu ghi một lần cho mỗi loại dầm; cặp nét cùng bề rộng không ký hiệu vẫn là dầm (vẽ phóng to 2 lần)
+    from optimat.rough.structural import _unlabeled_beams
+    lines = [("h", 0, 0, 8000), ("h", 400, 0, 8000),                      # dầm có ký hiệu, rộng 400 trên bản vẽ
+             ("v", 1000, 400, 7600), ("v", 1400, 400, 7600),              # dầm ngang không ký hiệu
+             ("v", 5000, 400, 1000), ("v", 5400, 400, 1000),              # cạnh cột 600 = 300 mm: bỏ
+             ("v", 7000, 400, 7600), ("v", 7600, 400, 7600)]              # rộng 600 khác bề rộng dầm: bỏ
+    labeled = [(0, "h", 200, 0, 8000, 400, ("h", 200, 0, 8000))]
+    beams = _unlabeled_beams(lines, labeled, 0.5)
+    assert [(b.id, b.b_mm, b.x1, b.y1, b.x2, b.y2) for b in beams] == [("D?", 200, 600, 200, 600, 3800)]
+
+
+def test_scale_picked_by_beam_width_when_view_mixes_scales():
+    # dầm mái bộ 46: khung có hình chi tiết 1:20 (nhiều kích thước) cạnh mặt bằng 1:50 vẽ phóng to 2 lần
+    from optimat.drawing.sheets import View
+    from optimat.rough.structural import _scale_by_beam_width
+    segs = [Segment(0, 0, 8000, 0, "D"), Segment(0, 400, 8000, 400, "D")]
+    d = Drawing(segs, [TextItem("DM1", 4000, 600, "0", "unicode", 250)], [], [], [], {}, 1.0, [])
+    view = View(title="MẶT BẰNG DẦM MÁI", ma="BV08", ten="Mặt bằng dầm", nhom="", x=4000, y=-2000, bbox=(-1000, -1000, 9000, 3000))
+    dims = [Dim(x=1, y=1, value=200, measured=1000, vertical=False)] * 5 + [Dim(x=1, y=1, value=500, measured=1000, vertical=False)] * 2
+    assert _scale_by_beam_width(d, view, dims, {"dk1": (200, 300)}) == 0.5
+    assert _scale_by_beam_width(d, view, dims[:5], {"dk1": (200, 300)}) is None       # một tỷ lệ: theo trung vị

@@ -270,7 +270,7 @@ def inventory_dxf(path: str, source: dict | None = None) -> dict:
     used = Counter(e.dxf.get("style", "Standard").lower() for e in msp.query("TEXT MTEXT"))
     vni = {f["style"]: used[f["style"].lower()] for f in fonts if used[f["style"].lower()] and f["encoding"] == "vni"}
     if vni:
-        _warn(warnings, "FONT_UNSUPPORTED", "Chữ dùng font VNI chưa chuyển mã được, nội dung ghi chú có thể sai: "
+        _warn(warnings, "FONT_UNSUPPORTED", "Chữ dùng font VNI (ngoài Quy ước), đã tự chuyển mã, kiểm tra lại ghi chú: "
               + ", ".join(f"kiểu {s} ×{n}" for s, n in vni.items()))
     no_font = [f["style"] for f in fonts if not f["font"] and not _is_shape_style(doc, f["style"])]
     if no_font:

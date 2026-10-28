@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import math
 import re
 from typing import Optional
 
@@ -112,6 +113,26 @@ class RoughResult(RoughBill):
     formwork: list[WorkTotal] = Field(default_factory=list)            # cốp pha cộng theo cấu kiện (mỗi cấu kiện một dòng)
 
 
+def _wall_length(p: PlanInput) -> float:
+    return sum(math.hypot(w.x2 - w.x1, w.y2 - w.y1) for w in p.walls if w.keep and w.masonry)
+
+
+def duplicate_plans(sizes: dict[str, float]) -> dict[str, str]:
+    """Mặt bằng cùng tiêu đề (bỏ số "(2)" đánh thêm khi trùng tên) là một tầng vẽ nhiều lần (bản nội thất + bản kích
+    thước) hoặc tiêu đề lặp làm khung tìm tách một mặt bằng thành hai mảnh: chỉ tính bản nhận được nhiều nhất
+    (sizes: tên -> tổng chiều dài tường, hoặc dầm với mặt bằng kết cấu).
+    Không so hình học được: hai bản của cùng một tầng nhận tường lệch nhau tới 100% (Bietthu7 tầng 2: 0 m và 29 m).
+    Trả {tên bản bỏ qua: tên bản được tính}."""
+    groups: dict[str, list[str]] = {}
+    for name in sizes:
+        groups.setdefault(normalize(re.sub(r"\s*\(\d+\)$", "", name)), []).append(name)
+    out = {}
+    for g in groups.values():
+        keep = max(g, key=sizes.get)
+        out.update({n: keep for n in g if n != keep})
+    return out
+
+
 def compute_rough(req: RoughRequest, catalog: Catalog | None = None) -> RoughResult:
     catalog = catalog or default_catalog()
     params = req.params
@@ -128,7 +149,24 @@ def compute_rough(req: RoughRequest, catalog: Catalog | None = None) -> RoughRes
                         + (" (dầm, móng lấy từ bản vẽ kết cấu)." if req.structural_beams or params.foundations else "."))
     elif not any(p.is_ground for p in req.plans):
         warnings.append("Chưa xác định tầng trệt: chưa tính nền tầng trệt (đệm cát, bê tông lót).")
+    by_name = {p.name: p for p in req.plans}
+    length = {p.name: _wall_length(p) for p in req.plans}
+    dup = duplicate_plans(length)
+    for name, keep in dup.items():
+        warnings.append(f"QU-05: \"{name}\" trùng tiêu đề với \"{keep}\": coi là một tầng, chỉ tính \"{keep}\" "
+                        f"(tường {length[keep] / 1000:.1f} m, bản bỏ qua {length[name] / 1000:.1f} m). "
+                        "Nếu là hai tầng khác nhau, sửa tiêu đề trên bản vẽ.")
+    beam_length = {v: sum(math.hypot(b.x2 - b.x1, b.y2 - b.y1) for b in bs if b.keep) for v, bs in req.structural_beams.items()}
+    beam_dup = duplicate_plans(beam_length)
+    for name, keep in beam_dup.items():
+        warnings.append(f"QU-05: mặt bằng kết cấu \"{name}\" trùng tiêu đề với \"{keep}\": chỉ tính dầm của \"{keep}\" "
+                        f"({beam_length[keep] / 1000:.1f} m dầm, bản bỏ qua {beam_length[name] / 1000:.1f} m).")
+    ground_keep = {keep for name, keep in dup.items() if by_name[name].is_ground}
     for p in req.plans:
+        if p.name in dup:
+            continue
+        if p.name in ground_keep and not p.is_ground:     # bản bỏ qua được chọn làm tầng trệt: bản được tính thay nó
+            p = p.model_copy(update={"is_ground": True})
         for role, names in p.found.items():
             label, hint = FOUND_HINT.get(role, (role, "kiểm tra"))
             if (role == "STAIR" and p.stairs) or (role == "BEAM" and (p.beams is not None or req.structural_beams)):
@@ -173,6 +211,8 @@ def compute_rough(req: RoughRequest, catalog: Catalog | None = None) -> RoughRes
         warnings += warn
         works += _slab_form_deduction(p.name, beams, p.columns, params)
     for view, beams in req.structural_beams.items():
+        if view in beam_dup:
+            continue
         beams, warn = beam_joints(beams, [], params, footing_rects(params.foundations, view))
         warnings += warn
         used_beams[view] = beams

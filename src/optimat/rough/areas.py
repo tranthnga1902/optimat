@@ -1,7 +1,8 @@
 """Công tác theo diện tích của một mặt bằng: sàn, cán nền, nền tầng trệt, chống thấm (đặc tả mục 3.6, 3.8–3.10).
 
 Hình học lấy từ tường đã chốt (khe cửa đã được nối khi nhận dạng): tô các tường lên lưới ô CELL_MM, lấp kín phần
-bên trong đường bao (khe tới 2 × CLOSE_GAP_MM ở chỗ cột, đầu tường hụt được coi là liền) rồi đo:
+bên trong đường bao (khe tới 2 × CLOSE_GAP_MM ở chỗ cột, đầu tường hụt được coi là liền; vẫn hở thì lấy bao lồi của
+tường bao, cảnh báo để kiểm tra, 28/10/2026) rồi đo:
     diện tích trong tim tường bao = diện tích trong mép ngoài tường bao - Σ dài tường bao × dày / 2
     diện tích sử dụng (cán nền)    = phần trong đường bao không phải tường
     phòng                          = từng vùng trống khép kín; tên phòng đọc từ chữ trên bản vẽ theo data/rules/room_rules.csv
@@ -24,6 +25,7 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 from scipy import ndimage
+from scipy.spatial import ConvexHull, QhullError
 
 from .. import config
 from ..db.session import read_rule_table
@@ -64,6 +66,7 @@ class PlanGeometry:
     wall_area_m2: float = 0.0
     rooms: list[Room] = field(default_factory=list)
     labels_outside: list[str] = field(default_factory=list)   # tên phòng khớp quy tắc nhưng không nằm trong vùng khép kín nào
+    hull: bool = False                    # tường bao hở, đường bao lấy theo bao lồi của tường bao (người dùng kiểm tra)
 
 
 @lru_cache(maxsize=4)
@@ -129,8 +132,13 @@ def plan_geometry(walls, labels: list[tuple[str, str, float, float]] | None = No
     filled = ndimage.binary_fill_holes(closed_walls)
     inside = filled & ~grid
     wall_area = grid.sum() * a
+    hull = False
     if inside.sum() * a < wall_area:
-        return PlanGeometry(closed=False, wall_area_m2=round(wall_area, 2))
+        # nhà ống: mặt tiền, mặt sau toàn cửa / lan can giữa hai cột góc, không đoạn tường nào để khép
+        filled = _hull_mask([w for w in walls if w.role == "envelope"] or walls, grid.shape, x0, y0, cell)
+        if filled is None or (filled & ~grid).sum() * a < wall_area:
+            return PlanGeometry(closed=False, wall_area_m2=round(wall_area, 2))
+        inside, hull = filled & ~grid, True
     envelope_strip = sum(math.hypot(w.x2 - w.x1, w.y2 - w.y1) * float(w.cls) / 2 for w in walls if w.role == "envelope") / 1e6
     comp, n = ndimage.label(filled & ~closed_walls)
     sizes = ndimage.sum(inside, comp, range(1, n + 1)) * a
@@ -155,7 +163,31 @@ def plan_geometry(walls, labels: list[tuple[str, str, float, float]] | None = No
                           perimeter_m=round(edges, 2)))
     return PlanGeometry(closed=True, outline_area_m2=round(filled.sum() * a - envelope_strip, 2),
                         usable_area_m2=round(inside.sum() * a, 2), wall_area_m2=round(wall_area, 2),
-                        rooms=rooms, labels_outside=outside)
+                        rooms=rooms, labels_outside=outside, hull=hull)
+
+
+def _hull_mask(walls, shape, x0: float, y0: float, cell: float):
+    """Ô lưới nằm trong bao lồi của mép ngoài các tường (4 góc mỗi tường). None khi tường thẳng hàng (không có bao)."""
+    pts = []
+    for w in walls:
+        L = math.hypot(w.x2 - w.x1, w.y2 - w.y1)
+        if L == 0:
+            continue
+        half = float(w.cls) / 2
+        nx, ny = -(w.y2 - w.y1) / L * half, (w.x2 - w.x1) / L * half
+        ex, ey = (w.x2 - w.x1) / L * half, (w.y2 - w.y1) / L * half
+        pts += [(w.x1 - ex + sx * nx, w.y1 - ey + sx * ny) for sx in (-1, 1)]
+        pts += [(w.x2 + ex + sx * nx, w.y2 + ey + sx * ny) for sx in (-1, 1)]
+    try:
+        hull = ConvexHull(np.array(pts))
+    except (QhullError, ValueError):
+        return None
+    cy, cx = np.mgrid[0:shape[0], 0:shape[1]]
+    X, Y = x0 + (cx + 0.5) * cell, y0 + (cy + 0.5) * cell
+    mask = np.ones(shape, dtype=bool)
+    for nxe, nye, off in hull.equations:          # mặt phẳng: n·p + off ≤ 0 là bên trong
+        mask &= nxe * X + nye * Y + off <= 1e-6
+    return mask
 
 
 def area_works(geom: PlanGeometry, params: ProjectParams, plan: PlanParams) -> tuple[list[WorkItem], list[str]]:
@@ -168,6 +200,10 @@ def area_works(geom: PlanGeometry, params: ProjectParams, plan: PlanParams) -> t
         warnings.append(f"{name}: tường bao chưa khép kín, chưa tính được diện tích sàn, nền, chống thấm. "
                         "Vẽ thêm đoạn tường còn thiếu trên trang kiểm tra hoặc nhập tay diện tích.")
         return [], warnings
+    if geom.hull and (plan.outline_area_m2 is None or plan.usable_area_m2 is None):
+        warnings.append(f"{name}: tường bao chưa khép kín, đã khép theo bao lồi của tường bao "
+                        f"({_fmt(geom.outline_area_m2)} m² trong tim tường bao): kiểm tra; nhà không phải hình chữ nhật "
+                        "(chữ L, có hốc) thì vẽ thêm tường hoặc nhập tay diện tích.")
     src_outline = "manual" if plan.outline_area_m2 is not None else "auto"
     src_usable = "manual" if plan.usable_area_m2 is not None else "auto"
     no_outline = [] if outline is not None else ["diện tích trong tim tường bao (tường bao chưa khép kín)"]

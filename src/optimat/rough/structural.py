@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import math
 import re
+import statistics
 from collections import Counter
 from dataclasses import dataclass, field
 from functools import lru_cache
@@ -232,6 +233,24 @@ def _labels(drawing, bbox):
     return [(t, e) for t in drawing.texts if x0 <= t.x <= x1 and y0 <= t.y <= y1 and (e := element_of(t.text))]
 
 
+def _scale_by_beam_width(drawing, view: View, dims: list[Dim], sections: dict) -> float | None:
+    """Khung mặt bằng dầm chứa cả hình chi tiết tỷ lệ khác (dầm mái bộ 46: 82 kích thước 1:20, 7 kích thước của mặt bằng):
+    trong các tỷ lệ có ≥ 2 đường kích thước, chọn tỷ lệ làm bề rộng cặp nét dầm gần nhất với bề rộng ghi trên mặt cắt dầm.
+    None khi chỉ có một tỷ lệ hoặc không có bề rộng mặt cắt để so."""
+    cands = [r for r, n in Counter(round(d.value / d.measured, 3) for d in dims if d.measured).items() if n >= 2]
+    widths = {b for b, _ in sections.values() if b}
+    if len(cands) < 2 or not widths:
+        return None
+    best = None
+    for s in cands:
+        beams, _ = measure_beams(drawing, view, {}, s)
+        if beams:
+            err = statistics.median(min(abs(b.b_mm - w) for w in widths) for b in beams)
+            if best is None or err < best[0]:
+                best = (err, s)
+    return best[1] if best else None
+
+
 def measure_beams(drawing, view: View, sections: dict, scale: float = 1.0) -> tuple[list[Beam], list[str]]:
     """scale: hệ số đổi số đo trên bản vẽ ra mm thật (hình vẽ phóng to 2 lần: 0,5)."""
     labels = [(t, e) for t, e in _labels(drawing, view.bbox) if e[0] == "BEAM"]
@@ -261,11 +280,75 @@ def measure_beams(drawing, view: View, sections: dict, scale: float = 1.0) -> tu
                                 f"(tỷ lệ {width / sec[0]:.2f}): kiểm tra tỷ lệ hình vẽ, chiều dài dầm đo theo cùng tỷ lệ.")
     if unplaced:
         warnings.append(f"{view.title}: {len(unplaced)} ký hiệu dầm không tìm thấy cặp nét dầm ({', '.join(sorted(set(unplaced))[:5])}).")
+    extra = _unlabeled_beams(lines, [m[0][3] for m in groups.values()], scale)
+    if extra:
+        beams += extra
+        warnings.append(f"{view.title}: {len(extra)} đoạn dầm không ghi ký hiệu "
+                        f"({sum(math.hypot(b.x2 - b.x1, b.y2 - b.y1) for b in extra) / 1000:.1f} m), lấy theo cặp nét cùng bề rộng "
+                        "với dầm có ký hiệu, mã D?, cao theo cao dầm chung: kiểm tra.")
     no_depth = sorted({b.id for b in beams if b.d_mm is None})
     if no_depth:
         warnings.append(f"{view.title}: chưa có cao dầm {', '.join(no_depth[:8])}{'…' if len(no_depth) > 8 else ''} "
                         "(không có tiết diện ghi chữ hay mặt cắt dầm): nhập cao dầm hoặc cao dầm chung trong thông số công trình.")
     return beams, warnings
+
+
+MIN_UNLABELED_BEAM_MM = config.threshold("NG07")   # đoạn cặp nét ngắn hơn (cạnh cột, đầu dầm) không là dầm không ký hiệu
+
+
+def _unlabeled_beams(lines, labeled, scale: float) -> list[Beam]:
+    """Bản vẽ kết cấu thường ghi ký hiệu một lần cho mỗi loại dầm: cặp nét song song cùng bề rộng (±5%) với dầm đã có ký
+    hiệu trong hình là dầm. Gộp các đoạn cùng trục (lệch ≤ 15 mm), bỏ phần đã có dầm ký hiệu (bộ 46 lầu 1: 72 → ~100 m,
+    dự toán 95 m). labeled: cặp nét của dầm có ký hiệu (kết quả _nearest_pair)."""
+    widths = {p[5] for p in labeled}
+    if not widths:
+        return []
+    tol = config.threshold("NG09") / scale
+    spans: dict[str, list[list]] = {"h": [], "v": []}        # [trục, [(đầu, cuối)...], phần đã có ký hiệu]
+
+    def slot(o, axis):
+        for s in spans[o]:
+            if abs(s[0] - axis) <= tol:
+                return s
+        spans[o].append(s := [axis, [], []])
+        return s
+    for p in labeled:
+        slot(p[1], p[2])[2].append((p[3], p[4]))
+    for o in ("h", "v"):
+        ls = sorted((l for l in lines if l[0] == o), key=lambda l: l[1])
+        for i, a in enumerate(ls):
+            for b in ls[i + 1:]:
+                w = b[1] - a[1]
+                if w > max(widths) * 1.05:
+                    break
+                lo, hi = max(a[2], b[2]), min(a[3], b[3])
+                if any(abs(w - x) <= config.threshold("NG08") * x for x in widths) and (hi - lo) * scale >= MIN_UNLABELED_BEAM_MM:
+                    slot(o, (a[1] + b[1]) / 2)[1].append((lo, hi, w))
+    out = []                                                  # (hướng, trục, đầu, cuối, rộng)
+    for o in ("h", "v"):
+        for axis, ivs, done in spans[o]:
+            merged: list[list[float]] = []
+            for lo, hi, w in sorted(ivs):
+                if merged and lo <= merged[-1][1] + tol:
+                    merged[-1][1] = max(merged[-1][1], hi)
+                else:
+                    merged.append([lo, hi, w])
+            for lo, hi, w in merged:
+                for dlo, dhi in sorted(done):          # bỏ phần đã có dầm ký hiệu
+                    if dhi <= lo or dlo >= hi:
+                        continue
+                    if (dlo - lo) * scale >= MIN_UNLABELED_BEAM_MM:
+                        out.append((o, axis, lo, dlo, w))
+                    lo = max(lo, dhi)
+                if (hi - lo) * scale >= MIN_UNLABELED_BEAM_MM:
+                    out.append((o, axis, lo, hi, w))
+    beams = []
+    for o, axis, lo, hi, w in out:
+        pts = ((lo, axis), (hi, axis)) if o == "h" else ((axis, lo), (axis, hi))
+        beams.append(Beam(id="D?", x1=round(pts[0][0] * scale, 1), y1=round(pts[0][1] * scale, 1),
+                          x2=round(pts[1][0] * scale, 1), y2=round(pts[1][1] * scale, 1),
+                          b_mm=round(w * scale / 10) * 10, source="structural"))
+    return beams
 
 
 def _footing_center(lines, x: float, y: float, a: float, b: float, tol: float = 0.03):
@@ -310,6 +393,11 @@ def read_structural(drawing, scale: float | None = None, dims: list[Dim] | None 
         s = scale
         if s is None:
             s = view_scale(inside(dims, _grown(v.bbox)))
+            if v.ma in ("BV04", "BV08") and (picked := _scale_by_beam_width(drawing, v, inside(dims, _grown(v.bbox)), sections)):
+                if s is not None and abs(picked - s) > 0.01:
+                    out.warnings.append(f"{v.title}: khung có hình vẽ nhiều tỷ lệ (trung vị {s:.3g}); dùng tỷ lệ {picked:.3g} "
+                                        "cho bề rộng dầm đo được khớp bề rộng ghi trên mặt cắt dầm, kiểm tra.")
+                s = picked
             if s is None:
                 s = 1.0
                 if v.ma in ("BV04", "BV08"):

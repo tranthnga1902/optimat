@@ -79,12 +79,26 @@ def test_manual_beam_depth_used_for_walls():
     assert not any("chưa trừ dầm" in w for w in res.warnings)
 
 
-def test_duplicate_plan_names_kept_apart():
-    # nhà phố build có hai tiêu đề "tầng 3": dầm, chi tiết theo tầng không được ghi đè nhau
-    res = compute_rough(RoughRequest(params=FULL, plans=[plan("Trệt", True), plan("Tầng 3", False), plan("Tầng 3", False)]),
+def test_same_title_counted_once():
+    # một tầng vẽ hai lần (bản nội thất nhận được ít tường hơn): không cộng hai lần, tính bản nhiều tường nhất
+    poor = plan("Tầng 2", False)
+    poor.walls = poor.walls[:2]
+    one = compute_rough(RoughRequest(params=FULL, plans=[plan("Trệt", True), plan("Tầng 2", False)]), Catalog.from_csv(None))
+    two = compute_rough(RoughRequest(params=FULL, plans=[plan("Trệt", True), poor, plan("Tầng 2", False)]),
                         Catalog.from_csv(None))
-    assert set(res.beams) == {"Trệt", "Tầng 3", "Tầng 3 (2)"}
-    assert {w.plan for w in res.works if w.code == "COT"} == {"Trệt", "Tầng 3", "Tầng 3 (2)"}
+    assert set(two.beams) == {"Trệt", "Tầng 2 (2)"}          # tên vẫn tách riêng (QU-05), bản ít tường bỏ qua
+    assert [(t.code, t.quantity) for t in two.totals] == [(t.code, t.quantity) for t in one.totals]
+    assert any("QU-05" in w and "chỉ tính \"Tầng 2 (2)\"" in w for w in two.warnings)
+
+
+def test_duplicate_ground_flag_moves_to_counted_copy():
+    # bản bị bỏ qua được chọn làm tầng trệt: bản được tính vẫn tính nền
+    poor = plan("Trệt", True)
+    poor.walls = poor.walls[:2]
+    res = compute_rough(RoughRequest(params=FULL, plans=[poor, plan("Trệt", False)]), Catalog.from_csv(None))
+    assert {w.plan for w in res.works} == {"Trệt (2)"}
+    assert any(t.code == "NEN_DEM_CAT" for t in res.totals)
+    assert not any(w.code == "SAN" for w in res.works)       # tầng trệt không có sàn
 
 
 def test_no_plans_warns():

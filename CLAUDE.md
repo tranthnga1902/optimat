@@ -7,7 +7,7 @@ Kế hoạch 15 tuần và danh sách việc nằm trong `PLAN.md`. Trao đổi 
 ## Lệnh
 
 ```powershell
-pytest                                                        # 294 bài (21/10/2026: 291 đạt, 3 xfail), bài cần PostgreSQL chỉ chạy khi có OPTIMAT_TEST_DATABASE_URL; conftest bỏ .env và DATABASE_URL (đặt PYTHONIOENCODING=utf8)
+pytest                                                        # 300 bài (29/10/2026: 297 đạt, 3 xfail), bài cần PostgreSQL chỉ chạy khi có OPTIMAT_TEST_DATABASE_URL; conftest bỏ .env và DATABASE_URL (đặt PYTHONIOENCODING=utf8)
 python scripts/check_data.py [--strict]                       # kiểm soát dữ liệu; 0 lỗi mới commit (hook .githooks/pre-commit)
 python scripts/survey_drawings.py <thư mục hoặc file bản vẽ>     # thống kê layer, hatch, block, ghi chú chưa có quy tắc
 python scripts/ingest_cad.py <thư mục hoặc file> [--store data/uploads]   # tiếp nhận hồ sơ CAD (S02): kiểm tra file, hash/phiên bản, chuyển DWG có log, <tên>.inventory.json; trang /tiep-nhan, API /api/ingest
@@ -15,6 +15,7 @@ python scripts/make_ingest_samples.py                         # sinh lại 15 fi
 python scripts/make_s03_fixtures.py [--schema]                   # S03: sinh 15 bản vẽ con chuẩn (SYNTHETIC) từ data/ground_truth/s03/cases.json; --schema: docs/schema/ho_so_chuan_hoa.schema.json; trang /mapping
 python scripts/evaluate_takeoff.py                            # so kết quả bóc tách với data/ground_truth
 python scripts/batch_takeoff.py <thư mục hoặc file...>        # bóc phần thô hàng loạt, gộp reports/batch/tong_hop.xlsx: đối tượng nhận được, công tác trống + lý do, cảnh báo theo bản vẽ
+python scripts/compare_estimate.py <dự toán.csv> <kiến trúc> --structural <kết cấu>   # so khối lượng phần thô với dự toán thật data/ground_truth/du_toan
 python scripts/concept_report.py <file.dxf>                  # đối chiếu Quy ước v1.0: <tên>.khai_niem.json (23 điều khoản QU, nguồn từng bộ phận)
 python scripts/build_material_check_xlsx.py                  # docs/du-lieu/...Doi chieu vat lieu ban ve.xlsx: định nghĩa vật liệu phần thô + đối chiếu bản vẽ build
 $env:PYTHONPATH = "src"
@@ -46,7 +47,7 @@ không đặt thì đọc CSV trong `data/catalog`, `data/rules` — chỉ dùng
 
 Luồng: bản vẽ DWG/DXF -> nhận diện tường -> đo bóc -> tìm nguồn cung -> dự đoán giá -> tối ưu -> giải thích.
 
-- `src/optimat/drawing/`: đọc DXF/DWG, phân loại layer, chuyển mã TCVN3, ghép cặp nét song song thành tường, đo bóc.
+- `src/optimat/drawing/`: đọc DXF/DWG, phân loại layer, chuyển mã TCVN3, VNI và "mã cũ 2" (đoán theo từng kiểu chữ, `encoding.py`), ghép cặp nét song song thành tường, đo bóc.
   Bản vẽ thật: `dxf_reader.py` mở block, nhận hatch bị phá (nét song song cách đều), đọc cung cửa và chữ trong thuộc tính;
   quy tắc chung của `dxf_reader.py`: mọi tọa độ đổi sang WCS (đối tượng 2D ghi theo OCS, block lật làm OCS khác WCS);
   `geometry_mismatch()` đối chiếu từng điểm với ezdxf mỗi lần `read_dxf` (lệch thì cảnh báo, giữ qua `crop`), test chạy trên mọi bản vẽ trong `data/drawings/build`, `test`;
@@ -89,7 +90,7 @@ Luồng: bản vẽ DWG/DXF -> nhận diện tường -> đo bóc -> tìm nguồ
   thêm `structural_file`, `structural_scale` (để trống = tự suy). Hình chi tiết: `drawing/dimensions.py` đọc DIMENSION và suy
   tỷ lệ từng hình (hiển thị / đo); `structural.py` đọc mặt cắt MC, GỐI, NHỊP ra kích thước móng (`footing_detail_sizes`) và
   tiết diện dầm (`beam_detail_sizes`); `rough/foundations.py` chỉ tính khối lượng từ các kích thước đó. Các CSV quy tắc thêm từ 19/10 (`loai_ban_ve`, `ky_hieu_cau_kien`, `do_tin_cay`, `bang_thep`,
-  `thep_kg_m`, `loai_mai`, `ho_tro_cau_kien`, `cong_bo_gia`) chưa có bảng PostgreSQL và chưa qua `check_data` (đọc thẳng file).
+  `thep_kg_m`, `loai_mai`, `ho_tro_cau_kien`, `cong_bo_gia`, `nguong_nhan_dien` — ngưỡng nhận diện có định nghĩa + nguồn, đọc qua `config.threshold(mã)`) chưa có bảng PostgreSQL và chưa qua `check_data` (đọc thẳng file).
   Chưa đọc: cốt thép Ø trên hình chi tiết (thép lấy từ bảng thống kê, S07), mặt bằng sàn, cầu thang, mái, lanh tô. Thông số công trình (`ProjectParams`) và
   định mức thiếu thì để trống + cảnh báo, không điền mặc định (Quy ước B7). API `/api/takeoff/rough/auto`, `/api/takeoff/rough`
   (lưu `takeoff_results` với `result.kind = "rough"`); tab "Phần thô" trên trang kiểm tra, trang `/phan-tho`; công cụ

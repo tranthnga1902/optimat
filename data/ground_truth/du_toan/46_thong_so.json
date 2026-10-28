@@ -1,0 +1,20 @@
+{
+  "concrete_supply": "site_mix",
+  "concrete_grade": "M200",
+  "lean_concrete_grade": "M150",
+  "masonry_mortar_grade": "M75",
+  "plaster_mortar_grade": "M75",
+  "plaster_thickness_mm": 15,
+  "slab_thickness_mm": 100,
+  "beam_width_mm": 200,
+  "beam_depth_mm": 350,
+  "openings": {"door_height_mm": 2000},
+  "steel_kg_per_m3": {"MONG": 110, "COT": 270, "DAM": 290, "SAN": 110, "CAU_THANG": 210, "LANH_TO": 280},
+  "foundations": [
+    {"name": "M1", "count": 4, "length_mm": 1200, "width_mm": 1200, "height_mm": 700, "lean_thickness_mm": 100},
+    {"name": "M2", "count": 6, "length_mm": 1200, "width_mm": 1200, "height_mm": 700, "lean_thickness_mm": 100},
+    {"name": "M3", "count": 2, "length_mm": 1200, "width_mm": 1200, "height_mm": 700, "lean_thickness_mm": 100},
+    {"name": "M4", "count": 2, "length_mm": 1200, "width_mm": 1200, "height_mm": 700, "lean_thickness_mm": 100}
+  ],
+  "ground_layers": [{"kind": "BE_TONG_LOT", "thickness_mm": 100}]
+}

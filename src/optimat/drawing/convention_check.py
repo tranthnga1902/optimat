@@ -260,8 +260,9 @@ def _checks(path, drawing: Drawing, regions, plans: list[PlanConcepts], per_plan
     else:
         out["QU-02"] = ("dat", "Chiều dày tường đo được nằm trong dải 85–370 mm" + (", đơn vị không khai báo nên coi là mm." if ins == 0 else "."), ev)
     enc = Counter(t.encoding for t in drawing.texts)
-    vni = [t.text[:30] for t in drawing.texts if t.encoding == "vni"][:5]
-    out["QU-03"] = (("vi_pham", f"{enc['vni']} chữ dùng bảng mã VNI (chưa hỗ trợ).", vni) if vni else
+    vni = [t.text[:30] for t in drawing.texts if t.encoding in ("vni", "ma_cu_2")][:5]
+    out["QU-03"] = (("vi_pham", f"{enc['vni'] + enc['ma_cu_2']} chữ dùng bảng mã VNI hoặc mã cũ khác "
+                     "(đã tự chuyển sang Unicode, kiểm tra lại chữ).", vni) if vni else
                     ("dat", "Chữ dùng Unicode hoặc TCVN3.", [f"{k}: {v} chữ" for k, v in enc.most_common()]))
 
     # Tổ chức mặt bằng

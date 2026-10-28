@@ -160,7 +160,7 @@ class _Collector:
         self.style_hint = self._style_hints()
 
     def _style_hints(self) -> dict[str, str]:
-        """Bảng mã cũ (VNI, VH) của từng kiểu chữ, đoán trên toàn bộ chữ cùng kiểu: chữ ngắn ("LEÂ THÒ") một mình
+        """Bảng mã cũ (VNI, mã cũ 2) của từng kiểu chữ, đoán trên toàn bộ chữ cùng kiểu: chữ ngắn ("LEÂ THÒ") một mình
         không đủ dấu hiệu."""
         texts: dict[str, list[str]] = {}
         for layout in [self.doc.modelspace(), *self.doc.blocks]:

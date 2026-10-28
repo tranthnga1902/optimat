@@ -14,7 +14,7 @@ from .concepts import match_block
 from .dxf_reader import BlockRef, Drawing, crop, read_drawing
 from .layer_classifier import LayerClass
 from .material_rules import apply_material_rules, block_rule
-from .plans import find_plans, floor_heights, has_only_other_plans, has_only_views
+from .plans import find_plans, floor_heights, has_only_other_plans, has_only_views, level_chain
 from .walls import (LENGTH_RULES, _project, bridge_openings, choose_wall_layers, dedupe_walls, detect_walls, extend_corners,
                     hatch_strip_walls, net_lengths)
 
@@ -265,7 +265,7 @@ def takeoff_plans(drawing: Drawing, floor_height_mm: float | None = None,
         return [PlanTakeoff(name="Toàn bộ bản vẽ", height_mm=result.floor_height_mm,
                             height_source="nhập tay" if floor_height_mm else "chưa có",
                             bbox=[min(xs), min(ys), max(xs), max(ys)], result=result)]
-    heights = floor_heights(plans)
+    heights = floor_heights(plans, level_chain(drawing))
     out = []
     for i, p in enumerate(plans):
         if floor_height_mm:

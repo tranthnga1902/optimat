@@ -31,9 +31,22 @@ def test_geometry_of_closed_box():
     assert g.labels_outside == ["BAN CÔNG"]
 
 
-def test_open_outline_gives_no_area():
-    walls = box()[:3]
-    g = plan_geometry(walls, LABELS)
+def test_open_outline_closed_by_hull_with_warning():
+    # nhà ống: một mặt toàn cửa, không có tường; khép theo bao lồi của tường bao, cảnh báo để kiểm tra
+    g = plan_geometry(box()[:3], LABELS)
+    assert g.closed and g.hull
+    # phía không có tường không trừ được dải nửa dày tường: lớn hơn hình hộp đủ tường ~1%
+    assert g.outline_area_m2 == pytest.approx(plan_geometry(box(), LABELS).outline_area_m2, rel=0.02)
+    works, warnings = area_works(g, ProjectParams(slab_thickness_mm=100), PlanParams(name="T2", void_area_m2=0))
+    assert next(w for w in works if w.code == "SAN").quantity == pytest.approx(g.outline_area_m2 * 0.1, abs=1e-3)
+    assert any("bao lồi" in w and "kiểm tra" in w for w in warnings)
+    # nhập tay thắng, không cảnh báo bao lồi
+    _, warnings = area_works(g, ProjectParams(), PlanParams(name="T2", outline_area_m2=70, usable_area_m2=60))
+    assert not any("bao lồi" in w for w in warnings)
+
+
+def test_single_wall_has_no_outline():
+    g = plan_geometry(box()[:1], LABELS)
     works, warnings = area_works(g, ProjectParams(), PlanParams(name="T2"))
     assert not g.closed and works == [] and "khép kín" in warnings[0]
 
@@ -65,7 +78,7 @@ def test_ground_floor_and_missing_params():
 
 
 def test_manual_area_when_outline_open():
-    g = plan_geometry(box()[:3], LABELS)
+    g = plan_geometry(box()[:1], LABELS)
     works, _ = area_works(g, ProjectParams(slab_thickness_mm=100), PlanParams(name="T2", outline_area_m2=50.0, void_area_m2=0))
     san = next(w for w in works if w.code == "SAN")
     assert san.quantity == pytest.approx(5.0) and san.source == "manual"

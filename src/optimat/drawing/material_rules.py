@@ -132,6 +132,17 @@ def block_rule(block: BlockRef, rules=None) -> Rule | None:
     return _best(rules or load_rules(), "block", block.name)
 
 
+def _hatch_share(w, polygons, n: int = 9) -> float:
+    """Phần chiều dài tường nằm trong vùng hatch (n điểm đều dọc trục). Trước đây chỉ thử điểm giữa: tường 7,7 m có điểm
+    giữa rơi vào ô tô đặc của một cột bị coi cả bức là vách bê tông (bộ 46)."""
+    xs = [x for p in polygons for x, _ in p]
+    ys = [y for p in polygons for _, y in p]
+    if not xs or max(w.x1, w.x2) < min(xs) or min(w.x1, w.x2) > max(xs) or max(w.y1, w.y2) < min(ys) or min(w.y1, w.y2) > max(ys):
+        return 0.0
+    ts = [(k + 0.5) / n for k in range(n)]
+    return sum(_inside(w.x1 + (w.x2 - w.x1) * t, w.y1 + (w.y2 - w.y1) * t, polygons) for t in ts) / n
+
+
 def _inside(px: float, py: float, polygons) -> bool:
     """Điểm nằm trong vùng hatch theo quy tắc chẵn lẻ (biên lồng trong biên là lỗ rỗng)."""
     inside = False
@@ -184,7 +195,7 @@ def apply_material_rules(drawing: Drawing, walls: list[WallSegment], catalog: Ca
         if not rule.target and rule.element == "WALL_MASONRY":
             continue                                    # chỉ xác nhận là khối xây, không cho biết vật liệu
         for w in walls:
-            if _inside((w.x1 + w.x2) / 2, (w.y1 + w.y2) / 2, hatch.polygons):
+            if _hatch_share(w, hatch.polygons) >= config.threshold("NG10"):
                 candidates[w.wall_id].append((rule.priority, CONFIDENCE["hatch"], rule, "hatch"))
 
     for w in walls:

@@ -1,6 +1,6 @@
-"""Bảng mã VNI, VH và tách mặt bằng trên bản vẽ ngoài bộ build cũ (28/10/2026, bộ công trình 18 bản vẽ)."""
+"""Bảng mã VNI, mã cũ 2 và tách mặt bằng trên bản vẽ ngoài bộ build cũ (28/10/2026, bộ công trình 18 bản vẽ)."""
 from optimat.drawing.dxf_reader import Drawing, Segment, TextItem
-from optimat.drawing.encoding import detect_encoding, to_unicode, vh_to_unicode, vni_to_unicode
+from optimat.drawing.encoding import detect_encoding, to_unicode, ma_cu_2_to_unicode, vni_to_unicode
 from optimat.drawing.plans import (_frame_lines, _is_plan_title, find_plans, floor_order, has_only_views,
                                    level_chain)
 
@@ -21,13 +21,15 @@ def test_vni_windows():
     assert to_unicode("MAËT CAÉT A-A") == ("MẶT CẮT A-A", "vni")
 
 
-def test_vh():
-    # chữ thật trên Mau_nha_25x5.dwg (font VHArial, VHAvan)
-    assert vh_to_unicode("MÀÛT BÀÒNG TÁÖNG 1 TL 1/100") == "MẶT BẰNG TẦNG 1 TL 1/100"
-    assert vh_to_unicode("MÀÛT ÂÆÏNG CHÊNH") == "MẶT ĐỨNG CHÍNH"
-    assert vh_to_unicode("âæåüc thäúng chiãöu VÆÎA Cæía NHIÃÛT") == "được thống chiều VỮA Cửa NHIỆT"
-    assert to_unicode("TÁÖNG 2") == ("TẦNG 2", "vh")
-    assert detect_encoding("VHARIAL.TTF") == "vh"
+def test_ma_cu_2():
+    # chữ thật trên Mau_nha_25x5.dwg (kiểu chữ TIEUDE, không khai báo font)
+    assert ma_cu_2_to_unicode("MÀÛT BÀÒNG TÁÖNG 1 TL 1/100") == "MẶT BẰNG TẦNG 1 TL 1/100"
+    assert ma_cu_2_to_unicode("MÀÛT ÂÆÏNG CHÊNH") == "MẶT ĐỨNG CHÍNH"
+    assert ma_cu_2_to_unicode("âæåüc thäúng chiãöu VÆÎA Cæía NHIÃÛT") == "được thống chiều VỮA Cửa NHIỆT"
+    assert to_unicode("TÁÖNG 2") == ("TẦNG 2", "ma_cu_2")
+    # font VH*.TTF là font TCVN3
+    assert to_unicode("nhµ ë biÖt thù", "VHAVAN.TTF") == ("nhà ở biệt thự", "tcvn3")
+    assert detect_encoding("VHARIAL.TTF") == "tcvn3"
 
 
 def test_short_text_uses_style_hint():
@@ -49,6 +51,25 @@ def test_san_thuong_is_floor_plan():
     assert _is_plan_title("MẶT BẰNG SÂN THƯỢNG TL 1:50")
     assert not _is_plan_title("MẶT BẰNG KẾT CẤU SÀN TẦNG 2")
     assert not _is_plan_title("MẶT BẰNG CẦU THANG")
+
+
+def test_abbreviated_and_detail_titles():
+    # bộ 46: tầng trệt ghi tắt "MB TRỆT"; hình chi tiết tỷ lệ 1:25 không phải mặt bằng tầng
+    assert _is_plan_title("MB TRỆT  TL 1:50")
+    assert not _is_plan_title("MB W.C P.NGỦ LẦU 1 TL 1:25")
+    assert not _is_plan_title("MB TRÍCH ĐOẠN TRỆT TL 1:25")
+    assert not _is_plan_title("MB HẦM PHÂN TỰ HỌAI 1-1")
+    assert not _is_plan_title("MBA 3 pha")
+    assert not _is_plan_title("mb THANG TẦNG 1~2")
+
+
+def test_floor_heights_top_floor_and_near_levels():
+    from optimat.drawing.plans import PlanRegion, floor_heights
+    p = [PlanRegion("lầu 1", 0, 0, (0, 0, 1, 1), 3.65, "", 1), PlanRegion("chi tiết", 0, 0, (0, 0, 1, 1), 3.7, "", 1),
+         PlanRegion("lầu 2", 0, 0, (0, 0, 1, 1), 7.0, "", 1)]
+    # +3.700 sát +3.650 không phải tầng trên; tầng cao nhất lấy cao độ kế tiếp trong chuỗi
+    assert floor_heights(p, [0.0, 3.7, 7.0, 10.3]) == {0: 3350, 1: 3300, 2: 3300}
+    assert 2 not in floor_heights(p)
 
 
 def test_floor_order():

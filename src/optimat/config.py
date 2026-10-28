@@ -19,6 +19,21 @@ if _ENV.exists() and not _os.environ.get("OPTIMAT_NO_DOTENV"):   # pytest đặt
 # ---- Nhận diện bản vẽ ----
 # Ký hiệu nhận dạng theo Quy ước bản vẽ v1.0 (tên layer -> vai trò, tiền tố block cửa)
 # nằm trong data/rules/concepts.csv; 23 điều khoản QU trong data/rules/quy_uoc.csv (drawing/concepts.py).
+THRESHOLDS_PATH = DATA_DIR / "rules" / "nguong_nhan_dien.csv"
+_thresholds: dict[str, float] = {}
+
+
+def threshold(code: str) -> float:
+    """Ngưỡng nhận diện theo mã trong data/rules/nguong_nhan_dien.csv (mỗi dòng có định nghĩa và nguồn). Không có số dự phòng:
+    thiếu mã thì báo lỗi."""
+    if not _thresholds:
+        import csv
+        with open(THRESHOLDS_PATH, encoding="utf-8-sig", newline="") as f:
+            _thresholds.update({r["ma"]: float(r["gia_tri"]) for r in csv.DictReader(f)})
+    try:
+        return _thresholds[code]
+    except KeyError:
+        raise KeyError(f"Thiếu ngưỡng {code} trong {THRESHOLDS_PATH}") from None
 
 # Tiếp nhận hồ sơ CAD (drawing/ingest.py): dung lượng tối đa mỗi file tải lên, file lưu theo hash ở UPLOAD_DIR
 MAX_UPLOAD_MB = 50

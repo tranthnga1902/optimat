@@ -3,9 +3,10 @@
 Hỗ trợ:
 - TCVN3 (ABC, các font .VnTime, .VnArial, vn*.shx): mỗi chữ có dấu là một ký tự.
 - VNI-Windows (font VNI-…): nguyên âm + ký tự dấu đứng sau ("MAËT BAÈNG" = MẶT BẰNG).
-- VH (font VHArial, VHAvan, VHelvCn…): chữ gốc ă â ê ô ơ ư đ là một ký tự, dấu thanh đứng sau
+- Mã cũ 2 (chưa rõ tên, kiểu chữ không khai báo font): chữ gốc ă â ê ô ơ ư đ là một ký tự, dấu thanh đứng sau
   ("MÀÛT BÀÒNG TÁÖNG" = MẶT BẰNG TẦNG). Không tìm được tài liệu gốc; bảng dưới suy từ chữ trên bản vẽ
   Mau_nha_25x5 (28/10/2026), các ký tự chưa thấy trên bản vẽ để nguyên.
+Font VH*.TTF (VHARIAL, VHAVAN, VHELVCN0…) là font TCVN3 ("Mãng" = Móng, "nhµ ë biÖt thù" = nhà ở biệt thự).
 LƯU Ý: bảng ánh xạ cần được kiểm tra lại trên chính các bản vẽ bạn thu thập;
 font SHX tự chế của từng công ty có thể dùng bảng mã riêng.
 """
@@ -54,9 +55,9 @@ _VNI_MARK = _pairs({"Ù": _ACUTE, "Ø": _GRAVE, "Û": _HOOK, "Õ": _TILDE, "Ï":
                     "Ü": _BREVE + _TILDE, "Ë": _BREVE + _DOT})
 _VNI_CHAR = _pairs({"Ñ": "Đ", "Ö": "Ư", "Ô": "Ơ", "Ò": "Ị", "Ó": "Ỉ", "Æ": "Ĩ"})
 
-# VH: chữ gốc một ký tự, dấu thanh đứng sau (mỗi nhóm nguyên âm một dãy ký tự dấu riêng)
-_VH_CHAR = _pairs({"À": "Ă", "Á": "Â", "Â": "Đ", "Ã": "Ê", "Ä": "Ô", "Å": "Ơ", "Æ": "Ư", "Ê": "Í", "Ë": "Ị"})
-_VH_MARK = _pairs({"Ì": _GRAVE, "Í": _HOOK, "Î": _TILDE, "Ï": _ACUTE,        # sau a e i o u y ơ ư
+# Mã cũ 2: chữ gốc một ký tự, dấu thanh đứng sau (mỗi nhóm nguyên âm một dãy ký tự dấu riêng)
+_MC2_CHAR = _pairs({"À": "Ă", "Á": "Â", "Â": "Đ", "Ã": "Ê", "Ä": "Ô", "Å": "Ơ", "Æ": "Ư", "Ê": "Í", "Ë": "Ị"})
+_MC2_MARK = _pairs({"Ì": _GRAVE, "Í": _HOOK, "Î": _TILDE, "Ï": _ACUTE,        # sau a e i o u y ơ ư
                    "Ò": _GRAVE, "Ó": _HOOK, "Ô": _TILDE, "Õ": _ACUTE,        # sau ă (Ó, Ô suy theo dãy, chưa thấy)
                    "Ö": _GRAVE, "Ø": _HOOK, "Ù": _TILDE, "Ú": _ACUTE,        # sau â ê ô
                    "Û": _DOT, "Ü": _DOT})
@@ -65,35 +66,33 @@ _VH_MARK = _pairs({"Ì": _GRAVE, "Í": _HOOK, "Î": _TILDE, "Ï": _ACUTE,       
 _LEGACY = set("ÄÅÆËÎÏÑÖØÛÜäåæëîïñöøûü")
 _UNICODE_VI = re.compile("[ĂăĐđƠơƯưẠ-ỹ]")
 _VNI_SIGN = re.compile("[AEIOUYaeiouy][ÂÁÀÅÃÄÊÉÈÚÜËÙØÛÕÏâáàåãäêéèúüëùøûõï]|[Ññ]|[Öö][ÔôÙØÛÕÏùøûõï]")
-_VH_SIGN = re.compile("[AEIOUYaeiouy][ÌÍÎìíî]|Â[A-Z0-9]")
-# chữ gốc VH + dấu thanh: VNI không có cặp này; nguyên âm đôi VH (iã = iê, uä = uô) lại giống dấu VNI nên cặp này tính 2
-_VH_PAIR = re.compile("[ÀÁÃÄÅÆàáãäåæ][ÌÍÎÏÒÓÔÕÖØÙÚÛÜìíîïòóôõöøùúûü]")
+_MC2_SIGN = re.compile("[AEIOUYaeiouy][ÌÍÎìíî]|Â[A-Z0-9]")
+# chữ gốc + dấu thanh của mã cũ 2: VNI không có cặp này; nguyên âm đôi mã cũ 2 (iã = iê, uä = uô) lại giống dấu VNI nên cặp này tính 2
+_MC2_PAIR = re.compile("[ÀÁÃÄÅÆàáãäåæ][ÌÍÎÏÒÓÔÕÖØÙÚÛÜìíîïòóôõöøùúûü]")
 
 
 def legacy_kind(text: str) -> str | None:
-    """'vni' hoặc 'vh' khi nội dung là chữ mã cũ (đếm các cặp nguyên âm + dấu đặc trưng), không thì None."""
+    """'vni' hoặc 'ma_cu_2' khi nội dung là chữ mã cũ (đếm các cặp nguyên âm + dấu đặc trưng), không thì None."""
     if not any(ch in _LEGACY for ch in text) or _UNICODE_VI.search(text):
         return None
     vni = len(_VNI_SIGN.findall(text))
-    vh = len(_VH_SIGN.findall(text)) + 2 * len(_VH_PAIR.findall(text))
+    vh = len(_MC2_SIGN.findall(text)) + 2 * len(_MC2_PAIR.findall(text))
     if vni == vh == 0:
         return None
-    return "vni" if vni > vh else "vh"
+    return "vni" if vni > vh else "ma_cu_2"
 
 
 def detect_encoding(font_name: str | None, text: str = "", hint: str | None = None) -> str:
-    """Trả về 'tcvn3', 'vni', 'vh' hoặc 'unicode' dựa trên tên font, dự phòng bằng nội dung.
+    """Trả về 'tcvn3', 'vni', 'ma_cu_2' hoặc 'unicode' dựa trên tên font, dự phòng bằng nội dung.
     hint: bảng mã cũ đoán trên mọi chữ cùng kiểu chữ (legacy_kind), dùng khi tên font và chính dòng chữ không đủ.
-    Font TCVN3 mà chữ không có ký tự đặc trưng TCVN3 nhưng rõ là VNI/VH (bản vẽ đổi font giữa chừng): theo nội dung."""
+    Font TCVN3 mà chữ không có ký tự đặc trưng TCVN3 nhưng rõ là VNI / mã cũ 2 (bản vẽ đổi font giữa chừng): theo nội dung."""
     font = (font_name or "").lower()
-    if font.startswith(".vn") or (font.startswith("vn") and font.endswith(".shx")):
+    if font.startswith((".vn", "vh")) or (font.startswith("vn") and font.endswith(".shx")):
         if text and not any(ch in _TCVN3_MARKERS for ch in text) and (kind := legacy_kind(text)):
             return kind
         return "tcvn3"
     if font.startswith("vni"):
         return "vni"
-    if font.startswith("vh"):
-        return "vh"
     if any(ch in _TCVN3_MARKERS for ch in text):
         return "tcvn3"
     if _UNICODE_VI.search(text):
@@ -121,8 +120,8 @@ def vni_to_unicode(text: str) -> str:
     return _compose(text, _VNI_CHAR, _VNI_MARK)
 
 
-def vh_to_unicode(text: str) -> str:
-    return _compose(text, _VH_CHAR, _VH_MARK)
+def ma_cu_2_to_unicode(text: str) -> str:
+    return _compose(text, _MC2_CHAR, _MC2_MARK)
 
 
 def to_unicode(text: str, font_name: str | None = None, hint: str | None = None) -> tuple[str, str]:
@@ -132,8 +131,8 @@ def to_unicode(text: str, font_name: str | None = None, hint: str | None = None)
         return tcvn3_to_unicode(text), enc
     if enc == "vni":
         return vni_to_unicode(text), enc
-    if enc == "vh":
-        return vh_to_unicode(text), enc
+    if enc == "ma_cu_2":
+        return ma_cu_2_to_unicode(text), enc
     return text, enc
 
 

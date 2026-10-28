@@ -13,7 +13,7 @@ Trạng thái: ✅ xong · 🔄 đang làm · ⬜ chưa làm
 | S1 | Chuỗi công tác → vật liệu | Gói `rough/`: thông số công trình B1, 14 công tác, `dinh_muc_phan_tho.csv`, cấp phối vữa từ `material_relations` | Gạch, xi măng, cát của tường W-GN01-220 đúng định mức; ô định mức trống báo "chưa tra" | ✅ |
 | S2 | Xây, trát, lanh tô | `rough/walls.py`: trừ cửa, lanh tô, cột, dầm; trát 2 mặt, tường bao tách trong/ngoài | Test số học trên mặt bằng mẫu; chạy được trên 2 bản vẽ build | ✅ |
 | S3a | Đường bao và phòng | `rough/areas.py`: tô tường lên lưới, đóng khe ở chỗ cột, tìm phòng; tên phòng theo `room_rules.csv` | Hộp mẫu sai số < 0,5%; nhận phòng WC | ✅ |
-| S3b | Sàn, cán nền, nền, chống thấm | Sàn trừ ô trống, cán nền theo diện tích sử dụng, nền trệt theo lớp, chống thấm WC + cổ tường, ban công nhập tay | Test cho tầng trệt và tầng trên; đường bao hở thì báo và cho nhập tay diện tích | ✅ |
+| S3b | Sàn, cán nền, nền, chống thấm | Sàn trừ ô trống, cán nền theo diện tích sử dụng, nền trệt theo lớp, chống thấm WC + cổ tường, ban công nhập tay | Test cho tầng trệt và tầng trên; đường bao hở thì báo và cho nhập tay diện tích | ✅ (28/10: hở thì khép theo bao lồi tường bao + cảnh báo kiểm tra, nhập tay vẫn thắng) |
 | S4a | Cột | Nhận cột trên mặt bằng (hatch đặc, ô chữ nhật nhỏ), tiết diện, chiều cao; m³, cốp pha; trừ cột trong tường | Test cột mẫu; đếm cột trên bản vẽ build | ✅ |
 | S4b | Dầm | Đọc dầm từ bản vẽ kết cấu nếu có; không có thì suy theo tường và cột để người dùng duyệt; m³, cốp pha | Test dầm suy từ tường; cảnh báo khi phải suy | ✅ (21/10: đọc cả hình chi tiết móng, dầm) |
 | S4c | Cầu thang | Vùng thang (đã loại khỏi tường), số bậc, bề rộng vế; m³ bản thang + bậc | Test thang mẫu | 🔄 còn nhận thang tự động |

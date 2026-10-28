@@ -170,3 +170,15 @@ def test_text_rules_match_whole_words():
     assert _best(rules, "text", "tuong xay gach dat nung 220").rule_id == "T09"
     assert _best(rules, "text", "dung gach be tong khi chung ap").target == ("AAC",)
     assert _best(rules, "text", "kaac bao") is None             # "aac" nằm giữa từ khác: không khớp
+
+
+def test_hatch_must_cover_half_the_wall():
+    # bộ 46: ô tô đặc của một cột nằm ở giữa tường dài 7,7 m không làm cả bức tường thành vách bê tông
+    from types import SimpleNamespace
+    from optimat.drawing.material_rules import _hatch_share
+    wall = SimpleNamespace(x1=0, y1=0, x2=7700, y2=0)
+    column = [[(3700, -110), (3920, -110), (3920, 110), (3700, 110)]]
+    assert _hatch_share(wall, column) < 0.5
+    whole = [[(-50, -110), (7750, -110), (7750, 110), (-50, 110)]]
+    assert _hatch_share(wall, whole) == 1.0
+    assert _hatch_share(wall, [[(9000, 0), (9100, 0), (9100, 100)]]) == 0.0      # ngoài khung, không thử điểm
