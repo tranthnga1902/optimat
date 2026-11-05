@@ -22,7 +22,11 @@ người dùng cần chuyển sang DXF trước, không chỉ đổi đuôi file
    Tạo admin ngay: khi database chưa có admin, ai mở `/dang-nhap` cũng tạo được admin.
 
 `DATABASE_URL` của Render có dạng `postgresql://...`; `db/session.py` tự đổi sang `postgresql+psycopg://`.
-Gói Starter có 512 MB RAM: hết bộ nhớ khi đọc bản vẽ lớn hoặc chạy NSGA-II thì nâng `optimat-api` lên Standard.
+Mọi thành phần đang ở gói **free** (không cần thẻ):
+- Web service ngủ sau 15 phút không có truy cập, lần mở sau chờ khoảng 1 phút; 512 MB RAM, hết bộ nhớ khi đọc
+  bản vẽ lớn hoặc chạy NSGA-II thì nâng `optimat-api` lên Starter/Standard.
+- PostgreSQL free bị Render **xóa sau 30 ngày**. Muốn giữ lâu: tạo database miễn phí ở https://neon.tech, xóa
+  khối `databases:` và đổi `DATABASE_URL` trong `render.yaml` thành `sync: false`, rồi dán URL của Neon.
 
 ## Cấu hình Render thủ công
 

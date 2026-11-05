@@ -6,7 +6,7 @@ services:
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: starter            # 512 MB RAM; bản vẽ lớn hoặc NSGA-II bị hết bộ nhớ thì nâng lên standard (2 GB)
+    plan: free               # 512 MB RAM, ngủ sau 15 phút không dùng; hết bộ nhớ thì nâng lên starter/standard
     region: singapore
     healthCheckPath: /api/health
     envVars:
@@ -24,7 +24,7 @@ services:
     name: optimat-web
     runtime: node
     rootDir: frontend
-    plan: starter
+    plan: free
     region: singapore
     buildCommand: npm ci && npm run build
     startCommand: npm start
@@ -38,6 +38,6 @@ databases:
   - name: optimat-db
     databaseName: optimat
     user: optimat
-    plan: basic-256mb        # gói free bị xóa sau 30 ngày
+    plan: free               # 1 GB, Render XÓA sau 30 ngày; muốn giữ lâu thì dùng Neon/Supabase (xem deploy/RENDER.md)
     region: singapore
     postgresMajorVersion: "16"
