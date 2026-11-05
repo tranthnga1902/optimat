@@ -1,0 +1,16 @@
+{
+  "tested_hashes": {
+    "src/optimat/drawing/dxf_reader.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0",
+    "src/optimat/rough/columns.py": "84457d7dbeab3ea9a369d5ca401baa9069fd5e60502a278dc2fb52dddfb39a14",
+    "tests/test_rough_column_contours.py": "93f35364ebe87cdff1e7c35d47af0979570144e2f2efe2d8e229603f431dab40"
+  },
+  "current_hashes": {
+    "src/optimat/drawing/dxf_reader.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0",
+    "src/optimat/rough/columns.py": "84457d7dbeab3ea9a369d5ca401baa9069fd5e60502a278dc2fb52dddfb39a14",
+    "tests/test_rough_column_contours.py": "93f35364ebe87cdff1e7c35d47af0979570144e2f2efe2d8e229603f431dab40"
+  },
+  "matches_tested": true,
+  "receipt": "v2_receipt.json",
+  "patch": "signal_columns_v2.patch",
+  "read_table_base_sha256": "a05915b14795a4a48f4d9f9532945f88bcc43c8a084dacf877d1ef7dcb7d6085"
+}

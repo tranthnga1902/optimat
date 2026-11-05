@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_admin_db.py::test_overview_and_rows_from_csv",
+    "-vv",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\backend_20261104\\admin_metadata_fix\\pytest_temp"
+  ],
+  "started_utc": "2026-11-04T02:37:02.761442+00:00",
+  "outside_sandbox": true,
+  "flags": {
+    "DATABASE_URL_present": false,
+    "OPTIMAT_TEST_DATABASE_URL_present": false,
+    "OPENAI_API_KEY_present": false,
+    "OPTIMAT_NO_DOTENV": "1",
+    "LLM_PROVIDER": "none",
+    "PYTHONIOENCODING": "utf-8"
+  },
+  "scope": "one authorized metadata CSV contract test; no DB or real CAD"
+}

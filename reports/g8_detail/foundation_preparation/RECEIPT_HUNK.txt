@@ -1,0 +1,17 @@
+CHƯA RELEASE / PSEUDOCODE cho review
+
+volume_receipts = []
+def capture_tier(t):
+    value = tier_volume_m3(t)  # hàm cũ, đúng một lần
+    volume_receipts.append((t, value))
+    return value              # chính value đi vào sum cũ
+one = f.volume_m3 if f.volume_m3 is not None else (sum(capture_tier(t) for t in tiers) if tiers else None)
+raw_mong_q = f.count * one if one is not None else None
+# _work nhận raw_mong_q không đổi; child receipts có count một lần;
+# raw_mong_q giữ reference khi component float representation khác.
+
+extra = pit_overlap_m3(pits)   # lời gọi cũ, chỉ một lần, SLICES200 giữ
+if extra > 1e-4:
+    signed_work = _neg("DAO_DAT", extra, ... old kwargs ...)
+    # capture receipt extra sign=-1 với legacy=signed_work.quantity đã âm.
+    # KHÔNG sửa _neg dùng chung hoặc CP SAN caller.

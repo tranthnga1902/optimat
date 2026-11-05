@@ -1,0 +1,679 @@
+{
+  "kind": "ACTUAL_RAW_SOURCE_READ_NOT_APPROVED_TAKEOFF",
+  "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+  "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "split": "build",
+  "INSUNITS": 0,
+  "raw_rows": [
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CCC5"
+      ],
+      "type": "INSERT",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1103294.0974399
+      ],
+      "raw": {
+        "L2": "4300",
+        "TL": "42.4",
+        "DT": "17.2",
+        "SLA": "4",
+        "SL1": "2",
+        "DAI": "4300",
+        "DK": "20",
+        "SH": "3"
+      },
+      "duplicate_tags": [],
+      "attrib_sources": {
+        "L2": {
+          "handle": "118CCC7",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "TL": {
+          "handle": "118CCC8",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DT": {
+          "handle": "118CCC9",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SLA": {
+          "handle": "118CCCA",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SL1": {
+          "handle": "118CCCB",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DAI": {
+          "handle": "118CCCC",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DK": {
+          "handle": "118CCCD",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SH": {
+          "handle": "118CCCE",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        }
+      },
+      "group": null,
+      "segment": null,
+      "axis": null
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CCD1"
+      ],
+      "type": "INSERT",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1104014.0974399
+      ],
+      "raw": {
+        "L2": "4300",
+        "TL": "42.4",
+        "DT": "17.2",
+        "SLA": "4",
+        "SL1": "2",
+        "DAI": "4300",
+        "DK": "20",
+        "SH": "4"
+      },
+      "duplicate_tags": [],
+      "attrib_sources": {
+        "L2": {
+          "handle": "118CCD3",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "TL": {
+          "handle": "118CCD4",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DT": {
+          "handle": "118CCD5",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SLA": {
+          "handle": "118CCD6",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SL1": {
+          "handle": "118CCD7",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DAI": {
+          "handle": "118CCD8",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DK": {
+          "handle": "118CCD9",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SH": {
+          "handle": "118CCDA",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        }
+      },
+      "group": null,
+      "segment": null,
+      "axis": null
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CD2A"
+      ],
+      "type": "INSERT",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1109054.0974399
+      ],
+      "raw": {
+        "L2": "4300",
+        "TL": "84.8",
+        "DT": "34.4",
+        "SLA": "8",
+        "SL1": "2",
+        "DAI": "4300",
+        "DK": "20",
+        "SH": "3"
+      },
+      "duplicate_tags": [],
+      "attrib_sources": {
+        "L2": {
+          "handle": "118CD2C",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "TL": {
+          "handle": "118CD2D",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DT": {
+          "handle": "118CD2E",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SLA": {
+          "handle": "118CD2F",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SL1": {
+          "handle": "118CD30",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DAI": {
+          "handle": "118CD31",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DK": {
+          "handle": "118CD32",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SH": {
+          "handle": "118CD33",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        }
+      },
+      "group": null,
+      "segment": null,
+      "axis": null
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CD36"
+      ],
+      "type": "INSERT",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1109774.0974399
+      ],
+      "raw": {
+        "L2": "4300",
+        "TL": "84.8",
+        "DT": "34.4",
+        "SLA": "8",
+        "SL1": "2",
+        "DAI": "4300",
+        "DK": "20",
+        "SH": "4"
+      },
+      "duplicate_tags": [],
+      "attrib_sources": {
+        "L2": {
+          "handle": "118CD38",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "TL": {
+          "handle": "118CD39",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DT": {
+          "handle": "118CD3A",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SLA": {
+          "handle": "118CD3B",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SL1": {
+          "handle": "118CD3C",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DAI": {
+          "handle": "118CD3D",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DK": {
+          "handle": "118CD3E",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SH": {
+          "handle": "118CD3F",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        }
+      },
+      "group": null,
+      "segment": null,
+      "axis": null
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CDA7"
+      ],
+      "type": "INSERT",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1116254.0974399
+      ],
+      "raw": {
+        "L2": "4300",
+        "TL": "42.4",
+        "DT": "17.2",
+        "SLA": "4",
+        "SL1": "2",
+        "DAI": "4300",
+        "DK": "20",
+        "SH": "3"
+      },
+      "duplicate_tags": [],
+      "attrib_sources": {
+        "L2": {
+          "handle": "118CDA9",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "TL": {
+          "handle": "118CDAA",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DT": {
+          "handle": "118CDAB",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SLA": {
+          "handle": "118CDAC",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SL1": {
+          "handle": "118CDAD",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DAI": {
+          "handle": "118CDAE",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DK": {
+          "handle": "118CDAF",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SH": {
+          "handle": "118CDB0",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        }
+      },
+      "group": null,
+      "segment": null,
+      "axis": null
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CDB3"
+      ],
+      "type": "INSERT",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1116974.0974399
+      ],
+      "raw": {
+        "L2": "4300",
+        "TL": "42.4",
+        "DT": "17.2",
+        "SLA": "4",
+        "SL1": "2",
+        "DAI": "4300",
+        "DK": "20",
+        "SH": "4"
+      },
+      "duplicate_tags": [],
+      "attrib_sources": {
+        "L2": {
+          "handle": "118CDB5",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "TL": {
+          "handle": "118CDB6",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DT": {
+          "handle": "118CDB7",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SLA": {
+          "handle": "118CDB8",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SL1": {
+          "handle": "118CDB9",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DAI": {
+          "handle": "118CDBA",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DK": {
+          "handle": "118CDBB",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SH": {
+          "handle": "118CDBC",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        }
+      },
+      "group": null,
+      "segment": null,
+      "axis": null
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CDD7"
+      ],
+      "type": "INSERT",
+      "block": "TK_14",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1119134.0974399
+      ],
+      "raw": {
+        "SH": "7",
+        "L1": "170",
+        "L2": "170",
+        "M": "60",
+        "DK": "6",
+        "DAI": "800",
+        "SL1": "77",
+        "SLA": "154",
+        "DT": "123.2",
+        "TL": "27.3"
+      },
+      "duplicate_tags": [],
+      "attrib_sources": {
+        "SH": {
+          "handle": "118CDD9",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "L1": {
+          "handle": "118CDDA",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "L2": {
+          "handle": "118CDDB",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "M": {
+          "handle": "118CDDC",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DK": {
+          "handle": "118CDDD",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DAI": {
+          "handle": "118CDDE",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SL1": {
+          "handle": "118CDDF",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "SLA": {
+          "handle": "118CDE0",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "DT": {
+          "handle": "118CDE1",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        },
+        "TL": {
+          "handle": "118CDE2",
+          "type": "ATTRIB",
+          "layer": "TEXT_TK"
+        }
+      },
+      "group": null,
+      "segment": null,
+      "axis": null
+    }
+  ],
+  "anchor_evidence": [
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CD0D"
+      ],
+      "type": "TEXT",
+      "layer": "TEXT_TCK",
+      "text": "C-1",
+      "xy": [
+        -1726496.458390178,
+        -1104234.697712751
+      ],
+      "group_claim_from_packet04": "C-1",
+      "binding_confirmed": false
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CD0E"
+      ],
+      "type": "TEXT",
+      "layer": "TEXT_SLCK",
+      "text": "(SL: 2)",
+      "xy": [
+        -1726096.458390178,
+        -1104307.56265136
+      ],
+      "group_claim_from_packet04": "C-1",
+      "binding_confirmed": false
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CD8A"
+      ],
+      "type": "TEXT",
+      "layer": "TEXT_TCK",
+      "text": "C-1A",
+      "xy": [
+        -1726496.458390178,
+        -1110806.213401701
+      ],
+      "group_claim_from_packet04": "C-1A",
+      "binding_confirmed": false
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CD8B"
+      ],
+      "type": "TEXT",
+      "layer": "TEXT_SLCK",
+      "text": "(SL: 4)",
+      "xy": [
+        -1726096.458390178,
+        -1110787.56265136
+      ],
+      "group_claim_from_packet04": "C-1A",
+      "binding_confirmed": false
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CDEF"
+      ],
+      "type": "TEXT",
+      "layer": "TEXT_TCK",
+      "text": "C-2",
+      "xy": [
+        -1726496.458390178,
+        -1117194.697712751
+      ],
+      "group_claim_from_packet04": "C-2",
+      "binding_confirmed": false
+    },
+    {
+      "file": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "handlepath": [
+        "modelspace",
+        "118CDF0"
+      ],
+      "type": "TEXT",
+      "layer": "TEXT_SLCK",
+      "text": "(SL: 2)",
+      "xy": [
+        -1726096.458390178,
+        -1117267.56265136
+      ],
+      "group_claim_from_packet04": "C-2",
+      "binding_confirmed": false
+    }
+  ],
+  "closed_frames_containing_C2_anchor": [
+    {
+      "handle": "EA8BF0",
+      "layer": "LS-THAY",
+      "points": [
+        [
+          -1855203.567280918,
+          -1090474.335669499
+        ],
+        [
+          -1290965.206836723,
+          -1090473.832518398
+        ],
+        [
+          -1290965.019491897,
+          -1141478.367176996
+        ],
+        [
+          -1855203.379936092,
+          -1141478.870328096
+        ]
+      ],
+      "is_group_boundary_confirmed": false
+    },
+    {
+      "handle": "1191A63",
+      "layer": "Tpl_Bound",
+      "points": [
+        [
+          -1745339.274299023,
+          -1124754.712373443
+        ],
+        [
+          -1745339.274299023,
+          -1095054.712373447
+        ],
+        [
+          -1703339.274299029,
+          -1095054.712373447
+        ],
+        [
+          -1703339.274299029,
+          -1124754.712373443
+        ]
+      ],
+      "is_group_boundary_confirmed": false
+    }
+  ],
+  "accepted_group_rows": [],
+  "segment_assignment": null,
+  "axis_assignment": null,
+  "pending": [
+    "Chưa có ranh giới hình học riêng cho nhóm/bảng C-2",
+    "INSUNITS=0; chưa chứng thực đơn vị DAI/DT/TL từ header/nguồn thiết kế trong lượt này",
+    "Chưa nối mark→chi tiết đoạn/tầng/trục; mark7 TK_14 không được phân vào đoạn",
+    "C-1/C-2 trùng số không là cùng instance; không dùng locators04 như oracle đầu vào sản phẩm"
+  ]
+}

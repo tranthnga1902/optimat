@@ -1,0 +1,10 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 12 items
+
+tests\test_rough_formwork_materials.py ............                      [100%]
+
+============================= 12 passed in 2.85s ==============================

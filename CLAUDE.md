@@ -1,21 +1,25 @@
 # OptiMat AI
 
-Đồ án tốt nghiệp ngành CNTT: hệ thống AI Agent hỗ trợ tối ưu lựa chọn vật liệu xây tường cho nhà ở
+Schema hiện hành: **20 bảng vật lý** tại `src/optimat/db/schema20.py`; các ánh xạ cũ ở models.py có thể là view. Không gọi Base.metadata.create_all hoặc áp DDL 45 bảng cũ. Xem `docs/schema/CSDL_20_BANG.md` và kế hoạch dữ liệu `docs/KE_HOACH_HOAN_THIEN_DU_LIEU_20_BANG.md`. Chuyển dữ liệu cũ bằng scripts/migrate_schema20.py có backup.
+
+Đồ án tốt nghiệp ngành CNTT: hệ thống AI Agent hỗ trợ tối ưu lựa chọn vật liệu thô (phần thô: kiến trúc + kết cấu) cho nhà ở
 riêng lẻ ở miền Bắc Việt Nam, dùng XGBoost để dự đoán giá và NSGA-II để tối ưu đa mục tiêu.
 Kế hoạch 15 tuần và danh sách việc nằm trong `PLAN.md`. Trao đổi với người dùng bằng tiếng Việt.
 
 ## Lệnh
 
 ```powershell
-pytest                                                        # 300 bài (29/10/2026: 297 đạt, 3 xfail), bài cần PostgreSQL chỉ chạy khi có OPTIMAT_TEST_DATABASE_URL; conftest bỏ .env và DATABASE_URL (đặt PYTHONIOENCODING=utf8)
+pytest                                                        # 303 bài (29/10/2026: 300 đạt, 3 xfail), bài cần PostgreSQL chỉ chạy khi có OPTIMAT_TEST_DATABASE_URL; conftest bỏ .env và DATABASE_URL (đặt PYTHONIOENCODING=utf8)
 python scripts/check_data.py [--strict]                       # kiểm soát dữ liệu; 0 lỗi mới commit (hook .githooks/pre-commit)
 python scripts/survey_drawings.py <thư mục hoặc file bản vẽ>     # thống kê layer, hatch, block, ghi chú chưa có quy tắc
 python scripts/ingest_cad.py <thư mục hoặc file> [--store data/uploads]   # tiếp nhận hồ sơ CAD (S02): kiểm tra file, hash/phiên bản, chuyển DWG có log, <tên>.inventory.json; trang /tiep-nhan, API /api/ingest
 python scripts/make_ingest_samples.py                         # sinh lại 15 file CAD mẫu lỗi/hợp lệ + expected.json ở data/sample/ingest
 python scripts/make_s03_fixtures.py [--schema]                   # S03: sinh 15 bản vẽ con chuẩn (SYNTHETIC) từ data/ground_truth/s03/cases.json; --schema: docs/schema/ho_so_chuan_hoa.schema.json; trang /mapping
 python scripts/evaluate_takeoff.py                            # so kết quả bóc tách với data/ground_truth
-python scripts/batch_takeoff.py <thư mục hoặc file...>        # bóc phần thô hàng loạt, gộp reports/batch/tong_hop.xlsx: đối tượng nhận được, công tác trống + lý do, cảnh báo theo bản vẽ
+python scripts/batch_takeoff.py <thư mục hoặc file...> [--params data/sample/thong_so_mau.json] [--jobs 4]   # bóc phần thô hàng loạt (--jobs: nhiều tiến trình), gộp reports/batch/tong_hop.xlsx: đối tượng nhận được, công tác trống + lý do, cảnh báo theo bản vẽ
+python scripts/benchmark_material_rules.py [--walls 400] [--file <dxf>]   # đo thời gian đọc bản vẽ + gán vật liệu (mặt bằng tự dựng hoặc bản vẽ thật); ghi số vào NHAT_KY.md khi đổi mã
 python scripts/compare_estimate.py <dự toán.csv> <kiến trúc> --structural <kết cấu>   # so khối lượng phần thô với dự toán thật data/ground_truth/du_toan
+python scripts/import_estimate.py <dự toán.xlsx> --sheet "Bang khoi luong" --first-col 2 --encoding vni --out data/ground_truth/du_toan/<tên>.csv   # dự toán Excel -> CSV đáp án (.xls: lưu lại thành .xlsx trước)
 python scripts/concept_report.py <file.dxf>                  # đối chiếu Quy ước v1.0: <tên>.khai_niem.json (23 điều khoản QU, nguồn từng bộ phận)
 python scripts/build_material_check_xlsx.py                  # docs/du-lieu/...Doi chieu vat lieu ban ve.xlsx: định nghĩa vật liệu phần thô + đối chiếu bản vẽ build
 $env:PYTHONPATH = "src"
@@ -45,7 +49,12 @@ không đặt thì đọc CSV trong `data/catalog`, `data/rules` — chỉ dùng
 
 ## Kiến trúc
 
-Luồng: bản vẽ DWG/DXF -> nhận diện tường -> đo bóc -> tìm nguồn cung -> dự đoán giá -> tối ưu -> giải thích.
+**Luồng chính (chốt 05/11/2026, ưu tiên cao nhất):** dự toán XLS/XLSX -> chuẩn hóa, gắn mã (người dùng duyệt) -> tổng hợp
+khối lượng theo hạng mục -> định mức ra vật tư + giá tham chiếu (tra bảng, XGBoost theo ngày lập) -> kiểm tra sai lệch
+-> đề xuất vật liệu thô bằng NSGA-II -> báo cáo. Bóc bản vẽ chỉ là nguồn đối chiếu khối lượng. Chi tiết và sprint DT01–DT07:
+`docs/LUONG_DU_TOAN_SAI_LECH.md`.
+
+Luồng bóc tách (cũ, giữ làm nguồn đối chiếu): bản vẽ DWG/DXF -> nhận diện tường -> đo bóc -> tìm nguồn cung -> dự đoán giá -> tối ưu -> giải thích.
 
 - `src/optimat/drawing/`: đọc DXF/DWG, phân loại layer, chuyển mã TCVN3, VNI và "mã cũ 2" (đoán theo từng kiểu chữ, `encoding.py`), ghép cặp nét song song thành tường, đo bóc.
   Bản vẽ thật: `dxf_reader.py` mở block, nhận hatch bị phá (nét song song cách đều), đọc cung cửa và chữ trong thuộc tính;
@@ -99,7 +108,20 @@ Luồng: bản vẽ DWG/DXF -> nhận diện tường -> đo bóc -> tìm nguồ
   phần thô, so nguyên từ, `drawing/material_notes.py`), `drawing_concepts` (`concepts.csv`), `convention_clauses` (`quy_uoc.csv`) (sửa bằng Excel rồi `init_db.py --reload-rules`
   hoặc sinh lại `sql/05_rules.sql`; có `DATABASE_URL` thì mã chỉ đọc bảng). `data/rules/material_rules.csv`: bộ quy tắc. `data/rules/room_rules.csv`: tên phòng (WC, ban công) cho chống thấm.
   `data/rules/dinh_muc_phan_tho.csv`: định mức trát, cán nền, cấp phối bê tông trộn tại chỗ, dây buộc, chống thấm, cốp pha
-  (ô số chờ tra TT 38/2026, có số thì bắt buộc ghi số hiệu bảng). `data/ground_truth/`: đáp án đo tay (cột `split` = build hoặc test).
+  (30/10/2026 đã điền 19/22 dòng từ PDF TT 38/2026 Phụ lục II, VII lưu ở `data/van_ban/`, không vào Git; cấp phối bê tông đã nhân 1,025 m³ vữa / m³ kết cấu; có số thì bắt buộc ghi số hiệu bảng). `data/rules/viet_tat.csv` (30/10/2026): từ viết tắt trên
+  bản vẽ ("btct", "xm", "kg nung") giãn ra chữ đầy đủ trước khi so `material_rules` / `material_notes`
+  (`encoding.expand_abbreviations`, so cả chuỗi gốc lẫn chuỗi giãn; qua `check_data`, chưa có bảng). Ghi chú nhiều dòng TEXT
+  xếp cột được ghép thành đoạn làm tín hiệu bổ sung (`drawing/text_blocks.py`). `data/ground_truth/`: đáp án đo tay (cột `split` = build hoặc test).
+- **Trạng thái dữ liệu A/B/C/D** (đặc tả 30/10/2026 mục 3, `rough/status.py`): mỗi `WorkItem` và `MaterialLine` mang
+  `status` = yếu nhất của các đầu vào (A đọc trực tiếp, B suy luận, C thông số người dùng / hệ số tham khảo, D thiếu số)
+  kèm `inputs` (đầu vào quyết định) và `stage` (đất móng / khung / tường / chống thấm). `dinh_muc_phan_tho.csv` có thêm
+  `qty_min, qty_max, muc_xac_nhan (nguon | tinh | kinh_nghiem), ngay_tra`: hệ số có số mà không có `norm_code` TT 38 phải
+  ghi đủ ba cột này (check_data) và làm vật liệu thành C; bảng `rough_norms` có đủ các cột này từ 30/10/2026
+  (database cũ: chạy `sql/04_upgrade.sql` rồi `init_db.py --reload-rules`). `MaterialLine` có `group_id` (5 nhóm), `weight_kg` (× `unit_weight_kg`), `quantity_min/max`,
+  `confirmation`; `RoughResult.by_group`, `envelope_by_orientation` (khi `ProjectParams.north_deg`), `status`.
+  `ProjectParams.min_opening_m2` (mặc định 0 = trừ mọi lỗ). `ProjectParams.wall_systems_by_class` (lớp -> phương án tường, chỉ cho tường bản vẽ không ghi vật liệu, C). Loại vật liệu thô `materials.raw_class` (RAW_CLASSES, 11 loại); `ProjectParams.material_classes` chỉ xuất loại đã chọn; `RoughResult.by_class`. `data/rules/khoang_hop_ly.csv`: khoảng thông thường cho kiểm
+  tra chéo (`rough/checks.py`, chỉ cảnh báo; KH05 sàn từng tầng so với `ProjectParams.building_area_m2`). JSON cho bộ tối ưu:
+  `rough/boq.export_for_optimizer` (API `/api/takeoff/rough/optimizer`, `export_boq.py --json`; dòng D vào `missing`).
 - `src/optimat/catalog/`: danh mục vật liệu, nhà cung cấp, phương tiện (PostgreSQL hoặc CSV).
 - **Đại lý** (19/10/2026): ~2.800 đại lý thật miền Bắc (Trang Vàng, Hòa Phát, OpenStreetMap; thu thập ở `D:\daily`), chưa có giá,
   phần lớn chưa có tọa độ; `lat`, `lon`, `lead_time_days` để trống được, tối ưu bỏ qua đại lý thiếu (có ghi chú). Trang
@@ -182,7 +204,8 @@ nhận diện) trả 401/403 cho người chưa đăng nhập hoặc không ph�
 thường chưa bắt đăng nhập. Lộ trình quản trị AD-01..06: `SPRINTS.md`.
 
 Chưa có: trình thu thập giá,
-bge-m3, OSRM (bản đồ đại lý Leaflet đã có, chưa tính quãng đường), LangGraph, đối chiếu dự toán Excel, dữ liệu thật.
+bge-m3, OSRM (bản đồ đại lý Leaflet đã có, chưa tính quãng đường), LangGraph, dữ liệu thật. Kiểm tra sai lệch dự toán (05/11/2026): `rough/estimate_check.py`, `POST /api/estimate/check`,
+trang `/kiem-tra-sai-lech`; đầu vào là bảng chuẩn CSV/XLSX (cột như `data/ground_truth/du_toan/*.csv`), file .xls/.xlsx của phần mềm dự toán đọc thẳng bằng `rough/estimate_reader.py` (tự nhận dòng tiêu đề, cột theo từ khóa, chữ VNI).
 
 Bản vẽ thật đã thử (13/10/2026, nhóm build, chưa có đáp án đo tay): nhà phố 4 mặt bằng và nhà dân 3 mặt bằng
 (xuất qua phần mềm xem nhanh: hatch bị phá, tường trên layer theo nét bút), file kết cấu (bỏ qua đúng).
@@ -190,7 +213,9 @@ Tường bao nhận tốt; còn nhận nhầm thành cầu thang, khung cửa s�
 Các ngưỡng tự nhận layer (config.py) mới chỉnh trên 2 bản vẽ này.
 
 Vấn đề đã biết:
-- Bộ quy tắc hatch (ANSI31, SOLID) là quy ước giả định. Hatch bị phá mất tên mẫu nên không dùng để gán vật liệu được.
+- Bộ quy tắc hatch (ANSI31, SOLID) là quy ước giả định. Hatch bị phá thành nét rời (30/10/2026) được dựng lại thành vùng
+  "ANSI31" đoán (`HatchItem.synthetic`, nguồn `hatch_doan`, tin cậy 0,4): chỉ xác nhận "là khối xây" (H01), không cho biết
+  loại gạch; mẫu hatch thật (AR-B816, AR-CONC…) vẫn không khôi phục được.
 - Danh mục thật: chỉ W-GN01-110 và W-GN01-220 đủ số để tối ưu; các phương án khác thiếu định mức, khối lượng tường hoặc λ
   (xem `Catalog.wall_view().missing`). Chưa có phương án lớp 330. Mọi vật liệu tường chưa có hao hụt (`waste_pct`):
   bảng vật liệu và tối ưu đều không cộng hao hụt (có ghi chú). Bảng `labor_rates` thật còn trống (số MẪU ở `data/sample/catalog`). VU04 (vữa AAC) tính theo tấn nhưng chưa có khối

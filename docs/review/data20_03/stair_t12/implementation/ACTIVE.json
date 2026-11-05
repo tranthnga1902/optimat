@@ -1,0 +1,10 @@
+{
+  "status": "SOURCE_FREEZE_CHỜ_01_15_REVIEW",
+  "receipt": "final/receipt.json",
+  "contract": "final/STAIR_CONTRACT.json",
+  "handoff": "final/HANDOFF.md",
+  "stairs_sha256": "059d396d0df3dfd68f075e8984980036514c4b9239bc313408631e4a9302324b",
+  "C2_helper_sha256": "6bb3c47a1a2275c05e264e91afc40968fa01670371c8a237df65ca5aed61d6e9",
+  "test": "239 passed,3 deselected,EXIT0",
+  "actual": "scoped source replay, not full CAD parser; BT/CP/XAY NULL/D"
+}

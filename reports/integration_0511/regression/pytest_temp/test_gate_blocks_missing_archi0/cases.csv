@@ -1,0 +1,5 @@
+ten,cong_trinh_id,data_kind,split,du_toan,phien_ban,kien_truc,ket_cau,thong_so,nguon,quyen_dung,dap_an_trang_thai,nguoi_kiem,ghi_chu
+khong_kt,ct_khong_kt,ACTUAL,test,gt/khong_kt.csv,chua_ro,,,,x,noi_bo,da_kiem,KS. A,
+thu_muc,ct_thu_muc,ACTUAL,test,gt/thu_muc.csv,chua_ro,data/drawings/test,,,x,noi_bo,da_kiem,KS. A,
+du_toan_thu_muc,ct_du_toan_thu_muc,ACTUAL,test,gt,chua_ro,kt/du_toan_thu_muc.dxf,,,x,noi_bo,da_kiem,KS. A,
+du,ct_du,ACTUAL,test,gt/du.csv,chua_ro,data/drawings/test/kt.dxf,,,x,noi_bo,da_kiem,KS. A,

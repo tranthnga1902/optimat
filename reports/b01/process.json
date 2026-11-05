@@ -1,0 +1,13 @@
+{
+  "pid": 17540,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_formwork_materials.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\b01\\pytest_temp"
+  ]
+}

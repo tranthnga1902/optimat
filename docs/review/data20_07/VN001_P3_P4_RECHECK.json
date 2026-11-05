@@ -1,0 +1,207 @@
+{
+  "source_sample": "..\\data_nha_o\\mau_kiem_tra_vn001.json",
+  "source_sample_sha256": "33949dda0147490d55f6ebb59693e6fe00d4b54f6ec6f6cd320d6e9584bf64ae",
+  "kind": "source_arithmetic_and_partial_drawing_crosscheck",
+  "rows": [
+    {
+      "index": 1,
+      "source_label": "BM-1",
+      "page": 3,
+      "factors": [
+        "2",
+        "7.29",
+        "1",
+        "1.15",
+        "1.3"
+      ],
+      "reported_m3": "21.797",
+      "recomputed_m3": "21.79710",
+      "rounded_m3": "21.797",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false
+    },
+    {
+      "index": 2,
+      "source_label": "BM-2",
+      "page": 3,
+      "factors": [
+        "2",
+        "4.89",
+        "1",
+        "1.15",
+        "1.3"
+      ],
+      "reported_m3": "14.621",
+      "recomputed_m3": "14.62110",
+      "rounded_m3": "14.621",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false
+    },
+    {
+      "index": 3,
+      "source_label": "BM-3",
+      "page": 3,
+      "factors": [
+        "10.69",
+        "0.9",
+        "1.15",
+        "1.3"
+      ],
+      "reported_m3": "14.383",
+      "recomputed_m3": "14.383395",
+      "rounded_m3": "14.383",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false
+    },
+    {
+      "index": 4,
+      "source_label": "BM-5",
+      "page": 3,
+      "factors": [
+        "10.48",
+        "1",
+        "1.15",
+        "1.3"
+      ],
+      "reported_m3": "15.668",
+      "recomputed_m3": "15.66760",
+      "rounded_m3": "15.668",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false,
+      "drawing_correspondence": "BM-4 at axis B",
+      "drawing_length_m": "12.08",
+      "net_length_explanation": "12.08 - 2*0.80 = 10.48",
+      "source_label_issue": true,
+      "handles": [
+        "1000001",
+        "1002FE7"
+      ]
+    },
+    {
+      "index": 5,
+      "source_label": "BM-5",
+      "page": 4,
+      "factors": [
+        "10.99",
+        "1",
+        "1.15",
+        "1.3"
+      ],
+      "reported_m3": "16.430",
+      "recomputed_m3": "16.43005",
+      "rounded_m3": "16.430",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false,
+      "drawing_correspondence": "BM-5 at axis A",
+      "drawing_length_m": "12.59",
+      "net_length_explanation": "12.59 - 2*0.80 = 10.99",
+      "source_label_issue": false,
+      "handles": [
+        "1000057",
+        "1003162"
+      ]
+    },
+    {
+      "index": 6,
+      "source_label": "TC1-1",
+      "page": 4,
+      "factors": [
+        "1",
+        "3.5",
+        "0.92",
+        "0.25",
+        "1.3"
+      ],
+      "reported_m3": "1.047",
+      "recomputed_m3": "1.046500",
+      "rounded_m3": "1.047",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false
+    },
+    {
+      "index": 7,
+      "source_label": "TC1-2",
+      "page": 4,
+      "factors": [
+        "1",
+        "1.59",
+        "0.92",
+        "0.25",
+        "1.3"
+      ],
+      "reported_m3": "0.475",
+      "recomputed_m3": "0.4754100",
+      "rounded_m3": "0.475",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false
+    },
+    {
+      "index": 8,
+      "source_label": "DCT",
+      "page": 4,
+      "factors": [
+        "1",
+        "0.9",
+        "0.65",
+        "0.45",
+        "1.3"
+      ],
+      "reported_m3": "0.342",
+      "recomputed_m3": "0.342225",
+      "rounded_m3": "0.342",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false
+    },
+    {
+      "index": 9,
+      "source_label": "MG1-1",
+      "page": 4,
+      "factors": [
+        "1",
+        "3.44",
+        "0.45",
+        "0.4",
+        "1.3"
+      ],
+      "reported_m3": "0.805",
+      "recomputed_m3": "0.804960",
+      "rounded_m3": "0.805",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false
+    },
+    {
+      "index": 10,
+      "source_label": "BE-PHOT",
+      "page": 4,
+      "factors": [
+        "2.7",
+        "3.2",
+        "1.65",
+        "1.3"
+      ],
+      "reported_m3": "18.533",
+      "recomputed_m3": "18.53280",
+      "rounded_m3": "18.533",
+      "arithmetic": "match",
+      "geometry": "not_fully_verified",
+      "human_approval": false
+    }
+  ],
+  "sum_exact_m3": "104.1011400",
+  "sum_printed_rows_m3": "104.101",
+  "verification_status": "chua_kiem",
+  "human_approval": false,
+  "limitations": [
+    "net length convention is not verification of excavation dimensions or coefficient1.3",
+    "original source and canonical untouched; no database write"
+  ]
+}

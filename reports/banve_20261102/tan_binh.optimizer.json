@@ -1,0 +1,172 @@
+{
+ "status": "D",
+ "stages": {
+  "dat_mong": "Đất và móng",
+  "khung": "Khung bê tông cốt thép",
+  "tuong": "Tường xây, trát",
+  "chong_tham": "Chống thấm, nền"
+ },
+ "materials": [
+  {
+   "material_id": "XM02",
+   "name": "Xi măng PCB40, bao 50 kg",
+   "group_id": "be_tong_cot_thep",
+   "unit": "tấn",
+   "quantity": 17.15,
+   "quantity_min": null,
+   "quantity_max": null,
+   "weight_kg": 17150.0,
+   "transport_volume_m3": null,
+   "status": "C",
+   "provisional": true,
+   "confirmation": "nguon",
+   "by_stage": {
+    "khung": 13.303,
+    "dat_mong": 3.848
+   }
+  },
+  {
+   "material_id": "CA01",
+   "name": "Cát vàng hạt to (đổ bê tông)",
+   "group_id": "be_tong_cot_thep",
+   "unit": "m³",
+   "quantity": 32.948,
+   "quantity_min": null,
+   "quantity_max": null,
+   "weight_kg": 47774.6,
+   "transport_volume_m3": 32.948,
+   "status": "C",
+   "provisional": true,
+   "confirmation": "nguon",
+   "by_stage": {
+    "khung": 25.556,
+    "dat_mong": 7.392
+   }
+  },
+  {
+   "material_id": "DA01",
+   "name": "Đá 1×2",
+   "group_id": "be_tong_cot_thep",
+   "unit": "m³",
+   "quantity": 53.706,
+   "quantity_min": null,
+   "quantity_max": null,
+   "weight_kg": 83244.3,
+   "transport_volume_m3": 53.706,
+   "status": "C",
+   "provisional": true,
+   "confirmation": "nguon",
+   "by_stage": {
+    "khung": 41.654,
+    "dat_mong": 12.048
+   }
+  },
+  {
+   "material_id": "TH10",
+   "name": "Dây thép buộc 1 ly",
+   "group_id": "be_tong_cot_thep",
+   "unit": "kg",
+   "quantity": 183.323,
+   "quantity_min": 120.325,
+   "quantity_max": 246.321,
+   "weight_kg": 183.3,
+   "transport_volume_m3": null,
+   "status": "C",
+   "provisional": true,
+   "confirmation": "tinh",
+   "by_stage": {
+    "khung": 183.323
+   }
+  }
+ ],
+ "missing": [
+  {
+   "material_id": null,
+   "name": "Bê tông trộn tại chỗ M150",
+   "unit": "m³",
+   "known_part": 2.016,
+   "reason": "cấp phối bê tông M150; hao hụt thi công (%)"
+  },
+  {
+   "material_id": null,
+   "name": "Cốt thép (chưa chia nhóm đường kính)",
+   "unit": "tấn",
+   "known_part": 15.328,
+   "reason": "bảng thống kê thép để chia nhóm đường kính; hao hụt thi công (%)"
+  },
+  {
+   "material_id": "CP01",
+   "name": "Ván khuôn phủ phim",
+   "unit": "m²",
+   "known_part": null,
+   "reason": "định mức COP_PHA → CP01 (chưa tra TT 38/2026); khối lượng riêng (kg / đơn vị) để tính vận chuyển; hao hụt thi công (%)"
+  }
+ ],
+ "groups": [
+  {
+   "group_id": "be_tong_cot_thep",
+   "name": "Vật liệu bê tông cốt thép",
+   "in_scope": true,
+   "materials": [
+    "XM02",
+    "CA01",
+    "DA01",
+    "TH10"
+   ],
+   "weight_kg": 148352.2,
+   "weight_complete": true,
+   "status": "C"
+  },
+  {
+   "group_id": "phan_tho",
+   "name": "Vật liệu thi công phần thô",
+   "in_scope": true,
+   "materials": [
+    "CP01"
+   ],
+   "weight_kg": null,
+   "weight_complete": false,
+   "status": "D"
+  },
+  {
+   "group_id": "hoan_thien",
+   "name": "Vật liệu hoàn thiện",
+   "in_scope": false,
+   "materials": [],
+   "weight_kg": null,
+   "weight_complete": true,
+   "status": null
+  },
+  {
+   "group_id": "khac_phap_ly",
+   "name": "Vật liệu khác và khung pháp lý",
+   "in_scope": false,
+   "materials": [],
+   "weight_kg": null,
+   "weight_complete": true,
+   "status": null
+  },
+  {
+   "group_id": "ket_cau_thep_bao_che",
+   "name": "Vật liệu kết cấu thép và bao che",
+   "in_scope": false,
+   "materials": [],
+   "weight_kg": null,
+   "weight_complete": true,
+   "status": null
+  },
+  {
+   "group_id": "chua_ro",
+   "name": "Chưa xếp nhóm (danh mục chưa có mã)",
+   "in_scope": true,
+   "materials": [
+    "Bê tông trộn tại chỗ M150",
+    "Cốt thép (chưa chia nhóm đường kính)"
+   ],
+   "weight_kg": null,
+   "weight_complete": false,
+   "status": "D"
+  }
+ ],
+ "envelope_by_orientation": {}
+}

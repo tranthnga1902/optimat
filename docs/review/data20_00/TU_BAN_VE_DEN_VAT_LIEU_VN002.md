@@ -1,0 +1,27 @@
+# Từ cấu kiện đến vật liệu có thể đối chiếu · VN002
+
+Mục tiêu là giảm cả hai loại sai: bỏ sót vật liệu của một cấu kiện và gán lượng của cả nhóm cho một cấu kiện. Ca triển khai đầu tiên là cột thân nhà C-2, giao trục 4/A, cao độ +3,150 đến +6,750 m. Đây là hồ sơ build kiểm nội bộ, chưa có người đo bóc phê duyệt.
+
+| Công đoạn | Bằng chứng để chuyển bước | Ca đối chứng ngăn sai |
+|---|---|---|
+| Chọn đúng đối tượng | Tệp/revision/hash → hình và tầng → trục và mã → đoạn cao độ; giữ handle và đường dẫn qua block lồng. | Hai cột cùng tên ở 4/A và 4/B có định danh khác; cùng một cột xuất hiện trên mặt cắt không sinh thêm số lượng. |
+| Chọn đúng số đo | Ghép hai đường biên/cạnh hoặc DIM đúng mặt cắt, cao độ đúng đầu và đơn vị có căn cứ. | Kích thước lệch trục–mép cột không được coi là cạnh toàn tiết diện. Hình hở hoặc đường chéo không thành cột. |
+| Tính và phân bổ giao | Lưu riêng thể tích hình học, phần trừ có nguồn, quy ước, tổng sau trừ. Gắn ghi chú sàn với ô, nút biên, cao độ và mặt cắt phù hợp. | Hai vùng sàn cùng tầng có cao độ khác nhau. Nếu bằng chứng không phân biệt được vùng, giữ lượng hình học; lượng sau trừ chưa chốt. |
+| Liên kết vật liệu | Từ từng công tác và cấu kiện đến quy cách thiết kế, số hiệu thanh/cấp phối/định mức, số lượng mỗi cấu kiện và phạm vi thống kê. | Không phân bình quân tổng thép tầng; không nhân tiếp hệ số số cấu kiện khi bảng đã ghi tổng; không áp bước đai giữa nhịp cho vùng đầu cột. |
+| Tính lượng mua | Tách vật liệu đã lắp theo thiết kế, hao hụt có nguồn và lượng đặt theo quy cách bán. Giữ các phương án thay thế tách nhau. | Bê tông thương phẩm và thành phần của bê tông trộn tại chỗ chỉ thuộc hai lựa chọn khác nhau. Thiếu bảng cắt/hệ số/đơn tối thiểu/báo giá thì chưa xác định lượng mua hoặc giá giao. |
+| Nghiệm thu | 07 bóc tay độc lập khỏi đường tính ứng dụng; 03/06 bảo toàn bằng chứng qua reader/API, 04/02 gắn vật liệu theo đúng dòng, 15 so trước/sau, 01 xác minh trên 3001. Sau khi khóa bản build, đánh giá trên nhà ở chưa dùng để chỉnh thuật toán, công bố mẫu số, sai số và các dòng thiếu. | Một phép tính đúng trên VN002 không chứng minh độ chính xác của toàn nhà hay một hồ sơ mới. |
+
+## Kết quả kiểm thiết kế cho đoạn C-2
+
+- **Bê tông.** Bộ đọc trên DXF cho 0,220 × 0,220 × 3,600 = 0,174240 m³. Mặt bằng KC-03-02 ghi H=120 mm trong ô giáp nút. Tờ KC-04-03 xác nhận dầm biên D1-4A đến trục 4 tại +6,750; mặt cắt 3–3 phía gối ghi 120 + 280 = 400 mm. Đây là bằng chứng củng cố chiều dày sàn giáp đầu cột. Nếu áp quy ước cột tính tới đáy sàn, phần trừ là 0,005808 m³ và còn 0,168432 m³. Bản reader đã kiểm còn để trống kết quả sau trừ do chưa gán được nguồn ô sàn cho nút. [Mặt bằng](VN002_C2_A4_SLAB.png), [dầm biên đến trục 4](VN002_D1_4A_DEN_TRUC4.png), [mặt cắt 3–3](VN002_D1_4A_MC33.png).
+- **Thép dọc.** Ở KC-02-04, chi tiết 2–2 và hình dọc đánh dấu 3 và 4, mỗi dấu 2Ø20. Bảng cùng tờ ở nhóm C-2 (SL:2) ghi chiều dài cắt mỗi thanh 4.300 mm. Theo hai dòng đó, một cột cần 2 số hiệu × 2 thanh/số hiệu × 4,30 m = **17,20 m** chiều dài cắt của bộ thanh. Chiều dài này có thể vượt cao độ đoạn, không cắt cụt về 3,60 m hay cộng thêm neo nối lần hai. Theo KC-00, bảng 3 ghi Ø20 là 2,470 kg/m: **42,484 kg**. Theo hai dòng bảng thép đã làm tròn, khối lượng phân cho một trong hai cột là (42,4 + 42,4)/2 = **42,4 kg**. Giữ chênh 0,084 kg để đối chiếu; chưa xác nhận quy ước đơn trọng dùng để lập bảng. Kết quả đọc tay, chưa phải biên nhận web hay lượng mua nguyên cây. [Chi tiết C-2](VN002_C2_A4_SECTION.png), [bảng thép](VN002_C2_BANG_THEP_3_4.png), [đơn trọng](VN002_BANG3_DON_TRONG.png).
+- **Đai và cốp pha.** Bảng ghi 77 đai Ø6 mỗi cột cho toàn nhóm chiều cao. Chi tiết dọc thể hiện bước a100/a200 theo vùng. Chưa phân bổ đủ số đai tại ranh vùng cho riêng đoạn này. Diện tích cốp pha cần trừ đúng mặt tiếp xúc, số tấm mua còn phụ thuộc quy cách và số lần sử dụng. Để trống từng phần thiếu.
+
+**Phần việc phát hành:** trên 3001 chỉ nhận đạt khi mở được dòng 4/A của đúng dự án và phiên bản, hiển thị số đo, nguồn, khoản trừ, phương án, lượng đã biết và lý do còn thiếu. Lưu ảnh thật, biên nhận tính và đối chiếu với bảng tay. Giữ nguyên 20 bảng PostgreSQL.
+
+## Bản sửa đã có bằng chứng
+
+- Bộ tính vật liệu đã sửa liên kết phần góp về **đúng dòng công tác trong snapshot**. Với kết quả reader VN002, đoạn 4/A có dòng bê tông và cốp pha riêng với 4/B. Ba ca tái hiện lỗi trước sửa; 129 ca liên quan qua sau sửa. Chưa chọn được lượng thuần thì vật liệu vẫn hiện trạng thái thiếu. [Biên nhận 04 và cách tái hiện](../data20_04/column_material_binding/README.md).
+- Bộ đọc bảng thép từng mượn tiêu đề cột của bảng bên cạnh. 05 có bản sửa thử cách ly giới hạn phạm vi trước khi đọc header và hàng; bốn ca từ fail thành pass, 135 kiểm thử qua trên bản thử. Còn phải duyệt và tích hợp lên bản chạy. Đây là lỗi ranh giới bảng, khác với lỗi nối số hiệu thanh về đúng đoạn vật lý. [Biên nhận thử nghiệm](../data20_05/rebar_table_fix/staging_receipt.json).
+- Source CAD kiểm tay đã có cho cả thanh 3 và 4 của C-2. C-1 có hàng trùng toàn bộ số hiệu, đường kính, chiều dài và số lượng. Mọi ánh xạ cần cả nhóm cấu kiện, tờ, phiên bản và quan hệ tới mặt cắt. [Nguồn từng hàng](../data20_04/column_material_binding/schedule_source.json).
+- Trong gói giao diện kiểm riêng, khi chọn 4/B danh sách lý do thiếu không còn lấy nhầm lý do thiếu sàn của 4/A. Điều kiện chung của vật tư vẫn hiển thị. Đã thử cả bê tông thương phẩm lẫn trộn tại chỗ. [Kết quả kiểm phạm vi](../../../reports/c2_ui_final_v3/mixed_scope.json). Đây là kiểm gói mã nguồn, không thay cho thao tác trên 3001.

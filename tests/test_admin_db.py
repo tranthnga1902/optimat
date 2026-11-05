@@ -1,4 +1,4 @@
-"""Quản trị cơ sở dữ liệu (api/admin_db.py): xem 26 bảng, sửa 6 bảng quy tắc khi có PostgreSQL."""
+"""Quản trị cơ sở dữ liệu (api/admin_db.py): xem 28 bảng, sửa 6 bảng quy tắc khi có PostgreSQL."""
 import os
 import subprocess
 import sys
@@ -18,8 +18,18 @@ def test_overview_and_rows_from_csv(monkeypatch):
     monkeypatch.delenv("DATABASE_URL", raising=False)
     d = client.get("/api/admin/db").json()
     tables = {t["name"]: t for c in d["clusters"] for t in c["tables"]}
-    assert d["source"] == "csv" and not d["connected"] and len(tables) == 26
+    assert d["source"] == "csv" and not d["connected"] and len(tables) == 20
+    assert d['expected_table_count'] == 20 and d['physical_table_count'] is None
     assert not any(t["editable"] for t in tables.values())          # không có database: chỉ xem
+    revisions = {"project_document_revisions", "project_profile_revisions"}
+    assert 'document_revisions' in tables
+    for name in sorted(revisions):
+        response = client.get(f"/api/admin/tables/{name}")
+        assert response.status_code == 200
+        fallback = response.json()
+        # Có model trong metadata không có nghĩa DB đã áp schema hoặc đã có dữ liệu.
+        assert fallback["name"] == name and fallback["source"] == "csv"
+        assert fallback["rows"] == [] and fallback["total"] == 0 and fallback["editable"] is False
     t = client.get("/api/admin/tables/material_notes").json()
     assert t["total"] > 150 and t["rows"][0]["id"] == 1 and "pattern" in t["rows"][0]
     assert client.post("/api/admin/tables/material_notes", json={"pattern": "x"}).status_code == 409

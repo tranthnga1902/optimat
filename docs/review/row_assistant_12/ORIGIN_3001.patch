@@ -1,0 +1,55 @@
+--- a/src/optimat/api/material_advisor.py
++++ b/src/optimat/api/material_advisor.py
+@@ -26,7 +26,7 @@
+ 
+ def _allow(request: Request, user):
+     origin = request.headers.get("origin")
+-    if origin not in {"http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173", "http://127.0.0.1:5173"}:
++    if origin not in {"http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173", "http://127.0.0.1:5173", "http://127.0.0.1:3001"}:
+         raise HTTPException(403, "Nguồn yêu cầu trợ lý chưa được cho phép.")
+     if not get_database_url():
+         if os.environ.get("OPTIMAT_ASSISTANT_LOCAL_DEMO") != "1" or not request.client or request.client.host not in {"127.0.0.1", "::1", "testclient"}:
+--- a/tests/test_material_advisor_api.py
++++ b/tests/test_material_advisor_api.py
+@@ -102,3 +102,41 @@
+         request_body = {**payload, "contextJson": json.dumps(changed)}
+         request_body["contextHash"] = hashlib.sha256(request_body["contextJson"].encode()).hexdigest()
+         assert client.post("/api/assistant/materials", json=request_body).status_code == 409
++
++
++def test_exact_demo_origin_3001_bound_request_and_guards(client, monkeypatch):
++    payload = request().model_dump()
++    origin = {"origin": "http://127.0.0.1:3001"}
++    calls = []
++    monkeypatch.setattr(api.Catalog, "load", lambda: None)
++    def mock_advice(req, catalog):
++        calls.append(req.requestId)
++        return {"requestId": req.requestId, "contextHash": req.contextHash, "applied": False}
++    monkeypatch.setattr(api, "advise_materials", mock_advice)
++
++    # Origin hợp lệ không thay thế cookie phiên hoặc binding.
++    assert client.post("/api/assistant/materials", json=payload, headers=origin).status_code == 401
++    session = client.post("/api/assistant/material-session", json=payload, headers=origin)
++    assert session.status_code == 200 and session.json()["provenance"] == "client_snapshot"
++    answer = client.post("/api/assistant/materials", json=payload, headers=origin)
++    assert answer.status_code == 200 and answer.json()["applied"] is False
++    assert calls == [payload["requestId"]]
++
++    changed = request(scope="Bản thay đổi").model_dump()
++    assert client.post("/api/assistant/materials", json=changed, headers=origin).status_code == 409
++    bad_origins = ["http://127.0.0.1:3002", "http://localhost:3001", "https://evil.example", ""]
++    for bad_origin in bad_origins:
++        for path in ("material-session", "materials"):
++            assert client.post(f"/api/assistant/{path}", json=payload, headers={"origin": bad_origin}).status_code == 403
++    # Kiểm header thực sự vắng, không chỉ chuỗi Origin rỗng.
++    client.headers.pop("origin", None)
++    for path in ("material-session", "materials"):
++        assert client.post(f"/api/assistant/{path}", json=payload).status_code == 403
++
++    monkeypatch.delenv("OPTIMAT_ASSISTANT_LOCAL_DEMO")
++    for path in ("material-session", "materials"):
++        assert client.post(f"/api/assistant/{path}", json=payload, headers=origin).status_code == 403
++    monkeypatch.setattr(api, "get_database_url", lambda: "configured")
++    for path in ("material-session", "materials"):
++        assert client.post(f"/api/assistant/{path}", json=payload, headers=origin).status_code == 401
++    assert calls == [payload["requestId"]]  # Mọi nhánh bị chặn đều không gọi trợ lý.

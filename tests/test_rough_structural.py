@@ -56,6 +56,22 @@ def _beam_plan() -> Drawing:
                    warnings=[])
 
 
+def test_strip_footing_uses_explicit_length_and_leaves_section_pending():
+    d = _beam_plan()
+    d.texts.append(_t("lanh tô", 90000, 0, 1914))
+    d.texts.extend([_t("BM-5", 1000, -19000), _t("MẶT CẮT MÓNG BĂNG BM-5", 31000, -32000),
+                    _t("bm-5: l=12590mm; sl=01", 31000, -32100)])
+    def footing():
+        return next(f for f in read_structural(d).foundations if f.name == "BM-5")
+    f = footing()
+    assert (f.kind, f.count, f.gross_length_mm, f.length_mm, f.width_mm, f.height_mm) == ("bang", 1, 12590, None, None, None)
+    d.texts.append(_t("bm-5: l=11000mm; sl=01", 31000, -32200))
+    assert footing().gross_length_mm is None
+    d.texts = [t for t in d.texts if t.text not in ("BM-5", "bm-5: l=11000mm; sl=01")]
+    f = footing()
+    assert not f.positions and f.gross_length_mm == 12590 and f.length_mm is None
+
+
 def test_read_structural_beams_and_foundations():
     st = read_structural(_beam_plan())
     beams = st.beams["MẶT BẰNG DẦM SÀN LẦU 2-3-4"]
@@ -165,3 +181,43 @@ def test_scale_picked_by_beam_width_when_view_mixes_scales():
     dims = [Dim(x=1, y=1, value=200, measured=1000, vertical=False)] * 5 + [Dim(x=1, y=1, value=500, measured=1000, vertical=False)] * 2
     assert _scale_by_beam_width(d, view, dims, {"dk1": (200, 300)}) == 0.5
     assert _scale_by_beam_width(d, view, dims[:5], {"dk1": (200, 300)}) is None       # một tỷ lệ: theo trung vị
+
+
+def _schedule_drawing():
+    # bảng THỐNG KÊ CỘT kiểu bộ 46: hàng mã cột + SL, mỗi hàng một đoạn cao độ, ô có đường kích thước mặt cắt
+    t = lambda s, x, y: TextItem(s, x, y, "0", "unicode", 250)
+    texts = [t("THỐNG KÊ CỘT", 0, 0), t("C1", -7000, 600), t("SL: 02", -5000, 600), t("C2", 0, 600), t("SL: 06", 2000, 600),
+             t("Từ+0.050", -14000, 4300), t("Đến +3.650", -14000, 3700),
+             t("Từ+3.650", -14000, 9300), t("Đến +6.950", -14000, 8700)]
+    dims = [Dim(-7000, 4000, 200, 2000, False), Dim(-6000, 4000, 300, 3000, True), Dim(-7000, 4100, 50, 500, False),
+            Dim(0, 4000, 300, 3000, False), Dim(1000, 4000, 250, 2500, True),
+            Dim(-7000, 9000, 200, 2000, False), Dim(-6000, 9000, 250, 2500, True)]       # C2 đoạn trên: không có hình
+    return Drawing([], texts, [], [], [], {}, 1.0, []), dims
+
+
+def test_column_schedule_reads_grid():
+    from optimat.rough.structural import read_column_schedule
+    d, dims = _schedule_drawing()
+    spans, warnings = read_column_schedule(d, dims)
+    got = {(s.code, s.count, s.z_from_mm, s.z_to_mm, s.b_mm, s.h_mm) for s in spans}
+    assert got == {("C1", 2, 50, 3650, 200, 300), ("C2", 6, 50, 3650, 300, 250), ("C1", 2, 3650, 6950, 200, 250)}
+    assert any("C2" in w and "tiết diện" in w for w in warnings)                  # ô trống không đoán
+
+
+def test_column_schedule_without_mapping_keeps_local_column_pending():
+    from optimat.rough.structural import ColumnSpan
+    from optimat.rough.columns import Column
+    from optimat.drawing.review import ReviewWall
+    from optimat.rough.takeoff import PlanInput
+    walls = [ReviewWall(id="A", cls="220", role="envelope", x1=0, y1=0, x2=6000, y2=0, mat="GN01")]
+    plan = PlanInput(name="Tầng 2", height_mm=3300, walls=walls, columns=[Column(id="K1", x=0, y=0, b_mm=220, h_mm=220)])
+    span = ColumnSpan(code="C1", count=4, z_from_mm=0, z_to_mm=3300, b_mm=200, h_mm=300)
+    res = compute_rough(RoughRequest(params=ProjectParams(slab_thickness_mm=100), plans=[plan], column_schedule=[span]),
+                        Catalog.from_csv(None))
+    cot = [w for w in res.works if w.code == "COT"]
+    assert len(cot) == 2
+    scheduled = next(w for w in cot if w.plan == "bảng thống kê cột")
+    assert scheduled.quantity == pytest.approx(4 * 0.2 * 0.3 * 3.3)
+    local = next(w for w in cot if w.plan == "Tầng 2")
+    assert local.quantity is None and local.missing and local.status == "D"
+    assert not next(t for t in res.totals if t.code == "COT").complete

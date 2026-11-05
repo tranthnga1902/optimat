@@ -1,0 +1,25 @@
+{
+  "pid": 28816,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_review.py",
+    "tests/test_view_progress.py",
+    "tests/test_takeoff_view_concurrency.py",
+    "tests/test_admin_project_file.py",
+    "tests/test_auth_admin.py",
+    "tests/test_admin_db.py",
+    "tests/test_rough_beams.py",
+    "tests/test_rough_columns.py",
+    "tests/test_rough_takeoff.py",
+    "-vv",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\integration_next\\focused_retry1\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T15:25:17.380941+00:00"
+}

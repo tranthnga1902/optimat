@@ -1,0 +1,38 @@
+{
+  "3002": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3002-candidate",
+    "build_id_at_capture": "5STud4qMZi47UJU3U-_3-",
+    "files": {
+      "src/app/(user)/do-boc/model.ts": {
+        "base_sha256": "15d1b600c8fa64e2c0cea81a585ee4c37bb16ba98810f3fab343bd43947c27e5",
+        "new_sha256": "b4798ce06bb5ca74ecd55f5f12a564fc678c4f121abf55cde2312cf18fed9b80"
+      },
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base_sha256": "e4fa5e72bddb9e13730f4b1d7cf55b5260a9a5baf61afc0ae352a081b9e0a9c5",
+        "new_sha256": "c079ab6a84c94999c53de054dfcc1ddaa7d0e81326b2435dfd92770c16eb637a"
+      }
+    },
+    "patch_sha256": "097d280196d36cfe18b35f5e0fe477aed14ff68ab605d39d259a4f23f4c9461b",
+    "approved_delta_lines_identical": true,
+    "apply_on_clean_copy": true,
+    "base_board_sha256": "0caa7567501afe3e8b4304ba584c3a805dfdf1caf0316060249adfccf09a7239"
+  },
+  "3001": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3001-candidate",
+    "build_id_at_capture": "UthdKbmMyzssbWeIX9H04",
+    "files": {
+      "src/app/(user)/do-boc/model.ts": {
+        "base_sha256": "50af95bed8e5a8578714ceff68c4ab75db8a47365974505958f74477f1b258d9",
+        "new_sha256": "59900ecf9476a38241649f4652b03c7103e59659a8d23c097e81173734033fa9"
+      },
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base_sha256": "5743ef0458cf836a583f9d91ad20184cf7fe5d652f72905d8106f44c20f6cb25",
+        "new_sha256": "ef6411ae331ee9725f686488a00d2426c1d4688cde81bfb605175f0c93fb266b"
+      }
+    },
+    "patch_sha256": "6c9336022ac687ffeb20c807b04f7a05a1e956d7637270755e6c62ba4b0e942d",
+    "approved_delta_lines_identical": true,
+    "apply_on_clean_copy": true,
+    "base_board_sha256": "3e894d8b30b17aa45268b15dda71269c882c9e91f176b387155c3a14275e4652"
+  }
+}

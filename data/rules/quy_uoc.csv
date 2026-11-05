@@ -13,7 +13,7 @@ QU-11,Tường,"Nét tường không nằm trong block có tên (block bàn gh�
 QU-12,Tường,Tường thẳng. Tường cong không được bóc.,B,Báo cung tròn lớn trên layer tường
 QU-13,Tường,Tường bao khép kín quanh nhà ở mỗi tầng (cửa được coi là liền).,K,Kiểm tra vòng kín sau khi nối khe cửa
 QU-14,Cửa,"Cửa đi có cung cánh cửa (bán kính 450–1300 mm, góc 60–120°); cửa sổ có nét kính trong bề dày tường; hoặc block cửa tên bắt đầu D, CD (cửa đi), S, CS, W (cửa sổ).",K,"Nối khe tường ≤ 3600 mm khi có dấu hiệu cửa, ghi lỗ mở"
-QU-15,Cửa,"Có bảng thống kê cửa: ký hiệu, rộng, cao, số lượng; ký hiệu ghi cạnh cửa.",K,"Đọc bảng; không có thì chiều cao mặc định 2,2 m cửa đi, 1,4 m cửa sổ và cảnh báo"
+QU-15,Cửa,"Có bảng thống kê cửa: ký hiệu, rộng, cao, số lượng; ký hiệu ghi cạnh cửa.",K,"Đọc bảng (chưa hỗ trợ); không có thì lấy kích thước cửa của dự án; dự án cũng trống thì không trừ lỗ mở đó và cảnh báo, không dùng số mặc định (B7)"
 QU-16,Bộ phận khác trên mặt bằng kiến trúc,"Cột: hình chữ nhật kín, tô đặc hoặc gạch chéo hai đường, cạnh 200–600 mm.",K,Tìm hình kín nhỏ có tô; so vị trí qua các tầng
 QU-17,Bộ phận khác trên mặt bằng kiến trúc,"Cầu thang: nét bậc cách đều, mũi tên và chữ LÊN hoặc XUỐNG.",K,Loại thành thang khỏi tường; đếm bậc
 QU-18,Bộ phận khác trên mặt bằng kiến trúc,"Ô trống trên sàn (thông tầng, giếng trời) vẽ dấu chéo chữ X và ghi chữ.",K,Trừ khỏi diện tích sàn

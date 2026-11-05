@@ -16,9 +16,10 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from optimat.catalog.repository import Catalog  # noqa: E402
 from optimat.drawing.dxf_reader import read_drawing  # noqa: E402
-from optimat.rough.boq import boq_workbook  # noqa: E402
+from optimat.rough.boq import boq_workbook, export_for_optimizer  # noqa: E402
 from optimat.rough.models import ProjectParams  # noqa: E402
 from optimat.rough.takeoff import compute_rough, rough_from_drawing  # noqa: E402
+from optimat.schemas import OpeningDefaults  # noqa: E402
 
 
 def main() -> None:
@@ -29,14 +30,19 @@ def main() -> None:
     ap.add_argument("--scale", type=float, help="hệ số tỷ lệ mặt bằng kết cấu (vẽ phóng to 2 lần: 0.5)")
     ap.add_argument("--params", help="file JSON thông số công trình")
     ap.add_argument("--out", help="file .xlsx ghi ra (mặc định cạnh bản vẽ)")
+    ap.add_argument("--json", help="ghi thêm JSON vật liệu thô cho bộ tối ưu (export_for_optimizer)")
     a = ap.parse_args()
-    params = ProjectParams(**json.loads(Path(a.params).read_text(encoding="utf-8"))) if a.params else ProjectParams()
+    raw = json.loads(Path(a.params).read_text(encoding="utf-8")) if a.params else {}
+    openings = OpeningDefaults(**raw.pop("openings")) if "openings" in raw else None
+    params = ProjectParams(**raw)
     catalog = Catalog.load()
     req = rough_from_drawing(read_drawing(a.drawing), params, a.height, catalog, Path(a.drawing).name,
-                             structural=[read_drawing(s) for s in a.structural], structural_scale=a.scale)
+                             structural=[read_drawing(s) for s in a.structural], structural_scale=a.scale, openings=openings)
     result = compute_rough(req, catalog)
     out = Path(a.out or Path(a.drawing).with_suffix(".boq.xlsx"))
     boq_workbook(result, req).save(out)
+    if a.json:
+        Path(a.json).write_text(json.dumps(export_for_optimizer(result), ensure_ascii=False, indent=1), encoding="utf-8")
     blank = sum(1 for w in result.works if w.quantity is None)
     print(f"Đã ghi {out}: {len(result.works)} dòng công tác ({blank} để trống), {len(req.rebar)} dòng thép, "
           f"{len(result.warnings)} cảnh báo.")

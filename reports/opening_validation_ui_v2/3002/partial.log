@@ -1,0 +1,2 @@
+PASS: hai request giữ 4 ID/parent/keep/nullable/known. 24 ca sai bị chặn trước JSON, loc 422 đúng hình và lỗ kể cả sau lọc, không lặp lý do.
+PASS: nhóm ảnh hưởng chờ, nhóm độc lập còn 4,56 m², tổng null, giữ lỗ chưa gắn tường.

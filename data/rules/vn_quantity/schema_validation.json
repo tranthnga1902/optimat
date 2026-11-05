@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "checksums": "passed",
+  "validated_records": {
+    "norms.jsonl": 59050,
+    "tables.jsonl": 2898,
+    "page_text.jsonl": 2603,
+    "measurement_rules.json": 38,
+    "reference_tables.jsonl": 558,
+    "basis_evidence.json": 3271
+  },
+  "duration_seconds": 44.6,
+  "scope": "Kiểu dữ liệu, khóa, mã, số, ngày và SHA-256; không thay thế duyệt chuyên môn."
+}

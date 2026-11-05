@@ -1,25 +1,35 @@
-# Kiểm soát dữ liệu OptiMat AI (2026-10-21, nguồn postgresql)
+# Kiểm soát dữ liệu OptiMat AI (2026-11-05, nguồn postgresql)
 
-Kết quả: **ĐẠT** · 0 lỗi · 1903 cảnh báo · 2 ghi chú
+Kết quả: **ĐẠT** · 0 lỗi · 1916 cảnh báo · 2 ghi chú
 
 | Hạng mục | Số liệu |
 |---|---|
-| Vật liệu (vật liệu tường) | 93 (16) |
-| Phương án tường (đủ số liệu tối ưu) | 20 (2) |
-| Theo lớp tường: phương án / đủ số liệu | 110: 7/1, 150: 3/0, 220: 5/1, 330: 0/0 |
-| Tên gọi khác, quy tắc bóc tách | 277, 27 |
-| Nhà cung cấp, dòng giá đại lý (có giá) | 2863, 0 (0) |
-| Vật liệu tường đã có giá | 0/16 |
-| Lịch sử giá (price_records): tổng / thật | 59 / 59 |
+| Vật liệu (vật liệu tường) | 98 (18) |
+| Phương án tường (đủ số liệu tối ưu) | 22 (5) |
+| Theo lớp tường: phương án / đủ số liệu | 110: 8/3, 150: 3/1, 220: 6/1, 330: 0/0 |
+| Tên gọi khác, quy tắc bóc tách | 292, 27 |
+| Nhà cung cấp, dòng giá đại lý (có giá) | 2867, 13 (13) |
+| Vật liệu tường đã có giá | 5/18 |
+| Lịch sử giá (price_records): tổng / thật | 63 / 63 |
 | Đáp án đo tay: bản vẽ, theo nhóm | 1, {'build': 1} |
+| Hồ sơ đánh giá phần thô (cases.csv): tổng, bị chặn | 2, 0 |
+| Bộ đáp án D02: dòng gốc / mẫu số / chờ phân loại / đã kiểm | 46_nha_tan_binh: 64 / 34 / 2 / 0 |
 
-## Cảnh báo (1903)
+## Cảnh báo (1916)
 
 | Khu vực | Mục | Nội dung |
 |---|---|---|
 | dap_an | data/ground_truth | Chưa có bản vẽ nhóm test có đáp án đo tay: chưa có số sai số để báo cáo. |
-| dinh_muc_phan_tho | dinh_muc_phan_tho.csv | 22/22 dòng định mức còn trống, chờ tra TT 38/2026: công tác dùng các dòng này chưa ra vật liệu mua về. |
-| gia | 16 vật liệu tường | Chưa có giá đại lý nào: AAC01, AAC02, AAC03, ALC01, ALC02, GK01, GK02, GK03, GK04, GN01, GN02, GN03, PN01, TN01, TN02, TN03. |
+| dap_an_d02 | d02/46_nha_tan_binh/dap_an_cong_tac.csv | 9 dòng chưa phân loại IN/OUT (giữ trong bộ, không coi là OUT): 46-C12.3, 46-C27.14, 46-C35.1, 46-C35.2, 46-C35.4, 46-C36, 46-C37, 46-C37.1, 46-C37.2. |
+| dap_an_d02 | d02/46_nha_tan_binh/dap_an_cong_tac.csv 46-C28 | Tổng phần con 94.14 lệch số gốc 90.066 (đã ghi khoi_luong_tinh_lai): người kiểm xác nhận. |
+| dinh_muc_phan_tho | CHONG_THAM CT01 CT01 | Hệ số tham khảo (tinh, Sika Bituseal BD, bản chi tiết sản phẩm (Sika Việt Nam)), chưa có số hiệu bảng TT 38/2026: vật liệu tính từ dòng này là tạm tính (C). |
+| dinh_muc_phan_tho | CHONG_THAM CT02 CT02 | Hệ số tham khảo (nguon, SikaTop-107 Seal VN, bản chi tiết sản phẩm hiệu đính 03/2026 (Sika Việt Nam)), chưa có số hiệu bảng TT 38/2026: vật liệu tính từ dòng này là tạm tính (C). |
+| dinh_muc_phan_tho | CHONG_THAM CT03 CT03 | Hệ số tham khảo (nguon, Sikalastic-110 (Sika Việt Nam); TOA PU Waterproof TDS 15/03/2023), chưa có số hiệu bảng TT 38/2026: vật liệu tính từ dòng này là tạm tính (C). |
+| dinh_muc_phan_tho | COT_THEP TH10 | Hệ số tham khảo (tinh, TT 38/2026/TT-BXD Phụ lục II (datafiles.chinhphu.vn)), chưa có số hiệu bảng TT 38/2026: vật liệu tính từ dòng này là tạm tính (C). |
+| dinh_muc_phan_tho | dinh_muc_phan_tho.csv | 2/31 dòng định mức còn trống, chờ tra TT 38/2026: công tác dùng các dòng này chưa ra vật liệu mua về. |
+| gia | 13 vật liệu tường | Chưa có giá đại lý nào: AAC02, ALC01, ALC02, GK01, GK04, GN02, GN03, GO01, GT01, PN01, TN01, TN02, TN03. |
+| ho_so | cases.csv dòng 2 (46_nha_tan_binh) | Quyền dùng chưa rõ: chỉ dùng nội bộ để đánh giá, không phân phối lại hồ sơ. |
+| ho_so | cases.csv dòng 3 (banve1_nha_pho_di_an) | Quyền dùng chưa rõ: chỉ dùng nội bộ để đánh giá, không phân phối lại hồ sơ. |
 | nguon_cung | CBG-0BF28D9EC2 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | CBG-15112CB965 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | CBG-3E270AD55D | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
@@ -33,6 +43,7 @@ Kết quả: **ĐẠT** · 0 lỗi · 1903 cảnh báo · 2 ghi chú
 | nguon_cung | CBG-6DDCD9EF88 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | CBG-904E2F04EE | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | CBG-9385832F4F | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
+| nguon_cung | CBG-991233626E | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | CBG-BF1179B54B | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | CBG-D01015FA3A | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | CBG-D9086B7F22 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
@@ -884,6 +895,9 @@ Kết quả: **ĐẠT** · 0 lỗi · 1903 cảnh báo · 2 ghi chú
 | nguon_cung | HPFDE93A54F3 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | HPFEC37221CD | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | HPFF26AC7375 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
+| nguon_cung | SUP_A | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
+| nguon_cung | SUP_B | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
+| nguon_cung | SUP_C | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | YP1014783 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | YP1017444 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | YP1022880 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
@@ -1884,25 +1898,24 @@ Kết quả: **ĐẠT** · 0 lỗi · 1903 cảnh báo · 2 ghi chú
 | nguon_cung | YP746889 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | YP982185 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
 | nguon_cung | YP992961 | Chưa có liên kết (Google Maps, website): kết quả tối ưu không dẫn link được. |
+| nguon_cung | supplier_materials | Có 13 dòng giá MẪU hoặc MÔ PHỎNG: không dùng để báo cáo. |
 | phuong_an_tuong | W-AAC01-100 | Chưa đủ số liệu để tối ưu, thiếu: khối lượng tường kg/m². |
 | phuong_an_tuong | W-AAC02-150 | Chưa đủ số liệu để tối ưu, thiếu: khối lượng tường kg/m². |
 | phuong_an_tuong | W-AAC03-200 | Chưa đủ số liệu để tối ưu, thiếu: khối lượng tường kg/m². |
 | phuong_an_tuong | W-ALC01-100 | Chưa đủ số liệu để tối ưu, thiếu: số lượng vật liệu / m² tường, công / m² tường, khối lượng tường kg/m². |
 | phuong_an_tuong | W-ALC02-150 | Chưa đủ số liệu để tối ưu, thiếu: số lượng vật liệu / m² tường, công / m² tường, khối lượng tường kg/m². |
-| phuong_an_tuong | W-GK01-110 | Chưa đủ số liệu để tối ưu, thiếu: số lượng vật liệu / m² tường, công / m² tường, khối lượng tường kg/m². |
 | phuong_an_tuong | W-GK01-220 | Chưa đủ số liệu để tối ưu, thiếu: số lượng vật liệu / m² tường, công / m² tường, khối lượng tường kg/m². |
 | phuong_an_tuong | W-GK02-190 | Chưa đủ số liệu để tối ưu, thiếu: hệ số dẫn nhiệt λ. |
 | phuong_an_tuong | W-GK03-100 | Chưa đủ số liệu để tối ưu, thiếu: khối lượng tường kg/m², hệ số dẫn nhiệt λ. |
 | phuong_an_tuong | W-GK04-xx | Chưa có lớp nhận diện bản vẽ (chiều dày): bóc tách không quy về được phương án này. |
-| phuong_an_tuong | W-GN02-110 | Chưa đủ số liệu để tối ưu, thiếu: số lượng vật liệu / m² tường, công / m² tường, khối lượng tường kg/m². |
-| phuong_an_tuong | W-GN02-220 | Chưa đủ số liệu để tối ưu, thiếu: số lượng vật liệu / m² tường, công / m² tường, khối lượng tường kg/m². |
-| phuong_an_tuong | W-GN03-105 | Chưa đủ số liệu để tối ưu, thiếu: khối lượng tường kg/m². |
-| phuong_an_tuong | W-GN03-150 | Chưa đủ số liệu để tối ưu, thiếu: khối lượng tường kg/m². |
+| phuong_an_tuong | W-GN02-110 | Chưa đủ số liệu để tối ưu, thiếu: khối lượng tường kg/m². |
+| phuong_an_tuong | W-GN02-220 | Chưa đủ số liệu để tối ưu, thiếu: khối lượng tường kg/m². |
+| phuong_an_tuong | W-GO01-100 | Chưa đủ số liệu để tối ưu, thiếu: hệ số dẫn nhiệt λ. |
+| phuong_an_tuong | W-GO01-200 | Chưa đủ số liệu để tối ưu, thiếu: hệ số dẫn nhiệt λ. |
 | phuong_an_tuong | W-PN01-xx | Chưa có lớp nhận diện bản vẽ (chiều dày): bóc tách không quy về được phương án này. |
 | phuong_an_tuong | W-TN01-xx | Chưa có lớp nhận diện bản vẽ (chiều dày): bóc tách không quy về được phương án này. |
 | phuong_an_tuong | W-TN02-xx | Chưa có lớp nhận diện bản vẽ (chiều dày): bóc tách không quy về được phương án này. |
 | phuong_an_tuong | W-TN03-xx | Chưa có lớp nhận diện bản vẽ (chiều dày): bóc tách không quy về được phương án này. |
-| phuong_an_tuong | lớp 150 | Lớp 150 chưa có phương án nào đủ số liệu để tối ưu. |
 | phuong_an_tuong | lớp 330 | Chưa có phương án tường nào cho lớp 330: tường 330 nhận diện được nhưng không gán được vật liệu. |
 | vat_lieu | AAC01 | Vật liệu tường còn trống: hao hụt thi công (%). |
 | vat_lieu | AAC02 | Vật liệu tường còn trống: hao hụt thi công (%). |
@@ -1912,10 +1925,12 @@ Kết quả: **ĐẠT** · 0 lỗi · 1903 cảnh báo · 2 ghi chú
 | vat_lieu | GK01 | Vật liệu tường còn trống: hao hụt thi công (%). |
 | vat_lieu | GK02 | Vật liệu tường còn trống: hệ số dẫn nhiệt λ, hao hụt thi công (%). |
 | vat_lieu | GK03 | Vật liệu tường còn trống: khối lượng / đơn vị, hệ số dẫn nhiệt λ, hao hụt thi công (%). |
-| vat_lieu | GK04 | Vật liệu tường còn trống: khối lượng / đơn vị, hao hụt thi công (%). |
+| vat_lieu | GK04 | Vật liệu tường còn trống: hao hụt thi công (%). |
 | vat_lieu | GN01 | Vật liệu tường còn trống: hao hụt thi công (%). |
 | vat_lieu | GN02 | Vật liệu tường còn trống: khối lượng / đơn vị, hao hụt thi công (%). |
-| vat_lieu | GN03 | Vật liệu tường còn trống: khối lượng / đơn vị, hao hụt thi công (%). |
+| vat_lieu | GN03 | Vật liệu tường còn trống: hao hụt thi công (%). |
+| vat_lieu | GO01 | Vật liệu tường còn trống: hệ số dẫn nhiệt λ, hao hụt thi công (%). |
+| vat_lieu | GT01 | Vật liệu tường còn trống: hệ số dẫn nhiệt λ, hao hụt thi công (%). |
 | vat_lieu | PN01 | Vật liệu tường còn trống: khối lượng / đơn vị, hệ số dẫn nhiệt λ, hao hụt thi công (%). |
 | vat_lieu | TN01 | Vật liệu tường còn trống: khối lượng / đơn vị, hao hụt thi công (%). |
 | vat_lieu | TN02 | Vật liệu tường còn trống: khối lượng / đơn vị, hao hụt thi công (%). |

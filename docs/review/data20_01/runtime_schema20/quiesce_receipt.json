@@ -1,0 +1,57 @@
+{
+  "status": "quiesced_verified",
+  "at": "2026-11-04T17:45:03.2422685+07:00",
+  "repo": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai",
+  "requestedPids": [
+    8232,
+    32168,
+    20628,
+    20220,
+    9160,
+    23920
+  ],
+  "processes": [
+    {
+      "pid": 8232,
+      "parent": 9752,
+      "executable": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+      "commandLine": "\"C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe\" -m uvicorn optimat.api.main:app --app-dir src --host 127.0.0.1 --port 8001"
+    },
+    {
+      "pid": 32168,
+      "parent": 8232,
+      "executable": "D:\\laragon\\bin\\python\\python-3.13\\python.exe",
+      "commandLine": "\"C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe\" -m uvicorn optimat.api.main:app --app-dir src --host 127.0.0.1 --port 8001"
+    },
+    {
+      "pid": 20628,
+      "parent": 31576,
+      "executable": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+      "commandLine": "\"C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe\" -m uvicorn optimat.api.main:app --app-dir src --host 127.0.0.1 --port 8002"
+    },
+    {
+      "pid": 20220,
+      "parent": 20628,
+      "executable": "D:\\laragon\\bin\\python\\python-3.13\\python.exe",
+      "commandLine": "\"C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe\" -m uvicorn optimat.api.main:app --app-dir src --host 127.0.0.1 --port 8002"
+    },
+    {
+      "pid": 9160,
+      "parent": 16460,
+      "executable": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+      "commandLine": "\"C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe\" -m uvicorn optimat.api.main:app --app-dir C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/src --port 8765"
+    },
+    {
+      "pid": 23920,
+      "parent": 9160,
+      "executable": "D:\\laragon\\bin\\python\\python-3.13\\python.exe",
+      "commandLine": "\"C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe\" -m uvicorn optimat.api.main:app --app-dir C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/src --port 8765"
+    }
+  ],
+  "restartPolicy": "Chờ S20 main receipt và chỉ thị restart; chưa restart",
+  "environmentNote": "Không đọc hoặc lưu environment/DSN/credential; cần S20 xác nhận môi trường từng cổng khi restart",
+  "remainingRequestedPids": [
+    null
+  ],
+  "remainingListeners": []
+}

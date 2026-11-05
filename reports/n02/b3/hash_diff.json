@@ -1,0 +1,26 @@
+{
+  "src/optimat/rough/steel.py": {
+    "before": "9857ac224c5289333a107edb65280f94858feea8121eafe1ba1e66f918b421a5",
+    "after": "40790e8602ffb9124a18b9b98c78449ab26578dcf4e3b9db55066cf57f1ca7b1"
+  },
+  "src/optimat/rough/status.py": {
+    "before": "f35df97de208e3cd9c9e7c67be82197fb94819d291403695bc1df1870652a812",
+    "after": "96d9482b769ef70294049b0724370df697e986bf820988b76d69a7dc31b4f384"
+  },
+  "src/optimat/rough/takeoff.py": {
+    "before": "03ddde818229db9b4a1abc8174890a289b53bb17884eb94baed88cd1b7ffd56b",
+    "after": "1fa43e190a5e22f2cd3b68bbedd939198210db926151fba4de28e745b576993f"
+  },
+  "src/optimat/rough/materials.py": {
+    "before": "86b32863e9a8907eb0bf8fd44e420e3279036b22fe7c44ca365776e0e2b064a1",
+    "after": "10e261d451406850c8a27979862c87dbb3d456a527752ce90a93ff8199a77187"
+  },
+  "tests/test_rough_partial.py": {
+    "before": null,
+    "after": "c334fc03134ca003daca7f1b107745619f41a7db1f7ae3afc4ed23d8009705db"
+  },
+  "src/optimat/rough/boq.py": {
+    "before": "955d6d5eb9db50192e1a5ca319ec289156d39c65675c3811296f52f28cb973f8",
+    "after": "379d53e448777b2a94bed455cd45a953dcb61b0658fe4ca739e7b8f3b0753bea"
+  }
+}

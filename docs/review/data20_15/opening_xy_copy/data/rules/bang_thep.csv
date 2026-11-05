@@ -1,0 +1,19 @@
+nhom,khoa,mau,ghi_chu
+cot_bang,cau_kien,^(ten )?cau kien$|^ck$,"Cột tên cấu kiện; ô gộp nhiều dòng thì dòng dưới lấy theo dòng trên"
+cot_bang,so_hieu,^(so hieu|sh|ky hieu)( thanh)?$,
+cot_bang,hinh_dang,^hinh dang,"Chỉ ghi lại, không dùng để tính"
+cot_bang,duong_kinh,^(duong kinh|dk|ø|φ|phi)\b,"Ø ghi bằng %%c cũng nhận"
+cot_bang,chieu_dai,^chieu dai( 1 thanh| mot thanh| cat)?( \((mm|m)\))?$,"Chiều dài cắt 1 thanh (đã gồm neo, nối, uốn, móc theo thiết kế). Ghi (m) thì đổi sang mm; không ghi thì coi là mm"
+cot_bang,sl_1ck,^(so luong |sl )?(1|mot|moi) ?ck$|^so thanh 1 ck$,
+cot_bang,so_ck,^so (cau kien|ck)$,
+cot_bang,tong_thanh,^(tong so thanh|tong sl|so luong|sl tong|tong so)$,
+cot_bang,khoi_luong,^(tong )?(khoi luong|trong luong)( \(kg\))?$,"Chỉ để đối chiếu với số hệ thống tính"
+ten_cau_kien,COT,^cot$,
+ten_cau_kien,DAM,^(dam|da kieng)$,
+ten_cau_kien,MONG,^mong$,
+ten_cau_kien,SAN,^san$,
+ten_cau_kien,LANH_TO,^lanh to$,
+ten_cau_kien,CAU_THANG,^(cau thang|ban thang|thang)$,
+ten_cau_kien,GIANG_TUONG,^giang( tuong)?$,
+ten_cau_kien,SE_NO,^se no$,
+ten_cau_kien,MAI,^(mai|san mai)$,

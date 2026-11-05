@@ -1,0 +1,14 @@
+{
+  "src/optimat/api/main.py": {
+    "before": "cf88ac8b0c6ff22390ba2765c9c5135a4a224d647587d53a627adf4f7be53c82",
+    "after": "f25d124f4a2366a3678821fc7c8da5898ad0f51d29f841b12351cf0dfad1af24"
+  },
+  "src/optimat/rough/takeoff.py": {
+    "before": "b529800263c84312400e78fb95eddd15ccf358a2dc0d64e313350e59dfe36269",
+    "after": "03ddde818229db9b4a1abc8174890a289b53bb17884eb94baed88cd1b7ffd56b"
+  },
+  "tests/test_rebar_scope_api.py": {
+    "before": null,
+    "after": "86c395e041bfc9cfdfa274f2de24e3d95d3cbfb9b51bbc888b9085f9089c3507"
+  }
+}

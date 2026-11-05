@@ -1,0 +1,100 @@
+--- a/src/app/(user)/du-an-cua-toi/ProjectDossier.tsx
++++ b/src/app/(user)/du-an-cua-toi/ProjectDossier.tsx
+@@ -9,7 +9,7 @@
+ 
+ type Props={project:OwnedProject; info:ProjectInfo; form:ReactNode; editing:boolean; dirty:boolean; getUid:()=>string;profile:ProfileRecord;draft:ProjectInfo;
+   sources:ProfileSource[];onSource:(s:ProfileSource)=>void;persistSelection:(r:SelectedRevision[])=>Promise<number>};
+-type UploadItem = { key: string; file: File; role: FileRole; target: string; status: "ready" | "sending" | "saved" | "failed"; message?: string };
++type UploadItem = { key: string; file: File; role: FileRole | ""; target: string; status: "ready" | "sending" | "saved" | "failed"; message?: string };
+ const roleLabels = { KT:"Kiến trúc", KC:"Kết cấu", HO_SO:"Hồ sơ", TIEN_LUONG:"Tiên lượng", THAM_KHAO:"Tham khảo" };
+ const fieldNames={location:"Địa điểm",buildingType:"Loại công trình",floors:"Số tầng",note:"Mô tả",materialNeeds:"Nhu cầu vật liệu"};
+ export function ProjectDossier({project,info,form,editing,dirty,getUid,profile,draft,sources,onSource,persistSelection}:Props) {
+@@ -65,6 +65,7 @@
+     setQueue(items => items.map(item => item.key === key ? {...item,...change} : item));
+   const upload=async(items:UploadItem[])=>{
+     if (!items.length || busy || uploading.current) return;
++    if (items.some(item=>!item.role)) {setErr("Chọn vai trò cho từng bản vẽ CAD đang chờ tải.");return;}
+     const abort=new AbortController();
+     uploading.current=abort;
+     setBusy(true);
+@@ -114,8 +115,7 @@
+   return <ProjectFilesPanel projectId={id} projectInfo={form} files={files} selectedRevisionIds={selected} viewingRevisionId={view}
+     preview={preview} busy={busy} loading={loading} error={err} onView={viewFile} onDownload={f=>{
+       if(f.project_id===id){const a=document.createElement("a");a.href=revisionPath(f,"original");a.download=f.name;a.click();}
+-    }} onSelectionChange={select} onStartAnalysis={start} startBlockedReason={!analysisAvailable?"Máy chủ chưa bật phân tích từ bản gốc đã lưu.":dirty?"Lưu thay đổi thông tin trước khi bắt đầu phân tích.":
+-      !selected.some(n=>files.find(f=>f.revision_id===n)?.role==="KT")?"Chọn một bản kiến trúc để bắt đầu bóc tách.":undefined}
++    }} onSelectionChange={select} onStartAnalysis={start} startBlockedReason={!analysisAvailable?"Máy chủ chưa bật phân tích từ bản gốc đã lưu.":dirty?"Lưu thay đổi thông tin trước khi bắt đầu phân tích.":undefined}
+     analysisContext={<div><p>Thông tin công trình · phiên bản {profile.version}. {info.note || "Chưa có mô tả."} {info.materialNeeds && `Nhu cầu: ${info.materialNeeds}`}</p>
+       {refsChanged && <button type="button" className="btn" disabled={busy||dirty} onClick={async()=>{
+         setBusy(true);setErr("");try{await persistSelection(files.filter(f=>selected.includes(f.revision_id)).map(selectedDto));}
+@@ -138,7 +138,7 @@
+       <label>Chọn tệp hồ sơ <input type="file" multiple aria-describedby="project-file-formats" accept=".dwg,.dxf,.pdf,.docx,.xls,.xlsx" disabled={busy} onChange={e=>{
+         const added=Array.from(e.currentTarget.files || [],(file):UploadItem=>({
+           key:crypto.randomUUID(),file,target:"",status:"ready",
+-          role:/\.(dwg|dxf)$/i.test(file.name) ? "KT" : /\.xlsx?$/i.test(file.name) ? "TIEN_LUONG" : "HO_SO"
++          role:/\.(dwg|dxf)$/i.test(file.name) ? "" : /\.xlsx?$/i.test(file.name) ? "TIEN_LUONG" : "HO_SO"
+         }));
+         setQueue(items=>[...items,...added]);e.currentTarget.value="";
+       }}/></label>
+@@ -146,15 +146,17 @@
+       {!!queue.length && <div className="w-full space-y-2">
+         {queue.map(item=><div key={item.key} className="flex flex-wrap items-center gap-2 rounded border border-slate-200 p-3">
+           <strong className="break-all">{item.file.name}</strong>
+-          <label>Vai trò <select className="field" disabled={busy||item.status==="saved"} value={item.role} onChange={e=>updateItem(item.key,{role:e.target.value as FileRole})}>
+-            {Object.entries(roleLabels).map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>
++          <label>Vai trò <select className="field" aria-label={`Vai trò của ${item.file.name}`} disabled={busy||item.status==="saved"} value={item.role} onChange={e=>updateItem(item.key,{role:e.target.value as FileRole})}>
++            {!item.role && <option value="">Chọn vai trò bản vẽ…</option>}
++            {Object.entries(roleLabels).filter(([key])=>!/\.(dwg|dxf)$/i.test(item.file.name) || ["KT","KC","THAM_KHAO"].includes(key)).map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>
+           <label>Lưu vào <select className="field" disabled={busy||item.status==="saved"} value={item.target} onChange={e=>updateItem(item.key,{target:e.target.value})}>
+             <option value="">Tệp mới</option>{[...new Map(files.map(f=>[f.file_id,f])).values()].map(f=><option key={f.file_id} value={f.file_id}>Phiên bản mới · {f.name}</option>)}</select></label>
+           <span role="status">{{ready:"Chờ tải",sending:"Đang tải…",saved:"Đã lưu",failed:item.message}[item.status]}</span>
+           {item.status==="failed" && <button type="button" className="btn" disabled={busy} onClick={()=>void upload([item])}>Thử lại</button>}
+           {item.status!=="saved" && <button type="button" className="btn" disabled={busy} onClick={()=>setQueue(items=>items.filter(row=>row.key!==item.key))}>Bỏ khỏi danh sách</button>}
+         </div>)}
+-        <button type="button" className="btn primary" disabled={busy||!queue.some(i=>i.status==="ready")} onClick={()=>void upload(queue.filter(i=>i.status==="ready"))}>Tải các tệp đang chờ</button>
++        {queue.some(i=>i.status==="ready" && !i.role) && <p>Chọn Kiến trúc cho mặt bằng nhà, Kết cấu cho móng, cột, dầm, sàn hoặc Tham khảo để lưu bản gốc.</p>}
++        <button type="button" className="btn primary" disabled={busy||!queue.some(i=>i.status==="ready")||queue.some(i=>i.status==="ready" && !i.role)} onClick={()=>void upload(queue.filter(i=>i.status==="ready"))}>Tải các tệp đang chờ</button>
+       </div>}
+       <button className="btn" type="button" disabled={busy||loading} onClick={()=>{setErr("");setLoading(true);setTick(t=>t+1);}}>Tải lại danh sách</button>
+       {busy && <span role="status">Đang lưu bản gốc…</span>}
+--- a/src/components/ProjectFilesPanel.tsx
++++ b/src/components/ProjectFilesPanel.tsx
+@@ -48,6 +48,8 @@
+ const versionName = (file: ProjectFileRevision) => file.version == null ? "Chưa xác định phiên bản" : `Phiên bản ${file.version}`;
+ const uploadedAt = (value: string | null) => value ? new Date(value).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }) : "Chưa xác định";
+ 
++const canAnalyze = (file: ProjectFileRevision) => (file.role === "KT" || file.role === "KC") && /^(dwg|dxf)$/i.test(file.original_format);
++
+ export function ProjectFilesPanel(props: ProjectFilesPanelProps) {
+   const { projectId, files, selectedRevisionIds, viewingRevisionId, preview, busy, loading } = props;
+   const revisions = files.filter(file => file.project_id === projectId);
+@@ -60,7 +62,9 @@
+     else if (selected.length !== selectedRevisionIds.length) blockedReason = "Danh sách đã chọn không còn khớp hồ sơ dự án. Hãy chọn lại.";
+     else if (!selected.length) blockedReason = "Chọn phiên bản cần phân tích trong bảng hồ sơ.";
+     else if (selected.some(file => !/^[a-f0-9]{64}$/i.test(file.sha256 || "") || !file.role || !Number.isSafeInteger(file.version) || (file.version ?? 0) < 1)) blockedReason = "Hồ sơ đã chọn thiếu hoặc không hợp lệ phiên bản, mã kiểm tra hoặc vai trò. Cần bổ sung trước khi phân tích.";
+-    else if (!selected.some(file => file.role === "KT" || file.role === "KC")) blockedReason = "Cần chọn ít nhất một bản kiến trúc hoặc kết cấu; tài liệu tham khảo không thay thế bản vẽ phân tích.";
++    else if (new Set(selected.map(file => file.file_id)).size !== selected.length) blockedReason = "Chỉ chọn một phiên bản cho mỗi tệp.";
++    else if (selected.some(file => !canAnalyze(file))) blockedReason = "Chỉ chọn tệp CAD kiến trúc hoặc kết cấu để phân tích.";
++    else if (!selected.some(file => file.role === "KT")) blockedReason = "Luồng bóc cả nhà cần một bản CAD kiến trúc. Chọn phiên bản kiến trúc trong hồ sơ hoặc bổ sung tệp còn thiếu.";
+   }
+   const cols: Col<ProjectFileRevision>[] = [
+     { key: "name", title: "Tên tệp gốc" },
+@@ -83,7 +87,7 @@
+         actions={file => <div className={styles.actions}>
+           <button type="button" className="btn" disabled={busy} aria-pressed={file.revision_id === viewingRevisionId} onClick={() => props.onView(file)}>Xem</button>
+           <button type="button" className="btn" disabled={busy} onClick={() => props.onDownload(file)}>Tải nguyên bản</button>
+-          <label><input type="checkbox" disabled={busy || !((file.role==="KT" || file.role==="KC") && /^(dwg|dxf)$/i.test(file.original_format))} checked={selectedRevisionIds.includes(file.revision_id)} aria-label={`Chọn phân tích ${file.name}, ${versionName(file)}`} onChange={event => props.onSelectionChange(event.target.checked ? [...selectedRevisionIds, file.revision_id] : selectedRevisionIds.filter(id => id !== file.revision_id))} /> Chọn phân tích</label>
++          <label><input type="checkbox" disabled={busy || (!canAnalyze(file) && !selectedRevisionIds.includes(file.revision_id))} checked={selectedRevisionIds.includes(file.revision_id)} aria-label={`Chọn phân tích ${file.name}, ${versionName(file)}`} onChange={event => props.onSelectionChange(event.target.checked ? [...selectedRevisionIds, file.revision_id] : selectedRevisionIds.filter(id => id !== file.revision_id))} /> Chọn phân tích</label>
+         </div>}
+       />}
+       {props.sourceContext && <details><summary>Căn cứ của thông tin dự án</summary>{props.sourceContext}</details>}
+@@ -101,6 +105,9 @@
+     <Card title="Phiên bản sẽ phân tích">
+       {props.analysisContext}
+       {!!selected.length && <ul className={styles.selection}>{selected.map(file => <li key={file.revision_id}><strong>{file.name}</strong> · {versionName(file)} · {roleName(file.role)}</li>)}</ul>}
++      {selected.some(file => file.role === "KT" && canAnalyze(file)) && <p className={styles.hint}>Bản kiến trúc dùng để kiểm mặt bằng, tường và lỗ mở. {selected.some(file => file.role === "KC" && canAnalyze(file))
++        ? "Bản kết cấu được đọc riêng để đối chiếu vị trí, mặt cắt và bảng thép."
++        : "Chưa chọn bản kết cấu riêng. Nếu chi tiết móng, dầm, cột hoặc thép nằm ở tệp khác, hãy chọn thêm tệp đó."}</p>}
+       {blockedReason && <p className={styles.hint}>{blockedReason}</p>}
+       <div className={styles.start}><p className={styles.hint}>Chỉ nút này bắt đầu phân tích các phiên bản đã chọn; không yêu cầu tải lại tệp.</p><button type="button" className="btn primary" disabled={busy || loading || !!blockedReason} onClick={props.onStartAnalysis}>Bắt đầu phân tích</button></div>
+     </Card>

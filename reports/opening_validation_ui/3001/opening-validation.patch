@@ -1,0 +1,111 @@
+--- a/src/app/(user)/do-boc/model.ts
++++ b/src/app/(user)/do-boc/model.ts
+@@ -138,12 +138,22 @@
+ export const convBad = (D: Data | null) => ((D && D.conventions && D.conventions.checks) || []).filter((c) => c.trang_thai === "vi_pham")
+   .sort((a, b) => (a.muc === b.muc ? 0 : a.muc === "B" ? -1 : 1));
+ 
++// JSON.stringify biến NaN/Infinity thành null. Chặn dữ liệu sai trước khi tuần tự hóa.
++function openingDimensions(plan: string, opening: Opening) {
++  const { w, h } = opening;
++  for (const [label, value] of [["chiều rộng", w], ["chiều cao", h]] as const) {
++    if (value != null && (typeof value !== "number" || !Number.isFinite(value) || value <= 0))
++      throw new Error(`${plan} · lỗ ${opening.id} · tường ${opening.wall}: ${label} phải là số dương hữu hạn (mm).`);
++  }
++  return { w: w ?? null, h: h ?? null };
++}
++
+ export function payload(D: Data, P: Plan, S: PlanState, project: number | null) {
+   // rule, msrc, ev, height_source, unmatched: căn cứ nhận dạng, lưu cùng bản chốt để truy vết
+   return { project_id: project, file: D.file, plan: P.plan.name, height_mm: S.height_mm, length_rule: S.length_rule || "tim",
+     height_source: S.height_source || P.plan.height_source || null, unmatched: P.unmatched || {},
+     walls: S.walls.map(({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited, rule, msrc }) => ({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited, rule: rule || null, msrc: msrc || null })),
+-    openings: S.openings.map(({ id, wall, kind, w, h, keep, src, ev }) => ({ id, wall, kind, w, h, keep, src, ev: ev || null })) };
++    openings: S.openings.map(o => ({ id: o.id, wall: o.wall, kind: o.kind, ...openingDimensions(P.plan.name, o), keep: o.keep, src: o.src, ev: o.ev || null })) };
+ }
+ 
+ // Mặt bằng đã sửa cho đúng = đáp án. Tọa độ lưu theo hệ của bản vẽ (mm) để so với lần nhận diện sau dù khung cắt thay đổi.
+@@ -270,7 +280,7 @@
+       void_area_m2: numOr(pp.void_area_m2), balcony_area_m2: numOr(pp.balcony_area_m2),
+       outline_area_m2: numOr(pp.outline_area_m2), usable_area_m2: numOr(pp.usable_area_m2),
+       walls: st.walls.map(({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited }) => ({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited })),
+-      openings: st.openings.map(({ id, wall, kind, w, h, keep, src }) => ({ id, wall, kind, w, h, keep, src })),
++      openings: st.openings.map(o => ({ id: o.id, wall: o.wall, kind: o.kind, ...openingDimensions(p.plan.name, o), keep: o.keep, src: o.src })),
+       columns: pp.cols.map(col => ({ ...col })),
+       stairs, labels: p.labels || [], found: p.found || {} }];
+   }) };
+@@ -314,10 +324,37 @@
+   bill_total?: number | null; bill_missing?: string[];
+ };
+ 
++/** Giữ đường dẫn FastAPI để người dùng tìm đúng mặt bằng, tường và lỗ mở. */
++export function validationMessage(detail: unknown, request: unknown, fallback: string) {
++  if (typeof detail === "string") return detail || fallback;
++  if (!Array.isArray(detail)) return fallback;
++  type Item = { loc?: (string | number)[]; msg?: string };
++  type InputPlan = { name?: string; plan?: string; openings?: { id?: string; wall?: string; w?: unknown; h?: unknown }[] };
++  const input = request as (InputPlan & { plans?: InputPlan[] }) | null;
++  const groups = new Map<string, Set<string>>();
++  for (const issue of detail as Item[]) {
++    if (!Array.isArray(issue?.loc)) continue;
++    const path = issue.loc[0] === "body" ? issue.loc.slice(1) : issue.loc;
++    const [list, index, field] = path.slice(-3);
++    const plan = path.length === 3 ? input : path.length === 5 && path[0] === "plans" && typeof path[1] === "number" ? input?.plans?.[path[1]] : null;
++    const opening = list === "openings" && typeof index === "number" ? plan?.openings?.[index] : null;
++    let reason = issue.msg || "Dữ liệu chưa hợp lệ";
++    let item = path.join(".") || "Yêu cầu";
++    if (opening && (field === "w" || field === "h")) {
++      const dimension = field === "w" ? "chiều rộng" : "chiều cao";
++      reason = opening[field] == null ? `Thiếu ${dimension} (mm)` : `${dimension === "chiều rộng" ? "Chiều rộng" : "Chiều cao"} phải là số dương hữu hạn (mm)`;
++      item = `${plan?.name || plan?.plan || "Mặt bằng"} · lỗ ${opening.id || Number(index) + 1}${opening.wall ? " · tường " + opening.wall : ""}`;
++    }
++    if (!groups.has(reason)) groups.set(reason, new Set());
++    groups.get(reason)!.add(item);
++  }
++  return [...groups].map(([message, items]) => `${message} — ${[...items].join(", ")}`).join(". ") || fallback;
++}
++
+ /** POST JSON; lỗi giữ đúng thông điệp của trang cũ (detail của FastAPI hoặc câu mặc định). */
+ export async function postJson<T>(path: string, data: unknown, fallback: string): Promise<T> {
+   const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+   const body = await r.json();
+-  if (!r.ok) throw new Error(body.detail || fallback);
++  if (!r.ok) throw new Error(validationMessage(body.detail, data, fallback));
+   return body as T;
+ }
+--- a/src/app/(user)/do-boc/Review.tsx
++++ b/src/app/(user)/do-boc/Review.tsx
+@@ -18,7 +18,7 @@
+ import { WorkReview } from "./WorkReview";
+ import { RoughTab } from "./Rough";
+ import {
+-  REASONS, RP_KEY, base, compute, convBad, csvText, fmt, initPlanParams, initState, nearestWall, payload, roughRequest, roughValues,
++  validationMessage, REASONS, RP_KEY, base, compute, convBad, csvText, fmt, initPlanParams, initState, nearestWall, payload, roughRequest, roughValues,
+   type Confirmed, type Data, type PlanParams, type PlanState, type Rough, type Structural,
+ } from "./model";
+ import { useViewport } from "./viewport";
+@@ -307,8 +307,7 @@
+       const request = roughRequest(L.data, L.states, L.planP, L.project, L.structural && "file" in L.structural ? L.structural : null, L.roughVals);
+       const r = await fetch("/api/takeoff/rough", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request) });
+       const body = await r.json();
+-      if (!r.ok) throw new Error(typeof body.detail === "string" ? body.detail
+-        : "Máy chủ từ chối dữ liệu phần thô: " + ((body.detail || []) as { loc?: string[]; msg: string }[]).map((d) => (d.loc || []).slice(-1)[0] + " " + d.msg).join("; "));
++      if (!r.ok) throw new Error(validationMessage(body.detail, request, "Máy chủ từ chối dữ liệu phần thô."));
+       if (revision.current !== atRevision || version.projectUid !== store.get("optimat-project-uid", "")) return;
+       const snapshot: WorkSnapshot = { ...version, file: L.data.file, reviewId: crypto.randomUUID(), at: new Date().toISOString(), request, result: body };
+       saveTogether({ "optimat-rough": JSON.stringify(snapshot) });
+@@ -623,12 +622,13 @@
+     let timedOut = false;
+     const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, 120_000);
+     try {
++      const request = payload(data, P, S, project);
+       const response = await fetch("/api/takeoff/confirm", { method: "POST", headers: { "Content-Type":"application/json" },
+-        body: JSON.stringify(payload(data, P, S, project)), signal: controller.signal });
++        body: JSON.stringify(request), signal: controller.signal });
+       const body = await response.json();
+       if (controller.signal.aborted || revision.current !== atRevision) return;
+       if (!stampIsCurrent(stamp)) { setExternalChange(true); return; }
+-      if (!response.ok) throw new Error(typeof body.detail === "string" ? body.detail : `Máy chủ từ chối kết quả (HTTP ${response.status}).`);
++      if (!response.ok) throw new Error(validationMessage(body.detail, request, `Máy chủ từ chối kết quả (HTTP ${response.status}).`));
+       stampByBody.current.set(body, stamp);
+       publishConfirmation(body);
+     } catch (err) {

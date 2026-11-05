@@ -1,0 +1,23 @@
+{
+  "pid": 31124,
+  "wrapper": 4632,
+  "started": "2026-11-03T22:48:23.3029330+07:00",
+  "checkout": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai",
+  "version": "0.1.0",
+  "health": {
+    "status": "ok",
+    "price_model_loaded": true,
+    "dwg_converter_available": true,
+    "catalog_source": "postgresql"
+  },
+  "download_route": "/api/admin/projects/{project_id}/files/{file_id}",
+  "operation_id": "download_project_file_api_admin_projects__project_id__files__file_id__get",
+  "method": "GET",
+  "hashes": {
+    "src/optimat/api/main.py": "A0909B5A32474583FC3378DF8268B3C075E210A172A93D189A03FB3D132D6741",
+    "src/optimat/api/admin_ops.py": "4D204F5F4CB4F7BB2BA98BA1923888AA98605AEC8E8A9C1CB6F61AC1E4B75482",
+    "src/optimat/drawing/viewer.py": "9E1857950985802EBA40091737B4CF2F9E59F187489F3A0D161E3A0F1C2C38F6",
+    "src/optimat/rough/models.py": "EA57EC73E239D73B6FD60AE7C4F8D0C5BC1E2994BA3E6F1401D5984E2B270A92",
+    "src/optimat/rough/takeoff.py": "2882A4E922D30D6A932022B06F04BF8BDA5FAA4E6E093ED0A443725A64EEF90F"
+  }
+}

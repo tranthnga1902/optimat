@@ -1,0 +1,36 @@
+...F                                                                     [100%]
+================================== FAILURES ===================================
+________ test_two_closed_polylines_keep_their_identity[offset3-False] _________
+
+tmp_path = WindowsPath('C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/docs/review/data20_05/column_contour_fix/pytest_touch_after/test_two_closed_polylines_keep3')
+offset = (225.4, 0), bridge = False
+
+    @pytest.mark.parametrize("offset,bridge", [((225, 0), False), ((225, 335), False),
+                                                ((400, 0), True), ((225.4, 0), False)])
+    def test_two_closed_polylines_keep_their_identity(tmp_path, offset, bridge):
+        import ezdxf
+        from optimat.drawing.dxf_reader import read_drawing
+    
+        doc = ezdxf.new()
+        doc.units = 4
+        doc.layers.new("COT")
+        model = doc.modelspace()
+        for x, y in ((0, 0), offset):
+            model.add_lwpolyline([(x, y), (x+225, y), (x+225, y+335), (x, y+335)],
+                                 close=True, dxfattribs={"layer": "COT"})
+        if bridge:
+            model.add_line((225, 0), offset, dxfattribs={"layer": "COT"})
+        path = tmp_path / "two_columns.dxf"
+        doc.saveas(path)
+        cols = detect_columns(read_drawing(str(path)))
+>       assert sorted((c.x, c.y, c.b_mm, c.h_mm) for c in cols) == sorted([
+            (112.5, 167.5, 225, 335), (offset[0]+112.5, round(offset[1]+167.5, 1), 225, 335)])
+E       assert [(112.5, 167....99997, 335.0)] == [(112.5, 167.....5, 225, 335)]
+E         
+E         At index 1 diff: (337.9, 167.5, 224.99999999999997, 335.0) != (337.9, 167.5, 225, 335)
+E         Use -v to get more diff
+
+tests\test_rough_column_contours.py:114: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rough_column_contours.py::test_two_closed_polylines_keep_their_identity[offset3-False]
+1 failed, 3 passed, 17 deselected in 5.43s

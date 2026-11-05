@@ -1,0 +1,16 @@
+material_id,relation_type,related_material_id,quantity,quantity_unit,source,note
+AAC01,REQUIRES,VU04,0.035,m³ vữa / m³ khối xây,"Thông tư 12/2021/TT-BXD, định mức dự toán xây dựng, mã AE.86 (xây gạch AAC bằng vữa xây bê tông nhẹ), Công báo số 771+772 [A]",Định mức AE.862. Muốn đổi sang tấn cần khối lượng thể tích vữa tươi của sản phẩm
+AAC02,REQUIRES,VU04,0.034,m³ vữa / m³ khối xây,"Thông tư 12/2021/TT-BXD, định mức dự toán xây dựng, mã AE.86 (xây gạch AAC bằng vữa xây bê tông nhẹ), Công báo số 771+772 [A]",Định mức AE.864
+AAC03,REQUIRES,VU04,0.035,m³ vữa / m³ khối xây,"Thông tư 12/2021/TT-BXD, định mức dự toán xây dựng, mã AE.86 (xây gạch AAC bằng vữa xây bê tông nhẹ), Công báo số 771+772 [A]",Định mức AE.866
+AAC01,REQUIRES,PK01,,m² lưới / m² tường,,Chưa có định mức. Xác nhận có bắt buộc không
+AAC02,REQUIRES,PK01,,m² lưới / m² tường,,Như trên
+AAC03,REQUIRES,PK01,,m² lưới / m² tường,,Như trên
+ALC01,REQUIRES,PK03,,kg keo / m² tường,,Chưa có định mức
+ALC02,REQUIRES,PK03,,kg keo / m² tường,,Chưa có định mức
+PN01,REQUIRES,PK03,,kg keo / m² tường,,Chưa có định mức
+VU01,COMPOSED_OF,XM01,224.0,kg xi măng / m³ vữa,"TT 38/2026/TT-BXD Phụ lục VII ""Định mức sử dụng vật liệu"" (cấp phối vữa 12.10100, Phụ lục I trọng lượng đơn vị vật liệu) [B]","Cấp phối 12.10133: vữa xi măng cát vàng (M > 2), xi măng PCB30, TT 38/2026 PL VII"
+VU01,COMPOSED_OF,CA02,1.17,m³ cát / m³ vữa,"TT 38/2026/TT-BXD Phụ lục VII ""Định mức sử dụng vật liệu"" (cấp phối vữa 12.10100, Phụ lục I trọng lượng đơn vị vật liệu) [B]","Cấp phối 12.10133: vữa xi măng cát vàng (M > 2), xi măng PCB30, TT 38/2026 PL VII"
+VU02,COMPOSED_OF,XM01,307.0,kg xi măng / m³ vữa,"TT 38/2026/TT-BXD Phụ lục VII ""Định mức sử dụng vật liệu"" (cấp phối vữa 12.10100, Phụ lục I trọng lượng đơn vị vật liệu) [B]","Cấp phối 12.10134: vữa xi măng cát vàng (M > 2), xi măng PCB30, TT 38/2026 PL VII"
+VU02,COMPOSED_OF,CA02,1.13,m³ cát / m³ vữa,"TT 38/2026/TT-BXD Phụ lục VII ""Định mức sử dụng vật liệu"" (cấp phối vữa 12.10100, Phụ lục I trọng lượng đơn vị vật liệu) [B]","Cấp phối 12.10134: vữa xi măng cát vàng (M > 2), xi măng PCB30, TT 38/2026 PL VII"
+VU06,COMPOSED_OF,XM01,395.0,kg xi măng / m³ vữa,"TT 38/2026/TT-BXD Phụ lục VII ""Định mức sử dụng vật liệu"" (cấp phối vữa 12.10100, Phụ lục I trọng lượng đơn vị vật liệu) [B]","Cấp phối 12.10135: vữa xi măng cát vàng (M > 2), xi măng PCB30, TT 38/2026 PL VII"
+VU06,COMPOSED_OF,CA02,1.08,m³ cát / m³ vữa,"TT 38/2026/TT-BXD Phụ lục VII ""Định mức sử dụng vật liệu"" (cấp phối vữa 12.10100, Phụ lục I trọng lượng đơn vị vật liệu) [B]","Cấp phối 12.10135: vữa xi măng cát vàng (M > 2), xi măng PCB30, TT 38/2026 PL VII"

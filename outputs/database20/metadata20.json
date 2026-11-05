@@ -1,0 +1,2570 @@
+[
+  {
+    "name": "cost_parameters",
+    "title": "Thông số chi phí",
+    "columns": [
+      {
+        "name": "parameter_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "kind",
+        "type": "VARCHAR(24)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "record_key",
+        "type": "TEXT",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "payload",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "kind IN ('vehicles','labor_rates') AND jsonb_typeof(payload) = 'object'"
+    ]
+  },
+  {
+    "name": "materials",
+    "title": "Vật liệu",
+    "columns": [
+      {
+        "name": "material_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "group",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "thickness_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "unit",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "qty_per_m2",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "weight_kg_per_m2",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "lambda_w_mk",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "labor_days_per_m2",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "data_kind",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": "ACTUAL",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "subgroup",
+        "type": "VARCHAR(128)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "family",
+        "type": "VARCHAR(32)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "usage_text",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "usage_role",
+        "type": "VARCHAR(128)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "tier",
+        "type": "INTEGER",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "purchase_unit",
+        "type": "VARCHAR(32)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "unit_conversion",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "length_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "width_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "height_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "price_priority",
+        "type": "VARCHAR(4)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "needs_lambda",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "lambda_source",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "unit_weight_kg",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "weight_source",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "transport_volume_m3",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "waste_pct",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "waste_source",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "standards_text",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "reference_brands",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "tech_notes",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "data_note",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "raw_class",
+        "type": "VARCHAR(32)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "catalog_metadata",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "data_kind IN ('ACTUAL', 'SAMPLE', 'SYNTHETIC')"
+    ]
+  },
+  {
+    "name": "rule_sets",
+    "title": "Quy tắc và dữ liệu tham chiếu",
+    "columns": [
+      {
+        "name": "set_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "kind",
+        "type": "VARCHAR(48)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "record_key",
+        "type": "TEXT",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "payload",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "version",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": "1",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": false,
+        "pk": false,
+        "default": "now()",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "jsonb_typeof(payload) = 'object' AND version > 0"
+    ]
+  },
+  {
+    "name": "suppliers",
+    "title": "Đại lý, nhà cung cấp",
+    "columns": [
+      {
+        "name": "supplier_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "province",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "lat",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "lon",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "lead_time_days",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "data_kind",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": "ACTUAL",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "dealer_type",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "brands",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "address",
+        "type": "VARCHAR(512)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "ward",
+        "type": "VARCHAR(128)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "district",
+        "type": "VARCHAR(128)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "maps_url",
+        "type": "VARCHAR(1024)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "phone",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "zalo",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "email",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "website",
+        "type": "VARCHAR(1024)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "facebook",
+        "type": "VARCHAR(1024)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "tax_code",
+        "type": "VARCHAR(32)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "opening_hours",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "delivers",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "delivery_radius_km",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "max_truck_ton",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "min_order",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "vat_invoice",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "payment",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "price_public",
+        "type": "VARCHAR(8)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "price_page_url",
+        "type": "VARCHAR(1024)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "verified",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "collected_at",
+        "type": "DATE",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "collected_by",
+        "type": "VARCHAR(128)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "source",
+        "type": "VARCHAR(1024)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "note",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "lat BETWEEN -90 AND 90 AND lon BETWEEN -180 AND 180",
+      "data_kind IN ('ACTUAL', 'SAMPLE', 'SYNTHETIC')",
+      "price_public IS NULL OR price_public IN ('YES', 'NO', 'PARTIAL')"
+    ]
+  },
+  {
+    "name": "users",
+    "title": "Người dùng",
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "email",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "full_name",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": "",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "password_hash",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "role",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": "user",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "is_active",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "pk": false,
+        "default": "true",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": false,
+        "pk": false,
+        "default": "now()",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "role IN ('admin', 'user')"
+    ]
+  },
+  {
+    "name": "work_norms",
+    "title": "Định mức công tác",
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "work_code",
+        "type": "VARCHAR(32)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": "TRAT | CAN_NEN | COT_THEP | CHONG_THAM | NEN_DEM_CAT | COP_PHA | BE_TONG_TRON",
+        "fk": []
+      },
+      {
+        "name": "variant",
+        "type": "VARCHAR(32)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "dày (mm), mác (M250) hoặc mã vật liệu; trống: mọi trường hợp",
+        "fk": []
+      },
+      {
+        "name": "material_id",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "mã danh mục; @VUA là vữa theo mác công trình",
+        "fk": []
+      },
+      {
+        "name": "material_name",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "tên vật liệu",
+        "fk": []
+      },
+      {
+        "name": "qty",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "lượng trên 1 đơn vị công tác",
+        "fk": []
+      },
+      {
+        "name": "qty_unit",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "ví dụ kg / m³",
+        "fk": []
+      },
+      {
+        "name": "qty_min",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "cận dưới khi hệ số là khoảng (đặc tả 30/10/2026 mục 3B)",
+        "fk": []
+      },
+      {
+        "name": "qty_max",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "cận trên khi hệ số là khoảng",
+        "fk": []
+      },
+      {
+        "name": "muc_xac_nhan",
+        "type": "VARCHAR(16)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "nguon | tinh | kinh_nghiem",
+        "fk": []
+      },
+      {
+        "name": "ngay_tra",
+        "type": "VARCHAR(10)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "ngày tra số, YYYY-MM-DD",
+        "fk": []
+      },
+      {
+        "name": "norm_code",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "số hiệu bảng TT 38/2026/TT-BXD",
+        "fk": []
+      },
+      {
+        "name": "source",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "nguồn",
+        "fk": []
+      },
+      {
+        "name": "note",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": "ghi chú",
+        "fk": []
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "audit_logs",
+    "title": "Nhật ký thao tác",
+    "columns": [
+      {
+        "name": "log_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "user_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "users.user_id"
+        ]
+      },
+      {
+        "name": "action",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "detail",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": false,
+        "pk": false,
+        "default": "now()",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "material_relations",
+    "title": "Quan hệ vật liệu",
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "material_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "materials.material_id"
+        ]
+      },
+      {
+        "name": "relation_type",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "related_material_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "materials.material_id"
+        ]
+      },
+      {
+        "name": "quantity",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "quantity_unit",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "source",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "note",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "relation_type IN ('REQUIRES', 'COMPOSED_OF')"
+    ]
+  },
+  {
+    "name": "price_records",
+    "title": "Lịch sử giá",
+    "columns": [
+      {
+        "name": "id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "date",
+        "type": "DATE",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "material_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "materials.material_id"
+        ]
+      },
+      {
+        "name": "supplier_id",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "suppliers.supplier_id"
+        ]
+      },
+      {
+        "name": "province",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "quantity",
+        "type": "FLOAT",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "unit",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "unit_price",
+        "type": "FLOAT",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "vat_included",
+        "type": "VARCHAR(8)",
+        "nullable": false,
+        "pk": false,
+        "default": "UNKNOWN",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "transport_included",
+        "type": "VARCHAR(8)",
+        "nullable": false,
+        "pk": false,
+        "default": "UNKNOWN",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "source",
+        "type": "VARCHAR(1024)",
+        "nullable": false,
+        "pk": false,
+        "default": "",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "data_kind",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": "ACTUAL",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "price_level",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": "DEALER",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "unit_price > 0",
+      "supplier_id IS NOT NULL OR price_level = 'BULLETIN'",
+      "vat_included IN ('YES', 'NO', 'UNKNOWN') AND transport_included IN ('YES', 'NO', 'UNKNOWN')",
+      "price_level IN ('DEALER', 'QUOTE', 'BULLETIN')",
+      "data_kind IN ('ACTUAL', 'SAMPLE', 'SYNTHETIC')"
+    ]
+  },
+  {
+    "name": "projects",
+    "title": "Dự án",
+    "columns": [
+      {
+        "name": "project_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "user_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "users.user_id"
+        ]
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "address",
+        "type": "VARCHAR(512)",
+        "nullable": false,
+        "pk": false,
+        "default": "",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "site_lat",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "site_lon",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "floor_height_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "door_width_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "door_height_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "window_width_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "window_height_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "budget",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "deadline_days",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "max_vehicle_ton",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "excluded_materials",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": false,
+        "pk": false,
+        "default": "now()",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": false,
+        "pk": false,
+        "default": "now()",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "profile_revisions",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "supplier_materials",
+    "title": "Giá đại lý",
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "supplier_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "suppliers.supplier_id"
+        ]
+      },
+      {
+        "name": "material_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "materials.material_id"
+        ]
+      },
+      {
+        "name": "base_price",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "product_url",
+        "type": "VARCHAR(1024)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "collected_at",
+        "type": "DATE",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "data_kind",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": "ACTUAL",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "dealer_product_name",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "brand",
+        "type": "VARCHAR(128)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "sale_unit",
+        "type": "VARCHAR(32)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "unit_conversion",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "price_level",
+        "type": "VARCHAR(16)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "price_date",
+        "type": "DATE",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "vat_included",
+        "type": "VARCHAR(8)",
+        "nullable": false,
+        "pk": false,
+        "default": "UNKNOWN",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "transport_included",
+        "type": "VARCHAR(8)",
+        "nullable": false,
+        "pk": false,
+        "default": "UNKNOWN",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "in_stock",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "note",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "base_price IS NULL OR (base_price > 0 AND price_level IS NOT NULL AND price_date IS NOT NULL)",
+      "price_level IS NULL OR price_level IN ('DEALER', 'QUOTE')",
+      "data_kind IN ('ACTUAL', 'SAMPLE', 'SYNTHETIC')",
+      "vat_included IN ('YES', 'NO', 'UNKNOWN') AND transport_included IN ('YES', 'NO', 'UNKNOWN')"
+    ]
+  },
+  {
+    "name": "wall_systems",
+    "title": "Phương án tường",
+    "columns": [
+      {
+        "name": "wall_system_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "material_id",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "materials.material_id"
+        ]
+      },
+      {
+        "name": "wall_thickness_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "detect_class",
+        "type": "VARCHAR(8)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "role",
+        "type": "VARCHAR(16)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "masonry_thickness_mm",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "norm_code",
+        "type": "VARCHAR(32)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "units_per_m3",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "mortar_m3_per_m3",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "labor_day_per_m3",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "unit_factor",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "mortar_material_id",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "materials.material_id"
+        ]
+      },
+      {
+        "name": "mortar_density",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "r0_reference",
+        "type": "FLOAT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "norm_source",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "note",
+        "type": "TEXT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "data_kind",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": "ACTUAL",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "data_kind IN ('ACTUAL', 'SAMPLE', 'SYNTHETIC')"
+    ]
+  },
+  {
+    "name": "analysis_runs",
+    "title": "Lần nhận dạng và bóc tách",
+    "columns": [
+      {
+        "name": "takeoff_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "project_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "projects.project_id"
+        ]
+      },
+      {
+        "name": "file_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "result",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "layer_overrides",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "confirmed_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": false,
+        "pk": false,
+        "default": "now()",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "kind",
+        "type": "VARCHAR(32)",
+        "nullable": false,
+        "pk": false,
+        "default": "takeoff",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "data_kind",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": "ACTUAL",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "input_snapshot",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "schema_version",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": "1",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "result_sha256",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "kind <> 'synthetic_housing' OR data_kind = 'SYNTHETIC'",
+      "data_kind IN ('ACTUAL','SAMPLE','SYNTHETIC')"
+    ]
+  },
+  {
+    "name": "document_revisions",
+    "title": "Hồ sơ và phiên bản tệp",
+    "columns": [
+      {
+        "name": "document_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "project_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "projects.project_id"
+        ]
+      },
+      {
+        "name": "record_type",
+        "type": "VARCHAR(12)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "file_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "revision_id",
+        "type": "BIGINT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "version",
+        "type": "INTEGER",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "filename",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "format",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "stored_path",
+        "type": "TEXT",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "sha256",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "size_bytes",
+        "type": "BIGINT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "role",
+        "type": "VARCHAR(16)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": false,
+        "pk": false,
+        "default": "now()",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "record_type <> 'revision' OR (revision_id IS NOT NULL AND version > 0 AND sha256 IS NOT NULL AND size_bytes > 0 AND role IN ('KT','KC','HO_SO','TIEN_LUONG','THAM_KHAO'))",
+      "record_type IN ('file','revision')"
+    ]
+  },
+  {
+    "name": "building_elements",
+    "title": "Cấu kiện",
+    "columns": [
+      {
+        "name": "element_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "analysis_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "analysis_runs.takeoff_id"
+        ]
+      },
+      {
+        "name": "element_key",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "kind",
+        "type": "VARCHAR(32)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "level_code",
+        "type": "VARCHAR(128)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "geometry",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "occurrences",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "relations",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "payload",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "evidence_sources",
+    "title": "Bằng chứng số đo",
+    "columns": [
+      {
+        "name": "evidence_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "analysis_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "analysis_runs.takeoff_id"
+        ]
+      },
+      {
+        "name": "kind",
+        "type": "VARCHAR(32)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "revision_id",
+        "type": "BIGINT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "document_revisions.revision_id"
+        ]
+      },
+      {
+        "name": "source_ref",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "raw_content",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "created_by",
+        "type": "INTEGER",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "users.user_id"
+        ]
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "optimization_runs",
+    "title": "Lần tối ưu",
+    "columns": [
+      {
+        "name": "run_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "project_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "projects.project_id"
+        ]
+      },
+      {
+        "name": "takeoff_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "analysis_runs.takeoff_id"
+        ]
+      },
+      {
+        "name": "model_version",
+        "type": "VARCHAR(32)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "method",
+        "type": "VARCHAR(16)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "config",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "solutions",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "chosen_index",
+        "type": "INTEGER",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "price_snapshot_date",
+        "type": "DATE",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "llm_model",
+        "type": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "tool_calls",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "excluded_materials",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP WITH TIME ZONE",
+        "nullable": false,
+        "pk": false,
+        "default": "now()",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "element_measurements",
+    "title": "Số đo cấu kiện",
+    "columns": [
+      {
+        "name": "measurement_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "element_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "building_elements.element_id"
+        ]
+      },
+      {
+        "name": "property_code",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "value",
+        "type": "NUMERIC(20, 6)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "unit",
+        "type": "VARCHAR(24)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "status",
+        "type": "VARCHAR(1)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "selected",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "pk": false,
+        "default": "false",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "method",
+        "type": "VARCHAR(24)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "evidence_ids",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "status IN ('A','B','C','D') AND (value IS NOT NULL OR status = 'D')",
+      "method <> 'user_input' OR status IN ('C','D')",
+      "NOT selected OR value IS NOT NULL"
+    ]
+  },
+  {
+    "name": "material_scenarios",
+    "title": "Phương án và nhu cầu vật liệu",
+    "columns": [
+      {
+        "name": "scenario_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "analysis_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "analysis_runs.takeoff_id"
+        ]
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "origin",
+        "type": "VARCHAR(24)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "selected",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "pk": false,
+        "default": "false",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "assignments",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "requirements",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "[]",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "catalog_snapshot",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "run_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "optimization_runs.run_id"
+        ]
+      }
+    ],
+    "checks": [
+      "origin <> 'optimized' OR run_id IS NOT NULL",
+      "origin IN ('design','user','proposed','optimized')"
+    ]
+  },
+  {
+    "name": "takeoff_items",
+    "title": "Dòng khối lượng",
+    "columns": [
+      {
+        "name": "item_id",
+        "type": "BIGINT",
+        "nullable": false,
+        "pk": true,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "analysis_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "analysis_runs.takeoff_id"
+        ]
+      },
+      {
+        "name": "seq",
+        "type": "INTEGER",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "work_code",
+        "type": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "element_id",
+        "type": "BIGINT",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": [
+          "building_elements.element_id"
+        ]
+      },
+      {
+        "name": "unit",
+        "type": "VARCHAR(24)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "quantity",
+        "type": "NUMERIC(20, 6)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "known_part",
+        "type": "NUMERIC(20, 6)",
+        "nullable": true,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "status",
+        "type": "VARCHAR(1)",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "formula",
+        "type": "TEXT",
+        "nullable": false,
+        "pk": false,
+        "default": "",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "input_snapshot",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": "{}",
+        "comment": null,
+        "fk": []
+      },
+      {
+        "name": "payload",
+        "type": "JSONB",
+        "nullable": false,
+        "pk": false,
+        "default": null,
+        "comment": null,
+        "fk": []
+      }
+    ],
+    "checks": [
+      "status IN ('A','B','C','D') AND (quantity IS NOT NULL OR status = 'D')"
+    ]
+  }
+]

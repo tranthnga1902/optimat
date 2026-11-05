@@ -1,0 +1,80 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 621 items
+
+tests\test_admin_db.py .ss                                               [  0%]
+tests\test_agent_api.py .......                                          [  1%]
+tests\test_app_data.py ........                                          [  2%]
+tests\test_auth_admin.py ..s                                             [  3%]
+tests\test_bulletin.py ...                                               [  3%]
+tests\test_c01_duong_co_so.py ..............                             [  6%]
+tests\test_compare_estimate.py .                                         [  6%]
+tests\test_concepts.py ............                                      [  8%]
+tests\test_db.py ssssssssssss                                            [ 10%]
+tests\test_drawing_io.py ......................                          [ 13%]
+tests\test_encoding_plans.py .............                               [ 15%]
+tests\test_evaluate_rough.py .                                           [ 15%]
+tests\test_export_boq_cli.py ...                                         [ 16%]
+tests\test_ground_truth_d02.py ...............                           [ 18%]
+tests\test_ground_truth_manifest.py ............                         [ 20%]
+tests\test_import_housing_estimates.py ....                              [ 21%]
+tests\test_ingest.py .................................                   [ 26%]
+tests\test_libredwg.py ..........                                        [ 28%]
+tests\test_material_notes.py ...                                         [ 28%]
+tests\test_material_rules.py ....................                        [ 32%]
+tests\test_optimize.py ......                                            [ 33%]
+tests\test_rebar_scope_api.py ..........................                 [ 37%]
+tests\test_registry.py ......................                            [ 40%]
+tests\test_render.py ...                                                 [ 41%]
+tests\test_review.py .....                                               [ 42%]
+tests\test_review_housing_quantities.py .....                            [ 42%]
+tests\test_rough_agent.py .....                                          [ 43%]
+tests\test_rough_api.py ...                                              [ 44%]
+tests\test_rough_areas.py .......                                        [ 45%]
+tests\test_rough_beams.py ...                                            [ 45%]
+tests\test_rough_build_drawings.py ..                                    [ 46%]
+tests\test_rough_columns.py ......                                       [ 47%]
+tests\test_rough_formwork_materials.py ............                      [ 48%]
+tests\test_rough_foundations.py ..........                               [ 50%]
+tests\test_rough_joints.py .......                                       [ 51%]
+tests\test_rough_materials.py ..................................         [ 57%]
+tests\test_rough_partial.py .........................................    [ 63%]
+tests\test_rough_plaster.py ...................                          [ 66%]
+tests\test_rough_rebar.py .............................................. [ 74%]
+................................                                         [ 79%]
+tests\test_rough_secondary.py ............x.......                       [ 82%]
+tests\test_rough_stairs.py ..                                            [ 82%]
+tests\test_rough_stairs_detect.py ...                                    [ 83%]
+tests\test_rough_status.py .................                             [ 86%]
+tests\test_rough_steel.py ...                                            [ 86%]
+tests\test_rough_structural.py ............................              [ 91%]
+tests\test_rough_takeoff.py ..........                                   [ 92%]
+tests\test_rough_walls.py .....                                          [ 93%]
+tests\test_s04_walls.py ..................                               [ 96%]
+tests\test_takeoff.py .......                                            [ 97%]
+tests\test_takeoff_structural_concurrency.py ........                    [ 98%]
+tests\test_takeoff_view_concurrency.py .....                             [ 99%]
+tests\test_thresholds.py ..                                              [100%]
+
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_admin_db.py:34: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_admin_db.py:61: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_auth_admin.py:41: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:46: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:57: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:71: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:79: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:87: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:109: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:145: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:180: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:217: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:250: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:281: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:324: chưa đặt OPTIMAT_TEST_DATABASE_URL
+XFAIL tests/test_rough_secondary.py::test_overlapping_ties_deduct_masonry_once - Hai giằng cùng đoạn trừ khối xây hai lần
+=========== 605 passed, 15 skipped, 1 xfailed in 589.49s (0:09:49) ============

@@ -5,7 +5,7 @@ from optimat.catalog.repository import Catalog
 from optimat.drawing.review import ReviewOpening, ReviewWall
 from optimat.rough.columns import Column
 from optimat.rough.models import GroundLayer, ProjectParams
-from optimat.rough.stairs import Stair
+from optimat.rough.stairs import Stair, StairFlight, StairLanding
 from optimat.rough.takeoff import PlanInput, RoomLabel, RoughRequest, compute_rough, ground_index
 
 
@@ -20,11 +20,22 @@ COLS = [Column(id=f"C{i}", x=x, y=y, b_mm=220, h_mm=220) for i, (x, y) in enumer
     [(0, 0), (5000, 0), (10000, 0), (0, 6000), (5000, 6000), (10000, 6000)])]
 
 
+def confirmed_stair():
+    source="SYNTHETIC thang: đã xác nhận phạm vi, không dầm riêng"
+    fs={k:source for k in ["run_mm","rise_mm","width_mm","step_count","tread_mm","riser_mm"]}
+    return Stair(id="T1",from_floor="T1",to_floor="T2",scope_source=source,
+        formwork_scope_source="SYNTHETIC chỉ đáy+thành bậc; không mặt cạnh hoặc giao khác",
+        steps_material="concrete",steps_material_source=source,
+        waist_thickness_mm=120,waist_thickness_basis="normal",waist_thickness_source=source,
+        flights=[StairFlight(id=f"V{i}",run_mm=2750,rise_mm=1650,width_mm=1000,step_count=11,tread_mm=250,riser_mm=150,field_sources=fs) for i in (1,2)],
+        landings=[StairLanding(id="CN",area_m2=2,thickness_mm=120,ownership="stair",field_sources={k:source for k in ["area_m2","thickness_mm","ownership"]})])
+
+
 def plan(name, ground):
     return PlanInput(name=name, is_ground=ground, height_mm=3300, walls=walls(), columns=COLS, void_area_m2=0 if not ground else None,
                      openings=[ReviewOpening(id="O1", wall="A", w=1000, h=2200)],
                      labels=[RoomLabel(kind="WET", text="WC", x=1500, y=3000)],
-                     stairs=[] if not ground else [Stair(steps=22, flight_width_mm=1000, tread_mm=250, landing_area_m2=2)])
+                     stairs=[] if not ground else [confirmed_stair()])
 
 
 FULL = ProjectParams(concrete_supply="ready_mix", concrete_grade="M250", lean_concrete_grade="M100", masonry_mortar_grade="M75",
@@ -51,7 +62,10 @@ def test_two_floor_house():
 
 
 def test_no_params_everything_flagged_not_guessed():
-    res = compute_rough(RoughRequest(plans=[plan("Trệt", True), plan("Tầng 2", False)]), Catalog.from_csv(None))
+    ground = plan("Trệt", True)
+    # Ca legacy chưa có nguồn thang; fixture complete ở ca khác không được điền hộ.
+    ground.stairs = [Stair(steps=22, flight_width_mm=1000, tread_mm=250, landing_area_m2=2)]
+    res = compute_rough(RoughRequest(plans=[ground, plan("Tầng 2", False)]), Catalog.from_csv(None))
     incomplete = {t.code for t in res.totals if not t.complete}
     assert {"LANH_TO", "DAM", "SAN", "COT_THEP", "NEN_DEM_CAT", "CHONG_THAM", "CAU_THANG"} <= incomplete
     assert next(t for t in res.totals if t.code == "XAY").complete      # xây không cần thông số bắt buộc
@@ -112,3 +126,21 @@ def test_found_rough_parts_warn_until_entered():
     assert any("cầu thang (layer CAUTHANG)" in w for w in warns) and any("móng (layer MONG)" in w for w in warns)
     p2 = plan("Trệt", True).model_copy(update={"found": {"STAIR": ["layer CAUTHANG"]}})     # đã nhập thang: không nhắc
     assert not any("cầu thang (layer" in w for w in compute_rough(RoughRequest(params=FULL, plans=[p2]), Catalog.from_csv(None)).warnings)
+
+
+def test_structural_beam_views_same_floor_counted_once():
+    # bộ 46: "MẶT BẰNG MÓNG - ĐÀ KIỀNG" (6 m, cạnh móng) và "MẶT BẰNG ĐÀ KIỀNG" (64 m) cùng là tầng móng
+    from optimat.rough.beams import Beam
+    big = [Beam(id="ĐK1", x1=0, y1=0, x2=8000, y2=0, b_mm=200, d_mm=300, source="structural")]
+    small = [Beam(id="ĐK3", x1=0, y1=0, x2=1200, y2=0, b_mm=200, d_mm=300, source="structural")]
+    req = RoughRequest(params=FULL, plans=[], structural_beams={"MẶT BẰNG MÓNG - ĐÀ KIỀNG": small, "MẶT BẰNG ĐÀ KIỀNG": big})
+    res = compute_rough(req, Catalog.from_csv(None))
+    dam = next(t for t in res.totals if t.code == "DAM")
+    assert dam.quantity is None and not dam.complete and dam.status == "D"
+    assert any("cùng tầng" in w and "MÓNG - ĐÀ KIỀNG" in w for w in res.warnings)
+    req = RoughRequest(**(req.model_dump() | {"beam_floor_sources": {"MONG": {
+        "source": "structural", "ref": "MẶT BẰNG ĐÀ KIỀNG", "evidence": "Người kiểm chọn bản phủ đủ"}}}))
+    chosen = compute_rough(req, Catalog.from_csv(None))
+    assert {w.plan for w in chosen.works if w.code == "DAM"} == {"MẶT BẰNG ĐÀ KIỀNG → MONG"}
+    assert next(t for t in chosen.totals if t.code == "DAM").complete
+    assert set(chosen.beams) == set(req.structural_beams)

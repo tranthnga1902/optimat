@@ -1,0 +1,39 @@
+--- a/src/optimat/rough/models.py
++++ b/src/optimat/rough/models.py
+@@ -431,6 +431,7 @@
+ class MaterialUse(BaseModel):
+     """Một phần khối lượng của vật liệu, sinh ra từ một công tác (để truy ngược)."""
+     work: str
++    rowIndex: Optional[int] = Field(default=None, ge=0)  # works[i] của chính snapshot, tương ứng khóa w:i
+     plan: Optional[str] = None
+     quantity: Optional[float] = None
+     via: str = ""                                   # chuỗi quy đổi: "XAY 12,5 m³ × 550 viên/m³" ...
+--- a/src/optimat/rough/materials.py
++++ b/src/optimat/rough/materials.py
+@@ -77,6 +77,7 @@
+ class _Bill:
+     def __init__(self, catalog: Catalog):
+         self.catalog = catalog
++        self.work_index: int | None = None
+         self.mats = catalog.materials.set_index("material_id")
+         self.lines: dict[str, MaterialLine] = {}
+         # Tổng phần góp số thô: đã gồm, chưa gồm, có phần khác 0 cần tỷ lệ hao hụt.
+@@ -101,7 +102,7 @@
+         if w.status == "D" and not w.missing:
+             missing.append(f"khối lượng {w.element or w.name}: D (nguồn công tác chưa đầy đủ)")
+         status = "D" if qty is None or missing else worst_status(w.status, "C" if confirmation in ("tinh", "kinh_nghiem") else None)
+-        line.uses.append(MaterialUse(work=w.code, plan=w.plan, quantity=None if qty is None else round(qty, 4), via=via,
++        line.uses.append(MaterialUse(work=w.code, rowIndex=self.work_index, plan=w.plan, quantity=None if qty is None else round(qty, 4), via=via,
+                                      status=status, stage=w.stage, waste_included=waste_included))
+         if qty is None or missing:
+             line.complete = False             # thiếu số, hoặc chưa xác định được vật liệu cụ thể để mua
+@@ -301,7 +302,8 @@
+     norms = load_norms() if norms is None else norms
+     bill = _Bill(catalog)
+     view = catalog.wall_view().set_index("wall_system_id") if not catalog.wall_systems.empty else pd.DataFrame()
+-    for w in works:
++    for index, w in enumerate(works):
++        bill.work_index = index
+         if w.basis == "not_supported":
+             continue                      # cấu kiện chưa có quy ước: không sinh vật liệu, đã báo trong công tác
+         q = w.quantity

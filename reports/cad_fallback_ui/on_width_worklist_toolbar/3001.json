@@ -1,0 +1,14 @@
+{
+  "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3001-candidate",
+  "patch_sha256": "70ef4bd2e28facd8e1f57deb04b9ddf4cd68cffcd2b8bd654c8672beb513a9ca",
+  "files": {
+    "src/app/(user)/do-boc/Board.tsx": {
+      "base_sha256": "3e894d8b30b17aa45268b15dda71269c882c9e91f176b387155c3a14275e4652",
+      "new_sha256": "12776827d945b55bed5890e4432d8609267354e52407fb7bc6d8ce6d1af56ad5"
+    },
+    "src/app/(user)/do-boc/ReadPreview.tsx": {
+      "base_sha256": "c2798586b32c1f08164090ee4b439b21c2aa4b040ff8c2ce39149e89136fa860",
+      "new_sha256": "a7542dd799adfb2b1d492627e0ef560fca44c2d090b780d086091284c5417d29"
+    }
+  }
+}

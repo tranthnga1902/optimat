@@ -1,0 +1,13 @@
+{
+  "src/optimat/rough/stairs.py": "4fa680b591f1f6d05ef2d7fa21098c34e40b638ce346b2a9fbfb453af3fd40ff",
+  "src/optimat/rough/takeoff.py": "1641a1dec3bf2f79cb2224a0b9fa97e7abbdcee40092b9c4a5c67ee80331ea3a",
+  "src/optimat/drawing/viewer.py": "9e1857950985802eba40091737b4cf2f9e59f187489f3a0d161e3a0f1c2c38f6",
+  "src/optimat/rough/models.py": "ec6430eab39cd9ffc75261e784e857bb29062544d7f9e01d96756e89ff1b6e0c",
+  "src/optimat/rough/status.py": "96d9482b769ef70294049b0724370df697e986bf820988b76d69a7dc31b4f384",
+  "tests/test_rough_stairs.py": "d3704ba375952f4a3e81729f8e8f9a3fb960e6081221db4962d381d349d12752",
+  "tests/test_rough_stairs_detect.py": "aa15e2f4db2bfb507594fa9bf0a4c504659d34d2a38174362bb5ccd244cf73ff",
+  "tests/test_work_dimensions.py": "db65fe6ce2bc23f48748c247af694f63982e574eed73a387de4b1cdb2e80ea0d",
+  "frontend/src/app/(user)/do-boc/model.ts": "4030107b65e07825d9e8d93e8954ec298e35d502ffc277d9fb2d2b4d6c6af5b5",
+  "docs/review/data20_07/STAIR_T1_SOURCE.json": "421f6830cf37999151d9454e3c8db93f97d01792269bbeb92e05e88113d1354f",
+  "docs/review/data20_07/STAIR_WAIST_DETAIL.png": "189675d9d2bf8a5cf27c5140a5af67dd99d76447a1b14ee597bfc68e236868e8"
+}

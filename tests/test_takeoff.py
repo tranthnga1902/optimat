@@ -53,3 +53,37 @@ def test_openings_recorded(sample_dxf, sample_openings):
     from optimat.drawing.takeoff import compute_takeoff
     result = compute_takeoff(read_drawing(sample_dxf), 3300, openings=sample_openings)
     assert [o.name for o in result.openings] == ["D1", "S1"] and all(o.wall_id for o in result.openings)
+
+
+def test_merge_plans_keeps_floor_groups(sample_dxf):
+    """Agent đo cả nhà = gộp từng mặt bằng (không đo cả file: sẽ cộng mặt đứng, mặt cắt); file không có mặt bằng thì báo."""
+    from optimat.drawing.takeoff import merge_plans
+    from optimat.schemas import PlanTakeoff
+    r = takeoff_from_file(sample_dxf, floor_height_mm=3300)
+    plans = [PlanTakeoff(name=n, height_mm=3300, height_source="nhập tay", bbox=[0, 0, 1, 1], result=r) for n in ("T1", "T2")]
+    merged = merge_plans(plans, 3300)
+    assert len(merged.groups) == 2 * len(r.groups)
+    assert sum(g.net_area_m2 for g in merged.groups) == pytest.approx(2 * sum(g.net_area_m2 for g in r.groups))
+    assert merged.openings_count == 2 * r.openings_count
+    assert all(w.startswith(("T1: ", "T2: ")) for w in merged.warnings)
+    assert merge_plans([]).groups == [] and merge_plans([]).warnings
+    # cùng một tầng vẽ nhiều hình (kích thước, vật dụng, bản chép "(2)"): chỉ tính một lần
+    same = [PlanTakeoff(name=n, height_mm=3300, height_source="nhập tay", bbox=[0, 0, 1, 1], result=r)
+            for n in ("MẶT BẰNG KÍCH THƯỚC LẦU 1", "MẶT BẰNG VẬT DỤNG LẦU 1", "MB TRỆT", "MB TRỆT (2)")]
+    once = merge_plans(same, 3300)
+    assert len(once.groups) == 2 * len(r.groups)
+    assert sum("cùng tầng" in w for w in once.warnings) == 2
+
+
+def test_block_openings_without_size_listed_not_subtracted(sample_dxf, sample_openings):
+    """B7: block cửa không ghi kích thước và dự án chưa nhập vẫn có trong danh sách (gắn tường, rộng/cao trống)
+    để trang kiểm tra nhập; không trừ. Có kích thước dự án thì trừ như cũ."""
+    result = takeoff_from_file(sample_dxf, floor_height_mm=3300)
+    ops = {o.name: o for o in result.openings}
+    assert set(ops) == {"D1", "S1"}
+    assert all(o.width_mm is None and o.height_mm is None and o.wall_id for o in ops.values())
+    groups = {g.wall_type: g for g in result.groups}
+    assert groups["220"].opening_area_m2 == 0 and result.openings_count == 0
+    assert any("danh sách lỗ mở" in w and "D1" in w and "S1" in w for w in result.warnings)
+    sized = takeoff_from_file(sample_dxf, floor_height_mm=3300, openings=sample_openings)
+    assert {g.wall_type: g for g in sized.groups}["220"].net_area_m2 == pytest.approx(105.64, abs=0.02)

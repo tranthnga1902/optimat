@@ -2,7 +2,7 @@
 
     python scripts/build_materials_sql.py
 
-File SQL sinh ra chạy được nhiều lần: thêm cột và bảng nếu chưa có, rồi chèn hoặc cập nhật 93 vật liệu,
+File SQL sinh ra chạy được nhiều lần: thêm cột và bảng nếu chưa có, rồi chèn hoặc cập nhật các vật liệu,
 các phương án tường, quan hệ vật liệu và tên gọi khác. Sửa số liệu trong file Excel rồi chạy lại script này.
 Script cũng ghi data/catalog/materials.csv, wall_systems.csv, material_aliases.csv, material_relations.csv (cùng số liệu, cho chế độ CSV),
 để mã vật liệu khi nhận diện bản vẽ, tối ưu và tra giá luôn là mã của danh mục thật (GN01, AAC01...).
@@ -33,7 +33,7 @@ RENAME = {"group_id": "group", "lambda_design": "lambda_w_mk"}
 MATERIAL_COLS = ["material_id", "group_id", "subgroup", "name", "family", "usage_text", "usage_role", "tier", "unit", "purchase_unit",
                  "unit_conversion", "length_mm", "width_mm", "height_mm", "price_priority", "needs_lambda", "lambda_design",
                  "lambda_source", "unit_weight_kg", "weight_source", "transport_volume_m3", "waste_pct", "waste_source",
-                 "standards_text", "reference_brands", "tech_notes", "data_note"]
+                 "standards_text", "reference_brands", "tech_notes", "data_note", "raw_class"]
 WALL_COLS = ["wall_system_id", "material_id", "wall_thickness_mm", "detect_class", "role", "masonry_thickness_mm", "norm_code",
              "units_per_m3", "mortar_m3_per_m3", "labor_day_per_m3", "unit_factor", "mortar_material_id", "mortar_density",
              "r0_reference", "norm_source", "note"]
@@ -77,6 +77,13 @@ def upsert(table: str, cols: list[str], values: list[str], key: str) -> str:
     quoted = ", ".join(f'"{c}"' for c in cols)
     sets = ", ".join(f'"{c}" = EXCLUDED."{c}"' for c in cols if c not in key.split(", "))
     conflict = ", ".join(f'"{k}"' for k in key.split(", "))
+    if table in ('material_groups','material_families','material_aliases','standards','material_standards'):
+        data=dict(zip(cols,values))
+        where=' AND '.join(f'"{k}" = {data[k]}' for k in key.split(', '))
+        updates=', '.join(f'"{c}" = {data[c]}' for c in cols if c not in key.split(', '))
+        return (f'UPDATE "{table}" SET {updates} WHERE {where};\n'
+                f'INSERT INTO "{table}" ({quoted}) SELECT {", ".join(values)} WHERE NOT EXISTS '
+                f'(SELECT 1 FROM "{table}" WHERE {where});')
     return f'INSERT INTO "{table}" ({quoted}) VALUES ({", ".join(values)})\n  ON CONFLICT ({conflict}) DO UPDATE SET {sets};'
 
 
@@ -102,7 +109,7 @@ def main() -> None:
     labels = source_labels(wb)
     dialect = postgresql.dialect()
     tables = Base.metadata.tables
-    out = ["-- OptiMat AI: danh mục 93 vật liệu, phương án tường, quan hệ vật liệu, tên gọi khác.",
+    out = ["-- OptiMat AI: danh mục vật liệu, phương án tường, quan hệ vật liệu, tên gọi khác.",
            "-- Sinh tự động bằng scripts/build_materials_sql.py từ data/catalog/materials_master.xlsx. Không sửa tay.",
            "-- Chạy SAU 01_schema.sql (hoặc scripts/init_db.py). Chạy lại nhiều lần được: dòng đã có sẽ được cập nhật.",
            "-- DBeaver: mở file này, bấm Alt+X (Execute SQL Script) để chạy toàn bộ, không bôi đen từng đoạn.",
@@ -113,7 +120,7 @@ def main() -> None:
         if col.name not in legacy:
             out.append(f'ALTER TABLE "materials" ADD COLUMN IF NOT EXISTS "{col.name}" {col.type.compile(dialect=dialect)};')
     out += ["", "-- 2. Bảng mới (bỏ qua nếu đã có)"]
-    for name in ("material_families", "wall_systems", "material_relations"):
+    for name in ("wall_systems", "material_relations"):
         ddl = str(CreateTable(tables[name]).compile(dialect=dialect)).strip().replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", 1)
         out.append(ddl + ";")
         for index in sorted(tables[name].indexes, key=lambda i: i.name):
@@ -130,10 +137,7 @@ def main() -> None:
     out += ["", f"-- 3b. Họ vật liệu: {len(families)} dòng (nguồn data/catalog/material_families.csv)"]
     for f in families.itertuples(index=False):
         out.append(upsert("material_families", list(families.columns), [lit(v) for v in f], "family_id"))
-    out += ["DO $$ BEGIN",
-            '  ALTER TABLE "materials" ADD CONSTRAINT "materials_family_fkey" FOREIGN KEY ("family") REFERENCES "material_families" ("family_id");',
-            "EXCEPTION WHEN duplicate_object THEN NULL;",
-            "END $$;"]
+    # material_families là view trên rule_sets; kiểm tra mã họ tại luồng nạp, không FK tới view.
 
     materials = sheet_rows(wb, "Vat lieu")
     out += ["", f"-- 4. Vật liệu: {len(materials)} dòng"]
@@ -160,8 +164,8 @@ def main() -> None:
     aliases = [(a.strip(), m["material_id"]) for m in materials for a in (m.get("keywords") or "").split(";") if a.strip()]
     out += ["", f"-- 7. Tên gọi khác và từ khóa thu thập giá: {len(aliases)} dòng"]
     for alias, mid in aliases:
-        out.append(f'INSERT INTO "material_aliases" ("alias", "material_id", "source") VALUES ({lit(alias)}, {lit(mid)}, \'tu khoa de xuat\')'
-                   ' ON CONFLICT ("alias", "material_id") DO NOTHING;')
+        out.append(f'INSERT INTO "material_aliases" ("alias", "material_id", "source") SELECT {lit(alias)}, {lit(mid)}, \'tu khoa de xuat\' '
+                   f'WHERE NOT EXISTS (SELECT 1 FROM "material_aliases" WHERE alias={lit(alias)} AND material_id={lit(mid)});')
 
     out += ["", "-- 8. View tính sẵn định mức theo 1 m2 tường = định mức theo m3 x chiều dày khối xây",
             'CREATE OR REPLACE VIEW "v_wall_systems" AS',

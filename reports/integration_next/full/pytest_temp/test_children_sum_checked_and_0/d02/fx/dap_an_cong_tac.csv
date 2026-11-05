@@ -1,0 +1,6 @@
+id,cong_trinh_id,dong_goc,cha_id,quan_he_cha,hang_muc_id,ma_pt,pham_vi,ma_qd,dem_mau_so,ma_cong_tac_goc,ma_cong_tac,cau_kien,vi_tri,noi_dung,so_luong,kich_thuoc,cong_thuc,khoi_luong,khoi_luong_tinh_lai,don_vi,cong_tru,phu_thuoc,loai_nguon,nguon,trang_thai_kiem,nguoi_kiem,ngay_kiem,can_kiem
+F-C01,ct_fx,1,,,,,IN,,co,,BE_TONG_LOT,,,,,,,3.5,3.5,m³,,,du_toan,gt/fx.csv stt 1,nhap,,,
+F-C01.1,ct_fx,1,F-C01,phan,F-HM-PT04,PT04,IN,,khong,,BE_TONG_LOT,,,,,,,1,,m³,,,du_toan,gt/fx.csv stt 1,nhap,,,
+F-C01.2,ct_fx,1,F-C01,phan,F-HM-PT05,PT05,IN,,khong,,BE_TONG_LOT,,,,,,,2.5,,m³,,,du_toan,gt/fx.csv stt 1,nhap,,,
+F-C02,ct_fx,2,,,F-HM-PT12,PT12,IN,,co,,COT,,,,,,,2,,m³,,,du_toan,gt/fx.csv stt 2,nhap,,,
+F-C03,ct_fx,3,,,,PT46,OUT,QĐ-chung,khong,,,,,,,,,10,,m²,,,du_toan,gt/fx.csv stt 3,nhap,,,

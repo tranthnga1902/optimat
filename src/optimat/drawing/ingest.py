@@ -66,6 +66,8 @@ def sniff(data: bytes) -> str | None:
 def check_upload(name: str, data: bytes, mime: str | None = None, max_mb: float = MAX_UPLOAD_MB) -> dict:
     """Kiểm tra một file tải lên, trả về thông tin file (đuôi, hash, phiên bản định dạng). Sai thì UploadRejected."""
     ext = Path(name).suffix.lower()
+    if ext in {".dwf", ".dwfx"}:
+        raise UploadRejected(f"{name}: hãy chuyển DWF sang DXF trước khi tải lên; đổi đuôi file không chuyển định dạng.")
     if ext not in ALLOWED_EXT:
         raise UploadRejected(f"{name}: định dạng {ext or '(không có đuôi)'} không được nhận. Chỉ nhận .dxf và .dwg.")
     mime = (mime or "").split(";")[0].strip().lower()

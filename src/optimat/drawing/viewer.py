@@ -1,6 +1,7 @@
 """Dữ liệu cho trang Kiểm tra bóc tách (/do-boc của frontend): bản vẽ, kết quả đo bóc từng mặt bằng, vật liệu chọn được.
 Chỉ gom kết quả đo bóc thật (cùng mã với API), không tính lại gì."""
 from __future__ import annotations
+import math
 
 from ..catalog.repository import Catalog, default_catalog
 from ..schemas import PlanTakeoff, TakeoffResult
@@ -14,6 +15,30 @@ from ..rough.takeoff import rough_parts
 
 def _r(v: float) -> float:
     return round(v, 1)
+
+
+def _display_fields(box):
+    return {"display_bbox": list(box), "display_size": [box[2]-box[0],box[3]-box[1]]}
+
+
+def _primitive_display_bbox(drawing, origin):
+    """Phạm vi minh họa dự phòng; không thay bbox/crop dùng nhận diện."""
+    points=[(s.x1,s.y1) for s in drawing.segments]+[(s.x2,s.y2) for s in drawing.segments]
+    span=max([1.0,*[abs(v) for s in drawing.segments for v in (s.x2-s.x1,s.y2-s.y1)]])
+    for t in drawing.texts:
+        h=max(t.height,span/350)
+        points.extend([(t.x,t.y),(t.x+len(t.text[:120])*h,t.y+h)])
+    for a in drawing.arcs:
+        points.extend([(a.cx-a.r,a.cy-a.r),(a.cx+a.r,a.cy+a.r)])
+    points.extend(p for h in drawing.hatches for poly in h.polygons for p in poly)
+    points=[p for p in points if all(math.isfinite(v) for v in p)] or [(0.,0.),(1.,1.)]
+    ox,oy=origin
+    return (min(p[0] for p in points)-ox,oy-max(p[1] for p in points),
+            max(p[0] for p in points)-ox,oy-min(p[1] for p in points))
+
+
+def _union_display_bbox(a,b):
+    return (min(a[0],b[0]),min(a[1],b[1]),max(a[2],b[2]),max(a[3],b[3]))
 
 
 def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: dict | None = None) -> dict:
@@ -47,6 +72,7 @@ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: d
         "height_mm": result.floor_height_mm,
         "length_rule": result.length_rule,
         "size": [_r(max(xs) - x0), _r(y1 - min(ys))],
+        **_display_fields(_primitive_display_bbox(drawing,(_r(x0),_r(y1)))),
         "layers": [{"name": n, "role": result.layer_classes.get(n, "UNKNOWN")} for n in layer_names],
         "segs": [[tx(s.x1), ty(s.y1), tx(s.x2), ty(s.y2), index[s.layer], 1 if s.kind == "hatch" else 0]
                  for s in drawing.segments],
@@ -66,7 +92,7 @@ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: d
         "hatches": hatches,
         "texts": [{"t": t.text.strip()[:120], "x": tx(t.x), "y": ty(t.y), "enc": t.encoding}
                   for t in drawing.texts if t.text.strip()],
-        "arcs": [[tx(a.cx), ty(a.cy), _r(a.r), round(a.start, 1), round(a.end, 1)] for a in drawing.arcs if a.r >= 300],
+        "arcs": [[tx(a.cx), ty(a.cy), _r(a.r), round(a.start, 1), round(a.end, 1)] for a in drawing.arcs if a.r > 0],
         "hatchsegs": len([s for s in drawing.segments if s.kind == "hatch"]),
         "plan": plan or {"name": file_name},
         "origin": [_r(x0), _r(y1)], "bbox_mm": [_r(x0), _r(min(ys)), _r(max(xs)), _r(y1)],
@@ -86,14 +112,23 @@ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: d
 
 
 def plans_data(drawing: Drawing, plans: list[PlanTakeoff], file_name: str) -> dict:
+    from ..rough.stairs import building_stairs
     from ..rough.takeoff import ground_index
     ground = ground_index([p.name for p in plans], [p.level_m for p in plans])
+    subs = [crop(drawing, tuple(p.bbox)) if p.name != "Toàn bộ bản vẽ" else drawing for p in plans]
+    stairs, notes = building_stairs(subs, [p.name for p in plans])   # thang tự nhận (B) để điền sẵn ô thang
     out = []
-    for i, p in enumerate(plans):
-        sub = crop(drawing, tuple(p.bbox)) if p.name != "Toàn bộ bản vẽ" else drawing
+    for i, (p, sub) in enumerate(zip(plans, subs)):
         info = {"name": p.name, "level_m": p.level_m, "height_mm": p.height_mm, "height_source": p.height_source,
                 "is_ground": i == ground}
-        out.append(viewer_data(sub, p.result, file_name, info))
+        data = viewer_data(sub, p.result, file_name, info)
+        if p.name != "Toàn bộ bản vẽ":
+            x0,y0,x1,y1=p.bbox
+            ox,oy=data["origin"]
+            data.update(_display_fields((x0-1500-ox,oy-y1-1500,x1+1500-ox,oy-y0+1500)))
+        data["stairs"] = [s.model_dump() for s in stairs[i]]
+        data["warnings"] = data["warnings"] + [n for n in notes if n.startswith(p.name + ":")]
+        out.append(data)
     return {"file": file_name, "plans": out}
 
 
@@ -102,6 +137,8 @@ def material_options(catalog: Catalog | None = None) -> list[dict]:
     systems: lớp chiều dày -> phương án tường; ready: phương án đủ số liệu để tối ưu."""
     catalog = catalog or default_catalog()
     view = catalog.wall_view()
+    if not view.empty:
+        view = view.dropna(subset=["detect_class"])
     families = catalog.wall_families()
     mats = catalog.materials[catalog.materials.get("family").isin(list(families))] if "family" in catalog.materials else []
     out = []
@@ -128,7 +165,17 @@ def add_cad_layers(drawing: Drawing, payload: dict, plans: list[PlanTakeoff] | N
         return
     for i, p in enumerate(payload["plans"]):
         box = tuple(plans[i].bbox) if plans and plans[i].name != "Toàn bộ bản vẽ" else None
-        p["cad"] = renderer.view(box or tuple(p["bbox_mm"]), tuple(p["origin"])).svg
+        try:
+            rendered = renderer.view(box,tuple(p["origin"]))
+        except Exception as exc:  # lỗi dựng nền riêng view; giữ nguyên dữ liệu nhận diện
+            p.pop("cad", None)
+            p["cad_missing"] = True
+            p.setdefault("warnings", []).append(f"Thiếu nền CAD của view này: {exc}")
+            continue
+        p["cad"] = rendered.svg
+        if rendered.display_bbox is not None:
+            display = rendered.display_bbox if box is not None else _union_display_bbox(p["display_bbox"],rendered.display_bbox)
+            p.update(_display_fields(display))
     xs = [c for s in drawing.segments for c in (s.x1, s.x2)] or [0.0, 1.0]
     ys = [c for s in drawing.segments for c in (s.y1, s.y2)] or [0.0, 1.0]
     ox, oy = min(xs), max(ys)
@@ -137,8 +184,20 @@ def add_cad_layers(drawing: Drawing, payload: dict, plans: list[PlanTakeoff] | N
         bx = plans[i].bbox if plans else p["bbox_mm"]
         boxes.append({"name": p["plan"]["name"], "x": _r(bx[0] - ox), "y": _r(oy - bx[3]),
                       "w": _r(bx[2] - bx[0]), "h": _r(bx[3] - bx[1])})
-    payload["overview"] = {"cad": renderer.view(None, (ox, oy)).svg, "size": [_r(max(xs) - ox), _r(oy - min(ys))],
+    overview_origin = (_r(ox),_r(oy))
+    display = _primitive_display_bbox(drawing,overview_origin)
+    payload["overview"] = {"origin": [_r(ox), _r(oy)], "size": [_r(max(xs) - ox), _r(oy - min(ys))],
+                           **_display_fields(display),
                            "plans": boxes}
+    try:
+        overview = renderer.view(None,overview_origin)
+    except Exception as exc:
+        payload["overview"]["cad_missing"] = True
+        payload["overview"]["warnings"] = [f"Thiếu nền CAD tổng thể: {exc}"]
+    else:
+        payload["overview"]["cad"] = overview.svg
+        if overview.display_bbox is not None:
+            payload["overview"].update(_display_fields(_union_display_bbox(display,overview.display_bbox)))
 
 
 def view_payload(drawing: Drawing, result, file_name: str, cad: bool = True) -> dict:
@@ -149,6 +208,27 @@ def view_payload(drawing: Drawing, result, file_name: str, cad: bool = True) -> 
         payload = plans_data(drawing, result, file_name)
     else:
         payload = {"file": file_name, "plans": [viewer_data(drawing, result, file_name)]}
+    if plans is not None and not any(p.result.walls or p.result.openings for p in plans):
+        from .sheets import sheet_type_of
+        from .encoding import normalize
+        signals = rough_parts(drawing)
+        roles = {"FOUNDATION", "BEAM", "COLUMN", "SLAB", "STAIR", "LINTEL", "REBAR"}
+        has_structural_title = False
+        for text in drawing.texts:
+            sheet = sheet_type_of(text.text)
+            if sheet is None or sheet.nhom != "ket_cau":
+                continue
+            has_structural_title = True
+            title_roles = set(sheet.bo_phan) & roles
+            if "thep" in normalize(text.text):
+                title_roles.add("REBAR")
+            for role in sorted(title_roles):
+                evidence = f"tiêu đề {text.text.strip()}"
+                sources = signals.setdefault(role, [])
+                if evidence not in sources:
+                    sources.append(evidence)
+        if plans == [] or has_structural_title:
+            payload["drawing_work_signals"] = signals
     if cad:
         add_cad_layers(drawing, payload, plans)
     if plans is not None:

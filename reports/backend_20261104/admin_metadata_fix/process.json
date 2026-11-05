@@ -1,0 +1,16 @@
+{
+  "pid": 22088,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_admin_db.py::test_overview_and_rows_from_csv",
+    "-vv",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\backend_20261104\\admin_metadata_fix\\pytest_temp"
+  ]
+}

@@ -1,0 +1,55 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 398 items
+
+tests\test_admin_db.py ...                                               [  0%]
+tests\test_agent_api.py .......                                          [  2%]
+tests\test_app_data.py ........                                          [  4%]
+tests\test_auth_admin.py ...                                             [  5%]
+tests\test_bulletin.py ...                                               [  6%]
+tests\test_compare_estimate.py .                                         [  6%]
+tests\test_concepts.py ............                                      [  9%]
+tests\test_db.py ............                                            [ 12%]
+tests\test_drawing_io.py ......................                          [ 17%]
+tests\test_encoding_plans.py .............                               [ 21%]
+tests\test_evaluate_rough.py .                                           [ 21%]
+tests\test_ground_truth_d02.py ...............                           [ 25%]
+tests\test_ground_truth_manifest.py ............                         [ 28%]
+tests\test_import_housing_estimates.py ....                              [ 29%]
+tests\test_ingest.py .................................                   [ 37%]
+tests\test_libredwg.py ..........                                        [ 39%]
+tests\test_material_notes.py ...                                         [ 40%]
+tests\test_material_rules.py ....................                        [ 45%]
+tests\test_optimize.py ......                                            [ 47%]
+tests\test_registry.py ......................                            [ 52%]
+tests\test_render.py ...                                                 [ 53%]
+tests\test_review.py .....                                               [ 54%]
+tests\test_rough_agent.py .....                                          [ 56%]
+tests\test_rough_api.py ...                                              [ 56%]
+tests\test_rough_areas.py .......                                        [ 58%]
+tests\test_rough_beams.py ...                                            [ 59%]
+tests\test_rough_build_drawings.py ..                                    [ 59%]
+tests\test_rough_columns.py ......                                       [ 61%]
+tests\test_rough_foundations.py ..........                               [ 63%]
+tests\test_rough_joints.py .......                                       [ 65%]
+tests\test_rough_materials.py ..........                                 [ 68%]
+tests\test_rough_plaster.py .................                            [ 72%]
+tests\test_rough_rebar.py ..xx.....                                      [ 74%]
+tests\test_rough_secondary.py ....x.......                               [ 77%]
+tests\test_rough_stairs.py ..                                            [ 78%]
+tests\test_rough_stairs_detect.py ...                                    [ 78%]
+tests\test_rough_status.py ...........                                   [ 81%]
+tests\test_rough_steel.py ...                                            [ 82%]
+tests\test_rough_structural.py ............................              [ 89%]
+tests\test_rough_takeoff.py ..........                                   [ 91%]
+tests\test_rough_walls.py .....                                          [ 93%]
+tests\test_s04_walls.py ..................                               [ 97%]
+tests\test_takeoff.py .......                                            [ 99%]
+tests\test_thresholds.py ..                                              [100%]
+
+================= 395 passed, 3 xfailed in 658.07s (0:10:58) ==================
+EXIT=0

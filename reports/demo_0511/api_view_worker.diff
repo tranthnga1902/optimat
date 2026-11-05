@@ -1,0 +1,44 @@
+--- main.before_view_worker.py
++++ src/optimat/api/main.py
+@@ -122,6 +122,21 @@
+             raise HTTPException(422, str(exc)) from exc
+ 
+ 
++def _takeoff_view_payload(data: bytes, suffix: str, file_name: str, overrides: dict | None,
++                          project_id: int | None, floor_height_mm: float | None) -> dict:
++    """Đọc, đo và dựng nền CAD trong worker để không chặn các yêu cầu khác."""
++    with tempfile.TemporaryDirectory() as tmp:
++        path = Path(tmp) / f"upload{suffix}"
++        path.write_bytes(data)
++        try:
++            drawing = read_drawing(str(path), overrides)
++        except DrawingError as exc:
++            raise HTTPException(422, str(exc)) from exc
++        height, openings = _project_inputs(project_id, floor_height_mm)
++        plans = takeoff_plans(drawing, height, Catalog.load(), openings)
++        return view_payload(drawing, plans, file_name or path.name)
++
++
+ @app.post("/api/takeoff/view")
+ async def takeoff_view(file: UploadFile = File(...), floor_height_mm: float | None = Form(None),
+                        layer_overrides: str | None = Form(None), project_id: int | None = Form(None)) -> dict:
+@@ -133,16 +148,9 @@
+         overrides = json.loads(layer_overrides) if layer_overrides else None
+     except json.JSONDecodeError as exc:
+         raise HTTPException(400, "layer_overrides phải là chuỗi JSON hợp lệ.") from exc
+-    with tempfile.TemporaryDirectory() as tmp:
+-        path = Path(tmp) / f"upload{suffix}"
+-        path.write_bytes(await file.read())
+-        try:
+-            drawing = read_drawing(str(path), overrides)
+-        except DrawingError as exc:
+-            raise HTTPException(422, str(exc)) from exc
+-    height, openings = _project_inputs(project_id, floor_height_mm)
+-    plans = takeoff_plans(drawing, height, Catalog.load(), openings)
+-    return view_payload(drawing, plans, file.filename or path.name)
++    data = await file.read()
++    return await run_in_threadpool(_takeoff_view_payload, data, suffix, file.filename or "", overrides,
++                                   project_id, floor_height_mm)
+ 
+ 
+ @app.post("/api/takeoff/confirm", response_model=ReviewResult)

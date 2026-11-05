@@ -1,0 +1,9 @@
+INFO:     127.0.0.1:61744 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61747 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61749 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51760 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51760 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57226 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57226 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57226 - "GET /api/auth/me HTTP/1.1" 200 OK

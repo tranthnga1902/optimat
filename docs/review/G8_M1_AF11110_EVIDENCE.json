@@ -1,0 +1,374 @@
+{
+  "source": "DU TOAN M1.xls",
+  "sha256": "9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+  "read_mode": "Stored cell values and BIFF number formats. Formula text not extracted.",
+  "sheets": {
+    "Tien luong": {
+      "A36": {
+        "value": 11.0,
+        "number_format": "#,##0"
+      },
+      "B36": {
+        "value": "Bê tông lót móng SX bằng máy trộn, đổ bằng thủ công, M100, đá 4x6, PCB30",
+        "number_format": "General"
+      },
+      "C36": {
+        "value": "m3",
+        "number_format": "General"
+      },
+      "J36": {
+        "value": 3.2515,
+        "number_format": "#,##0.0000"
+      },
+      "B37": {
+        "value": "Đài móng ",
+        "number_format": "General"
+      },
+      "B38": {
+        "value": "DC-1",
+        "number_format": "General"
+      },
+      "D38": {
+        "value": 2.0,
+        "number_format": "#,##0.0000"
+      },
+      "E38": {
+        "value": 0.75,
+        "number_format": "#,##0.0000"
+      },
+      "F38": {
+        "value": 2.15,
+        "number_format": "#,##0.0000"
+      },
+      "G38": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I38": {
+        "value": 0.3225,
+        "number_format": "#,##0.0000"
+      },
+      "B39": {
+        "value": "DC-2",
+        "number_format": "General"
+      },
+      "D39": {
+        "value": 4.0,
+        "number_format": "#,##0.0000"
+      },
+      "E39": {
+        "value": 0.75,
+        "number_format": "#,##0.0000"
+      },
+      "F39": {
+        "value": 2.25,
+        "number_format": "#,##0.0000"
+      },
+      "G39": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I39": {
+        "value": 0.675,
+        "number_format": "#,##0.0000"
+      },
+      "B40": {
+        "value": "DC-3",
+        "number_format": "General"
+      },
+      "D40": {
+        "value": 2.0,
+        "number_format": "#,##0.0000"
+      },
+      "E40": {
+        "value": 0.75,
+        "number_format": "#,##0.0000"
+      },
+      "F40": {
+        "value": 1.5,
+        "number_format": "#,##0.0000"
+      },
+      "G40": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I40": {
+        "value": 0.225,
+        "number_format": "#,##0.0000"
+      },
+      "B41": {
+        "value": "Giằng móng ",
+        "number_format": "General"
+      },
+      "B42": {
+        "value": "GM-1",
+        "number_format": "General"
+      },
+      "D42": {
+        "value": 2.0,
+        "number_format": "#,##0.0000"
+      },
+      "E42": {
+        "value": 9.930000000000001,
+        "number_format": "#,##0.0000"
+      },
+      "F42": {
+        "value": 0.5,
+        "number_format": "#,##0.0000"
+      },
+      "G42": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I42": {
+        "value": 0.993,
+        "number_format": "#,##0.0000"
+      },
+      "B43": {
+        "value": "GM-2",
+        "number_format": "General"
+      },
+      "D43": {
+        "value": 1.0,
+        "number_format": "#,##0.0000"
+      },
+      "E43": {
+        "value": 3.6699999999999995,
+        "number_format": "#,##0.0000"
+      },
+      "F43": {
+        "value": 0.5,
+        "number_format": "#,##0.0000"
+      },
+      "G43": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I43": {
+        "value": 0.1835,
+        "number_format": "#,##0.0000"
+      },
+      "B44": {
+        "value": "GM-3",
+        "number_format": "General"
+      },
+      "D44": {
+        "value": 2.0,
+        "number_format": "#,##0.0000"
+      },
+      "E44": {
+        "value": 3.6699999999999995,
+        "number_format": "#,##0.0000"
+      },
+      "F44": {
+        "value": 0.5,
+        "number_format": "#,##0.0000"
+      },
+      "G44": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I44": {
+        "value": 0.367,
+        "number_format": "#,##0.0000"
+      },
+      "B45": {
+        "value": "GM-4",
+        "number_format": "General"
+      },
+      "D45": {
+        "value": 1.0,
+        "number_format": "#,##0.0000"
+      },
+      "E45": {
+        "value": 3.6699999999999995,
+        "number_format": "#,##0.0000"
+      },
+      "F45": {
+        "value": 0.5,
+        "number_format": "#,##0.0000"
+      },
+      "G45": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I45": {
+        "value": 0.1835,
+        "number_format": "#,##0.0000"
+      },
+      "B46": {
+        "value": "Dầm tường",
+        "number_format": "General"
+      },
+      "B47": {
+        "value": "DT-01 ",
+        "number_format": "General"
+      },
+      "D47": {
+        "value": 1.0,
+        "number_format": "#,##0.0000"
+      },
+      "E47": {
+        "value": 5.35,
+        "number_format": "#,##0.0000"
+      },
+      "F47": {
+        "value": 0.4,
+        "number_format": "#,##0.0000"
+      },
+      "G47": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I47": {
+        "value": 0.214,
+        "number_format": "#,##0.0000"
+      },
+      "B48": {
+        "value": "DT-02",
+        "number_format": "General"
+      },
+      "D48": {
+        "value": 2.0,
+        "number_format": "#,##0.0000"
+      },
+      "E48": {
+        "value": 1.1,
+        "number_format": "#,##0.0000"
+      },
+      "F48": {
+        "value": 0.4,
+        "number_format": "#,##0.0000"
+      },
+      "G48": {
+        "value": 0.1,
+        "number_format": "#,##0.0000"
+      },
+      "I48": {
+        "value": 0.088,
+        "number_format": "#,##0.0000"
+      }
+    },
+    "Phân tích VT": {
+      "A58": {
+        "value": 11.0,
+        "number_format": "General"
+      },
+      "B58": {
+        "value": "AF.11110",
+        "number_format": "General"
+      },
+      "C58": {
+        "value": "Bê tông lót móng SX bằng máy trộn, đổ bằng thủ công, M100, đá 4x6, PCB30",
+        "number_format": "General"
+      },
+      "D58": {
+        "value": "m3",
+        "number_format": "General"
+      },
+      "E58": {
+        "value": 3.2515,
+        "number_format": "#,##0.#####0;\\-#,##0.#####0"
+      },
+      "C59": {
+        "value": "a) Vật liệu",
+        "number_format": "General"
+      },
+      "B60": {
+        "value": "A24.0797A",
+        "number_format": "General"
+      },
+      "C60": {
+        "value": "Xi măng PCB30",
+        "number_format": "General"
+      },
+      "D60": {
+        "value": "kg",
+        "number_format": "General"
+      },
+      "E60": {
+        "value": 197.825,
+        "number_format": "#,##0.#####0;\\-#,##0.#####0"
+      },
+      "F60": {
+        "value": 643.228,
+        "number_format": "#,##0.###0;\\-#,##0.###0"
+      },
+      "B61": {
+        "value": "A24.0180",
+        "number_format": "General"
+      },
+      "C61": {
+        "value": "Cát vàng",
+        "number_format": "General"
+      },
+      "D61": {
+        "value": "m3",
+        "number_format": "General"
+      },
+      "E61": {
+        "value": 0.572975,
+        "number_format": "#,##0.#####0;\\-#,##0.#####0"
+      },
+      "F61": {
+        "value": 1.863,
+        "number_format": "#,##0.###0;\\-#,##0.###0"
+      },
+      "B62": {
+        "value": "A24.0010",
+        "number_format": "General"
+      },
+      "C62": {
+        "value": "Đá 4x6",
+        "number_format": "General"
+      },
+      "D62": {
+        "value": "m3",
+        "number_format": "General"
+      },
+      "E62": {
+        "value": 0.92865,
+        "number_format": "#,##0.#####0;\\-#,##0.#####0"
+      },
+      "F62": {
+        "value": 3.0195,
+        "number_format": "#,##0.###0;\\-#,##0.###0"
+      },
+      "B63": {
+        "value": "A24.0524",
+        "number_format": "General"
+      },
+      "C63": {
+        "value": "Nước",
+        "number_format": "General"
+      },
+      "D63": {
+        "value": "lít",
+        "number_format": "General"
+      },
+      "E63": {
+        "value": 166.05,
+        "number_format": "#,##0.#####0;\\-#,##0.#####0"
+      },
+      "F63": {
+        "value": 539.9116,
+        "number_format": "#,##0.###0;\\-#,##0.###0"
+      }
+    }
+  },
+  "check": {
+    "detail_rows": [
+      38,
+      39,
+      40,
+      42,
+      43,
+      44,
+      45,
+      47,
+      48
+    ],
+    "sum_column_I": "3.2515",
+    "total_cell": "Tien luong!J36"
+  }
+}

@@ -1,0 +1,202 @@
+--- before-review2/src/optimat/rough/secondary.py
++++ after-review2/src/optimat/rough/secondary.py
+@@ -65,7 +65,7 @@
+     members: tuple[LinearMember, ...]
+     segments: tuple[tuple[float, float, float, float], ...]
+     missing: tuple[str, ...]
+-    formwork_missing: tuple[str, ...] = ()  # bổ sung khi kiểm phần đáy được tường đỡ
++    formwork_missing: tuple[str, ...] = ("chưa kiểm căn cứ tường đỡ đáy giằng",)
+ 
+ 
+ def _axis(m: LinearMember):
+@@ -219,6 +219,49 @@
+                  and w.wall_system_id == system), None)
+ 
+ 
++def _tie_formwork_support(group, walls, systems, view, height, openings, columns) -> tuple[str, ...]:
++    """Chỉ xác nhận đáy được đỡ khi mọi đoạn có tường cùng trục che phủ đủ."""
++    if group.missing:
++        return ()  # lý do hình học/ngữ cảnh đã chặn cả BT và CP
++    first = group.members[0]
++    reasons = []
++    valid_height = (height is not None and math.isfinite(height) and height > 0
++                    and first.z_bottom_mm >= 0 and first.z_bottom_mm + first.d_mm <= height)
++    if not valid_height:
++        reasons.append("chưa xác nhận ranh đứng tường đỡ đáy giằng")
++    if openings is None or columns is None:
++        reasons.append("chưa có thông tin lỗ mở/cột để xác nhận đáy giằng được đỡ")
++    for x1, y1, x2, y2 in group.segments:
++        horizontal = y1 == y2
++        start, end = (x1, x2) if horizontal else (y1, y2)
++        supported = []
++        for wall in walls:
++            if not (wall.keep and wall.masonry):
++                continue
++            if not (wall.y1 == wall.y2 == y1 == y2 or wall.x1 == wall.x2 == x1 == x2):
++                continue
++            lo, hi = sorted((wall.x1, wall.x2) if horizontal else (wall.y1, wall.y2))
++            lo, hi = max(lo, start), min(hi, end)
++            if hi <= lo:
++                continue
++            thick, _ = _thickness_m(systems.get(wall.id), wall.cls, view)
++            if first.b_mm / 1000 > thick:
++                reasons.append(f"giằng rộng hơn tường {wall.id}: đáy không được tường đỡ đầy, chưa xác định cốp pha đáy")
++                continue
++            if (not valid_height or openings is None or columns is None
++                    or any(o.keep and o.wall == wall.id for o in openings) or columns.get(wall.id, 0) > 0):
++                continue
++            supported.append((lo, hi))
++        cursor = start
++        for lo, hi in sorted(supported):
++            if lo > cursor:
++                break
++            cursor = max(cursor, hi)
++        if cursor < end:
++            reasons.append("chưa chứng minh tường đỡ đầy toàn bộ đáy giằng: chưa xác định cốp pha đáy")
++    return tuple(dict.fromkeys(reasons))
++
++
+ def deduct_ties(works: list[WorkItem], plan: str, walls, systems: dict, members: list[LinearMember], catalog, *,
+                 tie_groups: list[_TieGroup] | None = None, wall_height_mm: float | None = None,
+                 openings: list[ReviewOpening] | None = None,
+@@ -229,6 +272,8 @@
+     ties = normalize_ties(members) if tie_groups is None else tie_groups
+     affected = {}
+     for group in ties:
++        group.formwork_missing = _tie_formwork_support(
++            group, walls, systems, view, wall_height_mm, openings, column_len_in_walls)
+         first = group.members[0]
+         segments = group.segments or tuple((m.x1, m.y1, m.x2, m.y2) for m in group.members)
+         for wall in walls:
+@@ -276,9 +321,6 @@
+                 thick, _ = _thickness_m(systems.get(wall.id), wall.cls, view)
+                 overlap_width = min(first.b_mm / 1000, thick)
+                 volume = sum(laps) / 1000 * first.d_mm / 1000 * overlap_width
+-                if first.b_mm / 1000 > thick:
+-                    reason = f"giằng rộng hơn tường {wall.id}: đáy không được tường đỡ đầy, chưa xác định cốp pha đáy"
+-                    group.formwork_missing = tuple(dict.fromkeys([*group.formwork_missing, reason]))
+                 target["volume"] += volume
+                 target["evidence"].append(f"phần trừ giằng đã hợp {ids}: {_fmt(volume)} m³")
+     for target in affected.values():
+--- before-review2/tests/test_rough_secondary.py
++++ after-review2/tests/test_rough_secondary.py
+@@ -35,10 +35,10 @@
+ 
+ @pytest.mark.parametrize("kind", ["GIANG_TUONG", "SE_NO"])
+ @pytest.mark.parametrize("source, expected", [("structural", "A"), ("manual", "C"), ("inferred", "C")])
+-def test_linear_member_keeps_source_for_concrete_and_formwork(kind, source, expected):
++def test_linear_member_keeps_source_for_concrete_and_formwork(cat, kind, source, expected):
+     member = LinearMember(id="G1", kind=kind, x1=0, y1=0, x2=4000, y2=0,
+                           b_mm=220, d_mm=150, source=source, z_bottom_mm=1000)
+-    works, _ = linear_works("T1", [member], tie_groups=normalize_ties([member], plan_context=True))
++    works, _ = linear_works("T1", [member], tie_groups=_supported_groups(cat, [member]))
+     quantities = [w.quantity for w in works]
+     assign_status(works, ProjectParams(), {})
+     concrete, formwork = works
+@@ -52,13 +52,13 @@
+ 
+ 
+ @pytest.mark.parametrize("reverse", [False, True])
+-def test_linear_members_same_section_keep_separate_sources(reverse):
++def test_linear_members_same_section_keep_separate_sources(cat, reverse):
+     members = [LinearMember(id="G1", kind="GIANG_TUONG", x1=0, y1=0, x2=4000, y2=0,
+                             b_mm=220, d_mm=150, source="structural", z_bottom_mm=1000),
+                LinearMember(id="G2", kind="GIANG_TUONG", x1=4000, y1=0, x2=8000, y2=0,
+                             b_mm=220, d_mm=150, source="manual", z_bottom_mm=1000)]
+     ordered = members[::-1] if reverse else members
+-    works, _ = linear_works("T1", ordered, tie_groups=normalize_ties(ordered, plan_context=True))
++    works, _ = linear_works("T1", ordered, tie_groups=_supported_groups(cat, ordered))
+     assign_status(works, ProjectParams(), {})
+     concrete = [w for w in works if w.code == "GIANG_TUONG"]
+     formwork = [w for w in works if w.code == "COP_PHA"]
+@@ -384,9 +384,9 @@
+ 
+ @pytest.mark.parametrize("second", [dict(y1=400, y2=400), dict(y1=220, y2=220),
+                                      dict(y1=100, y2=100, z_bottom_mm=2000)])
+-def test_n03_review_disjoint_sections_are_not_merged_or_marked_missing(second):
++def test_n03_review_disjoint_sections_are_not_merged_or_marked_missing(cat, second):
+     members = [_tie(), _tie("G2", **second)]
+-    groups = normalize_ties(members, plan_context=True)
++    groups = _supported_groups(cat, members)
+     assert len(groups) == 2 and not any(g.missing for g in groups)
+     works, _ = linear_works("T1", members, tie_groups=groups)
+     assert sum(w.quantity for w in works if w.code == "GIANG_TUONG") == pytest.approx(0.264)
+@@ -414,3 +414,78 @@
+         assert cp.quantity == pytest.approx(1.2) and not cp.missing
+     brick = next(m for m in res.materials if m.material_id == "GN01")
+     assert brick.quantity == pytest.approx(net * 550) and brick.complete
++
++
++# Các fixture CP đầy đủ khai báo cả tường đỡ; ngữ cảnh tầng một mình không chứng minh đỡ đáy.
++def _supported_groups(cat, members):
++    walls = [WALL.model_copy(update=dict(id=f"W{i}", x1=m.x1, y1=m.y1, x2=m.x2, y2=m.y2))
++             for i, m in enumerate(members)]
++    groups = normalize_ties(members, plan_context=True)
++    deduct_ties([], "T1", walls, {}, members, cat, tie_groups=groups, wall_height_mm=3000,
++                openings=[], column_len_in_walls={})
++    return groups
++
++
++@pytest.mark.parametrize("gate", ["opening", "column", "height", "unknown_openings", "unknown_columns"])
++def test_n03_review2_wide_tie_formwork_warning_survives_every_masonry_gate(cat, gate):
++    from optimat.rough.models import WorkItem
++    from optimat.rough.boq import boq_workbook
++    members = [_tie(b_mm=300)]
++    groups = normalize_ties(members, plan_context=True)
++    opening = ReviewOpening(id="O1", wall="W1", w=1000, h=2000)
++    args = dict(wall_height_mm=3000, openings=[], column_len_in_walls={})
++    if gate == "opening": args["openings"] = [opening]
++    elif gate == "column": args["column_len_in_walls"] = {"W1": 220}
++    elif gate == "height": args["wall_height_mm"] = None
++    elif gate == "unknown_openings": args["openings"] = None
++    else: args["column_len_in_walls"] = None
++    xay = WorkItem(code="XAY", name="xây", unit="m³", quantity=6.6, plan="T1", element="tường 220 bao che")
++    deduct_ties([xay], "T1", [WALL], {}, members, cat, tie_groups=groups, **args)
++    works, _ = linear_works("T1", members, tie_groups=groups)
++    bt, cp = works
++    assert bt.quantity == pytest.approx(0.18) and bt.status == "C" and not bt.missing
++    assert cp.quantity is None and cp.status == "D"
++    assert any("đáy không được tường đỡ đầy" in m for m in cp.missing)
++    assert xay.quantity is None and xay.status == "D"
++
++
++@pytest.mark.parametrize("gate", ["opening", "column"])
++def test_n03_review2_combined_gates_propagate_to_formwork_totals_materials_and_boq(cat, gate):
++    from optimat.rough.columns import Column
++    from optimat.rough.boq import boq_workbook, export_for_optimizer
++    args = {"openings": [ReviewOpening(id="O1", wall="W1", w=1000, h=2000)]} if gate == "opening" else {
++        "columns": [Column(id="C1", x=2000, y=0, b_mm=220, h_mm=220)]}
++    params = P.model_copy(update={"formwork_type": "go"})
++    req = RoughRequest(params=params, plans=[_plan(beams=[], members=[_tie(b_mm=300)], **args)])
++    res = compute_rough(req, cat)
++    cp = next(w for w in res.works if w.formwork_of == "GIANG_TUONG")
++    assert cp.quantity is None and cp.status == "D" and any("đáy không được tường đỡ đầy" in m for m in cp.missing)
++    assert _one(res, "GIANG_TUONG").quantity == pytest.approx(0.18)
++    total = next(t for t in res.formwork if t.code == "GIANG_TUONG")
++    assert total.quantity is None and not total.complete and total.status == "D"
++    cp_mats = [m for m in res.materials if any(u.work == "COP_PHA" for u in m.uses)]
++    assert cp_mats and all(not m.complete and m.status == "D" for m in cp_mats)
++    out = export_for_optimizer(res)
++    assert any(m["material_id"] == "CP03" for m in out["missing"])
++    rows = list(boq_workbook(res)["Theo tầng"].values); header = rows[0]
++    row = next(dict(zip(header, r)) for r in rows[1:] if r[header.index("Công tác")] == cp.name
++               and "giằng" in str(r[header.index("Chi tiết")]))
++    assert row["Khối lượng"] is None and "đáy không được tường đỡ đầy" in row["missing_reason"]
++
++
++@pytest.mark.parametrize("walls", [[], [WALL.model_copy(update={"y1": 5000, "y2": 5000})],
++                                   [WALL.model_copy(update={"x2": 2000})]])
++def test_n03_review2_absent_or_partial_wall_support_does_not_certify_formwork(cat, walls):
++    members = [_tie()]; groups = normalize_ties(members, plan_context=True)
++    deduct_ties([], "T1", walls, {}, members, cat, tie_groups=groups,
++                wall_height_mm=3000, openings=[], column_len_in_walls={})
++    works, _ = linear_works("T1", members, tie_groups=groups)
++    assert works[0].quantity == pytest.approx(0.132) and works[0].status == "C"
++    assert works[1].quantity is None and works[1].status == "D" and works[1].missing
++
++
++def test_n03_review2_plan_context_alone_does_not_prove_bottom_support():
++    members = [_tie()]
++    works, _ = linear_works("T1", members, tie_groups=normalize_ties(members, plan_context=True))
++    assert works[0].quantity == pytest.approx(0.132) and works[0].status == "C"
++    assert works[1].quantity is None and any("chưa kiểm" in m for m in works[1].missing)

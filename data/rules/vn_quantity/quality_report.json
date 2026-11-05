@@ -1,0 +1,283 @@
+{
+  "ocr": {
+    "ocr_unreviewed": 193,
+    "visually_checked_stamp_only_no_body_text": 1,
+    "ocr_low_confidence": 3
+  },
+  "tables_total": 2898,
+  "tables_with_resource_records": 2527,
+  "tables_grid_only": 0,
+  "tables_without_indexed_norms": 371,
+  "resource_records": 59050,
+  "completion": {
+    "initial_unparsed_tables": 558,
+    "typed_tables": 558,
+    "table_kinds": {
+      "classification": 41,
+      "material_property": 42,
+      "document_index": 48,
+      "resource_matrix": 331,
+      "labor_matrix": 19,
+      "coefficient_lookup": 23,
+      "layout_fragment": 18,
+      "narrative_note": 3,
+      "cost_rate": 33
+    },
+    "initial_missing_basis": 3271,
+    "basis_added_with_evidence": 3271,
+    "initial_rows_still_missing_basis": 0,
+    "auxiliary_resource_records": 7047,
+    "auxiliary_records_missing_basis": 0
+  },
+  "norm_codes": 9286,
+  "resource_issues": {
+    "percentage_requires_cost_base": 9310,
+    "dash_or_empty_is_not_zero": 5973,
+    "conflicting_values_require_variant_or_code_review": 75,
+    "dot_thousands_separator_normalized": 294,
+    "wrapped_resource_label_alignment_requires_review": 77
+  },
+  "conflicting_code_resource_keys": [
+    [
+      "TT38_2026_3",
+      "AB.11371",
+      "Nhân công",
+      "công"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.11372",
+      "Nhân công",
+      "công"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.11373",
+      "Nhân công",
+      "công"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.11374",
+      "Nhân công",
+      "công"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51131",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51132",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51133",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51134",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51231",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51232",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51233",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51234",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51331",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51332",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51333",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51334",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51411",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51412",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51413",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AB.51414",
+      "Máy nén khí 660m3/h",
+      "ca"
+    ],
+    [
+      "TT38_2026_3",
+      "AF.61712",
+      "Dây thép",
+      "kg"
+    ],
+    [
+      "TT38_2026_3",
+      "AF.61712",
+      "Nhân công nhóm 2",
+      "công"
+    ],
+    [
+      "TT38_2026_3",
+      "AF.61712",
+      "Thép tròn",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "12.10401",
+      "Nước",
+      "l"
+    ],
+    [
+      "TT38_2026_8",
+      "12.10401",
+      "Vữa khô trộn sẵn (xây)",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "12.10402",
+      "Nước",
+      "l"
+    ],
+    [
+      "TT38_2026_8",
+      "12.10402",
+      "Vữa khô trộn sẵn (trát)",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "12.32501",
+      "Móc sắt",
+      "cái"
+    ],
+    [
+      "TT38_2026_8",
+      "12.33211",
+      "Thép mạ kẽm",
+      "m"
+    ],
+    [
+      "TT38_2026_8",
+      "12.33212",
+      "Thép mạ kẽm",
+      "m"
+    ],
+    [
+      "TT38_2026_8",
+      "17.20021",
+      "Que hàn",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "17.20022",
+      "Que hàn",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "17.20024",
+      "Que hàn",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "17.20044",
+      "Thép tròn",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "17.20045",
+      "Thép tròn",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "17.20046",
+      "Thép tròn",
+      "kg"
+    ],
+    [
+      "TT38_2026_8",
+      "17.20047",
+      "Thép tròn",
+      "kg"
+    ]
+  ],
+  "ocr_low_confidence_pages": [
+    {
+      "source_id": "TT01_2025",
+      "pdf_page": 24,
+      "mean_word_confidence": 74.08
+    },
+    {
+      "source_id": "TT01_2025",
+      "pdf_page": 25,
+      "mean_word_confidence": 79.57
+    },
+    {
+      "source_id": "TT01_2025",
+      "pdf_page": 26,
+      "mean_word_confidence": 79.62
+    }
+  ],
+  "grid_only_tables": [],
+  "note": "Bảng còn lại đã có kiểu, trục cột, hàng và giá trị có tọa độ; mục lục/ghi chú không phải định mức hao phí. Tất cả bản ghi còn chờ duyệt chuyên môn."
+}

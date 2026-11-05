@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_partial.py",
+    "tests/test_rough_materials.py",
+    "tests/test_rough_formwork_materials.py",
+    "tests/test_rough_steel.py",
+    "tests/test_rough_status.py",
+    "tests/test_rough_stairs.py",
+    "-q",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=reports/n02/b3/temp_pure_regression"
+  ],
+  "exit_code": 0,
+  "seconds": 15.526922225952148,
+  "database_env_removed": true,
+  "scope": "partial + A01/B01/steel/Q01-stair status pure regressions; no API/TestClient/real CAD/DB/full suite"
+}

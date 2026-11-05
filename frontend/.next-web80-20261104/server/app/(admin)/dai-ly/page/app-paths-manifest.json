@@ -1,0 +1,3 @@
+{
+  "/(admin)/dai-ly/page": "app/(admin)/dai-ly/page.js"
+}

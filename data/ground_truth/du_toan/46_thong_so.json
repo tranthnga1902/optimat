@@ -6,6 +6,7 @@
   "plaster_mortar_grade": "M75",
   "plaster_thickness_mm": 15,
   "slab_thickness_mm": 100,
+  "stair_slab_thickness_mm": 100,
   "beam_width_mm": 200,
   "beam_depth_mm": 350,
   "openings": {"door_height_mm": 2000},

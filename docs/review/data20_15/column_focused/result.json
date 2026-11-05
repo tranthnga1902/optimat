@@ -1,0 +1,16 @@
+{
+  "exit_code": 0,
+  "seconds": 5.09,
+  "source_stable": true,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_column_instance_provenance.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "scope": "SYNTHETIC pure CSV; no DB/HTTP/OpenAI/CAD/browser"
+}

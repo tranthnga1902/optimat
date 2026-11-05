@@ -1,0 +1,14 @@
+{
+  "status": "SOURCE-READY_BEFORE_TESTS_AFTER_SHELL_RECOVERY",
+  "files": [
+    "src/optimat/rough/steel.py",
+    "src/optimat/rough/status.py",
+    "src/optimat/rough/takeoff.py",
+    "src/optimat/rough/materials.py",
+    "tests/test_rough_partial.py"
+  ],
+  "tests_run_at_snapshot": false,
+  "new_model_or_boq_fields": false,
+  "prior_structured_status": "worst_status preserves status/inputs; no evidence parsing",
+  "environment_note": "rg/read commands recovered; no process restarted/killed"
+}

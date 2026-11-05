@@ -1,0 +1,14 @@
+ma,ap_dung,mau,truong,gia_tri,he_so,ghi_chu
+QC01,MONG|COT|DAM|SAN|CAU_THANG|LANH_TO|GIANG_TUONG|SE_NO|MAI,(?:\bm|\bmac) ?(?P<v>\d{3})\b,concrete_grade,M{v},,"Mác bê tông ghi trong tên: ""đá 1x2 M200"", ""mác 250"" (dự toán 46, banve1)"
+QC02,BE_TONG_LOT,(?:\bm|\bmac) ?(?P<v>\d{3})\b,lean_concrete_grade,M{v},,"Mác bê tông lót: ""lót móng ... M150"", ""mác 150"""
+QC03,MONG|COT|DAM|SAN|CAU_THANG|LANH_TO|GIANG_TUONG|SE_NO|MAI|BE_TONG_LOT,thuong pham,concrete_supply,ready_mix,,Bê tông thương phẩm ghi trong tên
+QC04,MONG|COT|DAM|SAN|CAU_THANG|LANH_TO|GIANG_TUONG|SE_NO|MAI|BE_TONG_LOT,\bda (?:1x2|2x4|4x6)\b,concrete_supply,site_mix,,"Tên ghi cỡ đá (""đá 1x2"") theo mã AF.1 trộn tại chỗ; thương phẩm khớp QC03 trước"
+QC05,XAY,\bvua\b.*?\bmac (?P<v>\d{2,3})\b,masonry_mortar_grade,M{v},,"""vữa xi măng mác 50"" (banve1)"
+QC06,XAY,\bm(?P<v>\d{2,3})\b,masonry_mortar_grade,M{v},,"""h<=16m M75"" (dự toán 46)"
+QC07,TRAT,\bvua\b.*?\bmac (?P<v>\d{2,3})\b,plaster_mortar_grade,M{v},,"""vữa mác 75"""
+QC08,TRAT,\bm(?P<v>\d{2,3})\b,plaster_mortar_grade,M{v},,"""vữa M75"""
+QC09,CAN_NEN,\bvua\b.*?\bmac (?P<v>\d{2,3})\b,screed_mortar_grade,M{v},,"""Láng nền ... vữa mác 75"""
+QC10,CAN_NEN,\bm(?P<v>\d{2,3})\b,screed_mortar_grade,M{v},,Vữa láng ghi M75
+QC11,TRAT|CAN_NEN,\bday(?: trat)? ?(?P<v>\d+(?:[.,]\d+)?) ?cm\b,thickness_mm,{v},10,"Chiều dày trát / láng ghi cm: ""dày trát 1,5cm"" -> 15 mm"
+QC12,XAY,gach ong.*?<= ?10 ?cm,wall_system_id,W-GO01-100,,"Gạch ống 8x8x19, dày <=10cm: AE.631 (TT 38)"
+QC13,XAY,gach ong.*?<= ?(?:20|22|30) ?cm,wall_system_id,W-GO01-200,,"Gạch ống 8x8x19, dày <=30cm: AE.632 (TT 38)"

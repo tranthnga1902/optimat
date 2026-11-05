@@ -1,0 +1,245 @@
+{
+  "start": "2026-11-03T10:40:21.035327+00:00",
+  "pid": 20288,
+  "route": "http://127.0.0.1:8000",
+  "jobs": [
+    {
+      "start": "2026-11-03T10:40:21.037165+00:00",
+      "file": "tan_binh_kien_truc.dxf",
+      "endpoint": "/api/takeoff/view",
+      "bytes": 13067970,
+      "initial_process": {
+        "pid": 20288,
+        "rss": 64458752,
+        "cpu": 7.703125
+      },
+      "probes": [
+        {
+          "utc": "2026-11-03T10:40:23.717464+00:00",
+          "process": {
+            "pid": 20288,
+            "rss": 279056384,
+            "cpu": 11.140625
+          },
+          "health": {
+            "error": "ReadTimeout",
+            "seconds": 5.007
+          },
+          "auth_me": {
+            "http": 200,
+            "seconds": 0.06
+          },
+          "job_still_pending": true
+        },
+        {
+          "utc": "2026-11-03T10:40:43.739973+00:00",
+          "process": {
+            "pid": 20288,
+            "rss": 500834304,
+            "cpu": 30.15625
+          },
+          "health": {
+            "error": "ReadTimeout",
+            "seconds": 5.005
+          },
+          "auth_me": {
+            "http": 200,
+            "seconds": 0.617
+          },
+          "job_still_pending": true
+        },
+        {
+          "utc": "2026-11-03T10:41:03.749265+00:00",
+          "process": {
+            "pid": 20288,
+            "rss": 639578112,
+            "cpu": 49
+          },
+          "health": {
+            "http": 200,
+            "seconds": 2.699
+          },
+          "auth_me": {
+            "http": 200,
+            "seconds": 0.336
+          },
+          "job_still_pending": true
+        },
+        {
+          "utc": "2026-11-03T10:41:21.459954+00:00",
+          "process": {
+            "pid": 20288,
+            "rss": 646385664,
+            "cpu": 63.65625
+          },
+          "health": {
+            "error": "ReadTimeout",
+            "seconds": 5.015
+          },
+          "auth_me": {
+            "http": 200,
+            "seconds": 0.395
+          },
+          "job_still_pending": true
+        },
+        {
+          "utc": "2026-11-03T10:41:41.486609+00:00",
+          "process": {
+            "pid": 20288,
+            "rss": 632213504,
+            "cpu": 82.328125
+          },
+          "health": {
+            "http": 200,
+            "seconds": 0.303
+          },
+          "auth_me": {
+            "http": 200,
+            "seconds": 0.032
+          },
+          "job_still_pending": true
+        }
+      ],
+      "response": {
+        "http": 200,
+        "response_bytes": 13191738,
+        "plans": [
+          {
+            "name": "MẶT BẰNG LẦU 2 TL 1:50",
+            "walls": 17,
+            "openings": 3
+          },
+          {
+            "name": "MẶT BẰNG LẦU 3 TL 1:50",
+            "walls": 17,
+            "openings": 3
+          },
+          {
+            "name": "MẶT BẰNG LẦU 4 TL 1:50",
+            "walls": 17,
+            "openings": 3
+          },
+          {
+            "name": "MẶT BẰNG SÂN THƯỢNG TL 1:50",
+            "walls": 18,
+            "openings": 2
+          },
+          {
+            "name": "MB TRỆT TL 1:50",
+            "walls": 18,
+            "openings": 9
+          },
+          {
+            "name": "MẶT BẰNG LẦU 1 TL 1:50",
+            "walls": 23,
+            "openings": 6
+          },
+          {
+            "name": "MẶT BẰNG LẦU 2 TL 1:50 (2)",
+            "walls": 14,
+            "openings": 2
+          },
+          {
+            "name": "MẶT BẰNG LẦU 3 TL 1:50 (2)",
+            "walls": 18,
+            "openings": 2
+          },
+          {
+            "name": "MẶT BẰNG LẦU 4 TL 1:50 (2)",
+            "walls": 16,
+            "openings": 2
+          },
+          {
+            "name": "MẶT BẰNG SÂN THƯỢNG TL 1:50 (2)",
+            "walls": 29,
+            "openings": 3
+          },
+          {
+            "name": "MB CỦA MĐ HƯỚNG ĐÔNG TĐ",
+            "walls": 0,
+            "openings": 0
+          }
+        ],
+        "file": "tan_binh_kien_truc.dxf"
+      },
+      "end": "2026-11-03T10:41:47.447119+00:00",
+      "seconds": 85.744,
+      "final_process": {
+        "pid": 20288,
+        "rss": 583065600,
+        "cpu": 87.171875
+      }
+    },
+    {
+      "start": "2026-11-03T10:41:47.852215+00:00",
+      "file": "tan_binh_ket_cau.dxf",
+      "endpoint": "/api/takeoff/structural",
+      "bytes": 7878010,
+      "initial_process": {
+        "pid": 20288,
+        "rss": 583065600,
+        "cpu": 87.171875
+      },
+      "probes": [
+        {
+          "utc": "2026-11-03T10:41:50.381624+00:00",
+          "process": {
+            "pid": 20288,
+            "rss": 569364480,
+            "cpu": 90.28125
+          },
+          "health": {
+            "error": "ReadTimeout",
+            "seconds": 5.008
+          },
+          "auth_me": {
+            "http": 200,
+            "seconds": 0.428
+          },
+          "job_still_pending": true
+        },
+        {
+          "utc": "2026-11-03T10:42:10.399278+00:00",
+          "process": {
+            "pid": 20288,
+            "rss": 569044992,
+            "cpu": 109.71875
+          },
+          "health": {
+            "error": "ReadTimeout",
+            "seconds": 5.013
+          },
+          "auth_me": {
+            "http": 200,
+            "seconds": 0.401
+          },
+          "job_still_pending": true
+        }
+      ],
+      "response": {
+        "http": 200,
+        "response_bytes": 36059,
+        "items": {
+          "structural_beams": 6,
+          "sheets": 15,
+          "notes": 32,
+          "structural_floors": 6,
+          "column_sections": 0,
+          "column_schedule": 34,
+          "rebar": 0,
+          "members": 0,
+          "foundations": 4
+        },
+        "file": "tan_binh_ket_cau.dxf"
+      },
+      "end": "2026-11-03T10:42:26.394795+00:00",
+      "seconds": 38.022,
+      "final_process": {
+        "pid": 20288,
+        "rss": 563150848,
+        "cpu": 124.703125
+      }
+    }
+  ],
+  "end": "2026-11-03T10:42:26.906689+00:00"
+}

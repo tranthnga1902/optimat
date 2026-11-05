@@ -1,0 +1,4 @@
+PHÁT TRIỂN / ĐỐI CHỨNG BUILD — nguồn đối chứng chưa được người kiểm xác nhận, không phải độ chính xác nghiệm thu
+chạy 1 hồ sơ, bỏ qua 1; đã ghi reports/c01_review_fix/c01_duong_co_so_build.xlsx
+  bỏ qua banve1_nha_pho_di_an: không phải split build (phát triển không chạy bộ test)
+EXIT=0

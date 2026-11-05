@@ -1,0 +1,11 @@
+family_id,name,sort_order,is_wall
+CLAY_SOLID,Gạch đất nung đặc,1,True
+CLAY_HOLLOW,"Gạch đất nung rỗng (2 lỗ, 6 lỗ)",2,True
+CMU_SOLID,Gạch bê tông đặc (không nung),3,True
+CMU_HOLLOW,Gạch block bê tông rỗng,4,True
+CLC,Gạch bê tông bọt (CLC),5,True
+AAC,Gạch bê tông khí chưng áp (AAC),6,True
+ALC_PANEL,Tấm tường ALC,7,True
+EPS_PANEL,Tấm panel EPS 3D,8,True
+CEMBOARD,Vách tấm xi măng sợi (Cemboard),9,True
+GYPSUM,Vách thạch cao,10,True

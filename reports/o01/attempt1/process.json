@@ -1,0 +1,29 @@
+{
+  "pid": 44272,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_beam_sources.py",
+    "tests/test_rough_takeoff.py",
+    "tests/test_rough_structural.py",
+    "tests/test_work_dimensions.py",
+    "tests/test_rough_secondary.py",
+    "tests/test_rough_status.py",
+    "tests/test_rough_partial.py",
+    "tests/test_rough_materials.py",
+    "tests/test_rough_price_source.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--deselect=tests/test_rough_structural.py::test_ket_cau_build_drawing",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\o01\\attempt1\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T16:11:14.533018+00:00",
+  "no_db": true,
+  "no_dotenv": true,
+  "metadata_catalog": "Catalog.from_csv(None)",
+  "test_overlay": "tests/conftest.py có thể dùng data/sample/catalog cho các hồi quy cũ"
+}

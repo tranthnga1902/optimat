@@ -1,0 +1,22 @@
+FFF.                                                                     [100%]
+================================== FAILURES ===================================
+E   AssertionError: assert [(None, 'COT'... 'COT', 'T2')] == [(1, 'COT', '... 'COT', 'T2')]
+      
+      At index 0 diff: (None, 'COT', 'T2') != (1, 'COT', 'T2')
+      Use -v to get more diff
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_column_material_binding.py:34: AssertionError: assert [(None, 'COT'... 'COT', 'T2')] == [(1, 'COT', '... 'COT', 'T2')]
+E   AssertionError: assert [(None, 'COT'... 'COT', 'T2')] == [(1, 'COT', '... 'COT', 'T2')]
+      
+      At index 0 diff: (None, 'COT', 'T2') != (1, 'COT', 'T2')
+      Use -v to get more diff
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_column_material_binding.py:34: AssertionError: assert [(None, 'COT'... 'COT', 'T2')] == [(1, 'COT', '... 'COT', 'T2')]
+E   AssertionError: assert [(None, 'COT'... 'COT', 'T2')] == [(1, 'COT', '... 'COT', 'T2')]
+      
+      At index 0 diff: (None, 'COT', 'T2') != (1, 'COT', 'T2')
+      Use -v to get more diff
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_column_material_binding.py:34: AssertionError: assert [(None, 'COT'... 'COT', 'T2')] == [(1, 'COT', '... 'COT', 'T2')]
+=========================== short test summary info ===========================
+FAILED tests/test_column_material_binding.py::test_contributions_use_final_row_indices_for_each_segment[ready_mix-material_ids0]
+FAILED tests/test_column_material_binding.py::test_contributions_use_final_row_indices_for_each_segment[site_mix-material_ids1]
+FAILED tests/test_column_material_binding.py::test_contributions_use_final_row_indices_for_each_segment[None-material_ids2]
+3 failed, 1 passed in 3.32s

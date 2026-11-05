@@ -1,0 +1,28 @@
+{
+  "pid": 30768,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_work_dimensions.py",
+    "tests/test_rough_secondary.py",
+    "tests/test_rough_status.py",
+    "tests/test_rough_partial.py",
+    "tests/test_rough_materials.py",
+    "tests/test_rough_columns.py",
+    "tests/test_rough_stairs.py",
+    "tests/test_rough_formwork_materials.py",
+    "tests/test_rough_foundations.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\work_dimensions\\attempt2\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T15:39:42.249804+00:00",
+  "no_db": true,
+  "no_dotenv": true,
+  "metadata_catalog": "Catalog.from_csv(None)",
+  "test_overlay": "tests/conftest.py có thể dùng data/sample/catalog cho các hồi quy cũ"
+}

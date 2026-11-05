@@ -1,16 +1,18 @@
 # Quy trình phát triển và kiểm soát dữ liệu
 
+Hiện hành: [20 bảng](schema/CSDL_20_BANG.md). Quy tắc/danh mục tham chiếu được gộp trong rule_sets, nhân công/xe trong cost_parameters; các tên cũ dưới đây được giữ qua view. Chuyển DB cũ bằng migrate_schema20.py có backup, không reset. Xem [kế hoạch dữ liệu sáu tuần](KE_HOACH_HOAN_THIEN_DU_LIEU_20_BANG.md).
+
 ## 1. Mỗi loại dữ liệu có một nguồn
 
 | Dữ liệu | Nguồn duy nhất (sửa ở đây) | Sinh ra / nạp vào |
 |---|---|---|
-| 75 vật liệu, phương án tường, quan hệ, tên gọi khác | `data/catalog/materials_master.xlsx` | `python scripts/build_materials_sql.py` → `sql/03_materials.sql` + `data/catalog/{materials,wall_systems,material_aliases}.csv` |
+| 93 vật liệu, phương án tường, quan hệ, tên gọi khác | `data/catalog/materials_master.xlsx` | `python scripts/build_materials_sql.py` → `sql/03_materials.sql` + `data/catalog/{materials,wall_systems,material_aliases}.csv` |
 | Quy tắc bóc tách vật liệu | `data/rules/material_rules.csv` | đọc trực tiếp |
 | Đại lý, giá đại lý | Mẫu `docs/du-lieu/OptiMat AI - Thu thap dai ly.xlsx` → bảng `suppliers`, `supplier_materials` | PostgreSQL (chế độ không có database: `data/catalog/suppliers.csv`, `supplier_materials.csv`) |
 | Lịch sử giá (huấn luyện XGBoost) | bảng `price_records` | `scripts/init_db.py --prices <file.csv>` |
 | Đáp án đo tay | `data/ground_truth/index.csv`, `walls.csv` | `scripts/evaluate_takeoff.py` |
 | Bản vẽ | `data/drawings/build/` (chỉnh quy tắc), `data/drawings/test/` (chỉ để báo cáo) | không đưa vào git (file lớn) |
-| Lược đồ database | `src/optimat/db/models.py` | `scripts/export_sql.py`, `scripts/build_upgrade_sql.py` → `sql/01`, `02`, `04` |
+| Lược đồ database | `src/optimat/db/schema20.py`, `compat20.py` | `scripts/export_sql.py`, `scripts/build_upgrade_sql.py` → `sql/01`, `02`, `04` |
 
 Không sửa tay file sinh tự động (`sql/*.sql`, `data/catalog/materials.csv`, `wall_systems.csv`, `material_aliases.csv`).
 

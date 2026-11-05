@@ -1,0 +1,450 @@
+--- before/src/optimat/rough/rebar.py
++++ after/src/optimat/rough/rebar.py
+@@ -15,14 +15,17 @@
+ from __future__ import annotations
+ 
+ import re
++import hashlib
++import json
+ from collections import Counter
++from datetime import datetime
+ from functools import lru_cache
+ from pathlib import Path
+ from statistics import median
+ from typing import Literal, Optional
+ 
+ import pandas as pd
+-from pydantic import BaseModel, Field
++from pydantic import BaseModel, Field, field_validator, model_validator
+ 
+ from .. import config
+ from ..drawing.encoding import normalize
+@@ -42,6 +45,65 @@
+     levels: tuple[int, ...]
+     element_code: str
+     quantity_basis: Literal["total", "per_member"]
++
++    @model_validator(mode="after")
++    def _known_scope(self):
++        if not self.levels or self.element_code not in {*ROLE_WORK.values(), "ALL"}:
++            raise ValueError("Phạm vi cần tập tầng và nhóm cấu kiện đã có quy ước.")
++        self.levels = tuple(sorted(set(self.levels)))
++        return self
++
++
++class RebarSourceRef(BaseModel):
++    """Context do caller tạo từ byte upload gốc; không phải chứng thực do client tự khai."""
++    source_id: str
++    revision_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
++
++    @classmethod
++    def from_bytes(cls, data: bytes) -> RebarSourceRef:
++        digest = hashlib.sha256(data).hexdigest()
++        return cls(source_id=f"structural:{digest}", revision_sha256=digest)
++
++    @model_validator(mode="after")
++    def _source_namespace(self):
++        if self.source_id != f"structural:{self.revision_sha256}":
++            raise ValueError("source_id phải thuộc namespace structural của hash nguồn gốc.")
++        return self
++
++
++class RebarTableRef(RebarSourceRef):
++    table_id: str = Field(min_length=1)
++
++
++class RebarScopeAssignment(BaseModel):
++    ref: RebarTableRef
++    content_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
++    scope: RebarScope
++    evidence: list[str] = Field(min_length=1)
++    confirmed_by: str = Field(min_length=1)
++    confirmed_at: datetime
++    override_reason: Optional[str] = None
++
++    @field_validator("confirmed_by", "override_reason")
++    @classmethod
++    def _nonblank_text(cls, value):
++        if value is not None and not value.strip():
++            raise ValueError("Thông tin xác nhận không được chỉ có khoảng trắng.")
++        return value
++
++    @field_validator("evidence")
++    @classmethod
++    def _nonblank_evidence(cls, values):
++        if any(not value.strip() for value in values):
++            raise ValueError("Chứng cứ phạm vi không được để trống.")
++        return values
++
++    @field_validator("confirmed_at")
++    @classmethod
++    def _timezone_required(cls, value):
++        if value.utcoffset() is None:
++            raise ValueError("Thời điểm xác nhận phải có múi giờ.")
++        return value
+ 
+ 
+ class RebarRow(BaseModel):
+@@ -68,6 +130,8 @@
+     scope_source: Optional[Literal["title", "confirmed"]] = None
+     scope_evidence: str = ""
+     raw_cells: dict[str, str] = Field(default_factory=dict)   # ô gốc và đơn vị; không so trùng chỉ bằng None
++    source_id: str = ""
++    revision_sha256: str = ""
+ 
+     @property
+     def formula(self) -> str:
+@@ -75,6 +139,22 @@
+         L = "?" if self.cut_length_mm is None else f"{self.cut_length_mm / 1000:g}"
+         m = "?" if self.kg_per_m is None else f"{self.kg_per_m:g}"
+         return f"{n} thanh × {L} m × {m} kg/m (Ø{self.dia_mm:g})" if self.dia_mm else f"{n} thanh × {L} m × {m} kg/m"
++
++
++class RebarTable(BaseModel):
++    """Bảng trước dedup; resolve chỉ làm việc trên bản sao rows."""
++    table_id: str
++    title: str
++    rows: list[RebarRow]
++    scope_from_title: Optional[RebarScope] = None
++
++
++class RebarTableManifest(BaseModel):
++    ref: RebarTableRef
++    title: str
++    row_count: int
++    content_sha256: str
++    scope_from_title: Optional[RebarScope] = None
+ 
+ 
+ @lru_cache(maxsize=2)
+@@ -261,34 +341,95 @@
+                     tuple(r.missing), tuple(r.notes), tuple(sorted(r.raw_cells.items()))) for r in rows)
+ 
+ 
+-def read_rebar_schedules(drawing) -> tuple[list[RebarRow], list[str]]:
+-    """Chỉ bỏ bảng nguyên tương đương có cùng scope tường minh trong một Drawing; giữ dòng trong bảng."""
+-    rows, warnings, tables, pending = [], [], [], set()
++def collect_rebar_tables(drawing) -> tuple[list[RebarTable], list[str]]:
++    """Thu từng bảng đúng một lần, kể cả bảng rỗng; chưa loại bản sao hoặc áp mapping."""
++    tables, warnings = [], []
+     titles = sorted((t for t in drawing.texts if TITLE_RE.search(normalize(t.text))),
+                     key=lambda t: (-t.y, t.x, t.text))
+     for index, title in enumerate(titles):
+         r, w = read_table(drawing, title)
+         warnings += w
+-        if not r:
+-            continue
+         table_id = f"table:{title.x:g}:{title.y:g}:{index}"
+         scope = _title_scope(title.text)
+         if scope and scope.element_code != "ALL" and any(
+                 row.element_code not in (None, scope.element_code) for row in r):
+             warnings.append(f"Bảng {table_id}: nhóm cấu kiện trong tiêu đề khác nội dung, chưa xác định phạm vi.")
+             scope = None
++        tables.append(RebarTable(table_id=table_id, title=title.text, rows=r, scope_from_title=scope))
++    return tables, warnings
++
++
++def _content_sha256(rows: list[RebarRow]) -> str:
++    # Sắp theo JSON, không so trực tiếp tuple có cả None/số; giữ số lần xuất hiện mỗi dòng.
++    content = sorted((json.dumps(key, ensure_ascii=False, allow_nan=False), count)
++                     for key, count in _table_content(rows).items())
++    return hashlib.sha256(json.dumps(content, ensure_ascii=False).encode("utf-8")).hexdigest()
++
++
++def table_manifest(tables: list[RebarTable], *, source: RebarSourceRef) -> list[RebarTableManifest]:
++    """Manifest từ bảng đã thu, không đọc graph/bảng lần hai và không loại bản sao."""
++    return [RebarTableManifest(ref=RebarTableRef(**source.model_dump(), table_id=t.table_id),
++                               title=t.title, row_count=len(t.rows), content_sha256=_content_sha256(t.rows),
++                               scope_from_title=t.scope_from_title.model_copy(deep=True) if t.scope_from_title else None)
++            for t in tables]
++
++
++def resolve_rebar_tables(tables: list[RebarTable], *, source: RebarSourceRef | None = None,
++                         assignments: list[RebarScopeAssignment] | None = None
++                         ) -> tuple[list[RebarRow], list[str]]:
++    """Áp mapping trên bảng mới thu từ MỘT Drawing; caller phải tạo source từ byte upload thực.
++
++    JSON-only rebar/nhãn confirmed không phải đầu vào cho đường này. Validate toàn bộ mapping trước khi copy/áp.
++    """
++    by_id = {t.table_id: t for t in tables}
++    if len(by_id) != len(tables):
++        raise ValueError("table_id trùng: chỉ resolve bảng từ một Drawing/phiên bản mỗi lần.")
++    mapping: dict[str, RebarScopeAssignment] = {}
++    for assignment in assignments or []:
++        ref = assignment.ref
++        if source is None or (ref.source_id, ref.revision_sha256) != (source.source_id, source.revision_sha256):
++            raise ValueError(f"Bảng {ref.table_id}: nguồn/revision không khớp byte upload, cần gửi lại đúng file.")
++        table = by_id.get(ref.table_id)
++        if table is None:
++            raise ValueError(f"Bảng {ref.table_id}: không tồn tại trong nguồn vừa đọc.")
++        if ref.table_id in mapping:
++            raise ValueError(f"Bảng {ref.table_id}: có nhiều assignment, cần một xác nhận duy nhất.")
++        if assignment.content_sha256 != _content_sha256(table.rows):
++            raise ValueError(f"Bảng {ref.table_id}: content_sha256 đã thay đổi, cần xác nhận manifest mới.")
++        title_scope = _title_scope(table.title)
++        if title_scope is not None and (assignment.scope != title_scope or table.scope_from_title is None) and not assignment.override_reason:
++            raise ValueError(f"Bảng {ref.table_id}: scope trái tiêu đề cần override_reason.")
++        mapping[ref.table_id] = assignment
++
++    rows, warnings, seen, pending = [], [], [], set()
++    for table in tables:
++        assignment = mapping.get(table.table_id)
++        scope = assignment.scope if assignment else table.scope_from_title
++        table_id = table.table_id
++        r = [row.model_copy(deep=True) for row in table.rows]
+         for row in r:
+             row.table_id = table_id
+-            row.scope = scope
+-            row.scope_source = "title" if scope else None
+-            row.scope_evidence = title.text
++            row.source_id = source.source_id if source else ""
++            row.revision_sha256 = source.revision_sha256 if source else ""
++            row.scope = scope.model_copy(deep=True) if scope else None
++            row.scope_source = "confirmed" if assignment else "title" if scope else None
++            row.scope_evidence = table.title + (" | " + assignment.model_dump_json() if assignment else "")
++        if not r:
++            continue
++        if scope is not None and scope.quantity_basis == "per_member":
++            pending.add(table_id)
++            warnings.append(f"Bảng {table_id}: số lượng một mẫu chưa phải tổng phạm vi; giữ nguyên, chờ xác nhận.")
++        if scope is None and source is not None:
++            pending.add(table_id)
++            warnings.append(f"Bảng {table_id}: chưa có phạm vi được xác định; giữ nguyên, chờ xác nhận.")
+         content = _table_content(r)
+-        duplicate = next((tid for tid, s, c in tables if scope is not None and scope == s and content == c), None)
++        duplicate = next((tid for tid, s, c in seen if scope is not None and scope.quantity_basis == "total"
++                          and scope == s and content == c), None)
+         if duplicate is not None:
+-            warnings.append(f"Bảng {table_id} '{title.text}' trùng hệt bảng {duplicate}, cùng phạm vi tổng "
+-                            f"{scope.element_code} tầng {scope.levels} theo tiêu đề: giữ {duplicate}, không cộng lần hai.")
++            warnings.append(f"Bảng {table_id} '{table.title}' trùng hệt bảng {duplicate}, cùng phạm vi tổng "
++                            f"{scope.element_code} tầng {scope.levels} đã đọc/xác nhận: giữ {duplicate}, không cộng lần hai.")
+             continue
+-        for tid, previous_scope, previous_content in tables:
++        for tid, previous_scope, previous_content in seen:
+             overlap = (scope is not None and previous_scope is not None
+                        and (scope.element_code == previous_scope.element_code
+                             or "ALL" in (scope.element_code, previous_scope.element_code))
+@@ -298,12 +439,19 @@
+                 pending.update((tid, table_id))
+                 warnings.append(f"Bảng {tid} và {table_id}: nghi lặp/chồng phạm vi hoặc cùng phạm vi khác nội dung; "
+                                 "giữ cả hai, chờ xác nhận, chưa coi tổng là hoàn chỉnh.")
+-        tables.append((table_id, scope, content))
++        seen.append((table_id, scope, content))
+         rows += r
+     for row in rows:
+         if row.table_id in pending:
+-            row.missing.append("phạm vi bảng thép nghi lặp/chồng hoặc khác nội dung: chờ xác nhận")
++            row.missing.append("phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận")
+     if rows:
+         warnings.append("Cốt thép theo bảng thống kê: chiều dài cắt lấy nguyên từ bảng (đã gồm neo, nối, uốn, móc theo "
+                         "thiết kế), hệ thống không tự cộng neo, nối.")
+     return rows, warnings
++
++
++def read_rebar_schedules(drawing) -> tuple[list[RebarRow], list[str]]:
++    """Wrapper cũ: cùng pipeline collect/resolve, giữ tuple rows/warnings và không nhận mapping JSON-only."""
++    tables, warnings = collect_rebar_tables(drawing)
++    rows, resolved_warnings = resolve_rebar_tables(tables)
++    return rows, warnings + resolved_warnings
+--- before/tests/test_rough_rebar.py
++++ after/tests/test_rough_rebar.py
+@@ -1,12 +1,16 @@
+ """S07: bảng thống kê cốt thép -> kg có nguồn; không nhầm với thép ước theo hàm lượng."""
+ from io import BytesIO
++from datetime import datetime, timezone
++import hashlib
+ 
+ import pytest
+ 
+ from optimat.drawing.dxf_reader import Drawing, TextItem
+ from optimat.rough.materials import STEEL_NAME
+ from optimat.rough.models import WORKS, ProjectParams, WorkItem
+-from optimat.rough.rebar import RebarRow, _num, element_code, read_rebar_schedules, unit_mass
++from optimat.rough.rebar import (RebarRow, RebarScope, RebarScopeAssignment, RebarSourceRef, RebarTable,
++                                 _num, collect_rebar_tables, element_code, read_rebar_schedules,
++                                 resolve_rebar_tables, table_manifest, unit_mass)
+ from optimat.rough.steel import steel_works
+ from optimat.rough.takeoff import RoughRequest, compute_rough
+ 
+@@ -264,6 +268,180 @@
+     assert copied.scope is None and copied.table_id == "" and copied.raw_cells == {}
+ 
+ 
++def _b1_assignment(entry, levels=(1,), basis="total", **changes):
++    """Xác nhận SYNTHETIC, chỉ dùng kiểm contract kỹ thuật, không là người kiểm công trình."""
++    fields = dict(ref=entry.ref, content_sha256=entry.content_sha256,
++                  scope=RebarScope(levels=levels, element_code="DAM", quantity_basis=basis),
++                  evidence=["SYNTHETIC: bảng tổng dầm của tầng được ghi"], confirmed_by="SYNTHETIC reviewer",
++                  confirmed_at=datetime(2026, 11, 3, 12, 0, tzinfo=timezone.utc))
++    return RebarScopeAssignment(**{**fields, **changes})
++
++
++def _b1_unscoped_tables():
++    title = "BẢNG THỐNG KÊ CỐT THÉP"
++    return collect_rebar_tables(_drawing(_scoped_table(1000, title=title)
++                                        + _scoped_table(-5000, title=title)))[0]
++
++
++def test_b1_collect_manifest_resolve_reads_each_table_once(monkeypatch):
++    from optimat.rough import rebar
++    original = rebar.read_table
++    calls = []
++
++    def read_once(drawing, title):
++        calls.append(title.text)
++        return original(drawing, title)
++
++    monkeypatch.setattr(rebar, "read_table", read_once)
++    tables, _ = collect_rebar_tables(_drawing(_scoped_table(1000) + _scoped_table(-5000)))
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC original CAD bytes")
++    manifest = table_manifest(tables, source=source)
++    rows, _ = resolve_rebar_tables(tables, source=source)
++    assert len(calls) == 2 and len(manifest) == 2 and len(rows) == 1
++    assert len({m.ref.table_id for m in manifest}) == 2
++    assert manifest[0].content_sha256 == manifest[1].content_sha256
++    assert source.revision_sha256 == hashlib.sha256(b"SYNTHETIC original CAD bytes").hexdigest()
++    assert source.source_id == f"structural:{source.revision_sha256}"
++
++
++def test_b1_manifest_includes_empty_table_and_keeps_original_scope():
++    tables, _ = collect_rebar_tables(_drawing(_scoped_table(1000)))
++    tables.append(RebarTable(table_id="empty", title="Bảng rỗng", rows=[]))
++    manifest = table_manifest(tables, source=RebarSourceRef.from_bytes(b"SYNTHETIC"))
++    assert len(manifest) == 2 and manifest[1].row_count == 0
++    manifest[0].scope_from_title.levels = (99,)
++    assert tables[0].scope_from_title.levels == (1,)
++
++
++@pytest.mark.parametrize("same_scope,expected_count,expected_kg", [(True, 1, 31.6), (False, 2, 63.2)])
++def test_b1_confirmed_mapping_resolves_unknown_scope_without_mutation(same_scope, expected_count, expected_kg):
++    tables = _b1_unscoped_tables()
++    before = [t.model_dump_json() for t in tables]
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC mapping source")
++    manifest = table_manifest(tables, source=source)
++    assignments = [_b1_assignment(manifest[0]), _b1_assignment(manifest[1], levels=(1,) if same_scope else (2,))]
++    rows, _ = resolve_rebar_tables(tables, source=source, assignments=assignments)
++    assert len(rows) == expected_count and sum(r.kg for r in rows) == pytest.approx(expected_kg)
++    assert all(r.scope_source == "confirmed" and not r.missing for r in rows)
++    assert all(r.source_id == source.source_id and r.revision_sha256 == source.revision_sha256 for r in rows)
++    assert all("SYNTHETIC reviewer" in r.scope_evidence and "confirmed_at" in r.scope_evidence for r in rows)
++    assert [t.model_dump_json() for t in tables] == before
++
++
++@pytest.mark.parametrize("bad", ["source", "table", "content", "duplicate", "no_context"])
++def test_b1_mapping_validation_is_atomic(bad):
++    tables = _b1_unscoped_tables()
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC source A")
++    manifest = table_manifest(tables, source=source)
++    first, second = _b1_assignment(manifest[0]), _b1_assignment(manifest[1])
++    if bad == "source":
++        other = RebarSourceRef.from_bytes(b"SYNTHETIC source B")
++        second.ref = second.ref.model_copy(update=other.model_dump())
++    elif bad == "table":
++        second.ref.table_id = "not-in-manifest"
++    elif bad == "content":
++        second.content_sha256 = "0" * 64
++    elif bad == "duplicate":
++        second = first.model_copy(deep=True)
++    before = [t.model_dump_json() for t in tables]
++    maps_before = [a.model_dump_json() for a in (first, second)]
++    with pytest.raises(ValueError):
++        resolve_rebar_tables(tables, source=None if bad == "no_context" else source, assignments=[first, second])
++    assert [t.model_dump_json() for t in tables] == before
++    assert [a.model_dump_json() for a in (first, second)] == maps_before
++
++
++def test_b1_stale_revision_or_changed_content_cannot_reuse_assignment():
++    tables = _b1_unscoped_tables()
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC revision 1")
++    assignment = _b1_assignment(table_manifest(tables, source=source)[0])
++    with pytest.raises(ValueError, match="revision"):
++        resolve_rebar_tables(tables, source=RebarSourceRef.from_bytes(b"SYNTHETIC revision 2"), assignments=[assignment])
++    tables[0].rows[0].raw_cells["chieu_dai"] = "3000"
++    with pytest.raises(ValueError, match="content_sha256"):
++        resolve_rebar_tables(tables, source=source, assignments=[assignment])
++
++
++def test_b1_override_requires_reason_and_keeps_original_title():
++    tables, _ = collect_rebar_tables(_drawing(_scoped_table(1000)))
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC override source")
++    entry = table_manifest(tables, source=source)[0]
++    assignment = _b1_assignment(entry, levels=(2,))
++    with pytest.raises(ValueError, match="override_reason"):
++        resolve_rebar_tables(tables, source=source, assignments=[assignment])
++    assignment.override_reason = "SYNTHETIC: người kiểm sửa ghi chú tầng"
++    rows, _ = resolve_rebar_tables(tables, source=source, assignments=[assignment])
++    assert rows[0].scope.levels == (2,) and rows[0].scope_source == "confirmed"
++    assert tables[0].title in rows[0].scope_evidence and "override_reason" in rows[0].scope_evidence
++    assert tables[0].scope_from_title.levels == (1,)
++
++
++@pytest.mark.parametrize("fields", [
++    {"confirmed_by": " "}, {"evidence": []}, {"evidence": [" "]},
++    {"confirmed_at": datetime(2026, 11, 3)}, {"override_reason": " "},
++])
++def test_b1_confirmation_requires_evidence_person_and_timezone(fields):
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC confirmation")
++    entry = table_manifest(_b1_unscoped_tables(), source=source)[0]
++    with pytest.raises(ValueError):
++        _b1_assignment(entry, **fields)
++
++
++def test_b1_per_member_and_missing_scope_stay_pending_without_multiplication():
++    tables = _b1_unscoped_tables()
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC per member")
++    manifest = table_manifest(tables, source=source)
++    assignments = [_b1_assignment(m, levels=(1, 2), basis="per_member") for m in manifest]
++    rows, warnings = resolve_rebar_tables(tables, source=source, assignments=assignments)
++    assert len(rows) == 2 and sum(r.kg for r in rows) == pytest.approx(63.2)
++    assert all(r.missing for r in rows) and any("một mẫu" in w for w in warnings)
++    single, _ = resolve_rebar_tables(tables[:1], source=source)
++    assert single[0].kg == pytest.approx(31.6) and single[0].scope is None and single[0].missing
++
++
++def test_b1_two_sources_same_local_table_id_are_not_deduplicated():
++    tables, _ = collect_rebar_tables(_drawing(_scoped_table(1000)))
++    a = RebarSourceRef.from_bytes(b"SYNTHETIC file A")
++    b = RebarSourceRef.from_bytes(b"SYNTHETIC file B")
++    first, _ = resolve_rebar_tables(tables, source=a)
++    second, _ = resolve_rebar_tables(tables, source=b)
++    assert first[0].table_id == second[0].table_id
++    assert first[0].source_id != second[0].source_id and sum(r.kg for r in first + second) == pytest.approx(63.2)
++    with pytest.raises(ValueError, match="table_id"):
++        resolve_rebar_tables(tables + tables, source=a)
++
++
++def test_b1_content_hash_preserves_multiplicity_and_ignores_row_order():
++    a = ["D1", "1", "thẳng", "Ø16", "2000", "10", "31,60"]
++    b = ["D2", "2", "uốn", "Ø16", "1000", "10", "15,80"]
++    tables, _ = collect_rebar_tables(_drawing(_scoped_table(1000, records=[a, b])
++                                            + _scoped_table(-5000, records=[b, a])
++                                            + _scoped_table(-11000, records=[a, a, b])))
++    manifest = table_manifest(tables, source=RebarSourceRef.from_bytes(b"SYNTHETIC hash"))
++    assert manifest[0].content_sha256 == manifest[1].content_sha256
++    assert manifest[0].content_sha256 != manifest[2].content_sha256
++
++
++def test_b1_assignment_and_source_json_roundtrip_preserves_types():
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC roundtrip")
++    entry = table_manifest(_b1_unscoped_tables(), source=source)[0]
++    assignment = _b1_assignment(entry, levels=(2, 1))
++    copied = RebarScopeAssignment.model_validate_json(assignment.model_dump_json())
++    assert copied == assignment and copied.scope.levels == (1, 2)
++    assert copied.confirmed_at.utcoffset() is not None
++    assert RebarSourceRef.model_validate_json(source.model_dump_json()) == source
++
++
++def test_b1_confirmed_row_label_is_not_an_assignment():
++    tables = _b1_unscoped_tables()
++    for t in tables:
++        for r in t.rows:
++            r.scope_source = "confirmed"
++            r.scope = RebarScope(levels=(1,), element_code="DAM", quantity_basis="total")
++    rows, _ = resolve_rebar_tables(tables, source=RebarSourceRef.from_bytes(b"SYNTHETIC inert label"))
++    assert len(rows) == 2 and all(r.scope is None and r.scope_source is None and r.missing for r in rows)
++
++
+ def test_schedule_steel_separate_from_ratio():
+     rows, _ = read_rebar_schedules(_drawing(_table(0, 1000)))
+     res = compute_rough(RoughRequest(plans=[], params=ProjectParams(steel_kg_per_m3={"COT": 150}), rebar=rows))

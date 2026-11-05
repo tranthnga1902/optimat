@@ -1,0 +1,45 @@
+{
+  "base_build_id": "4jlXI5sLtByy4nUnvUq92",
+  "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\rules-main-promote",
+  "scope": "4 tệp frontend; áp overlay hoặc patch lên bản nền được ghi mã băm. Giữ nguyên Review.tsx, nguồn quy tắc và toàn bộ tệp khác.",
+  "rules_preserved": {
+    "src\\app\\(admin)\\quy-tac\\page.tsx": "27de75cb469e6ef33a9ffbf1ac75252e799f7b41e1aa48929525f539d0d662b3",
+    "src\\app\\(admin)\\quy-tac\\rules.tsx": "f543150c1d2d076c4ba702b54b68f630a7e6d0c2f80944f1ad6e2bbaefb0a352"
+  },
+  "production": {
+    "src/app/(user)/do-boc/model.ts": {
+      "base_sha256": "f34763fa040db229f8f3ddb5ccc090a5cd0ddc2adb06c85968e55c4bd73f5558",
+      "overlay_sha256": "daf8c16497d9a1732031d66b703fbdce1ac39e889f33e319ab553214fdae6163",
+      "checkout_sha256": "4030107b65e07825d9e8d93e8954ec298e35d502ffc277d9fb2d2b4d6c6af5b5"
+    },
+    "src/app/(user)/do-boc/WorkReview.tsx": {
+      "base_sha256": "b3be6381ad67381894fe2375820488d582d9a7218b2dbad7c58f50e15fc8d3eb",
+      "overlay_sha256": "d3df81952b2f4cca6b28defe77f1da6de4f8a4347a04acf2e235c11dbf730c0f",
+      "checkout_sha256": "f47c9307f1b036ef5573fe169f3f63b77fab02c1e0185612c3398050321bb342"
+    },
+    "src/app/(user)/do-boc/ColumnTrace.tsx": {
+      "base_sha256": null,
+      "overlay_sha256": "6b2422b734d8601705add99eeb012b017d697b9f0405f9e9db20cbbee364232a",
+      "checkout_sha256": "d642f21c34587968cbefe4d4eb4f7fe5bcfc55321cb9867bfa53630543c9dddb"
+    },
+    "src/app/(user)/dieu-chinh/advice-scope.ts": {
+      "base_sha256": "3522df96ef415b5deff420b217709a1626b06e8035fd36fc270b0e517a3dcab8",
+      "overlay_sha256": "4453e40df199b0d7a1523a30895827768de1ab1e46d431ef5c2673fa762c8811",
+      "checkout_sha256": "4453e40df199b0d7a1523a30895827768de1ab1e46d431ef5c2673fa762c8811"
+    }
+  },
+  "existing_dependencies": {
+    "src/app/(user)/do-boc/paper-scale.ts": "9328663b208712a2ad4b0e28390861ad56d1904e91bbc2bf5cce5ecaf276696c",
+    "src/lib/work-review.ts": "d1d9f724a9949a8426d9102da8cfd005014c18e5cb67f02af40c9ab3b3655b29",
+    "src/lib/project-records.ts": "5ce634ee0198bb1bd79997b5b8607b9684b73a863d52530bfe157b68c5add9d2",
+    "src/components/Sheet.tsx": "d6d5b5e1a58185fc09b68e90cdaceca2d8870b2e0a7b343bada1f0a526a6a72a",
+    "src/app/(user)/do-boc/Review.tsx": "c46b536399982374a746dc3d1eed98de49b92d475a5452611cff1f955eae958b"
+  },
+  "patch_sha256": "b89908d78c5ccffc460ff044bf37c03843287fa004ea7fef9ed15ee1fedccc3f",
+  "ui_schema": [
+    "structural_columns[].source_sha256",
+    "structural_columns[].missing",
+    "structural_columns[].top_slab_candidates",
+    "material.uses[].rowIndex"
+  ]
+}

@@ -1,0 +1,11 @@
+
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\frontend\scripts\check-advice-scope.cjs
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+✖ 5 problems (5 errors, 0 warnings)
+
+exit 1

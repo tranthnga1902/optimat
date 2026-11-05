@@ -1,0 +1,235 @@
+{
+  "project": "nha_sang_hai_duong_4x15",
+  "split": "build",
+  "kc_file": "data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf",
+  "kc_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "sheet": "KC-01-11",
+  "pdf_page": 17,
+  "positions": [
+    {
+      "label": "A",
+      "description": "left vertical boundary beam in bottom slab plan",
+      "label_handle": "1173211",
+      "physical_instance_id": null,
+      "level": null,
+      "axis": null
+    },
+    {
+      "label": "B",
+      "description": "right vertical boundary beam in bottom slab plan",
+      "label_handle": "1173213",
+      "physical_instance_id": null,
+      "level": null,
+      "axis": null
+    }
+  ],
+  "evidence": [
+    {
+      "handle": "11731F9",
+      "raw": "%%UmÆt b»ng thÐp ®¸y bÓ n­íc",
+      "layer": "LS-TEXT",
+      "xy": [
+        -1411842.32764161,
+        -1058160.883303227,
+        0.0
+      ]
+    },
+    {
+      "handle": "1173211",
+      "raw": "dm-1",
+      "layer": "LS-TEXT",
+      "xy": [
+        -1413315.37111298,
+        -1067024.13338064,
+        -1.8837e-12
+      ]
+    },
+    {
+      "handle": "1173213",
+      "raw": "dm-1",
+      "layer": "LS-TEXT",
+      "xy": [
+        -1403663.415262573,
+        -1067024.13338064,
+        -1.8837e-12
+      ]
+    },
+    {
+      "handle": "1173220",
+      "raw": "%%UmÆt b»ng thÐp n¾p bÓ n­íc",
+      "layer": "LS-TEXT",
+      "xy": [
+        -1399689.028649547,
+        -1058161.202765029,
+        0.0
+      ]
+    },
+    {
+      "handle": "11732A4",
+      "raw": "%%UmÆt c¾t dÇm mãng dm-1",
+      "layer": "LS-TEXT",
+      "xy": [
+        -1388220.993141814,
+        -1058218.322574616,
+        -0.0878905047944732
+      ]
+    },
+    {
+      "handle": "11732A5",
+      "raw": "dm-1: l=2500mm; sl=02",
+      "layer": "LS-TEXT",
+      "xy": [
+        -1386567.051802149,
+        -1058718.322574616,
+        -0.0878905047944732
+      ]
+    },
+    {
+      "handle": "1172211",
+      "raw": "chi tiÕt bÓ n­íc",
+      "layer": "G-ANNO-TTLB",
+      "xy": [
+        -1380030.334933202,
+        -1082945.36595942,
+        0.0
+      ]
+    },
+    {
+      "handle": "1173581",
+      "raw": "DM-1",
+      "layer": "TEXT_TCK",
+      "xy": [
+        -1345792.255989423,
+        -1069306.72250732,
+        0.0
+      ]
+    },
+    {
+      "handle": "1173582",
+      "raw": "(SL: 2)",
+      "layer": "TEXT_SLCK",
+      "xy": [
+        -1345392.255989423,
+        -1069265.543789721,
+        0.0
+      ]
+    }
+  ],
+  "interpretation": "Two direct DM-1 labels on separate left/right boundaries of water tank bottom reinforcement plan; A/B are report-local names, not design axes.",
+  "quantity_support": "SL02 in section and schedule corroborates count but is not sole positional evidence.",
+  "human_approval": false,
+  "verification_status": "chua_kiem",
+  "limitations": [
+    "No global grid/floor association established.",
+    "Local CAD text positions are not physical beam centrelines or real-world coordinates.",
+    "Same beam type code can occur elsewhere; restrict to KC-01-11 water tank.",
+    "No architectural location established."
+  ],
+  "nearby_leader_geometry_candidates": [
+    {
+      "handle": "1173200",
+      "type": "LWPOLYLINE",
+      "layer": "LS-THEP",
+      "points": [
+        [
+          -1412036.651341773,
+          -1066566.574038602
+        ],
+        [
+          -1412036.651341773,
+          -1066711.833814267
+        ],
+        [
+          -1404334.078448519,
+          -1066711.833814267
+        ],
+        [
+          -1404334.078448519,
+          -1066566.574038602
+        ]
+      ]
+    },
+    {
+      "handle": "1173201",
+      "type": "LWPOLYLINE",
+      "layer": "LS-THEP",
+      "points": [
+        [
+          -1412036.651341773,
+          -1066481.106559909
+        ],
+        [
+          -1412036.651341773,
+          -1066335.846784244
+        ],
+        [
+          -1404334.078448519,
+          -1066335.846784244
+        ],
+        [
+          -1404334.078448519,
+          -1066481.106559909
+        ]
+      ]
+    },
+    {
+      "handle": "1173210",
+      "type": "LEADER",
+      "layer": "LS-DIM",
+      "points": [
+        [
+          -1411995.937231737,
+          -1067085.711073742,
+          0.0
+        ],
+        [
+          -1412961.740762954,
+          -1067085.711073742,
+          0.0
+        ],
+        [
+          -1413354.02647729,
+          -1067085.711073742,
+          0.0
+        ]
+      ]
+    },
+    {
+      "handle": "1173212",
+      "type": "LEADER",
+      "layer": "LS-DIM",
+      "points": [
+        [
+          -1404626.366140382,
+          -1067085.711073742,
+          0.0
+        ],
+        [
+          -1403477.045612598,
+          -1067085.711073742,
+          0.0
+        ],
+        [
+          -1403084.759898263,
+          -1067085.711073742,
+          0.0
+        ]
+      ]
+    },
+    {
+      "handle": "1173246",
+      "type": "LWPOLYLINE",
+      "layer": "LS-TEXT",
+      "points": [
+        [
+          -1400169.293045499,
+          -1067975.672511911
+        ],
+        [
+          -1400669.766810312,
+          -1067975.672511911
+        ]
+      ]
+    }
+  ]
+}

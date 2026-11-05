@@ -1,0 +1,72 @@
+{
+  "3002": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\p0-3002-release-r2",
+    "build": "XLGfOY4MIuGt8ZUp-wppq",
+    "files": {
+      "src/app/(user)/do-boc/Dialogs.tsx": {
+        "base": "a07e4038d9e401626d6c61c2daa8c533fdc49071aa435bc7a9eb6f21e700522a",
+        "new": "2012f3690c5fe1d5255b6474fa5fb567b7cc7452bffb28e573f86546393b37af"
+      },
+      "src/app/(user)/do-boc/KnownWallQuantities.tsx": {
+        "base": null,
+        "new": "5b0cff002cf55c4f86f33da8ad0b0aefb63338813a34e7958c2ca452a91e4d0c"
+      },
+      "src/app/(user)/do-boc/Lists.tsx": {
+        "base": "4aadf79ab554ce684ece2f587e0b42b90a86e2e8722348960f5873d532768d0a",
+        "new": "be4272fa8bdeb6be4d5565875f4c82a01607a4b5b373a7b5ebbd572d5d7da980"
+      },
+      "src/app/(user)/do-boc/model.ts": {
+        "base": "557fbd97fb70e369d7aebf5d6a8b0a9d3fdf362ea073f0053c3ad22a98e32e95",
+        "new": "ade4237e1c31d9b2ba7e53048bbf6e795ee81c8a45b9b16188c88166b457f8a1"
+      },
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base": "ea395bcb02b38ad2a65015feeb92d42b35a9d3ce15cf50e08a4e4a16e741d034",
+        "new": "ed311d255a501a157837ff734f25005af41a3339cbe5f525de4e73f099211101"
+      },
+      "src/app/(user)/toi-uu/optimize.tsx": {
+        "base": "f859f908483aac9dab7b0e0c2e4ccd10b1c0438b5e644254ff80ee203f6d9e1a",
+        "new": "2e9eb9cf75e72bf9315be4cda4c95d3626785c3f7bd2babbcc3ab1379234d0a2"
+      },
+      "src/app/(user)/vat-lieu/bill.tsx": {
+        "base": "d5e4852f055428a8e532428dcd9d7f6ff5c7f47527257b6e789bd06e612066fc",
+        "new": "980a84b80233435db9938ae39249764d8fe52f917fa1ed5cca4885361a1072f7"
+      }
+    },
+    "patch_sha256": "88f133de154249a2ff62259dd0d16ce87a8d1f72ab042952342f9df016f80fd1"
+  },
+  "3001": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\c2-p0-3001-release-r2",
+    "build": "LKTDjEOitNSiJBETPtyW8",
+    "files": {
+      "src/app/(user)/do-boc/Dialogs.tsx": {
+        "base": "a07e4038d9e401626d6c61c2daa8c533fdc49071aa435bc7a9eb6f21e700522a",
+        "new": "2012f3690c5fe1d5255b6474fa5fb567b7cc7452bffb28e573f86546393b37af"
+      },
+      "src/app/(user)/do-boc/KnownWallQuantities.tsx": {
+        "base": null,
+        "new": "5b0cff002cf55c4f86f33da8ad0b0aefb63338813a34e7958c2ca452a91e4d0c"
+      },
+      "src/app/(user)/do-boc/Lists.tsx": {
+        "base": "53e11d82a116ee0d529304aa50c1cb5dc2139cfda168a98a7051b2cde76a18a3",
+        "new": "e42a9d52286a5f8ede7fddbbbf1e5cb401a83d67d576995688a1a50a2a24bb20"
+      },
+      "src/app/(user)/do-boc/model.ts": {
+        "base": "daf8c16497d9a1732031d66b703fbdce1ac39e889f33e319ab553214fdae6163",
+        "new": "57b19cb0d52532b690b6eee6ef7b0f842abb7276d61d244196992216428ecb4d"
+      },
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base": "75a9ee37fa302176050c4c1ad1d688a69ce817ffb52e33038ec48d8f4d29e595",
+        "new": "8a04d794eaf2958793c50752558443c14016fb86953e2d9fe78a51e3b4e56378"
+      },
+      "src/app/(user)/toi-uu/optimize.tsx": {
+        "base": "6d7777bfad6677023ebc1ef1b22c0d02f5fe941e0ba8c72d87f32d2496e4c850",
+        "new": "9474e0cf8462eb4d27448dfeb188166608a316a22915e3c7a06d8e014fa54c4d"
+      },
+      "src/app/(user)/vat-lieu/bill.tsx": {
+        "base": "d5e4852f055428a8e532428dcd9d7f6ff5c7f47527257b6e789bd06e612066fc",
+        "new": "980a84b80233435db9938ae39249764d8fe52f917fa1ed5cca4885361a1072f7"
+      }
+    },
+    "patch_sha256": "55724124bda5bac6a58f67f1c7da929562e37a5b42f568e93a703799d40ab93a"
+  }
+}

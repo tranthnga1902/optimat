@@ -1,0 +1,43 @@
+# Render Blueprint: Dashboard > New > Blueprint > chọn repository này. Hướng dẫn: deploy/RENDER.md
+services:
+  # Backend FastAPI (Dockerfile có LibreDWG để đọc DWG)
+  - type: web
+    name: optimat-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter            # 512 MB RAM; bản vẽ lớn hoặc NSGA-II bị hết bộ nhớ thì nâng lên standard (2 GB)
+    region: singapore
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: optimat-db
+          property: connectionString
+      - key: OPTIMAT_SECRET_KEY
+        generateValue: true  # cố định khóa ký phiên, không bắt đăng nhập lại sau mỗi lần deploy
+      - key: OPENAI_API_KEY
+        sync: false          # nhập tay khi tạo Blueprint; để trống nếu không dùng trợ lý AI
+
+  # Giao diện Next.js; /api được chuyển tiếp sang backend
+  - type: web
+    name: optimat-web
+    runtime: node
+    rootDir: frontend
+    plan: starter
+    region: singapore
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: OPTIMAT_API
+        sync: false          # URL backend, vd. https://optimat-api.onrender.com (đọc lúc build: sửa thì phải deploy lại)
+
+databases:
+  - name: optimat-db
+    databaseName: optimat
+    user: optimat
+    plan: basic-256mb        # gói free bị xóa sau 30 ngày
+    region: singapore
+    postgresMajorVersion: "16"

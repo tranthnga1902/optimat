@@ -1,0 +1,24 @@
+{
+  "exit_code": 1,
+  "elapsed_seconds": 14.4,
+  "counts": {
+    "passed": 141,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "xpassed": 0
+  },
+  "collected": [
+    "145"
+  ],
+  "hash_before_count": 231,
+  "hash_after_count": 231,
+  "hash_diff": {
+    "changed": [
+      "tests/test_project_files.py"
+    ],
+    "added": [],
+    "removed": []
+  }
+}

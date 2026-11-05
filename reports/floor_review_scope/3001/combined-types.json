@@ -1,0 +1,550 @@
+{
+  "typescript": [
+    [
+      "Lists.tsx",
+      1005,
+      "'</' expected."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'len'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'w'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'w'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'w'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'area'."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'div'."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1005,
+      "'</' expected."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'size'."
+    ],
+    [
+      "Lists.tsx",
+      1127,
+      "Invalid character."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'size'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'span'."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'o'."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'div'."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1005,
+      "'</' expected."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      2657,
+      "JSX expressions must have one parent element."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'g'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'g'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'g'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'g'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'g'."
+    ],
+    [
+      "Lists.tsx",
+      1005,
+      "';' expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'tr'."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'tbody'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'c'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'c'."
+    ],
+    [
+      "Lists.tsx",
+      1005,
+      "';' expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'table'."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'div'."
+    ],
+    [
+      "Lists.tsx",
+      18004,
+      "No value exists in scope for the shorthand property 'c'. Either declare one or provide an initializer."
+    ],
+    [
+      "Lists.tsx",
+      1005,
+      "',' expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'c'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'c'."
+    ],
+    [
+      "Lists.tsx",
+      7006,
+      "Parameter 'o' implicitly has an 'any' type."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'materials'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'c'."
+    ],
+    [
+      "Lists.tsx",
+      7006,
+      "Parameter 'g' implicitly has an 'any' type."
+    ],
+    [
+      "Lists.tsx",
+      7006,
+      "Parameter 'i' implicitly has an 'any' type."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'D'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'D'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'edits'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'edits'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'materials'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'confirmed'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'confirmed'."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'confirmed'."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      2304,
+      "Cannot find name 'div'."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1005,
+      "'</' expected."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1185,
+      "Merge conflict marker encountered."
+    ],
+    [
+      "Lists.tsx",
+      1128,
+      "Declaration or statement expected."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Lists.tsx",
+      1109,
+      "Expression expected."
+    ],
+    [
+      "Review.tsx",
+      2322,
+      "Type '{ D: Data; indices: number[]; onOpen: (i: number) => void; }' is not assignable to type 'IntrinsicAttributes & { D: Data; onOpen: (i: number) => void; }'.   Property 'indices' does not exist on type 'IntrinsicAttributes & { D: Data; onOpen: (i: number) => void; }'."
+    ]
+  ],
+  "eslint": [
+    {
+      "ruleId": null,
+      "nodeType": null,
+      "fatal": true,
+      "severity": 2,
+      "message": "Parsing error: Merge conflict marker encountered.",
+      "line": 73,
+      "column": 0
+    }
+  ]
+}

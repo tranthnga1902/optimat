@@ -1,0 +1,86 @@
+{
+  "scope": "Hai file API/test theo human approval chuyển tiếp từ 01",
+  "added_origin": "http://127.0.0.1:3001",
+  "changed": [
+    "src/optimat/api/material_advisor.py",
+    "tests/test_material_advisor_api.py"
+  ],
+  "dependencies_unchanged": true,
+  "command": ".venv/Scripts/python.exe -m pytest tests/test_material_advisor_api.py -q -p no:cacheprovider -o faulthandler_timeout=20",
+  "terminal": "8 passed in 7.97s",
+  "exit_code": 0,
+  "openai_calls": 0,
+  "db_calls": 0,
+  "runtime_restart": false,
+  "logic_26_rerun": false,
+  "replay_rerun": false,
+  "patch_sha256": "4b3102235060303c1b5b06d547cbaf01d8e912a168d70da3095c5f224a764ae9",
+  "before": [
+    {
+      "path": "src/optimat/api/material_advisor.py",
+      "sha256": "285BCC1C885C3D2F0CB82F19C08E3FFE16F3FB674B47831453E726800A47293C"
+    },
+    {
+      "path": "tests/test_material_advisor_api.py",
+      "sha256": "DA8774E7D0C5CAD03673E8532A3955A7480F335C0CD52BAFACE9E425AF26E53E"
+    },
+    {
+      "path": "src/optimat/agent/material_advisor.py",
+      "sha256": "463E8F88B2C92958B6217CDE60EA419ECDBB345EF2569E912094D2ADB300210E"
+    },
+    {
+      "path": "src/optimat/api/auth.py",
+      "sha256": "30B9923B29E2411A5F2F1AFEFC8D31692EBA3AF4D5DFA7CB383F47C955EFBFA5"
+    },
+    {
+      "path": "src/optimat/config.py",
+      "sha256": "18A4F2BE39EDD9F545EEAFD26F9ECD9272FCFE23256237C99911AF69766A355B"
+    },
+    {
+      "path": "src/optimat/agent/llm.py",
+      "sha256": "FB4997EDBF6A38A0D9D22601FB859C7FB5CC3BC101E83CABE88C5C4C6DB7F555"
+    },
+    {
+      "path": "src/optimat/api/main.py",
+      "sha256": "A28A10E1D65E45411F38E026BB0FB79F5E2EDA2A0254D16A8F6C8B3F345531F9"
+    },
+    {
+      "path": "src/optimat/catalog/pricing.py",
+      "sha256": "6D442DC717088959F1AFE1A331B495BA1FB28524BE0A53DBF04DB8845B5E740C"
+    }
+  ],
+  "after": [
+    {
+      "path": "src/optimat/api/material_advisor.py",
+      "sha256": "3873672E507B0F30B029A9F1A9A4D8E4659C833B67CF813009C0611C7F14901D"
+    },
+    {
+      "path": "tests/test_material_advisor_api.py",
+      "sha256": "EEF33C6213829F704F36243FDD9742183D70D5A74588979DDFD995018FDC22CD"
+    },
+    {
+      "path": "src/optimat/agent/material_advisor.py",
+      "sha256": "463E8F88B2C92958B6217CDE60EA419ECDBB345EF2569E912094D2ADB300210E"
+    },
+    {
+      "path": "src/optimat/api/auth.py",
+      "sha256": "30B9923B29E2411A5F2F1AFEFC8D31692EBA3AF4D5DFA7CB383F47C955EFBFA5"
+    },
+    {
+      "path": "src/optimat/config.py",
+      "sha256": "18A4F2BE39EDD9F545EEAFD26F9ECD9272FCFE23256237C99911AF69766A355B"
+    },
+    {
+      "path": "src/optimat/agent/llm.py",
+      "sha256": "FB4997EDBF6A38A0D9D22601FB859C7FB5CC3BC101E83CABE88C5C4C6DB7F555"
+    },
+    {
+      "path": "src/optimat/api/main.py",
+      "sha256": "A28A10E1D65E45411F38E026BB0FB79F5E2EDA2A0254D16A8F6C8B3F345531F9"
+    },
+    {
+      "path": "src/optimat/catalog/pricing.py",
+      "sha256": "6D442DC717088959F1AFE1A331B495BA1FB28524BE0A53DBF04DB8845B5E740C"
+    }
+  ]
+}

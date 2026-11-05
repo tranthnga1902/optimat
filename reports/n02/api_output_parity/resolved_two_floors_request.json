@@ -1,0 +1,122 @@
+{
+  "project_id": null,
+  "file": "",
+  "params": {
+    "concrete_supply": null,
+    "concrete_grade": null,
+    "lean_concrete_grade": null,
+    "masonry_mortar_grade": null,
+    "plaster_mortar_grade": null,
+    "screed_mortar_grade": null,
+    "plaster_thickness_mm": null,
+    "screed_thickness_mm": null,
+    "slab_thickness_mm": null,
+    "beam_depth_mm": null,
+    "beam_width_mm": null,
+    "lintel_height_mm": null,
+    "lintel_bearing_mm": null,
+    "waterproof_upturn_mm": null,
+    "waterproof_material_id": null,
+    "stair_slab_thickness_mm": null,
+    "steel_kg_per_m3": {},
+    "steel_schedule_t": {},
+    "foundations": [],
+    "natural_ground_level_mm": null,
+    "excavation_margin_mm": null,
+    "excavation_slope": null,
+    "roofs": [],
+    "ground_layers": [],
+    "min_opening_m2": 0.0,
+    "north_deg": null,
+    "building_area_m2": null,
+    "wall_systems_by_class": {},
+    "material_classes": [],
+    "formwork_type": null
+  },
+  "plans": [],
+  "structural_beams": {},
+  "structural_floors": {},
+  "column_sections": {},
+  "sheets": [],
+  "notes": [],
+  "rebar": [
+    {
+      "table": "SYNTHETIC",
+      "row": 1,
+      "element": "D1",
+      "element_code": "DAM",
+      "mark": "1",
+      "shape": "",
+      "dia_mm": 16.0,
+      "cut_length_mm": 2000.0,
+      "bars_per_member": null,
+      "members": null,
+      "total_bars": 10.0,
+      "kg_per_m": 1.58,
+      "kg_per_m_source": "",
+      "kg": 31.6,
+      "schedule_kg": null,
+      "evidence": "SYNTHETIC source table 0",
+      "missing": [],
+      "notes": [],
+      "table_id": "0",
+      "scope": {
+        "levels": [
+          1
+        ],
+        "element_code": "DAM",
+        "quantity_basis": "total"
+      },
+      "scope_source": "title",
+      "scope_evidence": "SYNTHETIC",
+      "raw_cells": {
+        "chieu_dai": "2000",
+        "_length_unit": "mm"
+      },
+      "source_id": "structural:979199893a05ddb98a4ad393b5ec87b11d5053226e612c21f552e0a0a0bd50dc",
+      "revision_sha256": "979199893a05ddb98a4ad393b5ec87b11d5053226e612c21f552e0a0a0bd50dc"
+    },
+    {
+      "table": "SYNTHETIC",
+      "row": 1,
+      "element": "D1",
+      "element_code": "DAM",
+      "mark": "1",
+      "shape": "",
+      "dia_mm": 16.0,
+      "cut_length_mm": 2000.0,
+      "bars_per_member": null,
+      "members": null,
+      "total_bars": 10.0,
+      "kg_per_m": 1.58,
+      "kg_per_m_source": "",
+      "kg": 31.6,
+      "schedule_kg": null,
+      "evidence": "SYNTHETIC source table 1",
+      "missing": [],
+      "notes": [],
+      "table_id": "1",
+      "scope": {
+        "levels": [
+          2
+        ],
+        "element_code": "DAM",
+        "quantity_basis": "total"
+      },
+      "scope_source": "title",
+      "scope_evidence": "SYNTHETIC",
+      "raw_cells": {
+        "chieu_dai": "2000",
+        "_length_unit": "mm"
+      },
+      "source_id": "structural:979199893a05ddb98a4ad393b5ec87b11d5053226e612c21f552e0a0a0bd50dc",
+      "revision_sha256": "979199893a05ddb98a4ad393b5ec87b11d5053226e612c21f552e0a0a0bd50dc"
+    }
+  ],
+  "rebar_sources": [],
+  "rebar_table_manifest": [],
+  "rebar_scope_assignments": [],
+  "rebar_conversion": {},
+  "members": [],
+  "column_schedule": []
+}

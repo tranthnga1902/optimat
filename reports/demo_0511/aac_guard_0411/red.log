@@ -1,0 +1,35 @@
+...FFFF.FFFFF                                                            [100%]
+================================== FAILURES ===================================
+E   AssertionError: assert (not [WallGroup(wall_type='110', role='partition', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0...n_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id='VU02', design_material_share=1.0)])
+     +  where [WallGroup(wall_type='110', role='partition', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0...n_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id='VU02', design_material_share=1.0)] = RoughResult(works=[WorkItem(code='XAY', name='Xây tường', unit='m³', quantity=3.1, plan='T1', element='tường 110 ngăn'...êu cầu M75)', 'Vữa trát'], weight_kg=None, weight_complete=False, status='D')], status='D', envelope_by_orientation={}).wall_groups
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:57: AssertionError: assert (not [WallGroup(wall_type='110', role='partition', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0...n_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id='VU02', design_material_share=1.0)])
+E   assert (not [] and False)
+     +  where False = any(<generator object test_unresolved_design_grade_is_not_replaced.<locals>.<genexpr> at 0x0000015EEE7F45F0>)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:71: assert (not [] and False)
+E   assert (not [] and False)
+     +  where False = any(<generator object test_unresolved_design_grade_is_not_replaced.<locals>.<genexpr> at 0x0000015EEEA72C20>)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:71: assert (not [] and False)
+E   assert (not [] and False)
+     +  where False = any(<generator object test_unresolved_design_grade_is_not_replaced.<locals>.<genexpr> at 0x0000015EEEA713C0>)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:71: assert (not [] and False)
+E   AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...ign_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id=None, design_material_share=1.0)])
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:93: AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...ign_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id=None, design_material_share=1.0)])
+E   AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...ign_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id=None, design_material_share=1.0)])
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:93: AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...ign_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id=None, design_material_share=1.0)])
+E   AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...n_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id='VU02', design_material_share=1.0)])
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:93: AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...n_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id='VU02', design_material_share=1.0)])
+E   AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...ign_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id=None, design_material_share=1.0)])
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:93: AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...ign_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id=None, design_material_share=1.0)])
+E   AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...ign_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id=None, design_material_share=1.0)])
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_final_wall_groups_ui.py:93: AssertionError: assert (not [WallGroup(wall_type='220', role='envelope', length_m=10.0, gross_area_m2=31.0, opening_area_m2=0.0, net_area_m2=31.0,...ign_material_id='GN01', design_wall_system_id='W-GN01-220', design_mortar_material_id=None, design_material_share=1.0)])
+=========================== short test summary info ===========================
+FAILED tests/test_final_wall_groups_ui.py::test_aac_grade_gap_keeps_known_work_and_blocks_partial_purchase
+FAILED tests/test_final_wall_groups_ui.py::test_unresolved_design_grade_is_not_replaced[M999]
+FAILED tests/test_final_wall_groups_ui.py::test_unresolved_design_grade_is_not_replaced[M75/M100]
+FAILED tests/test_final_wall_groups_ui.py::test_unresolved_design_grade_is_not_replaced[M75.5]
+FAILED tests/test_final_wall_groups_ui.py::test_binder_norm_zero_and_unknown_are_distinct[0-None-None-M75-ngu\u1ed3n]
+FAILED tests/test_final_wall_groups_ui.py::test_binder_norm_zero_and_unknown_are_distinct[None-None-None-None-\u0111\u1ecbnh m\u1ee9c]
+FAILED tests/test_final_wall_groups_ui.py::test_binder_norm_zero_and_unknown_are_distinct[None-None-VU02-M75-\u0111\u1ecbnh m\u1ee9c]
+FAILED tests/test_final_wall_groups_ui.py::test_binder_norm_zero_and_unknown_are_distinct[0.29-None-None-None-li\xean k\u1ebft]
+FAILED tests/test_final_wall_groups_ui.py::test_binder_norm_zero_and_unknown_are_distinct[0.29-None-VU99-M75-VU99]
+9 failed, 4 passed in 5.17s

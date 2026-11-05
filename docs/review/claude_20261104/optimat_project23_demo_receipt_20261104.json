@@ -1,0 +1,55 @@
+{
+  "project_id": 23,
+  "project_name": "QA hồ sơ bản gốc 03-11",
+  "browser_used": "in-app browser tab 2",
+  "file": {
+    "id": 127,
+    "revision": 1,
+    "name": "sample_floor.dxf",
+    "role": "KT",
+    "bytes": 18229,
+    "sha256": "F88D3808A2DB5241EE24420F4D689C61F8E1736C6D834F6435DB82FFECE721A0",
+    "downloaded_copy": "C:/Users/Admin/Downloads/sample_floor (1).dxf",
+    "download_hash_matches": true
+  },
+  "profile": {
+    "before": 2,
+    "after": 3,
+    "saved_on_server_message": true,
+    "left_and_reopened": true,
+    "description": "Đối chiếu bản vẽ mẫu, phiên bản đã lưu và lịch sử công trình. Demo SAMPLE với sample_floor.dxf; không phải hồ sơ công trình thực tế."
+  },
+  "preview": {
+    "route": "/api/projects/23/files/127/revisions/1/preview",
+    "http": 200,
+    "upload_count_before": 1,
+    "upload_count_after": 1,
+    "analysis_count_before": 1,
+    "analysis_count_after": 1,
+    "assistant_posts": 0
+  },
+  "analysis": {
+    "prior_user_analysis": "e0bc7f2e-5cad-44ed-be98-eebc9ca36f23",
+    "new_analysis": "34a7ed70-b4ae-464c-8e2d-b2b3f915887c",
+    "route": "/api/projects/23/analysis",
+    "http": 200,
+    "upload_count_after": 1,
+    "analysis_count_after": 2,
+    "url": "http://127.0.0.1:3001/do-boc?analysis=34a7ed70-b4ae-464c-8e2d-b2b3f915887c",
+    "loading_finished": true,
+    "quantity_confirmation_performed": false
+  },
+  "screenshots": [
+    "C:/Users/Admin/AppData/Local/Temp/optimat-demo-profile-v3-20261104.jpg",
+    "C:/Users/Admin/AppData/Local/Temp/optimat-demo-original-preview-v1-20261104.jpg",
+    "C:/Users/Admin/AppData/Local/Temp/optimat-demo-analysis-started-20261104.jpg"
+  ],
+  "log": "C:/Users/Admin/AppData/Local/Temp/optimat_restore_20261104_134041/api.out.log",
+  "limits": [
+    "SAMPLE workflow only; no ACTUAL accuracy acceptance",
+    "User had already opened a prior analysis before this demo",
+    "Browser layout overlaps at the current viewport; not a full visual acceptance",
+    "No new file upload by agent; no assistant POST; quantity not confirmed"
+  ],
+  "recorded_at": "2026-11-04T14:31:14.9261833+07:00"
+}

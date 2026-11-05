@@ -1,5 +1,22 @@
 # Kế hoạch chi tiết OptiMat AI
 
+**Quyết định ngày 04/11/2026:** đúng [20 bảng vật lý](docs/schema/CSDL_20_BANG.md); [kế hoạch dữ liệu sáu tuần](docs/KE_HOACH_HOAN_THIEN_DU_LIEU_20_BANG.md). Các số bảng trong mốc lịch sử không mở lại phạm vi schema.
+
+**Ưu tiên mới theo chủ đồ án:** hoàn thiện sớm luồng lõi, sát thực tế, chỉn chu và không bịa số.
+Thứ tự triển khai tại [kế hoạch ưu tiên](docs/KE_HOACH_UU_TIEN_HOAN_THIEN.md);
+owner/ID tại [danh bạ phiên](docs/PHAN_VAI_CAC_PHIEN.md). Các mục lịch cũ bên dưới không tự mở rộng phạm vi.
+
+## Điều chỉnh luồng nghiệp vụ 03/11/2026: kiểm khối lượng trước vật liệu
+
+Phân vai mới: chat kế hoạch chỉ cố vấn và điều phối yêu cầu; các phiên phụ trách triển khai theo
+[phiếu điều chỉnh và bàn giao WIP](docs/DIEU_CHINH_LUONG_KIEM_KHOI_LUONG_20261103.md).
+
+Luồng ưu tiên mới: **Dự án → Bóc tách bản vẽ → Kiểm tra công tác và khối lượng → Nhận phương án vật liệu tại Tối ưu → So sánh với AI → Áp dụng phương án / xuất bảng mua**. Người dùng có thể chỉnh vật liệu và xem giá chi tiết khi cần. Tính sẵn các dòng có căn cứ và mang phần thiếu sang bước phương án theo [quy tắc tự đề xuất](docs/KE_HOACH_UU_TIEN_HOAN_THIEN.md).
+Bước kiểm công tác là điều kiện MVP, thực hiện trước các đầu việc chọn vật liệu và so giá. Dùng lại `/phan-tho`
+cho bước này, đặt trước `/dieu-chinh`; không tạo bộ máy tính khối lượng thứ hai.
+Đặc tả giao diện, phụ thuộc và nghiệm thu: [Kiểm tra công tác và khối lượng](docs/KIEM_TRA_CONG_TAC_KHOI_LUONG.md).
+Đây là điều chỉnh kế hoạch, chưa xác nhận giao diện đã triển khai. Các lịch/luồng cũ bên dưới đọc theo điều chỉnh này.
+
 Đồ án 15 tuần, 05/10/2026 đến 17/01/2027. Bản này điều chỉnh ngày 12/10/2026 theo ba quyết định:
 
 1. **Thu hẹp giả định đầu vào (góp ý của giảng viên hướng dẫn):** chỉ cam kết sai số đo bóc dưới 10% trên bản vẽ đạt bộ quy ước, với 20–30 mặt bằng kiểm tra có đáp án đo tay.
@@ -14,6 +31,87 @@
 
 Chi tiết nằm trong Charter, PRD (mục 3.6 đến 3.9, 4.2, 5.7) và tài liệu cơ sở dữ liệu. Bảng kế hoạch nộp Khoa chia 7 giai đoạn:
 tuần 1, 2, 3–4, 5–7, 8–9, 10–12, 13–15; danh sách việc theo tuần dưới đây chi tiết hơn và còn điều chỉnh.
+
+## MVP (chốt 02/11/2026, hạn demo 22/11/2026)
+
+**Phạm vi (người dùng chốt 03/11/2026): chỉ phần thô xây dựng.** Bản vẽ đầu vào là kiến trúc + kết cấu; không làm điện
+nước, biện pháp thi công, hoàn thiện.
+
+**Một câu:** người dùng mở 1 bộ bản vẽ thật (kiến trúc + kết cấu) trên web → bóc phần thô (tường, cột, dầm, sàn, móng,
+thang, thép, cốp pha), sửa, xác nhận → bảng vật liệu thô có giá thật → NSGA-II trả 3–5 phương án tường (chi phí, thời gian
+cung ứng, U) kèm đại lý từ database → lời giải thích.
+
+**Xong** = chạy trọn luồng trên `/do-boc` → `/toi-uu` với PostgreSQL và dữ liệu `ACTUAL`, quay video lại. pytest đạt là
+điều kiện cần, không phải tiêu chí xong.
+
+**Đóng băng đến khi MVP xong:** quản trị AD-02..06, `/tiep-nhan`, `/mapping`, công bố giá. Phần thô chỉ sửa lỗi và đo
+sai số với dự toán thật, không thêm cấu kiện mới. Mã đã có giữ nguyên, chỉ sửa khi chặn luồng MVP.
+
+### Dữ liệu (người dùng làm, không viết mã thay được)
+
+- [ ] Giảng viên duyệt phạm vi MVP ở trên (gửi kèm danh sách đóng băng).
+- [ ] Chọn 3–4 phương án tường cho MVP (ví dụ W-GN01-110, W-GN01-220, 1 AAC, 1 gạch bê tông); điền đủ định mức, khối lượng
+      tường, λ, hao hụt trong `materials_master.xlsx`, có nguồn; sinh lại SQL. Kiểm: `GET /api/catalog/wall-materials` → các
+      phương án này nằm trong `ready`.
+- [ ] Giá thật cho mọi vật liệu của các phương án trên (gạch + xi măng + cát + vữa AAC nếu có): mỗi vật liệu ≥ 3 đại lý
+      có tọa độ và `lead_time_days`, nạp `supplier_materials` (`ACTUAL`).
+- [ ] Ít nhất 6 tháng giá theo thời gian (công bố giá Sở XD hoặc đại lý) cho các vật liệu trên, để XGBoost huấn luyện
+      và so với mốc "tra bảng giá gần nhất".
+- [ ] Đo tay tường của 5 mặt bằng thật (2 lần, lệch < 2%), nhập `data/ground_truth/` (3 build, 2 test).
+- [ ] `labor_rates` thật cho Hà Nội (hoặc ghi rõ MVP không tính nhân công).
+
+### Mã (chỉ những việc chặn luồng)
+
+- [ ] Chạy luồng bằng tay trên `nha_pho.dxf`, ghi mọi chỗ gãy vào mục "Lỗi chặn MVP" bên dưới; chỉ sửa các lỗi đó.
+- [ ] Nhận tường trên 3 mặt bằng build đủ dùng: sai số diện tích tường < 10% so với đáp án đo tay (`evaluate_takeoff.py`).
+- [ ] Huấn luyện XGBoost `--from-db` trên giá `ACTUAL`; ghi bảng so sánh với mốc tra bảng (được phép thua mốc, ghi rõ).
+- [ ] Tối ưu dùng giá thật, không cần `OPTIMAT_CATALOG_OVERLAY`; ghi lần chạy vào `optimization_runs`.
+- [ ] Agent chạy được khi `LLM_PROVIDER=none`; chạy thử 1 lần với khóa OpenAI thật, ghi mã mô hình và chi phí.
+- [ ] Chạy 2 mặt bằng test một lần, ghi sai số vào `NHAT_KY.md`.
+
+### Demo
+
+- [ ] Kịch bản demo 5 phút, video dự phòng khi mất mạng.
+
+### Lỗi chặn MVP
+
+(ghi khi chạy luồng bằng tay: bước, lỗi, đã sửa chưa)
+
+Chạy 03/11/2026 qua API (PostgreSQL thật, `nha_pho.dxf`, cao tầng 3300, agent `use_llm=false`):
+
+| # | Bước | Kết quả | Loại | Trạng thái |
+|---|---|---|---|---|
+| 1 | Đo bóc (`/api/takeoff/plans`, 28 s) | 4 mặt bằng, 9 nhóm tường. Không nhóm nào nhận được vật liệu từ bản vẽ (hatch bị phá, chỉ biết "khối xây") → người dùng phải chọn phương án trên `/do-boc` | Dự kiến | — |
+| 2 | Tách mặt bằng | "mặt bằng tầng 3 (+6.60)" xuất hiện 2 lần (bản thứ 2 có hậu tố "(2)"): cần xem là trùng hay là tầng 4/mái đặt sai tiêu đề | Mã | ⬜ |
+| 3 | Nhóm tường lạ | Có nhóm 330 (3,3 m²) và 150 trên nhà phố, chưa có phương án nào cho hai lớp này → dòng trống trong bảng vật liệu | Mã + dữ liệu | ⬜ |
+| 4 | Bảng vật liệu (đã chọn W-GN01-110/220) | Ra số lượng gạch GN01 và vữa VU02, nhưng **không có giá** và thiếu hao hụt | Dữ liệu | ⬜ |
+| 5 | Tối ưu (`/api/optimize`) | **422 "Không có loại xe nào thỏa tải trọng"**: bảng `vehicles` = 0 dòng. Luồng dừng tại đây, agent cũng báo "không có phương án" | Dữ liệu | ⬜ chặn |
+| 6 | Dữ liệu trong DB | `supplier_materials` 0, `vehicles` 0, `labor_rates` 0, `price_records` 59 dòng ACTUAL cho 26 mã (không có GN01, VU02), `projects` 0. 5 phương án `ready`: W-GN01-110/220, W-GN03-105/150, W-GK01-110 | Dữ liệu | ⬜ |
+
+Chưa chạy trên giao diện `/do-boc` → `/toi-uu`: API dừng ở bước 5 nên giao diện cũng không đi qua được.
+
+03/11/2026: `sql/optimat_day_du.sql` (pg_dump database thật + khối SỐ MẪU xe, nhân công, 3 đại lý, giá gạch) nạp vào
+database trống chạy được; tối ưu qua được bước 5 và trả phương án khi chỉ có nhóm 110/220 (số MẪU, không báo cáo). Lỗi mới:
+
+| # | Bước | Kết quả | Loại | Trạng thái |
+|---|---|---|---|---|
+| 7 | Tối ưu cả nhà | Một nhóm tường không có phương án (330) làm **cả lần tối ưu trả 422**, thay vì bỏ nhóm đó và ghi vào notes | Mã | ✅ 03/11: bỏ nhóm + ghi chú "tổng chi phí chưa gồm nhóm này" (`optimize/problem.py`, test `test_group_without_option_is_skipped`) |
+| 8 | Kết quả tối ưu | `lead_time_days` trống trong phương án dù đại lý MẪU có `lead_time_days` | — | ✅ không phải lỗi: trường tên `supply_days` (3–4 ngày) |
+| 9 | Agent (`/api/agent/run`, `use_llm=false`) | Chạy hết luồng, nhưng tổng **233,3 triệu** so với **83,9 triệu** khi tối ưu theo từng mặt bằng (`/api/takeoff/plans`); tường 110 cần 8–12 chuyến xe 8 tấn. Nghi agent đo cả file như một mặt bằng (đếm trùng các tầng/hình chi tiết) | Mã | ✅ 03/11: đúng nguyên nhân (cả file 1.163 m², từng mặt bằng 320 m²); agent dùng `takeoff_building_from_file` (gộp từng mặt bằng), nay ra 83,9 triệu |
+| 11 | Agent trên 16 bản vẽ (`data/drawings`, cả DWG) | Một tầng vẽ nhiều hình (kích thước, kí hiệu cửa, vật dụng, bản chép "(2)") bị cộng nhiều lần; file điện không tách được mặt bằng bị đo cả file (3.300 m² tường) | Mã | ✅ 03/11: `merge_plans` giữ 1 hình mỗi tầng (nhiều tường nhất, có cảnh báo); file nhiều hình mà không tách được mặt bằng thì không đo cả file |
+| 12 | Bộ 46 Tân Bình so dự toán | Tường 10 cm: 823 m² so với ~1.034 m² (103,4 m³ / 0,1) = 80%; tường 20 cm: 412 so với ~450 m² (90,1 m³ / 0,2) = 91%. Trước sửa #11: 130% và 128% | Đo | ⬜ còn thiếu ~20% tường 110 |
+| 13 | banve1 (nhóm test, cả DXF và DWG) | Tách được mặt bằng nhưng **không nhận được tường nào** trên mọi mặt bằng. Không chỉnh quy tắc trên nhóm test: cần bản vẽ build cùng kiểu trình bày (S13g) | Dữ liệu | ⬜ chặn |
+| 14 | nha_pho | Sau #11, "mặt bằng tầng 3 (+6.60) (2)" bị coi là bản chép của tầng 3 và bỏ (tổng 320 → 269 m²). Cần mở bản vẽ xem đó là tầng 4/tum ghi sai tiêu đề hay bản chép thật | Dữ liệu | ⬜ |
+| 15 | Bản vẽ không phải kiến trúc | `Dien nuoc.dwg` vẫn đo ra 176 m² (mặt bằng điện nước dùng nền kiến trúc), `BIEN PHAP THI CONG.dwg` 1.305 m²: agent nên chỉ nhận file kiến trúc (`drawing/sheets.py` đã nhận loại bản vẽ) | — | ➖ ngoài phạm vi: điện nước, biện pháp thi công đã bỏ (03/11), người dùng chỉ đưa bản vẽ kiến trúc |
+| 16 | Phần thô bộ 46 so dự toán (03/11, `compare_estimate.py` + `46_thong_so.json`) | Lệch: lót −8%, móng −12%, cột +9%, dầm −19%, sàn −11%, cốp pha móng 0% / cột −5% / dầm −32% / sàn −35%, thép móng 0% / cột +27% / dầm −33% / sàn +11%, xây −18%, trát −28%. **Chưa có:** đào đắp đất, cầu thang, lanh tô (D) | Đo | ⬜ |
+| 17 | Agent | Chỉ bóc phần thô khi gửi `rough_params`; không gửi thì agent chỉ đo tường | Mã | ✅ 03/11: luôn bóc phần thô (thiếu thông số thì để trống, B7); `/api/agent/run` nhận `structural_file`. Bộ 46 không thông số: 12 công tác, có số xây, trát, cột, cán nền; dầm, sàn, móng, thép trống chờ thông số |
+| 18 | Trang `/do-boc` | Phần thô trên web không dùng bản vẽ kết cấu (dầm suy, móng không có); chưa có ô cốt đất, mở rộng hố, taluy | Mã | ✅ 03/11: nút "Mở bản vẽ kết cấu…" (`/api/takeoff/structural`), nhóm "Móng, đào đất". Bộ 46: dầm 15,3 → 30,2 m³, cột 10,5 → 18,6 m³. Chưa thử bằng tay trên trình duyệt (cần đăng nhập) |
+| 19 | Giá vật liệu phần thô | Bảng vật liệu phần thô không có giá | Mã | ✅ 03/11: đơn giá thấp nhất cùng đơn vị + thành tiền (`attach_prices`). Bộ 46 có giá công bố XM01, XM02, CA01, DA01; thiếu giá CA02, TH10, thép (chưa chia đường kính), gạch (chưa chọn phương án) |
+| 20 | Cầu thang | Chỉ nhập tay theo từng mặt bằng (số bậc, rộng vế...); chưa tự nhận trên bản vẽ (S4c) | Mã | ✅ 03/11: `rough/stairs.detect_stairs` + `building_stairs` (nét mũi bậc; tầng vẽ dở lấy thang đủ nhất trong nhà; bỏ sân thượng); trang `/do-boc` điền sẵn ô thang (B). Bộ 46: bê tông thang 5,59 / 5,85 m³ (−4%), thép +4%, cốp pha −23% |
+| 21 | Cầu thang nhà phố, nhà dân | Chỉ nhận 7–8 bậc/tầng (một vế; vế kia có thể là bậc rẻ quạt hoặc vẽ khác): có cảnh báo cao bậc > 220 mm, chưa sửa | Mã | ⬜ |
+| 10 | Kết quả agent | Mỗi tầng là một nhóm riêng nên câu trả lời lặp "Tường 110" nhiều dòng và số chuyến xe tính riêng từng tầng (chưa gộp chuyến) | Mã | ⬜ |
+
+03/11/2026, database `optimat` đã nạp `optimat_day_du.sql`: tối ưu cả nhà phố trả 2 phương án (NSGA-II, nhóm 330 và 150 bị bỏ kèm ghi chú). Luồng API chạy hết bằng số MẪU.
 
 ## Tổng quan theo tuần
 

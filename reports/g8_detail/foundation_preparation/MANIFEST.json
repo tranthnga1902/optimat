@@ -1,0 +1,49 @@
+{
+  "status": "STAGING_MANIFEST_NOT_CANONICAL_RELEASE",
+  "proposed_files": [
+    "src/optimat/rough/foundations.py",
+    "src/optimat/rough/quantity_details.py",
+    "tests/test_rough_foundation_details.py"
+  ],
+  "foundation_hunks": [
+    "Metadata receipts inside existing tier volume/formwork calculation passes",
+    "MONG/CP/DAO/DAP emitters only",
+    "Wrap DAO/DAP overlap _neg results at two earth callers AFTER signed legacy created"
+  ],
+  "protected": [
+    "Existing lean emitter",
+    "_neg shared helper body",
+    "tier/prismoid/pit/union/integration math",
+    "SLICES=200 and overlap threshold",
+    "models/takeoff/quantity_summary/O01/N03/price/catalog/boq/runtime31112"
+  ],
+  "cp_san_negative": "Unchanged quantity_detail=None; SUM retains gap/incomplete. No generic _neg expansion in P03a.",
+  "raw_capture": {
+    "volume_override": "Use declared volume/count; tiers references, no geometry recomputation",
+    "tiers": "Record each calculator return in same generator/sum pass; do not invoke volume twice",
+    "formwork": "Record original tier_formwork_m2 returns, including0 sloped face branch",
+    "pit": "Reuse v_pit scalar and p parameters already computed",
+    "fill": "Reuse v_pit/lean/one/neck or unknown; do not assign pit dimensions to backfill shape",
+    "overlap": "Reuse extra from pit_overlap_m3 once; signed row, positions receipts; no second integration"
+  },
+  "float_policy": "Component Decimal totals, actual pre_work aggregate q reference; no residual/tolerance/engine precision change",
+  "positions_scope_proposal": "Multiple holes missing/mismatch positions: partial ledger even legacyC; one hole/count0 not automatically missing net; BA decision pending",
+  "required_cases": [
+    "box/tiers/taper/override",
+    "unknown0/negative legacy branches",
+    "elevation/neck below ground",
+    "positions missing/mismatch/coincident/intersect/nonintersect",
+    "signed DAO/DAP extra",
+    "CP SAN negative remains gap",
+    "legacy parity and SUM coverage"
+  ],
+  "evidence_before_focus": [
+    "snapshots",
+    "exact manifest/diff",
+    "raw receipts source example",
+    "AST protected helpers",
+    "terminal/log/exit/hash before-after"
+  ],
+  "canonical_edits": false,
+  "tests_run": false
+}

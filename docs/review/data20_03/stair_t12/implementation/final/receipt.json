@@ -1,0 +1,39 @@
+{
+  "replay_exit": 0,
+  "test_exit": 0,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_stairs.py",
+    "tests/test_rough_stairs_detect.py",
+    "tests/test_rough_stair_components.py",
+    "tests/test_work_dimensions.py",
+    "tests/test_rough_status.py",
+    "tests/test_rough_takeoff.py",
+    "tests/test_structural_column_instances.py",
+    "tests/test_rough_partial.py",
+    "tests/test_rough_quantity_details.py",
+    "-k",
+    "not http",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "replay_command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "docs/review/data20_03/stair_t12/implementation/replay_source.py",
+    "--source",
+    "docs/review/data20_07/STAIR_T1_SOURCE.json",
+    "--from-floor",
+    "T1",
+    "--to-floor",
+    "T2",
+    "--out",
+    "docs\\review\\data20_03\\stair_t12\\implementation\\final\\replay"
+  ],
+  "utc": "2026-11-04T17:09:22.471555+00:00",
+  "files": 131,
+  "changed": [],
+  "C2_helper_unchanged": true
+}

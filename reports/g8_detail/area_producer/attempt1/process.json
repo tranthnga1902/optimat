@@ -1,0 +1,24 @@
+{
+  "pid": 38924,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_area_details.py",
+    "tests/test_rough_areas.py",
+    "tests/test_rough_partial.py",
+    "tests/test_rough_takeoff.py",
+    "tests/test_rough_quantity_details.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\g8_detail\\area_producer\\attempt1\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T17:02:42.444732+00:00",
+  "no_db": true,
+  "no_dotenv": true,
+  "metadata_catalog": "Catalog.from_csv(None)",
+  "test_overlay": "tests/conftest.py có thể dùng data/sample/catalog cho các hồi quy cũ"
+}

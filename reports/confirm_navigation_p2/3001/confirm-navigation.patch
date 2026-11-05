@@ -1,0 +1,429 @@
+--- a/src/app/(user)/do-boc/Review.tsx
++++ b/src/app/(user)/do-boc/Review.tsx
+@@ -18,7 +18,7 @@
+ import { WorkReview } from "./WorkReview";
+ import { RoughTab } from "./Rough";
+ import {
+-  REASONS, RP_KEY, base, compute, convBad, csvText, fmt, initPlanParams, initState, nearestWall, payload, postJson, roughRequest, roughValues,
++  REASONS, RP_KEY, base, compute, convBad, csvText, fmt, initPlanParams, initState, nearestWall, payload, roughRequest, roughValues,
+   type Confirmed, type Data, type PlanParams, type PlanState, type Rough, type Structural,
+ } from "./model";
+ import { useViewport } from "./viewport";
+@@ -42,12 +42,44 @@
+ }
+ 
+ type SheetState = { kind: "material" } | { kind: "confirm" } | { kind: "confirmed"; body: Confirmed; total: number }
++  | { kind: "recover"; body: Confirmed }
+   | { kind: "msg"; title: string; body?: ReactNode; primary?: boolean };
++type ConfirmationStamp = DrawingVersion & { projectId: number | null; revision: number; planIndex: number; published?: boolean };
++const storedProjectId = () => Number(store.get("optimat-project", "")) || null;
++
++export function confirmationGuide(plans: Data["plans"], states: Record<number, PlanState>, confirmed: Record<number, Confirmed>, at: number) {
++  if (!plans.length) return null;
++  const unclassified = plans.flatMap((_, i) => states[i]?.scope === "count" || states[i]?.scope === "reference" ? [] : [i]);
++  const counted = plans.flatMap((_, i) => states[i]?.scope === "count" ? [i] : []);
++  if (unclassified.length || !counted.length) {
++    const index = unclassified.includes(at) ? at : unclassified[0] ?? (plans[at] ? at : 0);
++    return { index, field: "scope", action: `Phân loại hình ${index + 1}/${plans.length}`, message: unclassified.length
++      ? `Còn ${unclassified.length}/${plans.length} hình chưa có phạm vi. Chọn tính khối lượng hoặc tham khảo cho “${plans[index].plan.name}”.`
++      : "Tất cả hình đang là tham khảo. Chọn ít nhất một mặt bằng để tính khối lượng." };
++  }
++  if (!counted.includes(at)) {
++    const index = counted.find(i => !confirmed[i]) ?? counted[0];
++    return { index, field: "plan", action: `Mở hình ${index + 1}: ${plans[index].plan.name}`, message: "Mở một mặt bằng trong phạm vi tính để kiểm kích thước và khối lượng." };
++  }
++  if (!Number.isFinite(states[at]?.height_mm) || states[at].height_mm <= 0)
++    return { index: at, field: "height", action: "Nhập chiều cao tầng", message: `Cần chiều cao có căn cứ cho “${plans[at].plan.name}” trước khi xác nhận.` };
++  return null;
++}
+ 
+ export function Review({ adjustment = false, roughOnly = false }: { adjustment?: boolean; roughOnly?: boolean }) {
+   const router = useRouter();
+   const [restored, setRestored] = useState(false);
+   const [saveError, setSaveError] = useState("");
++  const publishPending = useRef<ConfirmationStamp | null>(null);
++  const stampByBody = useRef(new WeakMap<Confirmed, ConfirmationStamp>());
++  const sessionProject = useRef<number | null>(null);
++  const lastStoredReview = useRef<string | null>(null);
++  const revision = useRef(0);
++  const activePlan = useRef(-1);
++  const confirmRequest = useRef<AbortController | null>(null);
++  const [confirmBusy, setConfirmBusy] = useState(false);
++  const scopeInput = useRef<HTMLSelectElement>(null);
++  const heightLabel = useRef<HTMLLabelElement>(null);
+   const drawing = useRef<DrawingVersion & { materialRevision?: string } | null>(null);
+   const [externalChange, setExternalChange] = useState(false);
+   const [saveNotice, setSaveNotice] = useState("");
+@@ -91,6 +123,18 @@
+   const confirmedList = useStored<unknown[]>("optimat-confirmed", []);
+   const roughStored = useStored<WorkSnapshot | null>("optimat-rough", null);
+   const receipt = useStored<WorkReceipt | null>("optimat-work-review", null);
++  useLayoutEffect(() => { activePlan.current = pi; }, [pi]);
++  // storage không phát sự kiện trong chính tab đã ghi. So với bản cuối do phiên này đọc/ghi,
++  // kể cả khi bản khác trùng tên tệp, tên tầng và drawingId.
++  const ownsReview = useCallback(() => {
++    try {
++      return !!drawing.current && drawing.current.projectUid === store.get("optimat-project-uid", "") &&
++        storedProjectId() === sessionProject.current && localStorage.getItem("optimat-review") === lastStoredReview.current;
++    } catch { return false; }
++  }, []);
++  const stampIsCurrent = useCallback((stamp?: ConfirmationStamp | null) => !!stamp && ownsReview() &&
++    stamp.projectUid === drawing.current?.projectUid && stamp.projectId === sessionProject.current &&
++    stamp.drawingId === drawing.current?.drawingId && stamp.revision === revision.current && stamp.planIndex === activePlan.current, [ownsReview]);
+   useEffect(() => {
+     const q = new URLSearchParams(location.search).get("project");
+     if (q) store.set("optimat-project", q);
+@@ -99,8 +143,12 @@
+   }, []);
+ 
+   useEffect(() => {
+-    const saved = store.get<ReviewSession | null>("optimat-review", null);
++    let saved: (ReviewSession & { projectId?: number | null }) | null;
+     try {
++      lastStoredReview.current = localStorage.getItem("optimat-review");
++      saved = lastStoredReview.current ? JSON.parse(lastStoredReview.current) : null;
++      sessionProject.current = storedProjectId();
++      if (saved?.projectId !== undefined && saved.projectId !== sessionProject.current) { setExternalChange(true); return; }
+       const uid = projectUid();
+       if (saved?.projectUid && saved.projectUid !== uid) { setMsg("Bản vẽ thuộc phiên dự án khác. Hãy mở lại dự án từ lịch sử."); return; }
+       drawing.current = { projectUid: uid, drawingId: saved?.drawingId || crypto.randomUUID(), materialRevision: saved?.materialRevision };
+@@ -129,6 +177,13 @@
+       const restoredPi = saved.pi < 0 && (roughOnly || !saved.data.overview?.cad) ? 0 : saved.pi;
+       setData(saved.data);
+       setStates(Object.fromEntries(saved.data.plans.map((p, i) => [i, saved.states[i] || initState(p)])));
++      const published = store.get<Confirmed[]>("optimat-confirmed", []);
++      for (const [key, body] of Object.entries(saved.confirmed)) {
++        const index = Number(key);
++        if (body.file === saved.data.file && body.plan === saved.data.plans[index]?.plan.name &&
++            saved.states[index]?.scope === "count" && reviewMatchesConfirmed(body.file, { [index]: body }, published.filter(p => p.plan === body.plan)))
++          stampByBody.current.set(body, { ...drawing.current!, projectId: sessionProject.current, revision: revision.current, planIndex: index, published: true });
++      }
+       setPlanP(saved.planP); setConfirmed(saved.confirmed);
+       setStructural(saved.structural); setPi(restoredPi); setMsg(null);
+       setTab(roughOnly ? "rough" : "qty");
+@@ -146,19 +201,33 @@
+   }, []);
+   const persistReview = useCallback((nextConfirmed = confirmed) => {
+     if (!data) return true;
+-    if (externalChange || !drawing.current || drawing.current.projectUid !== store.get("optimat-project-uid", "")) return false;
+-    const snapshot = { ...drawing.current, data, states, planP, confirmed: nextConfirmed, pi,
++    if (externalChange || !ownsReview() || (publishPending.current && !stampIsCurrent(publishPending.current))) {
++      setSaveError("Phiên dự án đã thay đổi. Tải phiên hiện tại để tiếp tục.");
++      return false;
++    }
++    const snapshot = { ...drawing.current, projectId: sessionProject.current, data, states, planP, confirmed: nextConfirmed, pi,
+       structural: structural && "file" in structural ? structural : null };
++    const writeSnapshot = (value: string) => {
++      if (!publishPending.current) {
++        localStorage.setItem("optimat-review", value); lastStoredReview.current = value; return;
++      }
++      const previous = store.get<Confirmed[]>("optimat-confirmed", []).filter(p => p.file !== data.file);
++      const summaries = Object.values(nextConfirmed).map(({file, plan, height_mm, groups, total_net_area_m2, confirmed_at, takeoff_id}) =>
++        ({file, plan, height_mm, groups, total_net_area_m2, confirmed_at, takeoff_id: takeoff_id || null}));
++      saveTogether({ "optimat-review": value, "optimat-confirmed": JSON.stringify([...previous, ...summaries]) });
++      publishPending.current.published = true;
++      lastStoredReview.current = value; publishPending.current = null;
++    };
+     try {
+       if (roughOnly) localStorage.setItem(RP_KEY, JSON.stringify(roughVals));
+-      localStorage.setItem("optimat-review", JSON.stringify(snapshot));
++      writeSnapshot(JSON.stringify(snapshot));
+       setSaveError(""); setSaveNotice("");
+       return true;
+     } catch {
+       // SVG nền CAD có thể rất lớn; hình học đo bóc vẫn đủ để khôi phục và tính tiếp.
+       try {
+         if (roughOnly) localStorage.setItem(RP_KEY, JSON.stringify(roughVals));
+-        localStorage.setItem("optimat-review", JSON.stringify(snapshot, (key, value) => key === "cad" ? undefined : value));
++        writeSnapshot(JSON.stringify(snapshot, (key, value) => key === "cad" ? undefined : value));
+         setSaveError("");
+         setSaveNotice("Đã lưu bản gọn để tiếp tục: giữ hình học, kích thước và khối lượng; khi mở lại dùng nền nét đã đọc thay cho ảnh CAD gốc.");
+         return true;
+@@ -168,7 +237,7 @@
+         return false;
+       }
+     }
+-  }, [data, states, planP, confirmed, pi, structural, roughOnly, roughVals, externalChange]);
++  }, [data, states, planP, confirmed, pi, structural, roughOnly, roughVals, externalChange, ownsReview, stampIsCurrent]);
+   useEffect(() => {
+     if (restored) persistReview();
+   }, [restored, persistReview]);
+@@ -177,7 +246,7 @@
+     const beforeNavigate = (event: globalThis.MouseEvent) => {
+       const link = event.target instanceof Element ? event.target.closest("a[href]") : null;
+       if (!(link instanceof HTMLAnchorElement) || link.origin !== location.origin || link.pathname === location.pathname) return;
+-      if (reading || !persistReview()) {
++      if (reading || confirmRequest.current || !persistReview()) {
+         event.preventDefault();
+         event.stopPropagation();
+       }
+@@ -193,6 +262,7 @@
+   const pp = P ? planP[pi] || initPlanParams(P) : null;
+   const scopeReady = !!data?.plans.length && data.plans.every((_, i) => !!states[i]?.scope) && data.plans.some((_, i) => states[i]?.scope === "count");
+   const allCountedConfirmed = scopeReady && data!.plans.every((_, i) => states[i]?.scope === "reference" || !!confirmed[i]);
++  const guide = data ? confirmationGuide(data.plans, states, confirmed, pi) : null;
+   const hasOverview = !!(data && data.overview && data.overview.cad);
+   const hasCad = !!data && (pi < 0 ? !!(data.overview && data.overview.cad) : !!(P && P.cad));
+   let bg = bgPref;
+@@ -205,17 +275,18 @@
+   const latest = useRef({ data, states, planP, project, rough, structural, roughVals });
+   useLayoutEffect(() => { latest.current = { data, states, planP, project, rough, structural, roughVals }; });
+   const roughTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined), busyRef = useRef(false);
+-  const revision = useRef(0), roughStarted = useRef(false), uploadRevision = useRef(0), structuralRevision = useRef(0);
++  const roughStarted = useRef(false), uploadRevision = useRef(0), structuralRevision = useRef(0);
+   useEffect(() => {
+     const changed = (event: StorageEvent) => {
+       if (event.key && !["optimat-project-uid","optimat-project","optimat-project-info","optimat-project-files-selected", "optimat-review", "optimat-work-review", "optimat-rough", RP_KEY].includes(event.key)) return;
+       revision.current++; uploadRevision.current++; structuralRevision.current++;
++      confirmRequest.current?.abort();
+       clearTimeout(roughTimer.current); readController.current?.abort(); setExternalChange(true);
+     };
+     window.addEventListener("storage", changed);
+     return () => window.removeEventListener("storage", changed);
+   }, []);
+-  useEffect(() => () => { revision.current++; uploadRevision.current++; structuralRevision.current++; clearTimeout(roughTimer.current); readController.current?.abort(); }, []);
++  useEffect(() => () => { revision.current++; uploadRevision.current++; structuralRevision.current++; clearTimeout(roughTimer.current); readController.current?.abort(); confirmRequest.current?.abort(); }, []);
+   const computeRough = useCallback(async function runRough() {
+     const L = latest.current;
+     if (!L.data || !drawing.current) return;
+@@ -260,6 +331,8 @@
+ 
+   // ---------------------------------------------------------------- sửa: mỗi lần sửa lưu một bước hoàn tác, bỏ trạng thái đã xác nhận
+   const markDirty = () => {
++    confirmRequest.current?.abort();
++    if (publishPending.current?.planIndex === pi) publishPending.current = null;
+     store.set("optimat-work-review", null);
+     store.set("optimat-materials-ready", false);
+     store.set("optimat-material-draft", null);
+@@ -271,6 +344,12 @@
+       .filter((p) => !(p.file === data.file && p.plan === P.plan.name)));
+     setSheet(null);
+     scheduleRough();
++    // Sửa một tầng giữ nguyên biên nhận đã lưu của các tầng còn lại.
++    if (drawing.current && ownsReview()) for (const [key, body] of Object.entries(confirmed)) {
++      const stamp = stampByBody.current.get(body);
++      if (Number(key) !== pi && stamp?.published)
++        stampByBody.current.set(body, { ...stamp, drawingId: drawing.current.drawingId, revision: revision.current });
++    }
+   };
+   const edit = (fn: (n: PlanState) => void) => {
+     if (!S) return;
+@@ -331,17 +410,20 @@
+   });
+ 
+   const loadPlan = (i: number, D: Data = data!, st = states) => {
++    confirmRequest.current?.abort();
+     setStates({ ...st, [i]: st[i] || initState(D.plans[i]) });
+     setPi(i); setHist([]); setSelected(null); setMsg(null);
+     setMode(mode);
+     fitSize(D.plans[i].size);
+   };
+   const showOverview = (D: Data = data!) => {
++    confirmRequest.current?.abort();
+     setPi(-1); setSelected(null); setHist([]); setMsg(null);
+     setMode("select");
+     fitSize(D.overview!.size);
+   };
+   const start = (D: Data) => {
++    confirmRequest.current?.abort(); publishPending.current = null;
+     store.set("optimat-material-selection", null);
+     drawing.current = { projectUid: projectUid(), drawingId: crypto.randomUUID() };
+     store.set("optimat-work-review", null);
+@@ -368,6 +450,7 @@
+     setReading(null); setShowReadPreview(false); setMsg(data ? null : START);
+   };
+   const readFile = async (name: string, url: string, request: RequestInit, context?: AnalysisContext) => {
++    confirmRequest.current?.abort();
+     if (!projectReady) { setMsg("Lưu tên và thông tin ở trang Dự án của tôi trước khi mở bản vẽ."); return; }
+     readController.current?.abort();
+     const controller = new AbortController(); readController.current = controller;
+@@ -488,33 +571,81 @@
+   // ---------------------------------------------------------------- xác nhận, xuất
+   // Ghi mặt bằng đã chốt cho giao diện chung (Vật liệu và giá, Phương án tối ưu). Lưu trên trình duyệt;
+   // kết quả chính thức nằm trong takeoff_results khi có mã dự án. Một bản vẽ + mặt bằng chỉ giữ lần xác nhận mới nhất.
+-  const remember = (body: Confirmed) => {
+-    const list = store.get<Confirmed[]>("optimat-confirmed", []).filter((p) => !(p.file === body.file && p.plan === body.plan));
+-    list.push({ file: body.file, plan: body.plan, height_mm: body.height_mm, groups: body.groups, total_net_area_m2: body.total_net_area_m2,
+-      confirmed_at: body.confirmed_at, takeoff_id: body.takeoff_id || null } as Confirmed);
+-    store.set("optimat-confirmed", list);
++  const focusField = (field: string) => {
++    if (field === "scope") scopeInput.current?.focus();
++    else if (field === "height") heightLabel.current?.querySelector("input")?.focus();
++  };
++  const focusAfterSwitch = useRef("");
++  useLayoutEffect(() => { focusField(focusAfterSwitch.current); focusAfterSwitch.current = ""; }, [pi]);
++  const guideToPlan = () => {
++    setSheet(null);
++    if (!guide) return;
++    if (guide.index === pi) focusField(guide.field);
++    else { focusAfterSwitch.current = guide.field; loadPlan(guide.index); }
++  };
++  const publishConfirmation = (body: Confirmed) => {
++    const stamp = stampByBody.current.get(body);
++    if (externalChange || !stamp || !stampIsCurrent(stamp)) { setSheet(null); setExternalChange(true); return; }
++    if (!data || !P || body.plan !== P.plan.name || body.file !== data.file) {
++      setSheet(null); setSaveError("Bản xác nhận không khớp mặt bằng đang mở."); return;
++    }
++    const next = { ...confirmed, [pi]: body };
++    if (stamp.published) {
++      const summaries = store.get<Confirmed[]>("optimat-confirmed", []).filter(p => p.plan === body.plan);
++      if (!reviewMatchesConfirmed(body.file, { [pi]: body }, summaries)) { setSheet(null); setExternalChange(true); return; }
++    } else {
++      publishPending.current = stamp;
++      setConfirmed(next);
++      if (!persistReview(next)) { setSheet({ kind: "recover", body }); return; }
++    }
++    if (adjustment) {
++      setSheet({ kind: "msg", title: "Đã lưu điều chỉnh", body: <p>Phương án vật liệu của mặt bằng đã được cập nhật cho bước tra giá và tối ưu.</p> });
++    } else if (data.plans.every((_, i) => states[i]?.scope === "reference" || next[i])) {
++      setSheet(null); router.push("/phan-tho");
++    } else {
++      setSheet({ kind: "confirmed", body, total: c?.total ?? body.total_net_area_m2 });
++    }
+   };
+   const sendConfirm = async () => {
+-    if (!data || !P || !S || !c || !scopeReady || S.scope !== "count") return;
+-    const at = pi;
++    if (confirmRequest.current) return;
++    if (externalChange || !ownsReview() || (publishPending.current && !stampIsCurrent(publishPending.current))) {
++      setSheet(null); setExternalChange(true); return;
++    }
++    if (guide) { guideToPlan(); return; }
++    if (reading || !data || !P || !S || !c) { setSheet(null); setSaveError("Chờ đọc xong và mở một mặt bằng để xác nhận."); return; }
++    if (confirmed[pi]) { publishConfirmation(confirmed[pi]); return; }
++    const version = drawing.current;
++    if (!version || project !== sessionProject.current || pi !== activePlan.current) { setSheet(null); setExternalChange(true); return; }
++    const stamp: ConfirmationStamp = { ...version, projectId: project, revision: revision.current, planIndex: pi };
++    const controller = new AbortController();
++    confirmRequest.current = controller; setConfirmBusy(true);
+     const atRevision = revision.current;
++    let timedOut = false;
++    const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, 120_000);
+     try {
+-      const body = await postJson<Confirmed>("/api/takeoff/confirm", payload(data, P, S, project), "Máy chủ từ chối kết quả.");
+-      if (revision.current !== atRevision) return;
+-      setConfirmed((x) => ({ ...x, [at]: body }));
+-      remember(body);
+-      const nextConfirmed = { ...confirmed, [at]: body };
+-      if (adjustment) {
+-        setSheet({ kind: "msg", title: "Đã lưu điều chỉnh", body: <p>Phương án vật liệu của mặt bằng đã được cập nhật cho bước tra giá và tối ưu.</p> });
+-      } else if (data.plans.every((_, i) => states[i]?.scope === "reference" || nextConfirmed[i])) {
+-        setSheet(null);
+-        if (persistReview(nextConfirmed)) router.push("/phan-tho");
+-      } else {
+-        setSheet({ kind: "confirmed", body, total: c.total });
+-      }
++      const response = await fetch("/api/takeoff/confirm", { method: "POST", headers: { "Content-Type":"application/json" },
++        body: JSON.stringify(payload(data, P, S, project)), signal: controller.signal });
++      const body = await response.json();
++      if (controller.signal.aborted || revision.current !== atRevision) return;
++      if (!stampIsCurrent(stamp)) { setExternalChange(true); return; }
++      if (!response.ok) throw new Error(typeof body.detail === "string" ? body.detail : `Máy chủ từ chối kết quả (HTTP ${response.status}).`);
++      stampByBody.current.set(body, stamp);
++      publishConfirmation(body);
+     } catch (err) {
+-      if (revision.current === atRevision) setSheet({ kind: "msg", title: "Chưa xác nhận được", body: <p>{(err as Error).message}</p> });
+-    }
++      if ((timedOut || !controller.signal.aborted) && stampIsCurrent(stamp))
++        setSheet({ kind: "msg", title: "Chưa nhận được kết quả xác nhận", body: <p>{timedOut ? "Máy chủ chưa phản hồi sau hai phút. Kiểm tra kết quả đã lưu của dự án trước khi gửi lại." : (err as Error).message}</p> });
++    } finally {
++      clearTimeout(timeout);
++      if (confirmRequest.current === controller) {
++        confirmRequest.current = null; setConfirmBusy(false);
++        if (controller.signal.aborted || revision.current !== atRevision) setSheet(prev => prev?.kind === "confirm" ? null : prev);
++      }
++    }
++  };
++  const openConfirmation = () => {
++    if (guide) guideToPlan();
++    else if (confirmed[pi]) publishConfirmation(confirmed[pi]);
++    else if (S && !reading) setSheet({ kind: "confirm" });
+   };
+   const download = (name: string, text: string, type: string) => {
+     try {
+@@ -632,17 +763,17 @@
+                   setStates(st => ({ ...st, [pi]: { ...st[pi], paperScale: el.value ? v : undefined } }));
+                 }} /></label>}</span>}
+           {data && !P && <span className={s.field}>Tỷ lệ in: chọn từng hình để xem</span>}
+-          {S && <label>Phạm vi hình <select value={S.scope || ""} onChange={(e) => {
++          {S && <label>Phạm vi hình <select ref={scopeInput} value={S.scope || ""} onChange={(e) => {
+             edit((n) => { n.scope = e.target.value as "count" | "reference" | null; });
+             store.set("optimat-materials-ready", false);
+           }}><option value="">Chưa xác nhận tầng/phạm vi</option><option value="count">Tính khối lượng tầng này</option><option value="reference">Hình tham khảo / bản sao, không cộng</option></select></label>}
+-          {data && !scopeReady && <span role="status">Phân loại mọi hình và chọn ít nhất một tầng để tính. Kiểm tra hình trùng tên hoặc khác tầng trước khi xác nhận.</span>}
++          {guide && <span role="status">{guide.message}</span>}
+           {data && (data.plans.length > 1 || hasOverview) && <label className={s.field}>Mặt bằng{" "}
+             <select value={String(pi)} onChange={(e) => { const v = Number(e.target.value); if (v < 0) showOverview(); else loadPlan(v); }}>
+               {hasOverview && <option value="-1">Toàn bộ bản vẽ</option>}
+               {data.plans.map((p, i) => <option key={i} value={i}>{i + 1}. {p.plan.name}</option>)}
+             </select></label>}
+-          <label className={s.field}>Chiều cao tầng (m){" "}
++          <label className={s.field} ref={heightLabel}>Chiều cao tầng (m){" "}
+             <ChangeInput type="number" step={0.05} min={1} max={10} value={S ? (S.height_mm / 1000).toFixed(2) : ""} onCommit={(el) => {
+               if (!S) return;
+               const v = Number(el.value);
+@@ -661,7 +792,8 @@
+             void upload(file);
+           }} /></label>
+           <button className={s.btn} type="button" disabled={!hist.length} onClick={undo}>Hoàn tác</button>
+-          <button className={`${s.btn} ${s.primary}`} type="button" disabled={!!reading || !S} onClick={() => S && setSheet({ kind: "confirm" })}>{adjustment ? "Lưu điều chỉnh mặt bằng" : "Xác nhận kích thước, khối lượng"}</button>
++          <button className={`${s.btn} ${s.primary}`} type="button" disabled={!!reading || confirmBusy || !data?.plans.length} onClick={openConfirmation}>
++            {guide?.action || (confirmed[pi] ? "Tiếp tục từ bản đã xác nhận" : adjustment ? "Lưu điều chỉnh mặt bằng" : "Xác nhận kích thước, khối lượng")}</button>
+         </header>
+         <div className={s.main}>
+           <Board svgRef={svgRef} scaleRef={scaleRef} zoomRef={zoomRef} zoomLabel={zoomLabel} zoomTo={zoomTo} movedRef={movedRef} toWorld={toWorld} onPointerDown={onPointerDown} fitSize={fitSize} data={data} pi={pi} P={P} S={S} selected={selected} mode={mode} onMode={setMode} draft={draft} snap={snap} unit={unit}
+@@ -697,8 +829,13 @@
+         </div>
+         {sheet?.kind === "material" && data && S && <MaterialDialog data={data} n={S.walls.filter((w) => w.keep && w.masonry && !w.mat).length} onClose={closeSheet}
+           onApply={(m, cl) => { edit((n) => n.walls.forEach((w) => { if (w.keep && w.masonry && !w.mat && (!cl || w.cls === cl)) { w.mat = m; w.edited = true; } })); closeSheet(); }} />}
+-        {sheet?.kind === "confirm" && P && S && c && <ConfirmDialog P={P} S={S} c={c} send={sendConfirm} onClose={closeSheet} />}
+-        {sheet?.kind === "confirmed" && <ConfirmedDialog body={sheet.body} total={sheet.total} onClose={closeSheet} />}
++        {sheet?.kind === "confirm" && P && S && c && <ConfirmDialog P={P} S={S} c={c} send={sendConfirm} busy={confirmBusy} onClose={() => { if (!confirmRequest.current) closeSheet(); }} />}
++        {sheet?.kind === "recover" && <Msg title="Máy chủ đã xác nhận mặt bằng" onClose={closeSheet}><p>{saveError || "Chưa hoàn tất lưu phiên trên trình duyệt."} Giữ trang này mở để tiếp tục từ kết quả đã nhận.</p>
++          <button className={s.btn} type="button" onClick={() => publishConfirmation(sheet.body)}>Thử lưu phiên và tiếp tục</button></Msg>}
++        {sheet?.kind === "confirmed" && <ConfirmedDialog body={sheet.body} total={sheet.total} onClose={closeSheet} onNext={() => {
++          const next = data?.plans.findIndex((_, i) => states[i]?.scope === "count" && !confirmed[i]) ?? -1;
++          closeSheet(); if (next >= 0) loadPlan(next);
++        }} />}
+         {sheet?.kind === "msg" && <Msg title={sheet.title} primary={sheet.primary} onClose={closeSheet}>{sheet.body}</Msg>}
+       </div>
+     </div>
+--- a/src/app/(user)/do-boc/Dialogs.tsx
++++ b/src/app/(user)/do-boc/Dialogs.tsx
+@@ -44,8 +44,7 @@
+   );
+ }
+ 
+-export function ConfirmDialog({ P, S, c, send, onClose }: { P: Plan; S: PlanState; c: Computed; send: () => Promise<void>; onClose: () => void }) {
+-  const [busy, setBusy] = useState(false);
++export function ConfirmDialog({ P, S, c, send, busy, onClose }: { P: Plan; S: PlanState; c: Computed; send: () => Promise<void>; busy: boolean; onClose: () => void }) {
+   const off = S.walls.filter((w) => !w.keep).length, man = S.walls.filter((w) => w.src === "manual" && w.keep).length;
+   return (
+     <Sheet onClose={onClose}>
+@@ -53,8 +52,8 @@
+       <p>Chiều cao tầng {fmt(S.height_mm / 1000)} m · {S.walls.filter((w) => w.keep).length} đoạn tường (vẽ thêm {man}, đã loại {off}) · {S.openings.filter((o) => o.keep).length} lỗ mở.</p>
+       <p>Diện tích tường thực tính tạm: <b>{fmt(c.total)} m²</b>. Vật liệu được lựa chọn ở bước tiếp theo.</p>
+       <p>Máy chủ sẽ tính lại khối lượng bằng cùng công thức và trả kết quả chốt.</p>
+-      <div className={s.actions}><button className={s.btn} type="button" onClick={onClose}>Quay lại sửa</button>
+-        <button className={`${s.btn} ${s.primary}`} type="button" disabled={busy} onClick={() => { setBusy(true); send(); }}>{busy ? "Đang gửi…" : "Xác nhận"}</button></div>
++      <div className={s.actions}><button className={s.btn} type="button" disabled={busy} onClick={onClose}>Quay lại sửa</button>
++        <button className={`${s.btn} ${s.primary}`} type="button" disabled={busy} onClick={send}>{busy ? "Đang gửi…" : "Xác nhận"}</button></div>
+     </Sheet>
+   );
+ }
+@@ -82,12 +81,12 @@
+ }
+ 
+ /** Xác nhận chỉ hiển thị khối lượng; vật liệu và tối ưu nằm ở bước sau. */
+-export function ConfirmedDialog({ body, total, onClose }: { body: Confirmed; total: number; onClose: () => void }) {
++export function ConfirmedDialog({ body, total, onClose, onNext }: { body: Confirmed; total: number; onClose: () => void; onNext: () => void }) {
+   return <Sheet onClose={onClose}>
+     <h2>Đã xác nhận khối lượng mặt bằng</h2>
+     <p>Diện tích tường thực: <b>{fmt(body.total_net_area_m2)} m²</b> (trang tính {fmt(total)} m²).</p>
+-    <p>Tiếp tục xác nhận các mặt bằng còn lại. Khi hoàn tất, hệ thống mở trang điều chỉnh vật liệu.</p>
++    <p>Tiếp tục xác nhận các mặt bằng cần tính. Khi hoàn tất, hệ thống mở bước Kiểm tra công tác và khối lượng.</p>
+     {body.warnings.length > 0 && <Warn items={body.warnings} />}
+-    <button className={s.btn} type="button" onClick={onClose}>Kiểm tra mặt bằng tiếp theo</button>
++    <button className={s.btn} type="button" onClick={onNext}>Kiểm tra mặt bằng tiếp theo</button>
+   </Sheet>;
+ }

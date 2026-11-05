@@ -45,7 +45,17 @@ def read_dimensions(drawing) -> list[Dim]:
     if doc is None:
         return []
     s = drawing.unit_scale
-    out = []
+    return [Dim(p.x * s, p.y * s, value, measured * s, vertical) for p, value, measured, vertical in _linear_dims(doc)]
+
+
+def unit_ratios(doc) -> list[float]:
+    """Số hiển thị / số đo thô (theo đơn vị bản vẽ) của từng đường kích thước. Số hiển thị là mm thật, nên với hình vẽ
+    1:1 tỷ số này chính là hệ số đổi đơn vị bản vẽ ra mm; hình vẽ phóng to cho tỷ số nhỏ hơn (0,5, 0,25...)."""
+    return [value / measured for _, value, measured, _ in _linear_dims(doc)]
+
+
+def _linear_dims(doc):
+    """(điểm chữ, số hiển thị, số đo thô, đứng) của đường kích thước thẳng, ngang hoặc đứng, có chữ là một số."""
     for e in doc.modelspace().query("DIMENSION"):
         if e.dimtype not in (0, 1):                     # 0 thẳng (có góc), 1 thẳng hàng theo hai điểm
             continue
@@ -63,9 +73,7 @@ def read_dimensions(drawing) -> list[Dim]:
         value = _shown(doc, e, measured)
         if value is None or measured <= 0 or value <= 0:
             continue
-        p = e.dxf.get("text_midpoint") or e.dxf.defpoint
-        out.append(Dim(p.x * s, p.y * s, value, measured * s, abs(angle - 90) <= 1))
-    return out
+        yield (e.dxf.get("text_midpoint") or e.dxf.defpoint), value, measured, abs(angle - 90) <= 1
 
 
 def inside(dims: list[Dim], bbox) -> list[Dim]:

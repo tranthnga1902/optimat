@@ -1,0 +1,59 @@
+
+> frontend@0.1.0 build
+> next build
+
+▲ Next.js 16.4.2 (Turbopack)
+✓ Running next.config.ts took 1324ms
+- Cache Components enabled
+- Partial Prefetching enabled
+- Experiments (use with caution):
+  · proxyClientMaxBodySize: "1000mb"
+  · proxyTimeout: 300000
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 17.9s
+  Running TypeScript ...
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+  	- include was updated to add '.next-web80-20261104/types/**/*.ts'
+  	- include was updated to add '.next-web80-20261104/dev/types/**/*.ts'
+
+  Finished TypeScript in 12.6s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/24) ...
+  Generating static pages using 11 workers (6/24) 
+  Generating static pages using 11 workers (12/24) 
+  Generating static pages using 11 workers (18/24) 
+✓ Generating static pages using 11 workers (24/24) in 2.4s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /co-so-du-lieu
+├ ○ /dai-ly
+├ ○ /dang-nhap
+├ ○ /danh-muc
+├ ○ /dieu-chinh
+├ ○ /do-boc
+├ ○ /du-an
+├ ○ /du-an-cua-toi
+├ ○ /gia
+├ ○ /kiem-soat
+├ ○ /mapping
+├ ○ /mo-hinh
+├ ○ /nguoi-dung
+├ ○ /nhan-dien
+├ ○ /phan-tho
+├ ○ /quy-tac
+├ ○ /tiep-nhan
+├ ○ /toi-uu
+├ ○ /tong-quan
+└ ○ /vat-lieu
+
+
+○  (Static)  prerendered as static content
+
+exit 0

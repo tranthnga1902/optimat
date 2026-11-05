@@ -1,0 +1,21 @@
+{
+  "exit_code": 0,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_structural_column_instances.py",
+    "tests/test_rough_columns.py",
+    "tests/test_rough_structural.py::test_column_schedule_without_mapping_keeps_local_column_pending",
+    "tests/test_work_dimensions.py",
+    "tests/test_rough_quantity_details.py",
+    "-k",
+    "not http",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "utc": "2026-11-04T15:52:33.402531+00:00",
+  "changed": [],
+  "scope": "10 files; focused only, not full-repository quiet window"
+}

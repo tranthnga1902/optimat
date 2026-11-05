@@ -1,0 +1,12 @@
+[
+  {
+    "patch": "opening-validation.patch",
+    "paths": 7,
+    "applied": true
+  },
+  {
+    "patch": "after-opening.patch",
+    "paths": 9,
+    "applied": true
+  }
+]

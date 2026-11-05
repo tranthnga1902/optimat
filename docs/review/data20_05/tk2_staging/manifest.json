@@ -1,0 +1,23 @@
+{
+  "base": {
+    "rebar.base.py": "76f09b3d09a2b33a3e5d568c49ece3f5e9d46c083a52cb6790088dec8aa4c6b0",
+    "dxf_reader.base.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0"
+  },
+  "artifacts": {
+    "candidate.py": "c8f16a6df8c7eb81e9e59b69b010801f8652b86acce56646d3966abafd4e4c1f",
+    "test_tk2.py": "0e6af1dae02b71a666845a6e649679a8a07a5f9868788d5785d24a68e06074e4",
+    "probe_actual.py": "6e4e6a4dd3930a71084c54ca94e92dc753a57d044b51fabbd9dd818cf6c27186",
+    "actual_raw_receipt.json": "e5536a704491d9af3516e03d6ba1c4115e44917461261e5604370de8c338450d",
+    "rebar.base.py": "76f09b3d09a2b33a3e5d568c49ece3f5e9d46c083a52cb6790088dec8aa4c6b0",
+    "dxf_reader.base.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0"
+  },
+  "canonical_current": {
+    "src\\optimat\\rough\\rebar.py": "76f09b3d09a2b33a3e5d568c49ece3f5e9d46c083a52cb6790088dec8aa4c6b0",
+    "src\\optimat\\drawing\\dxf_reader.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0"
+  },
+  "canonical_rebar_unchanged": true,
+  "canonical_reader_unchanged": true,
+  "tests": "13 passed in4.91s; exit0; session9360 terminal",
+  "actual": "7INSERT+6TEXT anchors checked;2frames;0 accepted group rows; probe_actual exit0",
+  "status": "STAGING_ONLY; no source canonical edit; no material/segment binding"
+}

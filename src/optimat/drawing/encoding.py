@@ -109,7 +109,7 @@ def _compose(text: str, chars: dict[str, str], marks: dict[str, str]) -> str:
     out: list[str] = []
     for ch in text:
         base = unicodedata.normalize("NFD", out[-1])[0] if out else ""
-        if ch in marks and (base in _VOWELS or base in "ƠơƯư"):
+        if out and ch in marks and (base in _VOWELS or base in "ƠơƯư"):
             out[-1] = unicodedata.normalize("NFC", out[-1] + marks[ch])
         else:
             out.append(chars.get(ch, ch))
@@ -141,3 +141,42 @@ def normalize(text: str) -> str:
     text = text.lower().replace("đ", "d")
     decomposed = unicodedata.normalize("NFD", text)
     return "".join(ch for ch in decomposed if unicodedata.category(ch) != "Mn")
+
+
+# ---- Từ viết tắt trên bản vẽ (data/rules/viet_tat.csv) ----
+# Ghi chú vật liệu hay viết tắt ("BTCT", "vữa XM", "gạch kg nung"): giãn ra chữ đầy đủ (đã bỏ dấu) trước khi so với
+# material_rules.csv / material_notes.csv, để không phải thêm một dòng quy tắc cho mỗi cách viết tắt.
+# Chỉ áp cho ghi chú chữ, không áp cho tên layer. So nguyên từ, mẫu dài xét trước ("gach bt" trước "bt").
+_ABBREV: list[tuple["re.Pattern", str]] | None = None     # đọc ở lần dùng đầu (config import muộn, tránh import vòng)
+
+
+def load_abbreviations(path=None) -> list[tuple[str, str]]:
+    """Danh sách (viết tắt đã bỏ dấu, chữ đầy đủ đã bỏ dấu) theo thứ tự mẫu dài trước. Thiếu ô thì báo lỗi."""
+    import csv
+
+    from .. import config
+    p = path or config.DATA_DIR / "rules" / "viet_tat.csv"
+    out = []
+    with open(p, encoding="utf-8-sig", newline="") as f:
+        for r in csv.DictReader(f):
+            short, full = normalize(r["viet_tat"]).strip(), normalize(r["day_du"]).strip()
+            if not short or not full:
+                raise ValueError(f"viet_tat.csv, {r['ma']}: thiếu viết tắt hoặc chữ đầy đủ.")
+            out.append((short, full))
+    return sorted(out, key=lambda x: -len(x[0]))
+
+
+def expand_abbreviations(normalized: str) -> str:
+    """Giãn từ viết tắt trong chuỗi đã normalize(). Không khớp gì thì trả nguyên chuỗi."""
+    global _ABBREV
+    if _ABBREV is None:
+        _ABBREV = [(re.compile(rf"(?<![a-z0-9]){re.escape(s)}(?![a-z0-9])"), f) for s, f in load_abbreviations()]
+    for rx, full in _ABBREV:
+        normalized = rx.sub(full, normalized)
+    return normalized
+
+
+def reset_abbreviations() -> None:
+    """Đọc lại viet_tat.csv ở lần gọi sau (sau khi sửa file trong cùng tiến trình, hoặc trong kiểm thử)."""
+    global _ABBREV
+    _ABBREV = None

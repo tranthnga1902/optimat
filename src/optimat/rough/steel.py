@@ -27,8 +27,13 @@ def schedule_works(rows: list[RebarRow]) -> list[WorkItem]:
                              missing=[f"Not supported: cấu kiện '{el}' chưa có quy ước (ky_hieu_cau_kien.csv, bang_thep.csv)"]))
             continue
         known = [r.kg for r in items if r.kg is not None]
-        miss = [f"dòng {r.row} ({r.mark or r.dia_mm}): {', '.join(r.missing)}" for r in items if r.missing]
+        miss = [f"dòng {r.row} ({r.mark or r.dia_mm}): " + ", ".join(r.missing or ["khối lượng thép chưa xác định"])
+                for r in items if r.missing or r.kg is None]
         out.append(_work("COT_THEP", sum(known) / 1000 if known else None, element=f"thép {STEEL_ELEMENTS[code]} {el}",
+                         dimensions=[dict(label=f"{r.mark or r.row}: Ø{r.dia_mm:g}" if r.dia_mm is not None else f"dòng {r.row}", count=r.total_bars,
+                            length_m=r.cut_length_mm/1000 if r.cut_length_mm is not None else None,
+                            diameter_m=r.dia_mm/1000 if r.dia_mm is not None else None,
+                            source=r.evidence, note="Dài cắt một thanh theo bảng; rộng/cao không áp dụng") for r in items],
                          steel_element=code, basis="bang_thong_ke", evidence=evidence, missing=miss,
                          formula=f"Σ {len(items)} dòng bảng thép: " + " + ".join(r.formula for r in items[:6])
                                  + (" + …" if len(items) > 6 else "") + " = " + _fmt(sum(known)) + " kg"))
@@ -42,12 +47,16 @@ def steel_works(works: list[WorkItem], params: ProjectParams,
     out, warnings = [], []
     rebar = rebar or []
     scheduled = {r.element_code for r in rebar if r.element_code}
-    out += [w for w in schedule_works(rebar) if w.steel_element not in params.steel_schedule_t]
+    schedules = schedule_works(rebar)
+    out += [w for w in schedules if w.steel_element not in params.steel_schedule_t]
     ratio_used = []
     for code, label in STEEL_ELEMENTS.items():
         if code in params.steel_schedule_t:
+            inputs = [w for w in schedules if w.steel_element == code]
             out.append(_work("COT_THEP", params.steel_schedule_t[code], element=f"thép {label}", steel_element=code,
                              source="manual", basis="bang_thong_ke",
+                             missing=[m for w in inputs for m in w.missing],
+                             evidence=[e for w in inputs for e in w.evidence],
                              formula=f"{_fmt(params.steel_schedule_t[code])} tấn theo bảng thống kê thép"))
             continue
         if code in scheduled:
@@ -64,7 +73,8 @@ def steel_works(works: list[WorkItem], params: ProjectParams,
             known = [w.quantity for w in items if w.quantity is not None]
             m3 = sum(known)
             missing = ([] if kg is not None else [f"hàm lượng thép {label} (kg/m³)", f"bảng thống kê thép {label}"]) + \
-                      ([f"khối lượng bê tông {label}"] if len(known) < len(items) else [])
+                      ([f"khối lượng bê tông {label}"] if len(known) < len(items) else []) + \
+                      [m for w in items for m in w.missing]
             out.append(_work("COT_THEP", m3 * kg / 1000 if kg is not None and known else None, plan=plan,
                              element=f"thép {label}", steel_element=code, missing=missing,
                              basis="ham_luong" if kg is not None else None,

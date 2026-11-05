@@ -1,0 +1,29 @@
+{
+  "status": "source_verified_not_deployed",
+  "backend_contract": "OPENING_MISSING_BACKEND.md",
+  "ports": {
+    "3002": {
+      "base": "XLGfOY4MIuGt8ZUp-wppq",
+      "checks": [
+        "before.log",
+        "partial.log",
+        "confirm.log",
+        "consumers.log",
+        "types.json"
+      ],
+      "patch_sha256": "c4292cf90323cb0999c6c00029590f111d98f1d218bc7e5f22eba3605e1e3a5f"
+    },
+    "3001": {
+      "base": "LKTDjEOitNSiJBETPtyW8",
+      "checks": [
+        "before.log",
+        "partial.log",
+        "confirm.log",
+        "consumers.log",
+        "types.json"
+      ],
+      "patch_sha256": "016c1787ef029fde20e84c266b96db6da263b225b0c6e815b236af802f05cafc"
+    }
+  },
+  "manifest_sha256": "877ffe52f27adab48e2d61244edee16dfb9680e014a954e9ee302458dbf20b50"
+}

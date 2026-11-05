@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_rebar.py",
+    "-k",
+    "mixed",
+    "--runxfail",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=reports/n01/temp_mixed"
+  ],
+  "exit_code": 0,
+  "seconds": 7.598041772842407,
+  "database_env_removed": true
+}

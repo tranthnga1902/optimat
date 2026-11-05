@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-04",
+  "dataset_version": "2026-11-04.complete2",
+  "status": "passed",
+  "pytest": {
+    "files": [
+      "tests/test_quantity_knowledge.py",
+      "tests/test_quantity_completion.py"
+    ],
+    "passed": 33,
+    "duration_seconds": 41.64
+  },
+  "source_evidence": {
+    "matched": 3271,
+    "checked": 3271,
+    "source_hashes_checked": 30
+  },
+  "schema_validation": {
+    "status": "passed",
+    "checksums": "passed",
+    "validated_records": {
+      "norms.jsonl": 59050,
+      "tables.jsonl": 2898,
+      "page_text.jsonl": 2603,
+      "measurement_rules.json": 38,
+      "reference_tables.jsonl": 558,
+      "basis_evidence.json": 3271
+    },
+    "duration_seconds": 44.6,
+    "scope": "Kiểu dữ liệu, khóa, mã, số, ngày và SHA-256; không thay thế duyệt chuyên môn."
+  },
+  "completion": {
+    "initial_unparsed_tables": 558,
+    "typed_tables": 558,
+    "table_kinds": {
+      "classification": 41,
+      "material_property": 42,
+      "document_index": 48,
+      "resource_matrix": 331,
+      "labor_matrix": 19,
+      "coefficient_lookup": 23,
+      "layout_fragment": 18,
+      "narrative_note": 3,
+      "cost_rate": 33
+    },
+    "initial_missing_basis": 3271,
+    "basis_added_with_evidence": 3271,
+    "initial_rows_still_missing_basis": 0,
+    "auxiliary_resource_records": 7047,
+    "auxiliary_records_missing_basis": 0
+  },
+  "production_ready": false,
+  "database_written": false,
+  "existing_csv_coefficients_changed": false,
+  "visual_sample_pages": [
+    {
+      "source_id": "TT38_2026_8",
+      "pdf_page": 33
+    },
+    {
+      "source_id": "TT38_2026_6",
+      "pdf_page": 4
+    },
+    {
+      "source_id": "TT38_2026_3",
+      "pdf_page": 198
+    },
+    {
+      "source_id": "TT38_2026_3",
+      "pdf_page": 521
+    },
+    {
+      "source_id": "TT38_2026_3",
+      "pdf_page": 688
+    },
+    {
+      "source_id": "TT38_2026_9",
+      "pdf_page": 11
+    }
+  ],
+  "limitation": "Đã đối chiếu câu trích, cấu trúc và mẫu số liệu; chưa xác nhận thủ công từng hệ số."
+}

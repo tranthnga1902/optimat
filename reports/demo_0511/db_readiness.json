@@ -1,0 +1,71 @@
+{
+  "counts": {
+    "materials": 98,
+    "wall_systems": 22,
+    "suppliers": 2866,
+    "supplier_materials": 13,
+    "vehicles": 4,
+    "labor_rates": 1,
+    "price_records": 59,
+    "users": 1
+  },
+  "data_kinds": {
+    "materials": {
+      "ACTUAL": 98
+    },
+    "wall_systems": {
+      "ACTUAL": 22
+    },
+    "suppliers": {
+      "SAMPLE": 3,
+      "ACTUAL": 2863
+    },
+    "supplier_materials": {
+      "SAMPLE": 13
+    },
+    "vehicles": {
+      "SAMPLE": 4
+    },
+    "labor_rates": {
+      "SAMPLE": 1
+    },
+    "price_records": {
+      "ACTUAL": 59
+    }
+  },
+  "database": "optimat",
+  "user_roles": [
+    [
+      "user",
+      false,
+      1
+    ]
+  ],
+  "supplier_price_materials": [
+    [
+      "AAC01",
+      "SAMPLE",
+      3
+    ],
+    [
+      "AAC03",
+      "SAMPLE",
+      3
+    ],
+    [
+      "GK02",
+      "SAMPLE",
+      2
+    ],
+    [
+      "GK03",
+      "SAMPLE",
+      2
+    ],
+    [
+      "GN01",
+      "SAMPLE",
+      3
+    ]
+  ]
+}

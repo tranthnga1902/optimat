@@ -19,7 +19,8 @@ const DEALER_FIELDS: [string, FieldDef[]][] = [
   ["Địa chỉ", [["address", "Địa chỉ"], ["ward", "Phường, xã"], ["district", "Quận, huyện"], ["province", "Tỉnh"], ["lat", "Vĩ độ", "num"], ["lon", "Kinh độ", "num"], ["maps_url", "Link bản đồ"]]],
   ["Kinh doanh", [["dealer_type", "Loại (nhà máy, cấp 1, cấp 2…)"], ["brands", "Hãng phân phối (;)"], ["opening_hours", "Giờ mở cửa"], ["lead_time_days", "Thời gian cung ứng (ngày)", "num"],
     ["delivers", "Giao hàng", "bool"], ["delivery_radius_km", "Bán kính giao (km)", "num"], ["max_truck_ton", "Xe tối đa (tấn)", "num"], ["min_order", "Đơn tối thiểu"],
-    ["vat_invoice", "Xuất hóa đơn VAT", "bool"], ["payment", "Thanh toán"], ["price_public", "Công khai giá", "pub"], ["price_page_url", "Trang bảng giá"], ["tax_code", "Mã số thuế"]]],
+    ["vat_invoice", "Xuất hóa đơn VAT", "bool"], ["payment", "Thanh toán"], ["price_public", "Công khai giá", "pub"], ["price_page_url", "Trang bảng giá"], ["tax_code", "Mã số thuế"],
+    ["linked_supplier_id", "Cùng công ty với đại lý (mã, cho công bố giá CBG-…)"]]],
   ["Thu thập", [["verified", "Đã gọi xác minh", "bool"], ["collected_at", "Ngày thu thập", "date"], ["collected_by", "Người thu thập"], ["source", "Nguồn"], ["data_kind", "Loại dữ liệu", "kind"]]],
 ];
 const OPTS: Record<string, [string, string][]> = {

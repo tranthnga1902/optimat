@@ -1,0 +1,326 @@
+--- a/src/optimat/rough/boq.py
++++ b/src/optimat/rough/boq.py
+@@ -5,10 +5,12 @@
+ from __future__ import annotations
+ 
+ from io import BytesIO
++from decimal import Decimal
++import json
+ 
+ import pandas as pd
+ from openpyxl import Workbook
+-from openpyxl.styles import Font
++from openpyxl.styles import Alignment, Font, PatternFill
+ 
+ from .. import config
+ from .models import RAW_CLASSES, STAGES, STATUS_LABEL, STEEL_ELEMENTS, WORKS
+@@ -49,6 +51,134 @@
+     ws.freeze_panes = "A2"
+     for i, h in enumerate(header, start=1):
+         ws.column_dimensions[ws.cell(1, i).column_letter].width = max(10, min(60, len(h) + 4))
++
++
++def _detail_number(raw):
++    """Bản số Excel bảo thủ; raw string luôn được lưu riêng để truy vết."""
++    if raw is None:
++        return None
++    value = Decimal(str(raw))
++    if not value.is_finite():
++        raise ValueError("Lượng chi tiết phải hữu hạn.")
++    digits = list(value.as_tuple().digits)
++    while len(digits) > 1 and digits[-1] == 0:
++        digits.pop()
++    magnitude = value.copy_abs()
++    if len(digits) > 15 or (magnitude and not Decimal("1e-307") <= magnitude <= Decimal("1e307")):
++        return None
++    return float(value)
++
++
++def _detail_append(ws, values):
++    line = ws.max_row + 1
++    for column, value in enumerate(values, 1):
++        cell = ws.cell(line, column, value)
++        if isinstance(value, str):
++            cell.data_type = "s"  # Không cho nhãn/nguồn/expression trở thành công thức Excel.
++        elif isinstance(value, (int, float)):
++            cell.number_format = "0.###############;-0.###############;0"
++        cell.font = Font(name="Arial", size=10)
++        cell.alignment = Alignment(vertical="center", wrap_text=True)
++    ws.row_dimensions[line].height = 48
++    return line
++
++
++def _detail_sheet(wb, title, headers, widths, result):
++    _sheet(wb, title, headers, [])
++    ws = wb[title]
++    ws.insert_rows(1, 4)
++    ws.sheet_view.showGridLines = False
++    for row, text in ((2, title.upper()), (3, f"Mã kết quả lưu: {result.takeoff_id}" if getattr(result, "takeoff_id", None) is not None
++                       else "Chưa có mã kết quả lưu; không tự xác nhận trạng thái duyệt."),
++                      (4, "Raw chỉ theo từng dòng công tác; backend chưa cung cấp tổng raw theo nhóm công tác.")):
++        cell = ws.cell(row, 1, text)
++        cell.data_type = "s"
++        cell.font = Font(name="Arial", size=14 if row == 2 else 10, bold=row == 2)
++        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=len(headers))
++    for cell, width in zip(ws[5], widths):
++        cell.font = Font(name="Arial", size=10, bold=True, color="FFFFFF")
++        cell.fill = PatternFill("solid", fgColor="263B54")
++        cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
++        ws.column_dimensions[cell.column_letter].width = width
++    ws.row_dimensions[5].height = 32
++    ws.freeze_panes = "C6"
++    ws.page_setup.orientation = "landscape"
++    ws.page_setup.paperSize = ws.PAPERSIZE_A3
++    ws.sheet_properties.pageSetUpPr.fitToPage = True
++    ws.page_setup.fitToWidth, ws.page_setup.fitToHeight = 1, 0
++    ws.print_title_rows = "1:5"
++    return ws
++
++
++def _detail_link(cell, target, label):
++    cell.value, cell.data_type = label, "s"
++    cell.hyperlink = "#" + target
++    cell.font = Font(name="Arial", size=10, color="1256A0", underline="single")
++
++
++def _quantity_detail_sheets(wb, result):
++    """Consume đúng detail của result truyền vào, không tính lại lượng hoặc gộp raw nhóm."""
++    main = _detail_sheet(wb, "Tiên lượng chi tiết", ["STT", "Công tác / vị trí", "Số cấu kiện", "Dài (m)", "Rộng (m)",
++        "Cao (m)", "Hệ số có nguồn", "Cộng / trừ", "Khối lượng", "Đơn vị", "Thuyết minh", "Căn cứ"],
++        [6, 34, 10, 12, 12, 12, 18, 12, 16, 10, 40, 18], result)
++    trace = _detail_sheet(wb, "Truy vết chi tiết", ["Dòng tiên lượng", "Công tác trong kết quả", "Khóa dòng", "Nhóm", "Vai trò", "Dấu",
++        "Đơn vị", "Lượng tuyệt đối gốc (text)", "Đóng góp có dấu (text)", "Giới hạn số Excel", "Kích thước gốc",
++        "Hệ số và nguồn", "Quy đổi", "Phương pháp", "Diễn giải (text)", "Nguồn", "Lý do thiếu"],
++        [19, 22, 28, 22, 16, 8, 10, 28, 28, 30, 55, 40, 35, 22, 55, 65, 40], result)
++    compare = _detail_sheet(wb, "Đối soát chi tiết", ["Công tác trong kết quả", "Công tác / cấu tạo", "Tầng / vị trí", "Đơn vị",
++        "Chỉ tiêu", "Giá trị số", "Giá trị gốc (text)", "Mức chi tiết / phạm vi", "Căn cứ / lý do thiếu"],
++        [22, 40, 25, 10, 28, 22, 38, 28, 65], result)
++    for ordinal, work in enumerate(result.works):
++        key = f"work:{ordinal}"  # Chỉ ổn định trong chính result snapshot, không dùng qua lần tính lại.
++        name = " · ".join(filter(None, [work.name, work.code, work.variant]))
++        position = " · ".join(filter(None, [STAGES.get(work.stage or "", work.stage), work.plan or COMMON, work.element]))
++        heading = _detail_append(main, [ordinal + 1, name, None, None, None, None, None, None, None, work.unit, position])
++        main.merge_cells(start_row=heading, start_column=2, end_row=heading, end_column=8)
++        main.row_dimensions[heading].height = 48
++        detail = getattr(work, "quantity_detail", None)
++        base = [key, name, position, work.unit]
++        if detail is None:
++            _detail_append(main, [None, "Chưa có diễn giải chi tiết"])
++            _detail_append(compare, base + ["Lượng legacy", work.quantity, None if work.quantity is None else str(work.quantity),
++                "Chưa có diễn giải chi tiết", "; ".join(work.missing + work.evidence)])
++            continue
++        group = object()
++        for index, row in enumerate(detail.rows, 1):
++            if row.group != group:
++                group = row.group
++                line = _detail_append(main, [None, group or "Chi tiết"])
++                for cell in main[line]:
++                    cell.fill = PatternFill("solid", fgColor="E8EDF3")
++            raw = row.raw_quantity
++            amount = None if raw is None or row.role == "reference" else format(
++                Decimal(raw).copy_negate() if row.sign == -1 else Decimal(raw), "f")
++            dimensions = row.dimensions
++            dimensions_json = dimensions.model_dump(mode="json") if dimensions is not None else None
++            factors = "; ".join(f"{f.name}={f.value} ({f.source})" for f in row.factors)
++            precision = "Xem raw text; vượt precision Excel" if raw is not None and _detail_number(raw) is None else ""
++            repetition = f"Lặp {dimensions.repetitions} lần; đã có trong lượng" if dimensions and dimensions.repetitions != 1 else ""
++            note = "; ".join(filter(None, [row.expression, repetition, "; ".join(row.missing), precision]))
++            d = lambda field: _detail_number(getattr(dimensions, field)) if dimensions is not None else None
++            line = _detail_append(main, [index, row.label, d("count"), d("length_m"), d("width_m"), d("height_m"), factors or None,
++                "Tham khảo" if row.role == "reference" else "−" if row.sign == -1 else "+", _detail_number(amount), row.unit, note])
++            main.row_dimensions[line].height = 60
++            traced = _detail_append(trace, [None, key, row.row_id, row.group, row.role, row.sign, row.unit, raw, amount, precision,
++                json.dumps(dimensions_json, ensure_ascii=False), json.dumps([f.model_dump(mode="json") for f in row.factors], ensure_ascii=False),
++                json.dumps(row.conversion.model_dump(mode="json") if row.conversion else None, ensure_ascii=False), row.method,
++                row.expression, "\n".join(row.sources), "; ".join(row.missing)])
++            trace.row_dimensions[traced].height = 72
++            _detail_link(main.cell(line, 12), f"'Truy vết chi tiết'!A{traced}", f"Nguồn {ordinal + 1}.{index}")
++            _detail_link(trace.cell(traced, 1), f"'Tiên lượng chi tiết'!B{line}", f"Tiên lượng dòng {line}")
++        for label, value in (("Phần khối lượng đã biết", detail.known_part_raw),
++                             ("Tổng toàn phạm vi" if detail.complete else "Tổng toàn phạm vi (chưa đủ)", detail.total_raw)):
++            precision = "Xem Đối soát chi tiết; vượt precision Excel" if value is not None and _detail_number(value) is None else ""
++            _detail_append(main, [None, label, None, None, None, None, None, None, _detail_number(value), work.unit, precision])
++        scope = f"{detail.detail_level}; " + ("đủ toàn phạm vi" if detail.complete else "chưa đủ toàn phạm vi")
++        for label, value in (("Phần biết raw", detail.known_part_raw), ("Tổng raw toàn phạm vi", detail.total_raw),
++                             ("Lượng legacy", detail.legacy_quantity), ("Chênh raw − legacy", detail.legacy_delta)):
++            _detail_append(compare, base + [label, _detail_number(value), value, scope, "; ".join(work.missing + work.evidence)])
++    for ws in (main, trace, compare):
++        ws.print_area = ws.dimensions
+ 
+ 
+ def boq_workbook(result, req=None) -> Workbook:
+@@ -89,6 +219,7 @@
+     _sheet(wb, "Cảnh báo", ["#", "Cảnh báo"], [[i, w] for i, w in enumerate(result.warnings, start=1)])
+     m = support_matrix()
+     _sheet(wb, "Phạm vi hỗ trợ", list(m.columns), m.values.tolist())
++    _quantity_detail_sheets(wb, result)
+     return wb
+ 
+ 
+--- /dev/null
++++ b/tests/test_rough_boq_detail.py
+@@ -0,0 +1,164 @@
++"""Consumer Excel detail: pure DTO/serialization, không HTTP/DB/CAD/producer."""
++from io import BytesIO
++
++import pandas as pd
++import pytest
++from openpyxl import load_workbook
++
++from optimat.rough import boq
++from optimat.rough.models import DetailFactor, QuantityDetailRow, WorkDimensions, WorkItem
++from optimat.rough.quantity_details import summarize
++from optimat.rough.takeoff import RoughResult
++
++LEGACY_SHEETS = ["Tổng hợp", "Theo tầng", "Theo cấu kiện", "Cốt thép", "Vật liệu", "Theo nhóm", "Theo loại", "Cảnh báo", "Phạm vi hỗ trợ"]
++DETAIL_SHEETS = ["Tiên lượng chi tiết", "Truy vết chi tiết", "Đối soát chi tiết"]
++
++
++@pytest.fixture(autouse=True)
++def pure_support(monkeypatch):
++    monkeypatch.setattr(boq, "support_matrix", lambda: pd.DataFrame({"Công tác": ["SYNTHETIC"]}))
++
++
++def row(**patch):
++    return QuantityDetailRow(**(dict(row_id="r1", label="Cấu kiện thử", group="Nhóm thử", unit="m³",
++        raw_quantity="1", method="source_quantity", sources=["Nguồn SYNTHETIC"]) | patch))
++
++
++def work(rows=None, *, legacy=1.0, scope=True, **patch):
++    detail = summarize(rows if rows is not None else [row()], "m³", legacy, scope_complete=scope)
++    return WorkItem(code="BE_TONG_LOT", name="Công tác thử", unit="m³", quantity=legacy,
++                    quantity_detail=detail, status="B", **patch)
++
++
++def reopen(works, **patch):
++    result = RoughResult(works=works, **patch)
++    before = result.model_dump_json()
++    wb = load_workbook(BytesIO(boq.boq_bytes(result)), data_only=False)
++    assert result.model_dump_json() == before
++    return wb
++
++
++def records(ws):
++    headers = [c.value for c in ws[5]]
++    return [dict(zip(headers, r)) for r in ws.iter_rows(min_row=6, values_only=True)]
++
++
++def test_detail_roundtrip_sources_and_legacy_separate():
++    dimensions = WorkDimensions(label="Cấu kiện", source="Nguồn kích thước", count=2, repetitions=3,
++                               length_m=.7, width_m=1.5, height_m=.1)
++    factors = [DetailFactor(name="Hệ số thử", value="2", unit="1", meaning="Đã có trong lượng", source="Ô nguồn")]
++    w = work([row(raw_quantity="0.1259", dimensions=dimensions, factors=factors)], legacy=.126,
++             plan="Tầng 1", variant="Cấu tạo riêng", stage="mong")
++    wb = reopen([w], takeoff_id=42)
++    assert wb.sheetnames == LEGACY_SHEETS + DETAIL_SHEETS
++    assert wb["Tiên lượng chi tiết"].max_column == 12
++    line = next(r for r in records(wb["Tiên lượng chi tiết"]) if r["Công tác / vị trí"] == "Cấu kiện thử")
++    assert line["Khối lượng"] == .1259  # Không nhân count/repetitions/factor lần nữa.
++    assert line["Số cấu kiện"] == 2 and line["Dài (m)"] == .7
++    assert "Lặp 3" in line["Thuyết minh"] and "Ô nguồn" in line["Hệ số có nguồn"]
++    traced = records(wb["Truy vết chi tiết"])[0]
++    assert traced["Lượng tuyệt đối gốc (text)"] == "0.1259"
++    assert traced["Nguồn"] == "Nguồn SYNTHETIC" and traced["Công tác trong kết quả"] == "work:0"
++    assert "Nguồn kích thước" in traced["Kích thước gốc"]
++    comparison = {r["Chỉ tiêu"]: r for r in records(wb["Đối soát chi tiết"])}
++    assert comparison["Lượng legacy"]["Giá trị gốc (text)"] == "0.126"
++    assert comparison["Chênh raw − legacy"]["Giá trị gốc (text)"] == "-0.0001"
++    for name in DETAIL_SHEETS:
++        assert wb[name]["A3"].value == "Mã kết quả lưu: 42"
++    assert any(c.hyperlink and "Truy vết chi tiết" in c.hyperlink.target for row_cells in wb[DETAIL_SHEETS[0]] for c in row_cells)
++    assert any(c.hyperlink and "Tiên lượng chi tiết" in c.hyperlink.target for row_cells in wb[DETAIL_SHEETS[1]] for c in row_cells)
++
++
++def test_old_payload_no_detail_preserves_all_legacy_sheets(monkeypatch):
++    result = RoughResult.model_validate({"works": [{"code": "DAM", "name": "Dầm cũ", "unit": "m³", "quantity": 0,
++        "formula": "Giữ diễn giải cũ", "evidence": ["Nguồn cũ"], "dimensions": [
++            {"label": "Không tạo dòng giả", "source": "Kích thước cũ", "count": 99}]}]})
++    actual = boq.boq_workbook(result)
++    monkeypatch.setattr(boq, "_quantity_detail_sheets", lambda *args: None)
++    legacy = boq.boq_workbook(result)
++    assert legacy.sheetnames == LEGACY_SHEETS
++    for name in LEGACY_SHEETS:
++        assert list(actual[name].values) == list(legacy[name].values)
++        assert actual[name].freeze_panes == legacy[name].freeze_panes
++        assert actual[name]["A1"].font.bold == legacy[name]["A1"].font.bold
++    main_values = [r["Công tác / vị trí"] for r in records(actual[DETAIL_SHEETS[0]])]
++    assert "Chưa có diễn giải chi tiết" in main_values and "Không tạo dòng giả" not in main_values
++    assert actual[DETAIL_SHEETS[1]].max_row == 5
++    legacy_row = records(actual[DETAIL_SHEETS[2]])[0]
++    assert legacy_row["Giá trị số"] == 0 and legacy_row["Giá trị gốc (text)"] == "0.0"
++
++
++def test_partial_known_negative_has_no_whole_scope_total():
++    w = work([row(raw_quantity="2.5", sign=-1), row(row_id="unknown", raw_quantity=None, missing=["Thiếu chiều cao"])],
++             legacy=0, scope=False)
++    w = WorkItem.model_validate(w.model_dump() | {"status": "D", "missing": ["Phạm vi chưa đủ"]})
++    wb = reopen([w])
++    main = records(wb[DETAIL_SHEETS[0]])
++    assert next(r for r in main if r["Công tác / vị trí"] == "Phần khối lượng đã biết")["Khối lượng"] == -2.5
++    assert next(r for r in main if r["Công tác / vị trí"] == "Tổng toàn phạm vi (chưa đủ)")["Khối lượng"] is None
++    assert any("Thiếu chiều cao" in (r["Thuyết minh"] or "") for r in main)
++    compare = {r["Chỉ tiêu"]: r for r in records(wb[DETAIL_SHEETS[2]])}
++    assert compare["Chênh raw − legacy"]["Giá trị gốc (text)"] == "-2.5"
++    assert compare["Tổng raw toàn phạm vi"]["Giá trị gốc (text)"] is None
++
++
++def test_reference_union_and_complete_negative_not_clamped():
++    w = work([row(raw_quantity="3", sign=-1), row(row_id="union", raw_quantity="0.5", method="union"),
++              row(row_id="reference", raw_quantity="999", role="reference")], legacy=0)
++    wb = reopen([w])
++    trace = records(wb[DETAIL_SHEETS[1]])
++    assert trace[2]["Lượng tuyệt đối gốc (text)"] == "999"
++    assert trace[2]["Đóng góp có dấu (text)"] is None
++    main = records(wb[DETAIL_SHEETS[0]])
++    assert next(r for r in main if r["Cộng / trừ"] == "Tham khảo")["Khối lượng"] is None
++    assert next(r for r in main if r["Công tác / vị trí"] == "Tổng toàn phạm vi")["Khối lượng"] == -2.5
++
++
++@pytest.mark.parametrize("raw,scope,missing,expected", [("0", True, [], 0), (None, False, ["Chưa đo"], None)])
++def test_zero_and_unknown_remain_distinct(raw, scope, missing, expected):
++    wb = reopen([work([row(raw_quantity=raw, missing=missing)], scope=scope)])
++    comparison = {r["Chỉ tiêu"]: r for r in records(wb[DETAIL_SHEETS[2]])}
++    assert comparison["Phần biết raw"]["Giá trị số"] == expected
++    assert comparison["Tổng raw toàn phạm vi"]["Giá trị số"] == expected
++    assert comparison["Phần biết raw"]["Giá trị gốc (text)"] == raw
++
++
++@pytest.mark.parametrize("raw", ["1234567890123456", "0.123456789012345678901234567890123456", "1e308", "1e-308"])
++def test_precision_retains_exact_raw_text(raw):
++    wb = reopen([work([row(raw_quantity=raw)])])
++    main = next(r for r in records(wb[DETAIL_SHEETS[0]]) if r["Công tác / vị trí"] == "Cấu kiện thử")
++    assert main["Khối lượng"] is None and "precision" in main["Thuyết minh"]
++    trace = records(wb[DETAIL_SHEETS[1]])[0]
++    assert trace["Lượng tuyệt đối gốc (text)"] == row(raw_quantity=raw).raw_quantity
++    assert trace["Đóng góp có dấu (text)"] == row(raw_quantity=raw).raw_quantity
++    assert wb[DETAIL_SHEETS[1]]["H6"].data_type == "s"
++
++
++@pytest.mark.parametrize("text", ["=1+1", "+SUM(1,2)", "-1+2", "@SUM(1,2)"])
++def test_labels_sources_and_expression_are_literal_text(text):
++    w = work([row(label=text, group=text, sources=[text], expression=text)], variant=text)
++    w = WorkItem.model_validate(w.model_dump() | {"name": text})
++    wb = reopen([w])
++    trace = records(wb[DETAIL_SHEETS[1]])[0]
++    assert trace["Nguồn"] == text and trace["Diễn giải (text)"] == text
++    assert wb[DETAIL_SHEETS[1]]["P6"].data_type == "s"
++    assert not [c.coordinate for name in DETAIL_SHEETS for row_cells in wb[name] for c in row_cells if c.data_type == "f"]
++
++
++def test_nine_work_items_do_not_invent_raw_group_total():
++    wb = reopen([work([row(raw_quantity="0.1259")], legacy=.126, element=f"Cấu kiện {i}") for i in range(9)])
++    comparison = records(wb[DETAIL_SHEETS[2]])
++    assert len(comparison) == 9 * 4
++    assert len({r["Công tác trong kết quả"] for r in comparison}) == 9
++    assert sum(r["Chỉ tiêu"] == "Tổng raw toàn phạm vi" for r in comparison) == 9
++    assert "chưa cung cấp tổng raw theo nhóm" in wb[DETAIL_SHEETS[0]]["A4"].value
++    assert len(records(wb[DETAIL_SHEETS[1]])) == 9
++
++
++def test_empty_result_and_optimizer_payload_unchanged():
++    result = RoughResult(works=[])
++    before = boq.export_for_optimizer(result)
++    wb = load_workbook(BytesIO(boq.boq_bytes(result)))
++    assert wb.sheetnames == LEGACY_SHEETS + DETAIL_SHEETS
++    assert wb[DETAIL_SHEETS[1]].max_row == 5
++    assert boq.export_for_optimizer(result) == before

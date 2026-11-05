@@ -1,0 +1,20 @@
+{
+  "pid": 40348,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/../reports/g8_detail/staging/test_detail_contract.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\g8_detail\\attempt2_locked\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T16:26:49.591982+00:00",
+  "no_db": true,
+  "no_dotenv": true,
+  "metadata_catalog": "Catalog.from_csv(None)",
+  "test_overlay": "tests/conftest.py có thể dùng data/sample/catalog cho các hồi quy cũ"
+}

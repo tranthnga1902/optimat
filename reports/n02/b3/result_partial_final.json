@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_partial.py",
+    "-q",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=reports/n02/b3/temp_partial_final"
+  ],
+  "exit_code": 0,
+  "seconds": 11.816694736480713,
+  "database_env_removed": true,
+  "scope": "final pure partial only after BOQ label change; no API/TestClient/CAD/DB/full"
+}

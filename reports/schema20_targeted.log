@@ -1,0 +1,12 @@
+.............F.............................                              [100%]
+================================== FAILURES ===================================
+______________________ test_takeoff_reads_project_params ______________________
+tests\test_db.py:320: in test_takeoff_reads_project_params
+    assert plain["openings"] == [] and any("chưa có kích thước" in w for w in plain["warnings"])
+E   AssertionError: assert ([{'name': 'D5...': None, ...}] == []
+E     
+E     Left contains one more item: {'name': 'D5', 'x': 3000.0, 'y': 110.0, 'width_mm': None, ...}
+E     Use -v to get more diff)
+=========================== short test summary info ===========================
+FAILED tests/test_db.py::test_takeoff_reads_project_params - AssertionError: ...
+1 failed, 42 passed in 31.18s

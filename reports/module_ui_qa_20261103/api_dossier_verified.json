@@ -1,0 +1,30 @@
+{
+  "pid": 31112,
+  "wrapper": 38960,
+  "started": "2026-11-03T23:58:07.8209487+07:00",
+  "checkout": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai",
+  "routes": [
+    "/api/projects",
+    "/api/projects/{project_id}",
+    "/api/projects/{project_id}/files",
+    "/api/projects/{project_id}/files/{file_id}/revisions/{revision_id}/original",
+    "/api/projects/{project_id}/files/{file_id}/revisions/{revision_id}/preview",
+    "/api/projects/{project_id}/profile",
+    "/api/projects/{project_id}/analysis"
+  ],
+  "health": {
+    "status": "ok",
+    "price_model_loaded": true,
+    "dwg_converter_available": true,
+    "catalog_source": "postgresql"
+  },
+  "hashes": {
+    "src/optimat/api/project_analysis.py": "C0C758C59E6AA4E9C932D7C9C2D1A7AFFE5103673557A2AD73313CFBCDFC8930",
+    "src/optimat/api/main.py": "7001E9508EB62C53F10B75F1EF5D1CABB5CB6BF4F9C121B74EB2A1A748BB9BB8",
+    "tests/test_project_analysis.py": "46E00AC466FC90CC523AE3F261B5F8EE7079512431015F2BC34C04FE8A0B7911",
+    "src/optimat/db/project_documents.py": "BA8FD4DA1DA234645E35146A3A42E8BB8A5BA30F29B1DB3B49DA3371F7966AB0",
+    "src/optimat/api/project_files.py": "D4D20E88134918463B15F873652C9DF7228B46ADDF33679C5FE5BAE6BCF93FFD",
+    "src/optimat/rough/areas.py": "7F12940FC150444E00B3A65C2C0D4140D41442D1DEB03F436DFEE923D58646C4",
+    "src/optimat/rough/quantity_details.py": "2B026826413C388C70E5EE4645CAD7B9A18DA29D83EBC88F8D65CD9936104AF2"
+  }
+}

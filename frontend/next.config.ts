@@ -4,6 +4,7 @@ import type { NextConfig } from "next";
 const API = process.env.OPTIMAT_API ?? "http://127.0.0.1:8000";
 
 const nextConfig: NextConfig = {
+  distDir: process.env.OPTIMAT_NEXT_DIST_DIR || ".next",
   cacheComponents: true,
   devIndicators: { position: "bottom-right" }, // nút N của chế độ dev không che cuối menu bên trái
   partialPrefetching: true,

@@ -1,0 +1,5 @@
+{
+  "src/optimat/api/main.py": "f25d124f4a2366a3678821fc7c8da5898ad0f51d29f841b12351cf0dfad1af24",
+  "src/optimat/rough/takeoff.py": "03ddde818229db9b4a1abc8174890a289b53bb17884eb94baed88cd1b7ffd56b",
+  "tests/test_rebar_scope_api.py": "86c395e041bfc9cfdfa274f2de24e3d95d3cbfb9b51bbc888b9085f9089c3507"
+}

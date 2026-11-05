@@ -1,0 +1,11 @@
+{
+  "target": "http://127.0.0.1:8001/api/takeoff/structural",
+  "file": "data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf",
+  "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "bytes": 15295031,
+  "utc": "2026-11-04T13:52:32.826087+00:00",
+  "response_status": null,
+  "outcome": "connection_failed",
+  "error_type": "PermissionError",
+  "error": "[WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions"
+}

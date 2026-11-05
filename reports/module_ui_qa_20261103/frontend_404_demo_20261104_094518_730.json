@@ -1,0 +1,57 @@
+{
+  "at": "2026-11-04T09:45:18.7313032+07:00",
+  "buildId": "H7eQgDZ8u5vo-N2SW_pLT",
+  "port": 3001,
+  "host": "127.0.0.1",
+  "cwd": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\frontend",
+  "status": "demo_verified",
+  "oldFrontendPid": [
+    27012
+  ],
+  "apiPidBefore": [
+    10060
+  ],
+  "pid": 29096,
+  "started": "2026-11-04T09:45:18.7820335+07:00",
+  "stdout": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\module_ui_qa_20261103\\frontend_404_demo_20261104_094518_730.log",
+  "stderr": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\module_ui_qa_20261103\\frontend_404_demo_20261104_094518_730.err.log",
+  "pages": {
+    "/": {
+      "status": 200,
+      "sha256": "92D8A192452CAF6442556FFD5D0EA99461BD5039365D2934FDFF2A080CB09AFC",
+      "title": "OptiMat AI"
+    },
+    "/dang-nhap": {
+      "status": 200,
+      "sha256": "4887D9620154934AAE546DCC3BF6B0DF5F4871A6524BBF5DFB9E48295050BD06",
+      "title": "Đăng nhập · OptiMat AI"
+    },
+    "/du-an-cua-toi?ho-so=1": {
+      "status": 200,
+      "sha256": "7A3BFAF119A35FAE81067A66E8DF89FADE8F01F43120556E74F128237F09DA4C",
+      "title": "Dự án của tôi · OptiMat AI"
+    }
+  },
+  "assets": {
+    "/_next/static/chunks/0cz1d0mv5g_q7.js": "0973C1D64C88ADC8E3C950410CB58B288F72118D5965B78049438DEB8F2F9683",
+    "/_next/static/chunks/0s_0smniij33k.css": "1C7C221FE351A68CEEFF46C44B690F91DD2314C447320E5A794CE3FF25CD9A60",
+    "/_next/static/chunks/0ssqr03lk-c8r.js": "7365416994155485E238654E306F4BA6202381927F044D983F8F107B38853F24",
+    "/_next/static/chunks/1_txwh4m4zbbx.js": "AF8E61C66EF89C646E39DD374AC3C53F8D7C21D7170DF29E4FCB08A5FFD885CB",
+    "/_next/static/chunks/1n9njb_u1i-7w.css": "325DD2B10B7824578DFCB0EA53A9C5B8C83A12147028CFFC4CB557A2A3FF269F",
+    "/_next/static/chunks/1tq6ppe__m8m-.js": "3AC471B1370C62C670C29BA66167A8F9EB56132716933774276A9EE188421F1F",
+    "/_next/static/chunks/1vo0wohvofgd7.js": "E1AE6D6B14991A7802E3BCAF5D030547BFA3FEE71199DEE34B9896B3B8D1ADB4",
+    "/_next/static/chunks/1x6obpmlu1_c2.js": "7C0BE00BFD43494DCDDC8817168E952D9900555C3E80355686A423EEDD2BAB22",
+    "/_next/static/chunks/21poqdgvjdll4.js": "62E1AE1D25ECACFDA6F04E104359B9A953F83BAA29FB734FC8AD506AA92D80B6",
+    "/_next/static/chunks/2j5x_ukdjbtxo.js": "B493238C7933D3D61F7DB6D46DCB0F4ABACC236994E767FD0732CF49899E463E",
+    "/_next/static/chunks/3_0_uzdtve13n.js": "72AA304FEE280F03CDF55151B2BE05FBC72977FFEF549FFC1466A9848E3866CD",
+    "/_next/static/chunks/3eljhetyxix8q.js": "5EE8C3C8D12E974243C88054718B931E1438FA15266467CE8D313D6E27FE74CB",
+    "/_next/static/chunks/turbopack-3-ry682tkyiqk.js": "8BBB58CBFD4633C1D828C6BC37BC32ABC768A149C01B1DFC4F5131FD81274551"
+  },
+  "proxy": "ok",
+  "apiPidAfter": [
+    10060
+  ],
+  "originalFrontendPidAfter": [
+    27012
+  ]
+}

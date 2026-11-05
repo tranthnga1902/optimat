@@ -1,0 +1,7 @@
+{
+  "src/optimat/rough/rebar.py": "a05915b14795a4a48f4d9f9532945f88bcc43c8a084dacf877d1ef7dcb7d6085",
+  "docs\\review\\data20_05\\rebar_table_fix\\staging\\rebar.base.py": "a05915b14795a4a48f4d9f9532945f88bcc43c8a084dacf877d1ef7dcb7d6085",
+  "docs\\review\\data20_05\\rebar_table_fix\\staging\\rebar.py": "850a70e3211b22de1a8fabc5e9e409d895997c3dd06972cc2160bcfd90ce3667",
+  "docs\\review\\data20_05\\rebar_table_fix\\staging\\rebar_tokenizer.py": "f0eb2c2d865645167648a1820be2eb3571779730d9d40bbcc55ec255f4660ac5",
+  "tests/test_rebar_element_tokens.py": "afd689bb2bfb5c1d4872e29e7a4d961c363fbaccc25237fadcdbb42148a91e7a"
+}

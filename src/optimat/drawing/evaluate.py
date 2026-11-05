@@ -22,7 +22,7 @@ from ..schemas import OpeningDefaults
 from .dxf_reader import read_drawing
 from .encoding import normalize
 from .layer_classifier import LayerClass
-from .material_rules import MATERIAL_HINTS, _best, all_rules, rule_label
+from .material_rules import MATERIAL_HINTS, _best, _best_text, all_rules, rule_label
 from .takeoff import takeoff_from_file
 
 GT_DIR = config.DATA_DIR / "ground_truth"
@@ -101,7 +101,7 @@ def survey(paths: list[str]) -> dict[str, pd.DataFrame]:
     def frame(counter, signal, key=lambda v: v):
         data = []
         for value, n in counter.most_common():
-            rule = _best(rules, signal, key(value))
+            rule = _best_text(rules, key(value)) if signal == "text" else _best(rules, signal, key(value))
             data.append({"gia_tri": value, "so_lan": n, "quy_tac": rule.rule_id if rule else "",
                          "ket_qua": rule_label(rule) if rule else "CHUA CO QUY TAC"})
         return pd.DataFrame(data, columns=["gia_tri", "so_lan", "quy_tac", "ket_qua"])

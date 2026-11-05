@@ -1,0 +1,25 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 553.7,
+  "finished_utc": "2026-11-03T09:54:11.313410+00:00",
+  "summary_lines": [
+    "=========== 401 passed, 15 skipped, 3 xfailed in 549.74s (0:09:09) ============"
+  ],
+  "hash_before_count": 204,
+  "hash_after_count": 204,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "status": "COMPLETED",
+  "collected": 419,
+  "passed": 401,
+  "skipped": 15,
+  "xfailed": 3,
+  "failed": 0,
+  "errors": 0,
+  "pytest_duration_seconds": 549.74,
+  "collector_session_exit_code": 1,
+  "collector_error": "UnicodeEncodeError cp1252 while printing log tail after pytest exit 0 and after result/hash files were saved; no test rerun"
+}

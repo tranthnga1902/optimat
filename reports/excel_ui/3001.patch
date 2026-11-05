@@ -1,0 +1,114 @@
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -57,7 +57,7 @@
+ .tw { overflow-x: auto; }
+ .tw table:has(thead):not(.nonum) { counter-reset: rn; }
+ .tw table:has(thead):not(.nonum) tr::before { display: table-cell; width: 1%; padding: 6px 8px; text-align: right; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; border-bottom: 1px solid var(--rule2); }
+-.tw table:has(thead):not(.nonum) thead tr::before { content: "#"; font-weight: 600; padding: 8px; border-bottom-color: var(--rule); }
++.tw table:has(thead):not(.nonum) thead tr::before { content: "STT"; font-weight: 600; padding: 8px; border-bottom-color: var(--rule); }
+ .tw table:has(thead):not(.nonum) tbody tr::before { counter-increment: rn; content: counter(rn); }
+ .tw table:has(thead):not(.nonum) tbody tr:has(> td[colspan]:only-child)::before { counter-increment: none; content: ""; }
+ .tw table:has(thead):not(.nonum) tfoot tr::before { content: ""; border-bottom: 0; }
+@@ -77,6 +77,21 @@
+ .xl .pill { padding: 0 6px; font-size: 12px; line-height: 17px; }
+ .xl td .btn { min-height: 24px; padding: 0 8px; font-size: 12px; border-radius: 3px; }
+ 
++/* Lưới dữ liệu: phân cột nhẹ, giữ cột số thứ tự vừa nội dung. */
++.tw :is(th,td):not(:last-child), .xl :is(th,td):not(:last-child),
++.tw table:has(thead):not(.nonum) tr::before { border-inline-end: 1px solid var(--rule2); }
++.tw thead { background: var(--xh); }
++.xl .rn, .tw table:has(thead):not(.nonum) tr::before { padding-inline: 5px; white-space: nowrap; }
++
++/* Bảng dữ liệu cuộn trong khung riêng trên màn hình hẹp. */
++.tw:has(> table > thead) { max-width: 100%; min-width: 0; border: 1px solid var(--rule); border-radius: 6px; }
++.tw > table > thead { background: var(--xh); }
++.tw > table > tbody > tr:hover { background-color: color-mix(in srgb, var(--accent) 5%, transparent); }
++.xl .rn { position: sticky; left: 0; z-index: 1; background: var(--card); }
++.xl thead .rn { z-index: 3; background: var(--xh); }
++.xl tbody tr:hover .rn { background: var(--xh); }
++.xl table:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
++
+ /* thành phần dùng chung (components/ui.tsx) */
+ .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+ .pill.ok { background: var(--accent-soft); color: var(--accent-deep); } .pill.warn { background: var(--warn-bg); color: var(--warn-ink); }
+--- a/src/components/Sheet.tsx
++++ b/src/components/Sheet.tsx
+@@ -45,7 +45,17 @@
+   }, [rows, cols, q, sort, keep]);
+ 
+   const at = cur && cur.r < shown.length ? cur : null;
++  const [copyNote, setCopyNote] = useState("");
++  const copyTable = async () => {
++    const cell = (value: string) => /[\t\r\n"]/.test(value) ? '"' + value.replace(/"/g, '""') + '"' : value;
++    const values = [cols.map(c => c.title), ...shown.map(row => cols.map(c => val(row,c)))];
++    try {
++      await navigator.clipboard.writeText(values.map(row => row.map(cell).join("\t")).join("\r\n"));
++      setCopyNote(`Đã sao chép ${shown.length} dòng.`);
++    } catch { setCopyNote("Không thể sao chép. Bạn có thể dùng Tải CSV (Excel)."); }
++  };
+   const onKey = (e: KeyboardEvent) => {
++    if (e.target !== e.currentTarget) return;
+     const d = ({ ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] } as Record<string, number[]>)[e.key];
+     if (!d) return;
+     e.preventDefault();
+@@ -67,16 +77,21 @@
+       <div className="flex flex-wrap items-center gap-2">
+         <input className="field" type="search" placeholder="Lọc mọi cột…" aria-label="Lọc" value={q} onChange={(e) => { setQ(e.target.value); setCur(null); }} />
+         {controls}
+-        <button className="btn ml-auto" type="button" onClick={csv}>Tải CSV (Excel)</button>
++        <button className="btn ml-auto" type="button" disabled={!shown.length} onClick={copyTable}>Sao chép bảng</button>
++        <button className="btn" type="button" onClick={csv}>Tải CSV (Excel)</button>
+       </div>
++      {copyNote && <small role="status">{copyNote}</small>}
+       <div className="overflow-hidden rounded-lg border border-rule bg-card text-[13px]">
+         <div className="xl">
+-          <table tabIndex={0} onKeyDown={onKey}>
++          <table tabIndex={0} onKeyDown={onKey} onCopy={e => {
++            if (!at || e.target !== e.currentTarget || window.getSelection()?.toString()) return;
++            e.clipboardData.setData("text/plain",val(shown[at.r],cols[at.c])); e.preventDefault();
++          }}>
+             <thead>
+               <tr>
+-                <th className="rn">#</th>
++                <th className="rn" scope="col">STT</th>
+                 {cols.map((c) => (
+-                  <th key={c.key} className={c.num ? "n" : ""}>
++                  <th key={c.key} scope="col" aria-sort={sort?.key === c.key ? (sort.dir > 0 ? "ascending" : "descending") : undefined} className={c.num ? "n" : ""}>
+                     <button type="button" onClick={() => { setSort((s) => ({ key: c.key, dir: s?.key === c.key ? (-s.dir as 1 | -1) : 1 })); setCur(null); }}>
+                       {c.title}{sort?.key === c.key ? (sort.dir > 0 ? " ▲" : " ▼") : ""}
+                     </button>
+@@ -93,7 +108,12 @@
+                     const v = val(r, c);
+                     return (
+                       <td key={c.key} className={`${c.num ? "n" : ""} ${at?.r === i && at.c === j ? "on" : ""}`} title={v.length > 40 ? v : undefined}
+-                        onClick={() => setCur({ r: i, c: j })}>{c.render ? c.render(r) : v}</td>
++                        onClick={e => {
++                          setCur({ r: i, c: j });
++                          if (!(e.target as Element).closest("button,input,select,a,textarea,[contenteditable]")) {
++                            e.currentTarget.closest("table")?.focus({preventScroll:true});
++                          }
++                        }}>{c.render ? c.render(r) : v}</td>
+                     );
+                   })}
+                   {actions && <td>{actions(r)}</td>}
+--- a/src/app/(user)/do-boc/review.module.css
++++ b/src/app/(user)/do-boc/review.module.css
+@@ -104,6 +104,9 @@
+ .qty { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+ .app table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+ .app th, .app td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--rule); font-size: 12.5px; vertical-align: middle; white-space: normal; }
++.app table :is(th, td):not(:last-child), .app table:has(thead) tr::before { border-inline-end: 1px solid var(--rule); }
++.app table thead { background: var(--sunk); }
++.app table tbody tr:hover { background-color: color-mix(in srgb, var(--sel) 6%, transparent); }
+ .app th { color: var(--muted); font-weight: 600; font-size: 11.5px; }
+ .app td.num, .app th.num { text-align: right; font-family: var(--f-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+ .app tfoot td { font-weight: 700; border-bottom: 0; }
+@@ -153,7 +156,7 @@
+ /* cột # tự đánh số cho mọi bảng có dòng tiêu đề */
+ .app table:has(thead) { counter-reset: rn; }
+ .app table:has(thead) tr::before { display: table-cell; width: 1%; padding: 5px 6px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; border-bottom: 1px solid var(--rule); }
+-.app table:has(thead) thead tr::before { content: "#"; font-weight: 600; position: sticky; top: 0; background: transparent; }
++.app table:has(thead) thead tr::before { content: "STT"; font-weight: 600; position: sticky; top: 0; background: transparent; }
+ .app table:has(thead) tbody tr::before { counter-increment: rn; content: counter(rn); }
+ .app table:has(thead) tbody tr:has(> td[colspan]:only-child)::before { counter-increment: none; content: ""; }
+ .app table:has(thead) tfoot tr::before { content: ""; border-bottom: 0; }

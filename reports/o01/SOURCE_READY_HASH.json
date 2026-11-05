@@ -1,0 +1,6 @@
+{
+  "src/optimat/rough/takeoff.py": "aa1d00e565a9cd7344dde64f8d54c69793f3c8233cd47e6fc16419090da9f84b",
+  "tests/test_rough_beam_sources.py": "dbe64198299a3d4d893f8e4c9f3e6cba79a16cae57828e2720b098ce2a8e746c",
+  "tests/test_rough_takeoff.py": "09c52e34eba2d39bf1e0a5e15909f85ecd0e7b3f147a4bb68ec5fda9ca98b500",
+  "tests/test_work_dimensions.py": "db65fe6ce2bc23f48748c247af694f63982e574eed73a387de4b1cdb2e80ea0d"
+}

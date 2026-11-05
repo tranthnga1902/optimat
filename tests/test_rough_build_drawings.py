@@ -17,8 +17,9 @@ def _need(name: str) -> Path:
     return path
 
 
-def test_nha_dan_columns_and_rough():
-    req = rough_from_drawing(read_drawing(str(_need("nha_dan.dxf"))))
+def test_nha_dan_columns_and_rough(sample_openings):
+    # B7: cửa nhận từ khe tường cần kích thước của dự án; không có thì nhóm tường có lỗ đó để trống
+    req = rough_from_drawing(read_drawing(str(_need("nha_dan.dxf"))), openings=sample_openings)
     assert [p.is_ground for p in req.plans] == [True, False, False]
     # cột 200×200, đếm trên bản vẽ 17/10/2026; lầu 1 có thêm cột (-82340, 120157) vẽ bằng SOLID lật, trước đọc sai chỗ
     assert [len(p.columns) for p in req.plans] == [10, 10, 12]

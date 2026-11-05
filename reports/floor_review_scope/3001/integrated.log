@@ -1,0 +1,2 @@
+PASS phạm vi: nhóm trệt/tầng 1, lọc cảnh báo 2/3, 0 tầng, kiểm 2 tầng tại bước 3, giữ tầng ngoài, loại bản sao, khôi phục kết quả/biên nhận sau đổi nhóm.
+PASS: xác nhận tuần tự, quota/retry, HTTP lỗi, không POST/ghi lại; chặn 6 ca đổi ngữ cảnh cùng tab; sửa tầng khác, mở lại và hoàn tất.

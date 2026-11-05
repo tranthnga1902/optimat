@@ -1,0 +1,3907 @@
+{
+  "kind": "estimate_comparison",
+  "cong_trinh_id": "nha_huong_hai_duong_7x12",
+  "verification_status": "chua_kiem",
+  "method": "independent_CAD_takeoff_grouped_by_work_code",
+  "source_drawings": [
+    {
+      "path": "data\\drawings\\build\\nha_huong_hai_duong_7x12_kien_truc.dxf",
+      "sha256": "f3721915d599a9f115fd81e9b5fc266f98d896171cba3d1a1f522debc86f0234"
+    },
+    {
+      "path": "data\\drawings\\build\\nha_huong_hai_duong_7x12_ket_cau.dxf",
+      "sha256": "4ea9e76ead4eb9bb0849954eabf64f0a3cab74fa566633a981c82df50e859c4f"
+    }
+  ],
+  "warnings": [
+    "Đối chứng tự động, không thay xác nhận của người kiểm.",
+    "Hạng mục thiếu đầu vào hoặc chưa nhận diện không được coi là khớp.",
+    "Bộ đọc CAD báo có ACAD_PROXY_OBJECT bị bỏ qua; kết quả nhận diện có thể thiếu cấu kiện.",
+    "Bộ đọc CAD báo có ACAD_PROXY_OBJECT bị bỏ qua; kết quả nhận diện có thể thiếu cấu kiện."
+  ],
+  "comparison": [
+    {
+      "ma_cong_tac": "NEN_DEM_CAT",
+      "cau_kien": "",
+      "ten": "Đệm cát nền",
+      "don_vi": "m³",
+      "du_toan": 40.2,
+      "he_thong": null,
+      "trang_thai": "thiếu",
+      "status": "D",
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W003"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "BE_TONG_LOT",
+      "cau_kien": "",
+      "ten": "Bê tông lót",
+      "don_vi": "m³",
+      "du_toan": 8.131,
+      "he_thong": null,
+      "trang_thai": "thiếu",
+      "status": "D",
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W004"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "COT_THEP",
+      "cau_kien": "COT",
+      "ten": "Cốt thép",
+      "don_vi": "tấn",
+      "du_toan": 0.836,
+      "he_thong": null,
+      "trang_thai": "thiếu",
+      "status": "D",
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W010"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "COT",
+      "cau_kien": "",
+      "ten": "Bê tông cột",
+      "don_vi": "m³",
+      "du_toan": 4.703,
+      "he_thong": 0.932,
+      "trang_thai": "đủ",
+      "status": "B",
+      "lech_pct": -80.2,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W011"
+      ],
+      "verification_status": "chua_kiem"
+    },
+    {
+      "ma_cong_tac": "COT_THEP",
+      "cau_kien": "DAM",
+      "ten": "Cốt thép",
+      "don_vi": "tấn",
+      "du_toan": 1.59,
+      "he_thong": null,
+      "trang_thai": "không có",
+      "status": null,
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W012"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "DAM",
+      "cau_kien": "",
+      "ten": "Bê tông dầm",
+      "don_vi": "m³",
+      "du_toan": 7.804,
+      "he_thong": null,
+      "trang_thai": "không có",
+      "status": null,
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W013"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "COT_THEP",
+      "cau_kien": "SAN",
+      "ten": "Cốt thép",
+      "don_vi": "tấn",
+      "du_toan": 2.404,
+      "he_thong": null,
+      "trang_thai": "không có",
+      "status": null,
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W014"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "SAN",
+      "cau_kien": "",
+      "ten": "Bê tông sàn",
+      "don_vi": "m³",
+      "du_toan": 21.736,
+      "he_thong": null,
+      "trang_thai": "không có",
+      "status": null,
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W015"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "CAU_THANG",
+      "cau_kien": "",
+      "ten": "Bê tông cầu thang",
+      "don_vi": "m³",
+      "du_toan": 0.858,
+      "he_thong": null,
+      "trang_thai": "không có",
+      "status": null,
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W016"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "COT_THEP",
+      "cau_kien": "LANH_TO",
+      "ten": "Cốt thép",
+      "don_vi": "tấn",
+      "du_toan": 0.217,
+      "he_thong": null,
+      "trang_thai": "không có",
+      "status": null,
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W017"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "LANH_TO",
+      "cau_kien": "",
+      "ten": "Bê tông lanh tô",
+      "don_vi": "m³",
+      "du_toan": 1.348,
+      "he_thong": null,
+      "trang_thai": "không có",
+      "status": null,
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W018"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "XAY",
+      "cau_kien": "",
+      "ten": "Xây tường",
+      "don_vi": "m³",
+      "du_toan": 66.96,
+      "he_thong": 5.978,
+      "trang_thai": "đủ",
+      "status": "B",
+      "lech_pct": -91.1,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W023",
+        "nha_huong_hai_duong_7x12-W024"
+      ],
+      "verification_status": "chua_kiem"
+    },
+    {
+      "ma_cong_tac": "CHONG_THAM",
+      "cau_kien": "",
+      "ten": "Chống thấm",
+      "don_vi": "m²",
+      "du_toan": 8.36,
+      "he_thong": null,
+      "trang_thai": "không có",
+      "status": null,
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W030"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": null,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    },
+    {
+      "ma_cong_tac": "CAN_NEN",
+      "cau_kien": "",
+      "ten": "Cán nền",
+      "don_vi": "m²",
+      "du_toan": 280.68,
+      "he_thong": 46.46,
+      "trang_thai": "đủ",
+      "status": "C",
+      "lech_pct": null,
+      "ma_dinh_muc": "TT",
+      "reference_work_ids": [
+        "nha_huong_hai_duong_7x12-W033"
+      ],
+      "verification_status": "chua_kiem",
+      "diagnostic_difference_pct": -83.4,
+      "comparison_limitation": "Thiếu dữ liệu hoặc có giả định; không dùng làm sai số chính thức."
+    }
+  ],
+  "cad_request": {
+    "project_id": null,
+    "file": "nha_huong_hai_duong_7x12_kien_truc.dxf",
+    "params": {
+      "concrete_supply": null,
+      "concrete_grade": null,
+      "lean_concrete_grade": null,
+      "masonry_mortar_grade": null,
+      "plaster_mortar_grade": null,
+      "screed_mortar_grade": null,
+      "plaster_thickness_mm": null,
+      "screed_thickness_mm": null,
+      "slab_thickness_mm": null,
+      "beam_depth_mm": null,
+      "beam_width_mm": null,
+      "lintel_height_mm": null,
+      "lintel_bearing_mm": null,
+      "waterproof_upturn_mm": null,
+      "waterproof_material_id": null,
+      "stair_slab_thickness_mm": null,
+      "steel_kg_per_m3": {},
+      "steel_schedule_t": {},
+      "foundations": [],
+      "natural_ground_level_mm": null,
+      "excavation_margin_mm": null,
+      "excavation_slope": null,
+      "roofs": [],
+      "ground_layers": [],
+      "min_opening_m2": 0.0,
+      "north_deg": null,
+      "building_area_m2": null,
+      "wall_systems_by_class": {},
+      "material_classes": [],
+      "formwork_type": null
+    },
+    "plans": [
+      {
+        "name": "MB TRÇN",
+        "is_ground": true,
+        "void_area_m2": null,
+        "balcony_area_m2": null,
+        "outline_area_m2": null,
+        "usable_area_m2": null,
+        "height_mm": 3850.0,
+        "height_source": "cao độ tầng trên",
+        "walls": [
+          {
+            "id": "W1",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 436498.2848903158,
+            "y1": -12421.50873865746,
+            "x2": 436498.2848903158,
+            "y2": -9021.50873865746,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W2",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 429660.10455587873,
+            "y1": -9033.113533216494,
+            "x2": 431715.1045558789,
+            "y2": -9033.113533216494,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W3",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 429660.1045558788,
+            "y1": -4666.697620880092,
+            "x2": 431715.1045558789,
+            "y2": -4666.697620880092,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W4",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 429660.1045558788,
+            "y1": -4666.697620880092,
+            "x2": 429660.1045558788,
+            "y2": -6021.697620880092,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W5",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 429660.10455587873,
+            "y1": -9033.113533216494,
+            "x2": 429660.10455587873,
+            "y2": -10388.11353321649,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W6",
+            "cls": "110",
+            "role": "partition",
+            "x1": 432680.1045558789,
+            "y1": -4721.697620880077,
+            "x2": 432680.1045558789,
+            "y2": -6021.697620880092,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W7",
+            "cls": "110",
+            "role": "partition",
+            "x1": 432680.1045558788,
+            "y1": -9088.11353321648,
+            "x2": 432680.1045558788,
+            "y2": -10388.11353321649,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W8",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 436608.28489031584,
+            "y1": -4721.697620880092,
+            "x2": 436608.28489031584,
+            "y2": -6021.697620880092,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          }
+        ],
+        "openings": [],
+        "columns": [
+          {
+            "id": "C1",
+            "x": 429604.7,
+            "y": -10496.6,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          },
+          {
+            "id": "C2",
+            "x": 432624.7,
+            "y": -10496.6,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          },
+          {
+            "id": "C3",
+            "x": 429604.7,
+            "y": -6136.6,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          },
+          {
+            "id": "C4",
+            "x": 432624.7,
+            "y": -6136.6,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          },
+          {
+            "id": "C5",
+            "x": 436554.7,
+            "y": -6136.6,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          }
+        ],
+        "beams": null,
+        "stairs": [],
+        "labels": [],
+        "wall_systems": {
+          "W1": null,
+          "W2": null,
+          "W3": null,
+          "W4": null,
+          "W5": null,
+          "W6": null,
+          "W7": null,
+          "W8": null
+        },
+        "found": {},
+        "members": []
+      },
+      {
+        "name": "MB TRÇN (2)",
+        "is_ground": false,
+        "void_area_m2": null,
+        "balcony_area_m2": null,
+        "outline_area_m2": null,
+        "usable_area_m2": null,
+        "height_mm": 3800.0,
+        "height_source": "cao độ tầng trên",
+        "walls": [
+          {
+            "id": "W1",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 453492.9991524722,
+            "y1": -12417.26209350789,
+            "x2": 453492.9991524722,
+            "y2": -9017.262093507888,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W2",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 446446.1438850994,
+            "y1": -9036.364648119059,
+            "x2": 448391.1438850995,
+            "y2": -9036.364648119059,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W3",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 446446.1438850993,
+            "y1": -4669.948735782658,
+            "x2": 448391.1438850995,
+            "y2": -4669.948735782658,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W4",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 446446.1438850994,
+            "y1": -9036.364648119059,
+            "x2": 446446.1438850994,
+            "y2": -10391.36464811906,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W5",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 446446.1438850993,
+            "y1": -4669.948735782658,
+            "x2": 446446.1438850993,
+            "y2": -6024.948735782658,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W6",
+            "cls": "110",
+            "role": "partition",
+            "x1": 449356.1438850995,
+            "y1": -9091.364648119044,
+            "x2": 449356.1438850995,
+            "y2": -10391.36464811906,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W7",
+            "cls": "110",
+            "role": "partition",
+            "x1": 449356.1438850994,
+            "y1": -4724.948735782644,
+            "x2": 449356.1438850994,
+            "y2": -6024.948735782658,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          },
+          {
+            "id": "W8",
+            "cls": "110",
+            "role": "envelope",
+            "x1": 453394.3242195364,
+            "y1": -4724.948735782658,
+            "x2": 453394.3242195364,
+            "y2": -6024.948735782658,
+            "mat": null,
+            "masonry": true,
+            "keep": true,
+            "src": "auto",
+            "edited": false,
+            "rule": null,
+            "msrc": null
+          }
+        ],
+        "openings": [],
+        "columns": [
+          {
+            "id": "C1",
+            "x": 446391.1,
+            "y": -10502.4,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          },
+          {
+            "id": "C2",
+            "x": 449411.1,
+            "y": -10502.4,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          },
+          {
+            "id": "C3",
+            "x": 446391.1,
+            "y": -6132.4,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          },
+          {
+            "id": "C4",
+            "x": 449411.1,
+            "y": -6132.4,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          },
+          {
+            "id": "C5",
+            "x": 453341.1,
+            "y": -6132.4,
+            "b_mm": 220.0,
+            "h_mm": 220.0,
+            "source": "hatch",
+            "keep": true,
+            "role": null
+          }
+        ],
+        "beams": null,
+        "stairs": [],
+        "labels": [],
+        "wall_systems": {
+          "W1": null,
+          "W2": null,
+          "W3": null,
+          "W4": null,
+          "W5": null,
+          "W6": null,
+          "W7": null,
+          "W8": null
+        },
+        "found": {},
+        "members": []
+      }
+    ],
+    "structural_beams": {},
+    "structural_floors": {},
+    "column_sections": {},
+    "sheets": [
+      {
+        "ma": "BV01",
+        "loai_ban_ve": "Mặt bằng kiến trúc",
+        "nhom": "kien_truc",
+        "co": true,
+        "tieu_de": [
+          "mặt bằng ĐịNH Vị CÔNG TRìNH",
+          "mặt bằng định vị tường TầNG 1",
+          "mặt bằng định vị tường TầNG 2",
+          "mặt bằng ĐịNH Vị TƯờNG TầNG 1",
+          "mặt bằng ĐịNH Vị TƯờNG TầNG 2",
+          "mặt bằng định vị cửa TầNG 1",
+          "mặt bằng định vị cửa TầNG 2",
+          "MặT BằNG ĐịNH Vị CÔNG TRìNH",
+          "mặt bằng ĐịNH Vị cửa TầNG 1",
+          "mặt bằng ĐịNH Vị cửa TầNG 2"
+        ],
+        "bo_phan": [
+          "WALL"
+        ],
+        "vat_lieu": "Gạch, vữa xây"
+      },
+      {
+        "ma": "BV02",
+        "loai_ban_ve": "Mặt đứng kiến trúc",
+        "nhom": "kien_truc",
+        "co": true,
+        "tieu_de": [
+          "mặt đứng trục A-C",
+          "mặt đứng trục 4- 1",
+          "mặt đứng trục C-A",
+          "mặt đứng trục 1-4",
+          "mặt đứng trục a-c",
+          "mặt đứng trục 4-1",
+          "mặt đứng trục c-a",
+          "mặt đứng trục 1-4 (2)"
+        ],
+        "bo_phan": [
+          "WALL"
+        ],
+        "vat_lieu": "Gạch, vữa xây (kết hợp mặt bằng)"
+      },
+      {
+        "ma": "BV03",
+        "loai_ban_ve": "Mặt cắt kiến trúc",
+        "nhom": "kien_truc",
+        "co": true,
+        "tieu_de": [
+          "mặt cắt a - a",
+          "mặt cắt b - b",
+          "mặt cắt C - C",
+          "mặt cắt a-a",
+          "mặt cắt b-b",
+          "mặt cắt c-c",
+          "MặT CắT 1-1",
+          "MặT CắT 1-1 (2)",
+          "MặT CắT 1-1 (3)"
+        ],
+        "bo_phan": [
+          "WALL",
+          "SLAB"
+        ],
+        "vat_lieu": "Gạch, vữa, bê tông (kết hợp kết cấu)"
+      },
+      {
+        "ma": "BV04",
+        "loai_ban_ve": "Mặt bằng móng",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "FOUNDATION",
+          "BEAM"
+        ],
+        "vat_lieu": "Bê tông, thép, bê tông lót"
+      },
+      {
+        "ma": "BV05",
+        "loai_ban_ve": "Chi tiết móng",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "FOUNDATION"
+        ],
+        "vat_lieu": "Bê tông, thép, cốp pha"
+      },
+      {
+        "ma": "BV06",
+        "loai_ban_ve": "Mặt bằng cột",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "COLUMN"
+        ],
+        "vat_lieu": "Bê tông, thép, cốp pha"
+      },
+      {
+        "ma": "BV07",
+        "loai_ban_ve": "Chi tiết cột",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "COLUMN"
+        ],
+        "vat_lieu": "Thép, bê tông"
+      },
+      {
+        "ma": "BV08",
+        "loai_ban_ve": "Mặt bằng dầm",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "BEAM"
+        ],
+        "vat_lieu": "Bê tông, thép, cốp pha"
+      },
+      {
+        "ma": "BV09",
+        "loai_ban_ve": "Chi tiết dầm",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "BEAM"
+        ],
+        "vat_lieu": "Thép, bê tông"
+      },
+      {
+        "ma": "BV10",
+        "loai_ban_ve": "Mặt bằng kết cấu sàn",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "SLAB"
+        ],
+        "vat_lieu": "Bê tông, thép, cốp pha"
+      },
+      {
+        "ma": "BV11",
+        "loai_ban_ve": "Chi tiết cốt thép sàn",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "SLAB"
+        ],
+        "vat_lieu": "Thép"
+      },
+      {
+        "ma": "BV12",
+        "loai_ban_ve": "Mặt bằng và chi tiết cầu thang",
+        "nhom": "ket_cau",
+        "co": false,
+        "tieu_de": [],
+        "bo_phan": [
+          "STAIR"
+        ],
+        "vat_lieu": "Bê tông, thép, cốp pha"
+      },
+      {
+        "ma": "BV13",
+        "loai_ban_ve": "Mặt bằng và chi tiết mái",
+        "nhom": "ket_cau",
+        "co": true,
+        "tieu_de": [
+          "mặt bằng mái",
+          "mặt bằng mái (2)"
+        ],
+        "bo_phan": [
+          "ROOF"
+        ],
+        "vat_lieu": "Bê tông, thép, vật liệu mái"
+      },
+      {
+        "ma": "BV14",
+        "loai_ban_ve": "Chi tiết giằng tường, lanh tô",
+        "nhom": "ket_cau",
+        "co": true,
+        "tieu_de": [
+          "lanh tô"
+        ],
+        "bo_phan": [
+          "LINTEL"
+        ],
+        "vat_lieu": "Bê tông, thép, cốp pha"
+      },
+      {
+        "ma": "BV15",
+        "loai_ban_ve": "Bảng thống kê",
+        "nhom": "ket_cau",
+        "co": true,
+        "tieu_de": [
+          "BảNG THốNG KÊ Và Vị TRí CửA",
+          "bảng thống kê và vị trí cửa"
+        ],
+        "bo_phan": [
+          "BEAM",
+          "COLUMN",
+          "SLAB",
+          "FOUNDATION"
+        ],
+        "vat_lieu": "Thép, bê tông (đối chiếu khối lượng)"
+      }
+    ],
+    "notes": [
+      "Bản vẽ mái 'mặt bằng mái': chưa nhận loại mái (loai_mai.csv), nhập tay trong thông số mái.",
+      "Bản vẽ mái 'mặt bằng mái (2)': chưa nhận loại mái (loai_mai.csv), nhập tay trong thông số mái.",
+      "Bảng 'thống kê thép bể': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép móng': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép móng': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép bể phốt': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép cho 1 cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép dầm': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép sàn': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép lanh tô': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép dầm': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép sàn': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép lanh tô': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng."
+    ],
+    "rebar": [],
+    "members": [],
+    "column_schedule": []
+  },
+  "cad_result": {
+    "works": [
+      {
+        "code": "XAY",
+        "name": "Xây tường",
+        "unit": "m³",
+        "quantity": 4.878,
+        "plan": "MB TRÇN",
+        "element": "tường 110 bao che",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "11,52 m × 3,85 m × 0,11 m (dày danh nghĩa lớp 110) − 0 m² cửa × 0,11 m − 0,001 m³ cột",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "phương án tường (vật liệu xây)"
+        ],
+        "status": "B",
+        "inputs": [
+          "chiều dài, dày tường: A (hình học mặt bằng)",
+          "chiều cao tầng: B"
+        ],
+        "stage": "tuong"
+      },
+      {
+        "code": "XAY",
+        "name": "Xây tường",
+        "unit": "m³",
+        "quantity": 1.1,
+        "plan": "MB TRÇN",
+        "element": "tường 110 ngăn",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "2,6 m × 3,85 m × 0,11 m (dày danh nghĩa lớp 110) − 0 m² cửa × 0,11 m − 0,001 m³ cột",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "phương án tường (vật liệu xây)"
+        ],
+        "status": "B",
+        "inputs": [
+          "chiều dài, dày tường: A (hình học mặt bằng)",
+          "chiều cao tầng: B"
+        ],
+        "stage": "tuong"
+      },
+      {
+        "code": "TRAT",
+        "name": "Trát tường",
+        "unit": "m²",
+        "quantity": 44.352,
+        "plan": "MB TRÇN",
+        "element": "tường 110 bao che, mặt trong",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "1 × (11,52 m × 3,85 m − 0 m² cửa)",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "chiều dày trát"
+        ],
+        "status": "D",
+        "inputs": [
+          "chiều dài, dày tường: A (hình học mặt bằng)",
+          "chiều cao tầng: B",
+          "dày trát: D (chưa nhập)"
+        ],
+        "stage": "tuong"
+      },
+      {
+        "code": "TRAT",
+        "name": "Trát tường",
+        "unit": "m²",
+        "quantity": 44.352,
+        "plan": "MB TRÇN",
+        "element": "tường 110 bao che, mặt ngoài",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "1 × (11,52 m × 3,85 m − 0 m² cửa)",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "chiều dày trát"
+        ],
+        "status": "D",
+        "inputs": [
+          "chiều dài, dày tường: A (hình học mặt bằng)",
+          "chiều cao tầng: B",
+          "dày trát: D (chưa nhập)"
+        ],
+        "stage": "tuong"
+      },
+      {
+        "code": "TRAT",
+        "name": "Trát tường",
+        "unit": "m²",
+        "quantity": 20.02,
+        "plan": "MB TRÇN",
+        "element": "tường 110 ngăn, hai mặt",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "2 × (2,6 m × 3,85 m − 0 m² cửa)",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "chiều dày trát"
+        ],
+        "status": "D",
+        "inputs": [
+          "chiều dài, dày tường: A (hình học mặt bằng)",
+          "chiều cao tầng: B",
+          "dày trát: D (chưa nhập)"
+        ],
+        "stage": "tuong"
+      },
+      {
+        "code": "COT",
+        "name": "Bê tông cột",
+        "unit": "m³",
+        "quantity": 0.932,
+        "plan": "MB TRÇN",
+        "element": "5 cột 220×220",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "5 × 0,22 m × 0,22 m × 3,85 m",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [],
+        "status": "B",
+        "inputs": [
+          "tiết diện cột: A (mặt bằng)",
+          "chiều cao tầng: B",
+          "dày sàn: B (chưa trừ, lấy cả chiều cao tầng)"
+        ],
+        "stage": "khung"
+      },
+      {
+        "code": "BE_TONG_LOT",
+        "name": "Bê tông lót",
+        "unit": "m³",
+        "quantity": null,
+        "plan": "MB TRÇN",
+        "element": "nền tầng trệt",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "cấu tạo nền (lớp và chiều dày)"
+        ],
+        "status": "D",
+        "inputs": [
+          "thiếu: cấu tạo nền (lớp và chiều dày)"
+        ],
+        "stage": "dat_mong"
+      },
+      {
+        "code": "NEN_DEM_CAT",
+        "name": "Đệm cát nền",
+        "unit": "m³",
+        "quantity": null,
+        "plan": "MB TRÇN",
+        "element": "nền tầng trệt",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "cấu tạo nền (lớp và chiều dày)"
+        ],
+        "status": "D",
+        "inputs": [
+          "thiếu: cấu tạo nền (lớp và chiều dày)"
+        ],
+        "stage": "dat_mong"
+      },
+      {
+        "code": "CAN_NEN",
+        "name": "Cán nền",
+        "unit": "m²",
+        "quantity": 46.46,
+        "plan": "MB TRÇN",
+        "element": "nền các phòng",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": null,
+        "formula": "46,46 m² diện tích sử dụng",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "chiều dày cán nền"
+        ],
+        "status": "C",
+        "inputs": [
+          "diện tích sử dụng: B (phòng khép kín)",
+          "chiều dày lớp: C"
+        ],
+        "stage": "chong_tham"
+      },
+      {
+        "code": "COT_THEP",
+        "name": "Cốt thép",
+        "unit": "tấn",
+        "quantity": null,
+        "plan": "MB TRÇN",
+        "element": "thép cột",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": "COT",
+        "formwork_of": null,
+        "formula": "0,932 m³ × hàm lượng",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [
+          "hàm lượng thép cột (kg/m³)",
+          "bảng thống kê thép cột"
+        ],
+        "status": "D",
+        "inputs": [
+          "thiếu: hàm lượng thép cột (kg/m³)",
+          "thiếu: bảng thống kê thép cột"
+        ],
+        "stage": "khung"
+      },
+      {
+        "code": "COP_PHA",
+        "name": "Cốp pha",
+        "unit": "m²",
+        "quantity": 16.94,
+        "plan": "MB TRÇN",
+        "element": "cốp pha 5 cột 220×220",
+        "variant": null,
+        "wall_system_id": null,
+        "steel_element": null,
+        "formwork_of": "COT",
+        "formula": "5 × 2 × (0,22 + 0,22) m × 3,85 m",
+        "source": "auto",
+        "basis": null,
+        "evidence": [],
+        "missing": [],
+        "status": "B",
+        "inputs": [
+          "hình học cột: theo trạng thái cấu kiện"
+        ],
+        "stage": "khung"
+      }
+    ],
+    "intermediates": [
+      {
+        "kind": "be_tong",
+        "grade": null,
+        "material_id": null,
+        "name": "Bê tông (chưa chọn mác)",
+        "unit": "m³",
+        "quantity": 0.932,
+        "complete": false
+      }
+    ],
+    "materials": [
+      {
+        "material_id": null,
+        "name": "Gạch xây (chưa chọn phương án tường)",
+        "unit": "",
+        "quantity": null,
+        "complete": false,
+        "waste_pct": null,
+        "quantity_with_waste": null,
+        "uses": [
+          {
+            "work": "XAY",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "XAY 4,878 m³",
+            "status": "D",
+            "stage": "tuong",
+            "waste_included": false
+          },
+          {
+            "work": "XAY",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "XAY 1,1 m³",
+            "status": "D",
+            "stage": "tuong",
+            "waste_included": false
+          }
+        ],
+        "missing": [
+          "phương án tường (vật liệu xây)",
+          "hao hụt thi công (%)"
+        ],
+        "status": "D",
+        "group_id": null,
+        "raw_class": "gach",
+        "weight_kg": null,
+        "transport_volume_m3": null,
+        "quantity_min": null,
+        "quantity_max": null,
+        "confirmation": null,
+        "best_price": null,
+        "price_source": null,
+        "est_cost": null
+      },
+      {
+        "material_id": null,
+        "name": "Vữa trát",
+        "unit": "m³",
+        "quantity": null,
+        "complete": false,
+        "waste_pct": null,
+        "quantity_with_waste": null,
+        "uses": [
+          {
+            "work": "TRAT",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "TRAT 44,352 m²",
+            "status": "D",
+            "stage": "tuong",
+            "waste_included": false
+          },
+          {
+            "work": "TRAT",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "TRAT 44,352 m²",
+            "status": "D",
+            "stage": "tuong",
+            "waste_included": false
+          },
+          {
+            "work": "TRAT",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "TRAT 20,02 m²",
+            "status": "D",
+            "stage": "tuong",
+            "waste_included": false
+          }
+        ],
+        "missing": [
+          "định mức TRAT cho chiều dày (chưa nhập) mm trên nền chưa rõ (chưa có phương án tường hoặc họ vật liệu)",
+          "hao hụt thi công (%)"
+        ],
+        "status": "D",
+        "group_id": null,
+        "raw_class": "vua_be_tong",
+        "weight_kg": null,
+        "transport_volume_m3": null,
+        "quantity_min": null,
+        "quantity_max": null,
+        "confirmation": null,
+        "best_price": null,
+        "price_source": null,
+        "est_cost": null
+      },
+      {
+        "material_id": null,
+        "name": "Bê tông (chưa chọn mác)",
+        "unit": "m³",
+        "quantity": 0.932,
+        "complete": false,
+        "waste_pct": null,
+        "quantity_with_waste": null,
+        "uses": [
+          {
+            "work": "COT",
+            "plan": "MB TRÇN",
+            "quantity": 0.932,
+            "via": "COT 0,932 m³",
+            "status": "D",
+            "stage": "khung",
+            "waste_included": false
+          },
+          {
+            "work": "BE_TONG_LOT",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "BE_TONG_LOT ? m³",
+            "status": "D",
+            "stage": "dat_mong",
+            "waste_included": false
+          }
+        ],
+        "missing": [
+          "mác bê tông",
+          "hao hụt thi công (%)"
+        ],
+        "status": "D",
+        "group_id": null,
+        "raw_class": "vua_be_tong",
+        "weight_kg": null,
+        "transport_volume_m3": null,
+        "quantity_min": null,
+        "quantity_max": null,
+        "confirmation": null,
+        "best_price": null,
+        "price_source": null,
+        "est_cost": null
+      },
+      {
+        "material_id": "CA03",
+        "name": "Cát đen / cát san lấp",
+        "unit": "m³",
+        "quantity": null,
+        "complete": false,
+        "waste_pct": 3.5,
+        "quantity_with_waste": null,
+        "uses": [
+          {
+            "work": "NEN_DEM_CAT",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "NEN_DEM_CAT ? m³ × 1,22 m³ / m³",
+            "status": "D",
+            "stage": "dat_mong",
+            "waste_included": true
+          }
+        ],
+        "missing": [],
+        "status": "D",
+        "group_id": "be_tong_cot_thep",
+        "raw_class": "cat",
+        "weight_kg": null,
+        "transport_volume_m3": null,
+        "quantity_min": null,
+        "quantity_max": null,
+        "confirmation": "nguon",
+        "best_price": 220000.0,
+        "price_source": "BULLETIN, Bãi Tàm Xá - xã Vĩnh Thanh, 2026-06-20, ACTUAL",
+        "est_cost": null
+      },
+      {
+        "material_id": null,
+        "name": "Vữa cán nền",
+        "unit": "m³",
+        "quantity": null,
+        "complete": false,
+        "waste_pct": null,
+        "quantity_with_waste": null,
+        "uses": [
+          {
+            "work": "CAN_NEN",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "CAN_NEN 46,46 m²",
+            "status": "D",
+            "stage": "chong_tham",
+            "waste_included": false
+          }
+        ],
+        "missing": [
+          "định mức CAN_NEN cho chiều dày (chưa nhập) mm",
+          "hao hụt thi công (%)"
+        ],
+        "status": "D",
+        "group_id": null,
+        "raw_class": "vua_be_tong",
+        "weight_kg": null,
+        "transport_volume_m3": null,
+        "quantity_min": null,
+        "quantity_max": null,
+        "confirmation": null,
+        "best_price": null,
+        "price_source": null,
+        "est_cost": null
+      },
+      {
+        "material_id": null,
+        "name": "Cốt thép (chưa chia nhóm đường kính)",
+        "unit": "tấn",
+        "quantity": null,
+        "complete": false,
+        "waste_pct": null,
+        "quantity_with_waste": null,
+        "uses": [
+          {
+            "work": "COT_THEP",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "COT_THEP ? tấn",
+            "status": "D",
+            "stage": "khung",
+            "waste_included": false
+          }
+        ],
+        "missing": [
+          "bảng thống kê thép để chia nhóm đường kính",
+          "hao hụt thi công (%)"
+        ],
+        "status": "D",
+        "group_id": null,
+        "raw_class": "thep",
+        "weight_kg": null,
+        "transport_volume_m3": null,
+        "quantity_min": null,
+        "quantity_max": null,
+        "confirmation": null,
+        "best_price": null,
+        "price_source": null,
+        "est_cost": null
+      },
+      {
+        "material_id": "TH10",
+        "name": "Dây thép buộc 1 ly",
+        "unit": "kg",
+        "quantity": null,
+        "complete": false,
+        "waste_pct": null,
+        "quantity_with_waste": null,
+        "uses": [
+          {
+            "work": "COT_THEP",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "COT_THEP ? tấn × 11,96 kg / tấn",
+            "status": "D",
+            "stage": "khung",
+            "waste_included": false
+          }
+        ],
+        "missing": [
+          "hao hụt thi công (%)"
+        ],
+        "status": "D",
+        "group_id": "be_tong_cot_thep",
+        "raw_class": "thep",
+        "weight_kg": null,
+        "transport_volume_m3": null,
+        "quantity_min": null,
+        "quantity_max": null,
+        "confirmation": "tinh",
+        "best_price": null,
+        "price_source": null,
+        "est_cost": null
+      },
+      {
+        "material_id": null,
+        "name": "Vật liệu cốp pha",
+        "unit": "",
+        "quantity": null,
+        "complete": false,
+        "waste_pct": null,
+        "quantity_with_waste": null,
+        "uses": [
+          {
+            "work": "COP_PHA",
+            "plan": "MB TRÇN",
+            "quantity": null,
+            "via": "COP_PHA 16,94 m²",
+            "status": "D",
+            "stage": "khung",
+            "waste_included": false
+          }
+        ],
+        "missing": [
+          "loại ván khuôn (gỗ | ván ép)",
+          "hao hụt thi công (%)"
+        ],
+        "status": "D",
+        "group_id": null,
+        "raw_class": "khac",
+        "weight_kg": null,
+        "transport_volume_m3": null,
+        "quantity_min": null,
+        "quantity_max": null,
+        "confirmation": null,
+        "best_price": null,
+        "price_source": null,
+        "est_cost": null
+      }
+    ],
+    "warnings": [
+      "Bản vẽ mái 'mặt bằng mái': chưa nhận loại mái (loai_mai.csv), nhập tay trong thông số mái.",
+      "Bản vẽ mái 'mặt bằng mái (2)': chưa nhận loại mái (loai_mai.csv), nhập tay trong thông số mái.",
+      "Bảng 'thống kê thép bể': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép móng': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép móng': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép bể phốt': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép cho 1 cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép dầm': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép sàn': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép xây dựng cho tổng cấu kiện': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép lanh tô': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'BẢNG THỐNG KÊ CỐT THÉP': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép dầm': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép sàn': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Bảng 'thống kê thép lanh tô': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng.",
+      "Chưa có loại bản vẽ: Mặt bằng móng (Bê tông, thép, bê tông lót); Chi tiết móng (Bê tông, thép, cốp pha); Mặt bằng cột (Bê tông, thép, cốp pha); Chi tiết cột (Thép, bê tông); Mặt bằng dầm (Bê tông, thép, cốp pha); Chi tiết dầm (Thép, bê tông); Mặt bằng kết cấu sàn (Bê tông, thép, cốp pha); Chi tiết cốt thép sàn (Thép); Mặt bằng và chi tiết cầu thang (Bê tông, thép, cốp pha). Bộ phận lấy từ các loại này phải nhập tay hoặc tải thêm bản vẽ.",
+      "QU-05: \"MB TRÇN (2)\" trùng tiêu đề với \"MB TRÇN\": coi là một tầng, chỉ tính \"MB TRÇN\" (tường 14.1 m, bản bỏ qua 13.9 m). Nếu là hai tầng khác nhau, sửa tiêu đề trên bản vẽ.",
+      "MB TRÇN: chưa nhập cao dầm, chiều cao xây lấy bằng chiều cao tầng 3850 mm (chưa trừ dầm).",
+      "MB TRÇN: chưa nhập dày sàn, chiều cao cột lấy bằng chiều cao tầng 3850 mm.",
+      "MB TRÇN: tường bao chưa khép kín, đã khép theo bao lồi của tường bao (47,47 m² trong tim tường bao): kiểm tra; nhà không phải hình chữ nhật (chữ L, có hốc) thì vẽ thêm tường hoặc nhập tay diện tích.",
+      "Ca máy chưa tính: chưa có định mức hao phí máy theo TT 38/2026/TT-BXD.",
+      "Bê tông lót (MB TRÇN): chưa có khối lượng, thiếu cấu tạo nền (lớp và chiều dày).",
+      "Đệm cát nền (MB TRÇN): chưa có khối lượng, thiếu cấu tạo nền (lớp và chiều dày).",
+      "Cốt thép (MB TRÇN): chưa có khối lượng, thiếu hàm lượng thép cột (kg/m³), bảng thống kê thép cột.",
+      "Định mức định mức COT_THEP → Dây thép buộc: hệ số tham khảo (tinh; TT 38/2026/TT-BXD Phụ lục II (datafiles.chinhphu.vn)), chưa có số hiệu bảng TT 38/2026/TT-BXD: vật liệu từ dòng này là tạm tính (C)."
+    ],
+    "totals": [
+      {
+        "code": "XAY",
+        "name": "Xây tường",
+        "unit": "m³",
+        "quantity": 5.978,
+        "complete": true,
+        "items": 2,
+        "status": "B"
+      },
+      {
+        "code": "TRAT",
+        "name": "Trát tường",
+        "unit": "m²",
+        "quantity": 108.724,
+        "complete": true,
+        "items": 3,
+        "status": "D"
+      },
+      {
+        "code": "COT",
+        "name": "Bê tông cột",
+        "unit": "m³",
+        "quantity": 0.932,
+        "complete": true,
+        "items": 1,
+        "status": "B"
+      },
+      {
+        "code": "BE_TONG_LOT",
+        "name": "Bê tông lót",
+        "unit": "m³",
+        "quantity": null,
+        "complete": false,
+        "items": 1,
+        "status": "D"
+      },
+      {
+        "code": "NEN_DEM_CAT",
+        "name": "Đệm cát nền",
+        "unit": "m³",
+        "quantity": null,
+        "complete": false,
+        "items": 1,
+        "status": "D"
+      },
+      {
+        "code": "CAN_NEN",
+        "name": "Cán nền",
+        "unit": "m²",
+        "quantity": 46.46,
+        "complete": true,
+        "items": 1,
+        "status": "C"
+      },
+      {
+        "code": "COT_THEP",
+        "name": "Cốt thép",
+        "unit": "tấn",
+        "quantity": null,
+        "complete": false,
+        "items": 1,
+        "status": "D"
+      },
+      {
+        "code": "COP_PHA",
+        "name": "Cốp pha",
+        "unit": "m²",
+        "quantity": 16.94,
+        "complete": true,
+        "items": 1,
+        "status": "B"
+      }
+    ],
+    "beams": {
+      "MB TRÇN": []
+    },
+    "takeoff_id": null,
+    "formwork": [
+      {
+        "code": "COT",
+        "name": "Cốp pha cột",
+        "unit": "m²",
+        "quantity": 16.94,
+        "complete": true,
+        "items": 1,
+        "status": "B"
+      }
+    ],
+    "by_group": [
+      {
+        "group_id": "be_tong_cot_thep",
+        "name": "Vật liệu bê tông cốt thép",
+        "in_scope": true,
+        "materials": [
+          "CA03",
+          "TH10"
+        ],
+        "weight_kg": null,
+        "weight_complete": false,
+        "status": "D"
+      },
+      {
+        "group_id": "phan_tho",
+        "name": "Vật liệu thi công phần thô",
+        "in_scope": true,
+        "materials": [],
+        "weight_kg": null,
+        "weight_complete": true,
+        "status": null
+      },
+      {
+        "group_id": "hoan_thien",
+        "name": "Vật liệu hoàn thiện",
+        "in_scope": false,
+        "materials": [],
+        "weight_kg": null,
+        "weight_complete": true,
+        "status": null
+      },
+      {
+        "group_id": "khac_phap_ly",
+        "name": "Vật liệu khác và khung pháp lý",
+        "in_scope": false,
+        "materials": [],
+        "weight_kg": null,
+        "weight_complete": true,
+        "status": null
+      },
+      {
+        "group_id": "ket_cau_thep_bao_che",
+        "name": "Vật liệu kết cấu thép và bao che",
+        "in_scope": false,
+        "materials": [],
+        "weight_kg": null,
+        "weight_complete": true,
+        "status": null
+      },
+      {
+        "group_id": "chua_ro",
+        "name": "Chưa xếp nhóm (danh mục chưa có mã)",
+        "in_scope": true,
+        "materials": [
+          "Gạch xây (chưa chọn phương án tường)",
+          "Vữa trát",
+          "Bê tông (chưa chọn mác)",
+          "Vữa cán nền",
+          "Cốt thép (chưa chia nhóm đường kính)",
+          "Vật liệu cốp pha"
+        ],
+        "weight_kg": null,
+        "weight_complete": false,
+        "status": "D"
+      }
+    ],
+    "by_class": [
+      {
+        "group_id": "cat",
+        "name": "Cát",
+        "in_scope": true,
+        "materials": [
+          "CA03"
+        ],
+        "weight_kg": null,
+        "weight_complete": false,
+        "status": "D"
+      },
+      {
+        "group_id": "gach",
+        "name": "Gạch xây",
+        "in_scope": true,
+        "materials": [
+          "Gạch xây (chưa chọn phương án tường)"
+        ],
+        "weight_kg": null,
+        "weight_complete": false,
+        "status": "D"
+      },
+      {
+        "group_id": "vua_be_tong",
+        "name": "Vữa, bê tông thành phẩm",
+        "in_scope": true,
+        "materials": [
+          "Vữa trát",
+          "Bê tông (chưa chọn mác)",
+          "Vữa cán nền"
+        ],
+        "weight_kg": null,
+        "weight_complete": false,
+        "status": "D"
+      },
+      {
+        "group_id": "thep",
+        "name": "Thép cốt, dây buộc",
+        "in_scope": true,
+        "materials": [
+          "Cốt thép (chưa chia nhóm đường kính)",
+          "TH10"
+        ],
+        "weight_kg": null,
+        "weight_complete": false,
+        "status": "D"
+      },
+      {
+        "group_id": "khac",
+        "name": "Khác (ngoài phần thô)",
+        "in_scope": false,
+        "materials": [
+          "Vật liệu cốp pha"
+        ],
+        "weight_kg": null,
+        "weight_complete": false,
+        "status": "D"
+      }
+    ],
+    "status": "D",
+    "envelope_by_orientation": {}
+  },
+  "excluded_from_group_comparison": [
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W001",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W002",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W005",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W006",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W007",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W008",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W009",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W019",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W020",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W021",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W022",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W025",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W026",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W027",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W028",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W029",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W031",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W032",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W034",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W035",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W036",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W037",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W038",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W039",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W040",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W041",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W042",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W043",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W044",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W045",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W046",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W047",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W048",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W049",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W050",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W051",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W052",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W053",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W054",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W055",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W056",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W057",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W058",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W059",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W060",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W061",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W062",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W063",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W064",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W065",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W066",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W067",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W068",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W069",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W070",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W071",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W072",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W073",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W074",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W075",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W076",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W077",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W078",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W079",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W080",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W081",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W082",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W083",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W084",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W085",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W086",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W087",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W088",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W089",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W090",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W091",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W092",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W093",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W094",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W095",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W096",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W097",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W098",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W099",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W100",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W101",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W102",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W103",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W104",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W105",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W106",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W107",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W108",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W109",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W110",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W111",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W112",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W113",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W114",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W115",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W116",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W117",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W118",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W119",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W120",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W121",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W122",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W123",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W124",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W125",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W126",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W127",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W128",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W129",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W130",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W131",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W132",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W133",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W134",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W135",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W136",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W137",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W138",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W139",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W140",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W141",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W142",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W143",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W144",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W145",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W146",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W147",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W148",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W149",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W150",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W151",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W152",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W153",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W154",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W155",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W156",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W157",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W158",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W159",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W160",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W161",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W162",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W163",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W164",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W165",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W166",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W167",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W168",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W169",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W170",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W171",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W172",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W173",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W174",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W175",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W176",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W177",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W178",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W179",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W180",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W181",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W182",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W183",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W184",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W185",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W186",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W187",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W188",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W189",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W190",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W191",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W192",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W193",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W194",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W195",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W196",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W197",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W198",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W199",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W200",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W201",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W202",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W203",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W204",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W205",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W206",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W207",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W208",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W209",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W210",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W211",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W212",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W213",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W214",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W215",
+      "reason": "chưa ánh xạ công tác"
+    }
+  ],
+  "row_comparisons": [
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W001",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W002",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W003",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "NEN_DEM_CAT",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W004",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "BE_TONG_LOT",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W005",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W006",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W007",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W008",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W009",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W010",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "COT_THEP",
+        "COT"
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W011",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "COT",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W012",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "COT_THEP",
+        "DAM"
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W013",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "DAM",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W014",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "COT_THEP",
+        "SAN"
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W015",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "SAN",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W016",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "CAU_THANG",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W017",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "COT_THEP",
+        "LANH_TO"
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W018",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "LANH_TO",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W019",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W020",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W021",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W022",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W023",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "XAY",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W024",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "XAY",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W025",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W026",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "dòng gộp nhiều cấu kiện/công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W027",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W028",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W029",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W030",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "CHONG_THAM",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W031",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W032",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W033",
+      "status": "doi_chieu_theo_nhom_chua_kiem_tay",
+      "group": [
+        "CAN_NEN",
+        ""
+      ]
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W034",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W035",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W036",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W037",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W038",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W039",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W040",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W041",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W042",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W043",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W044",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W045",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W046",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W047",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W048",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W049",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W050",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W051",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W052",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W053",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W054",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W055",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W056",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W057",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W058",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W059",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W060",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W061",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W062",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W063",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W064",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W065",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W066",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W067",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W068",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W069",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W070",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W071",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W072",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W073",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W074",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W075",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W076",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W077",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W078",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W079",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W080",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W081",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W082",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W083",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W084",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W085",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W086",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W087",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W088",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W089",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W090",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W091",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W092",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W093",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W094",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W095",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W096",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W097",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W098",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W099",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W100",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W101",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W102",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W103",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W104",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W105",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W106",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W107",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W108",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W109",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W110",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W111",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W112",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W113",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W114",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W115",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W116",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W117",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W118",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W119",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W120",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W121",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W122",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W123",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W124",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W125",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W126",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W127",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W128",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W129",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W130",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W131",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W132",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W133",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W134",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W135",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W136",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W137",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W138",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W139",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W140",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W141",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W142",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W143",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W144",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W145",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W146",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W147",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W148",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W149",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W150",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W151",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W152",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W153",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W154",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W155",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W156",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W157",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W158",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W159",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W160",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W161",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W162",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W163",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W164",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W165",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W166",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W167",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W168",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W169",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W170",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W171",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W172",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W173",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W174",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W175",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W176",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W177",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W178",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W179",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W180",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W181",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W182",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W183",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W184",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W185",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W186",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W187",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W188",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W189",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W190",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W191",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W192",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W193",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W194",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W195",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W196",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W197",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W198",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W199",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W200",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W201",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W202",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W203",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W204",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W205",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W206",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W207",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W208",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W209",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W210",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W211",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W212",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W213",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W214",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    },
+    {
+      "work_id": "nha_huong_hai_duong_7x12-W215",
+      "status": "chua_doi_chieu_duoc",
+      "reason": "chưa ánh xạ công tác"
+    }
+  ],
+  "visual_spot_checks": [
+    {
+      "work_ids": [
+        "nha_huong_hai_duong_7x12-W002"
+      ],
+      "method": "assistant_visual_spotcheck",
+      "source": "PDF kết cấu trang 8 KC-01-02 và trang 10 KC-01-04; PDF tiên lượng trang 3",
+      "finding": "Chi tiết BM-1 ghi L=7290 mm, SL=02; phù hợp 2*7,29 trong diễn giải đào móng.",
+      "calculation": "2 * 7.29 * 1 * 1.15 * 1.3 = 21.7971 m³",
+      "result": "khop_mot_phan_kich_thuoc",
+      "limitation": "Chỉ kiểm chiều dài và số lượng BM-1; chưa xác nhận hệ số đào mở rộng hay tổng đào móng."
+    },
+    {
+      "work_ids": [
+        "nha_huong_hai_duong_7x12-W002"
+      ],
+      "method": "CAD_text_and_PDF_formula_crosscheck",
+      "source": "PDF tiên lượng trang 3 dòng BM-2; CAD kết cấu handle 1002DDD, layer LS-TEXT",
+      "finding": "BM-2 dài tổng 7,29 m; trừ ba băng giao rộng 0,80 m còn 4,89 m.",
+      "estimate_length_m": 4.89,
+      "drawing_length_m": 7.29,
+      "result": "resolved_measurement_convention",
+      "limitation": "Không xác nhận tổng đào, hệ số 1,3 hay tổng bê tông móng.",
+      "calculation": "7.29 - 3 * 0.80 = 4.89"
+    }
+  ],
+  "drawing_text_evidence": [
+    {
+      "file": "data\\drawings\\build\\nha_huong_hai_duong_7x12_ket_cau.dxf",
+      "evidence": [
+        {
+          "handle": "10028DD",
+          "layer": "LS-TEXT",
+          "text": "bm-1: l=7290mm; sl=02",
+          "x": -1747985.519270373,
+          "y": -1059503.684208512
+        },
+        {
+          "handle": "1002DDD",
+          "layer": "LS-TEXT",
+          "text": "bm-2: l=7290mm; sl=02",
+          "x": -1736369.083549885,
+          "y": -1059503.684208512
+        }
+      ]
+    }
+  ],
+  "detailed_review": {
+    "path": "reports\\review_housing_20261103\\gate_fix\\pytest_tmp_20261103_a\\test_regeneration_keeps_metada0\\nha_huong_hai_duong_7x12.quality_review.json",
+    "issues": [
+      {
+        "id": "HUONG-BM2-LENGTH",
+        "work": "W002",
+        "status": "resolved_measurement_convention",
+        "explanation": "BM-2 dài tổng 7,29 m; phần không giao ba băng ngang rộng 0,80 m là 7,29-3*0,80=4,89 m. Chỉ giải quyết chiều dài không giao, không xác nhận mọi hệ số đào đất.",
+        "sheets": [
+          "KC-01-02",
+          "KC-01-04"
+        ]
+      },
+      {
+        "id": "HUONG-BM2-WIDTH",
+        "work": "W006",
+        "status": "source_profile_mismatch",
+        "explanation": "Mặt cắt BM-2 rộng đáy 1,00 m, nhưng diễn giải bê tông BM-2 dùng 0,80 m. Tiết diện đúng theo hình: 1*0,25+(1+0,3)*0,25/2+0,3*0,1=0,4425 m²; diễn giải nguồn dùng 0,3675 m². Không sửa tổng móng khi chưa giải quyết hết phần giao theo cao độ.",
+        "sheets": [
+          "KC-01-04"
+        ]
+      },
+      {
+        "id": "HUONG-BM4-LABEL",
+        "work": "W002",
+        "status": "source_label_typo",
+        "explanation": "Hai dòng cùng ghi BM-5. Dòng L=10,48 m tương ứng BM-4: 12,08-2*0,80=10,48; dòng L=10,99 m mới là BM-5: 12,59-2*0,80=10,99. Không thay số gốc.",
+        "sheets": [
+          "KC-01-02",
+          "KC-01-04"
+        ]
+      },
+      {
+        "id": "HUONG-BM4-LABEL-LEAN",
+        "work": "W004",
+        "status": "source_label_typo",
+        "explanation": "Dòng BM-5 có L=10,48 m trong bê tông lót cũng tương ứng BM-4; giữ số gốc và ghi tên chuẩn riêng.",
+        "sheets": [
+          "KC-01-02",
+          "KC-01-04"
+        ]
+      },
+      {
+        "id": "HUONG-LINTEL-DIAMETER",
+        "work": "W017",
+        "status": "source_diameter_mismatch",
+        "explanation": "Nguồn ghi Phi 12: 92,9 kg. Bảng tổng hợp CAD ghi Ø16: 92,9 kg; bảng thống kê và chi tiết lanh tô cũng dùng Ø16. Chuẩn hóa quy cách thành Ø16 trong nhãn từ bản vẽ; giữ Phi12 nguyên bản nguồn.",
+        "sheets": [
+          "KC-06-03",
+          "KC-06-04"
+        ]
+      },
+      {
+        "id": "HUONG-TANK-INTERNAL-SUM",
+        "work": "W005",
+        "issue_type": "internal_schedule_arithmetic_conflict",
+        "status": "reviewed_unresolved",
+        "explanation": "Bể phốt KLCT Ø6/10/12=16.6/164.8/44.8 kg khác tổng15.7/163.8/43.6; đáy ba khối lượng dòng126.5 khác KLCT124.8.",
+        "handles": [
+          "100557B",
+          "100558D",
+          "1005546",
+          "10055B8",
+          "10055E2",
+          "100557C",
+          "100558E",
+          "10055E9",
+          "10055EB",
+          "10055EC"
+        ],
+        "pdf_page": 14,
+        "sheet": "KC-01-08",
+        "report": "reports/review_housing_20261103/KIEM_TONG_BANG_THEP.md"
+      }
+    ]
+  }
+}

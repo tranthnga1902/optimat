@@ -20,16 +20,18 @@ from __future__ import annotations
 
 import math
 import re
+from dataclasses import dataclass
 from functools import lru_cache
 from typing import Literal, Optional
 
 import pandas as pd
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .. import config
 from ..drawing.encoding import normalize
+from ..drawing.review import ReviewOpening
 from .materials import _fmt
-from .models import ROLE_WORK, ProjectParams, WorkItem
+from .models import ROLE_WORK, ProjectParams, WorkItem, worst_status
 from .walls import ROLE_VI, _thickness_m, _work
 
 ROOF_FILE = config.DATA_DIR / "rules" / "loai_mai.csv"
@@ -50,34 +52,180 @@ class LinearMember(BaseModel):
     d_mm: Optional[float] = None
     source: str = "manual"            # manual | structural
     keep: bool = True
+    z_bottom_mm: Optional[float] = Field(default=None, allow_inf_nan=False)
+    z_evidence: Optional[str] = None
 
     @property
     def length_mm(self) -> float:
         return math.hypot(self.x2 - self.x1, self.y2 - self.y1)
 
 
-def linear_works(plan: str, members: list[LinearMember]) -> tuple[list[WorkItem], list[str]]:
+@dataclass
+class _TieGroup:
+    members: tuple[LinearMember, ...]
+    segments: tuple[tuple[float, float, float, float], ...]
+    missing: tuple[str, ...]
+    formwork_missing: tuple[str, ...] = ("chưa kiểm căn cứ tường đỡ đáy giằng",)
+
+
+def _axis(m: LinearMember):
+    values = (m.x1, m.y1, m.x2, m.y2)
+    if not all(math.isfinite(v) for v in values) or m.length_mm <= 0:
+        return None
+    if m.y1 == m.y2:
+        return ("H", m.y1, min(m.x1, m.x2), max(m.x1, m.x2))
+    if m.x1 == m.x2:
+        return ("V", m.x1, min(m.y1, m.y2), max(m.y1, m.y2))
+    return None
+
+
+def _tie_rect(axis, width):
+    """Mặt bằng tiết diện chữ nhật, đầu đoạn phẳng; không nới trục bằng dung sai."""
+    if width is None or not math.isfinite(width) or width <= 0:
+        return None
+    direction, fixed, lo, hi = axis
+    return (lo, fixed - width / 2, hi, fixed + width / 2) if direction == "H" else (fixed - width / 2, lo, fixed + width / 2, hi)
+
+
+def normalize_ties(members: list[LinearMember], *, plan_context: bool = False) -> list[_TieGroup]:
+    """Hợp đoạn cùng cơ sở đã biết; không suy cùng tầng/cao độ từ hình chiếu."""
+    kept = [m for m in members if m.keep and m.kind == "GIANG_TUONG"]
+    reasons = [[] for _ in kept]
+    axes = [_axis(m) for m in kept]
+    for i, m in enumerate(kept):
+        if not plan_context:
+            reasons[i].append("chưa xác nhận tầng/hệ tọa độ giằng (pending K03)")
+        if m.z_bottom_mm is None:
+            reasons[i].append("cao độ đáy giằng")
+        for value, label in ((m.b_mm, "rộng giằng"), (m.d_mm, "cao giằng")):
+            if value is None or not math.isfinite(value) or value <= 0:
+                reasons[i].append(label)
+        if axes[i] is None:
+            reasons[i].append("trục giằng xiên, dài 0 hoặc tọa độ không hữu hạn: chưa hỗ trợ hợp")
+    for i, a in enumerate(kept):
+        for j in range(i):
+            b = kept[j]
+            aa, bb = axes[i], axes[j]
+            if aa is None or bb is None:
+                continue
+            ra, rb = _tie_rect(aa, a.b_mm), _tie_rect(bb, b.b_mm)
+            if ra is not None and rb is not None:
+                overlaps = min(ra[2], rb[2]) > max(ra[0], rb[0]) and min(ra[3], rb[3]) > max(ra[1], rb[1])
+            elif aa[:2] == bb[:2]:
+                overlaps = min(aa[3], bb[3]) > max(aa[2], bb[2])
+            else:
+                # Thiếu b: không thể chứng minh rời nếu hộp trục giao/chạm nhau.
+                overlaps = (max(min(a.x1, a.x2), min(b.x1, b.x2)) <= min(max(a.x1, a.x2), max(b.x1, b.x2))
+                            and max(min(a.y1, a.y2), min(b.y1, b.y2)) <= min(max(a.y1, a.y2), max(b.y1, b.y2)))
+            if not overlaps:
+                continue
+            if all(x is not None and math.isfinite(x) for x in (a.z_bottom_mm, b.z_bottom_mm, a.d_mm, b.d_mm)):
+                if a.z_bottom_mm + a.d_mm <= b.z_bottom_mm or b.z_bottom_mm + b.d_mm <= a.z_bottom_mm:
+                    continue
+            same = (aa[:2] == bb[:2] and a.z_bottom_mm is not None
+                    and (a.z_bottom_mm, a.b_mm, a.d_mm, a.source) == (b.z_bottom_mm, b.b_mm, b.d_mm, b.source))
+            if not same:
+                reason = f"giằng {a.id}/{b.id} chồng hình chiếu nhưng chưa chứng minh cùng thể tích/nguồn"
+                reasons[i].append(reason)
+                reasons[j].append(reason)
+    buckets = {}
+    for i, m in enumerate(kept):
+        axis = axes[i]
+        key = (axis[:2] if axis else ("pending", i), m.z_bottom_mm, m.b_mm, m.d_mm, m.source)
+        buckets.setdefault(key, []).append(i)
+    out = []
+    for indices in buckets.values():
+        items = tuple(kept[i] for i in indices)
+        missing = tuple(dict.fromkeys(r for i in indices for r in reasons[i]))
+        segments = []
+        if not missing:
+            spans = sorted((axes[i][2], axes[i][3]) for i in indices)
+            merged = []
+            for lo, hi in spans:
+                if merged and lo <= merged[-1][1]:
+                    merged[-1] = (merged[-1][0], max(hi, merged[-1][1]))
+                else:
+                    merged.append((lo, hi))
+            direction, fixed = axes[indices[0]][:2]
+            segments = [(lo, fixed, hi, fixed) if direction == "H" else (fixed, lo, fixed, hi) for lo, hi in merged]
+        out.append(_TieGroup(items, tuple(segments), missing))
+    return out
+
+
+def _tie_evidence(group: _TieGroup) -> list[str]:
+    evidence = []
+    for m in group.members:
+        raw = m.length_mm * m.b_mm * m.d_mm / 1e9 if m.b_mm is not None and m.d_mm is not None else None
+        evidence.append(f"{m.id} ({m.source}) trục ({m.x1:g},{m.y1:g})–({m.x2:g},{m.y2:g}); "
+                        f"b={m.b_mm}, d={m.d_mm} mm; z đáy={m.z_bottom_mm} mm tương đối đáy tầng/tường; "
+                        f"{m.z_evidence or 'chưa ghi chứng cứ cao độ'}; BT thô trước hợp={raw} m³")
+    return evidence
+
+
+def _tie_dimensions(group: _TieGroup, length: float) -> list[dict]:
+    raw = [dict(label=m.id, count=1, basis="reference", length_m=m.length_mm/1000,
+                width_m=m.b_mm/1000 if m.b_mm is not None else None,
+                height_m=m.d_mm/1000 if m.d_mm is not None else None,
+                bottom_level_m=m.z_bottom_mm/1000 if m.z_bottom_mm is not None else None,
+                source=f"{m.id} ({m.source}); {m.z_evidence or 'chưa ghi chứng cứ cao độ'}",
+                note="Dài trục bản ghi gốc trước hợp; không cộng raw thành khối lượng sau hợp") for m in group.members]
+    first = group.members[0]
+    raw.append(dict(label="Đoạn hợp giằng (không phải cấu kiện thêm)", basis="union",
+                    length_m=length if not group.missing else None,
+                    width_m=first.b_mm/1000 if first.b_mm is not None else None,
+                    height_m=first.d_mm/1000 if first.d_mm is not None else None,
+                    source="normalize_ties từ " + ", ".join(m.id for m in group.members),
+                    note="Không cộng thêm vào các bản ghi raw; CP đáy còn cần căn cứ đỡ riêng"))
+    return raw
+
+
+def linear_works(plan: str, members: list[LinearMember], *,
+                 tie_groups: list[_TieGroup] | None = None) -> tuple[list[WorkItem], list[str]]:
     works, warnings = [], []
-    for code, name in (("GIANG_TUONG", "giằng"), ("SE_NO", "sê nô")):
-        groups: dict[tuple, list[LinearMember]] = {}
-        for m in members:
-            if m.keep and m.kind == code:
-                groups.setdefault((m.b_mm, m.d_mm), []).append(m)
-        for (b, d), items in sorted(groups.items(), key=lambda kv: (kv[0][0] or 0, kv[0][1] or 0)):
-            L = sum(m.length_mm for m in items) / 1000
-            missing = [lab for v, lab in ((b, f"rộng {name}"), (d, f"cao {name}")) if v is None]
-            ids = ", ".join(sorted({m.id for m in items})[:5])
-            label = f"{len(items)} {name}" + (f" {b:.0f}×{d:.0f}" if not missing else "") + f" ({ids})"
-            evidence = [f"{m.id} ({m.source}) trục ({m.x1:.0f},{m.y1:.0f})–({m.x2:.0f},{m.y2:.0f})" for m in items]
-            works.append(_work(code, L * b * d / 1e6 if not missing else None, plan=plan, element=label, missing=missing,
-                               evidence=evidence, formula=f"{_fmt(L)} m × {_fmt(b / 1000) if b else 'rộng'} m × "
-                                                          f"{_fmt(d / 1000) if d else 'cao'} m"))
-            form = None if missing else (2 * d / 1000 * L if code == "GIANG_TUONG" else (2 * d + b) / 1000 * L)
-            works.append(_work("COP_PHA", form, plan=plan, element=f"cốp pha {label}", formwork_of=code, missing=missing,
-                               formula="2 × cao × dài (đáy nằm trên tường)" if code == "GIANG_TUONG"
-                               else "(2 × cao + rộng) × dài"))
-        if code == "SE_NO" and groups:
-            warnings.append(f"{plan}: sê nô tính theo tiết diện chữ nhật rộng × cao (quy ước gần đúng); sê nô chữ U cần sửa tay.")
+    ties = normalize_ties(members) if tie_groups is None else tie_groups
+    for group in ties:
+        first = group.members[0]
+        b, d = first.b_mm, first.d_mm
+        missing = list(group.missing)
+        length = sum(math.hypot(x2 - x1, y2 - y1) for x1, y1, x2, y2 in group.segments) / 1000
+        evidence = _tie_evidence(group)
+        ids = ", ".join(m.id for m in group.members[:5])
+        label = f"giằng ({ids})"
+        inputs = ["cao độ đáy giằng: C (người dùng xác nhận trong mặt bằng)"] if not missing else []
+        for code, quantity, formula, extra in (
+            ("GIANG_TUONG", None if missing else length * b * d / 1e6,
+             f"dài hợp {_fmt(length)} m × b={b} mm × d={d} mm; z đáy={first.z_bottom_mm} mm", {}),
+            ("COP_PHA", None if missing else 2 * d / 1000 * length,
+             f"2 × cao {d} mm × dài hợp {_fmt(length)} m (đáy nằm trên tường)", {"formwork_of": "GIANG_TUONG"}),
+        ):
+            item_missing = list(dict.fromkeys([*missing, *(group.formwork_missing if code == "COP_PHA" else ())]))
+            works.append(_work(code, None if item_missing else quantity, plan=plan, dimensions=_tie_dimensions(group, length), element=label, source=first.source,
+                               formula=formula, missing=item_missing, evidence=evidence,
+                               status="D" if item_missing else "C", inputs=inputs, **extra))
+        warnings += [f"{plan}, {label}: {reason}." for reason in (*missing, *group.formwork_missing)]
+    # Sê nô giữ cách tính cũ, không đi qua quy tắc hợp giằng.
+    groups = {}
+    for m in members:
+        if m.keep and m.kind == "SE_NO":
+            groups.setdefault((m.b_mm, m.d_mm, m.source), []).append(m)
+    for (b, d, source), items in sorted(groups.items(), key=lambda kv: (kv[0][0] or 0, kv[0][1] or 0, kv[0][2])):
+        length = sum(m.length_mm for m in items) / 1000
+        missing = [lab for value, lab in ((b, "rộng sê nô"), (d, "cao sê nô")) if value is None]
+        ids = ", ".join(sorted({m.id for m in items})[:5])
+        label = f"{len(items)} sê nô" + (f" {b:.0f}×{d:.0f}" if not missing else "") + f" ({ids})"
+        evidence = [f"{m.id} ({m.source}) trục ({m.x1:.0f},{m.y1:.0f})–({m.x2:.0f},{m.y2:.0f})" for m in items]
+        works.append(_work("SE_NO", length * b * d / 1e6 if not missing else None, plan=plan, element=label,
+                           dimensions=[dict(label=m.id, count=1, length_m=m.length_mm/1000, width_m=b/1000 if b is not None else None,
+                              height_m=d/1000 if d is not None else None, source=f"{plan}: {m.id} ({source})") for m in items],
+                           missing=missing, source=source, evidence=evidence,
+                           formula=f"{_fmt(length)} m × {_fmt(b / 1000) if b else 'rộng'} m × {_fmt(d / 1000) if d else 'cao'} m"))
+        works.append(_work("COP_PHA", None if missing else (2 * d + b) / 1000 * length, plan=plan,
+                           element=f"cốp pha {label}", formwork_of="SE_NO", dimensions=[dict(label=m.id, count=1, length_m=m.length_mm/1000,
+                           width_m=b/1000 if b is not None else None, height_m=d/1000 if d is not None else None,
+                           source=f"{plan}: {m.id} ({source})") for m in items], missing=missing, source=source,
+                           formula="(2 × cao + rộng) × dài"))
+    if groups:
+        warnings.append(f"{plan}: sê nô tính theo tiết diện chữ nhật rộng × cao (quy ước gần đúng); sê nô chữ U cần sửa tay.")
     return works, warnings
 
 
@@ -92,28 +240,128 @@ def _xay_of(works: list[WorkItem], plan: str, wall, system) -> Optional[WorkItem
                  and w.wall_system_id == system), None)
 
 
-def deduct_ties(works: list[WorkItem], plan: str, walls, systems: dict, members: list[LinearMember], catalog) -> list[str]:
-    """L2: trừ giằng tường khỏi khối xây của tường nó nằm trên (sửa tại chỗ công tác XAY)."""
+def _tie_formwork_support(group, walls, systems, view, height, openings, columns) -> tuple[str, ...]:
+    """Chỉ xác nhận đáy được đỡ khi mọi đoạn có tường cùng trục che phủ đủ."""
+    if group.missing:
+        return ()  # lý do hình học/ngữ cảnh đã chặn cả BT và CP
+    first = group.members[0]
+    reasons = []
+    valid_height = (height is not None and math.isfinite(height) and height > 0
+                    and first.z_bottom_mm >= 0 and first.z_bottom_mm + first.d_mm <= height)
+    if not valid_height:
+        reasons.append("chưa xác nhận ranh đứng tường đỡ đáy giằng")
+    if openings is None or columns is None:
+        reasons.append("chưa có thông tin lỗ mở/cột để xác nhận đáy giằng được đỡ")
+    for x1, y1, x2, y2 in group.segments:
+        horizontal = y1 == y2
+        start, end = (x1, x2) if horizontal else (y1, y2)
+        supported = []
+        for wall in walls:
+            if not (wall.keep and wall.masonry):
+                continue
+            if not (wall.y1 == wall.y2 == y1 == y2 or wall.x1 == wall.x2 == x1 == x2):
+                continue
+            lo, hi = sorted((wall.x1, wall.x2) if horizontal else (wall.y1, wall.y2))
+            lo, hi = max(lo, start), min(hi, end)
+            if hi <= lo:
+                continue
+            thick, _ = _thickness_m(systems.get(wall.id), wall.cls, view)
+            if first.b_mm / 1000 > thick:
+                reasons.append(f"giằng rộng hơn tường {wall.id}: đáy không được tường đỡ đầy, chưa xác định cốp pha đáy")
+                continue
+            if (not valid_height or openings is None or columns is None
+                    or any(o.keep and o.wall == wall.id for o in openings) or columns.get(wall.id, 0) > 0):
+                continue
+            supported.append((lo, hi))
+        cursor = start
+        for lo, hi in sorted(supported):
+            if lo > cursor:
+                break
+            cursor = max(cursor, hi)
+        if cursor < end:
+            reasons.append("chưa chứng minh tường đỡ đầy toàn bộ đáy giằng: chưa xác định cốp pha đáy")
+    return tuple(dict.fromkeys(reasons))
+
+
+def deduct_ties(works: list[WorkItem], plan: str, walls, systems: dict, members: list[LinearMember], catalog, *,
+                tie_groups: list[_TieGroup] | None = None, wall_height_mm: float | None = None,
+                openings: list[ReviewOpening] | None = None,
+                column_len_in_walls: dict[str, float] | None = None) -> list[str]:
+    """Trừ dải giằng đã xác nhận; thiếu cơ sở giao thì giữ raw và treo net đúng nhóm XAY."""
     warnings = []
     view = catalog.wall_view().set_index("wall_system_id") if not catalog.wall_systems.empty else pd.DataFrame()
-    for m in (m for m in members if m.keep and m.kind == "GIANG_TUONG"):
-        if m.d_mm is None:
-            warnings.append(f"{plan}: giằng {m.id} chưa có cao giằng, khối xây chưa trừ giằng.")
-            continue
-        horizontal = abs(m.y2 - m.y1) < abs(m.x2 - m.x1)
-        tx, ty = (0, AXIS_TOL_MM) if horizontal else (AXIS_TOL_MM, 0)     # dung sai chỉ theo phương ngang trục
-        rect = (min(m.x1, m.x2) - tx, min(m.y1, m.y2) - ty, max(m.x1, m.x2) + tx, max(m.y1, m.y2) + ty)
-        for w in walls:
-            if not (w.keep and w.masonry) or (abs(w.y2 - w.y1) < abs(w.x2 - w.x1)) != horizontal:
+    ties = normalize_ties(members) if tie_groups is None else tie_groups
+    affected = {}
+    for group in ties:
+        group.formwork_missing = _tie_formwork_support(
+            group, walls, systems, view, wall_height_mm, openings, column_len_in_walls)
+        first = group.members[0]
+        segments = group.segments or tuple((m.x1, m.y1, m.x2, m.y2) for m in group.members)
+        for wall in walls:
+            if not (wall.keep and wall.masonry):
                 continue
-            lap = _clip(w.x1, w.y1, w.x2, w.y2, rect)
-            xay = _xay_of(works, plan, w, systems.get(w.id))
-            if lap <= 0 or xay is None or xay.quantity is None:
+            laps, off_axis = [], False
+            for x1, y1, x2, y2 in segments:
+                if not all(math.isfinite(v) for v in (x1, y1, x2, y2)):
+                    laps.append(1.0)  # vị trí chưa biết: mọi tường có thể bị ảnh hưởng, không dùng làm lượng
+                    off_axis = True
+                    continue
+                horizontal = abs(y2 - y1) < abs(x2 - x1)
+                tx, ty = (0, AXIS_TOL_MM) if horizontal else (AXIS_TOL_MM, 0)
+                rect = (min(x1, x2) - tx, min(y1, y2) - ty, max(x1, x2) + tx, max(y1, y2) + ty)
+                lap = _clip(wall.x1, wall.y1, wall.x2, wall.y2, rect)
+                if lap <= 0:
+                    continue
+                laps.append(lap)
+                if not (wall.y1 == wall.y2 == y1 == y2 or wall.x1 == wall.x2 == x1 == x2):
+                    off_axis = True
+            xay = _xay_of(works, plan, wall, systems.get(wall.id))
+            if not laps or xay is None:
                 continue
-            thick, _ = _thickness_m(systems.get(w.id), w.cls, view)
-            v = lap / 1000 * m.d_mm / 1000 * thick
-            xay.quantity = round(max(0.0, xay.quantity - v), 3)
-            xay.formula += f" − {_fmt(v)} m³ giằng {m.id}"
+            target = affected.setdefault(id(xay), {"work": xay, "raw": xay.quantity, "volume": 0.0, "missing": [], "evidence": []})
+            reasons = list(group.missing)
+            if off_axis:
+                reasons.append("trục giằng/tường chưa cùng trục thực hoặc chưa xác định: chưa thể trừ chính xác")
+            if wall_height_mm is None or not math.isfinite(wall_height_mm) or wall_height_mm <= 0:
+                reasons.append("chiều cao khối xây thực để kiểm vị trí đứng giằng")
+            elif first.z_bottom_mm is not None and first.d_mm is not None:
+                if first.z_bottom_mm < 0 or first.z_bottom_mm + first.d_mm > wall_height_mm:
+                    reasons.append("giằng vượt đáy/đỉnh khối xây: chưa hỗ trợ cắt giao đứng")
+            if openings is None:
+                reasons.append("chưa có danh sách lỗ mở để kiểm giao giằng")
+            elif any(o.keep and o.wall == wall.id for o in openings):
+                reasons.append("tường có lỗ mở/lanh tô nhưng thiếu vị trí giao giằng (cần kiểm, chưa khẳng định giao)")
+            if column_len_in_walls is None:
+                reasons.append("chưa có phần cột đã trừ khỏi tường để kiểm giao giằng")
+            elif column_len_in_walls.get(wall.id, 0) > 0:
+                reasons.append("tường đã trừ cột nhưng chưa có khoảng giao giằng (cần kiểm)")
+            ids = ", ".join(m.id for m in group.members)
+            target["evidence"] += [f"tường {wall.id}; giằng {ids}; cao xây thực={wall_height_mm} mm", *_tie_evidence(group)]
+            target["missing"] += [f"tường {wall.id}: {r}" for r in reasons]
+            if not reasons:
+                thick, _ = _thickness_m(systems.get(wall.id), wall.cls, view)
+                overlap_width = min(first.b_mm / 1000, thick)
+                volume = sum(laps) / 1000 * first.d_mm / 1000 * overlap_width
+                target["volume"] += volume
+                target["evidence"].append(f"phần trừ giằng đã hợp {ids}: {_fmt(volume)} m³")
+    for target in affected.values():
+        xay, raw, volume = target["work"], target["raw"], target["volume"]
+        evidence = [f"XAY trước trừ giằng của nhóm '{xay.element}': {raw} m³", *target["evidence"]]
+        xay.evidence = list(dict.fromkeys([*xay.evidence, *evidence]))
+        if raw is not None and volume > raw:
+            target["missing"].append("tổng dải giằng vượt lượng xây trước trừ: cần kiểm giao, không ép về 0")
+        reasons = list(dict.fromkeys(target["missing"]))
+        if reasons:
+            xay.quantity = None
+            xay.status = "D"
+            xay.missing = list(dict.fromkeys([*xay.missing, *reasons]))
+            xay.formula += f"; trước trừ giằng={raw} m³; net chưa xác định (xem evidence/missing)"
+            warnings += [f"{plan}, {xay.element}: {r}." for r in reasons]
+        elif raw is not None:
+            xay.quantity = round(raw - volume, 3)
+            xay.status = worst_status(xay.status, "C")
+            xay.inputs = list(dict.fromkeys([*xay.inputs, "cao độ giằng dùng trừ xây: C (người dùng xác nhận)"]))
+            xay.formula += f" − {_fmt(volume)} m³ giằng đã hợp theo cao độ"
     return warnings
 
 
@@ -135,7 +383,7 @@ def lintel_under_beam(works: list[WorkItem], plan: str, height_mm: float, walls,
     skipped = []
     for o in openings:
         w = by_id.get(o.wall)
-        if not o.keep or w is None or o.h is None or o.h + lt <= h_wall:
+        if not o.keep or w is None or o.w is None or o.h is None or o.h + lt <= h_wall:
             continue
         thick, _ = _thickness_m(systems.get(w.id), w.cls, view)
         v = (o.w + 2 * bearing) / 1000 * thick * lt / 1000
@@ -162,10 +410,12 @@ def roof_works(params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
             continue
         missing = [lab for v, lab in ((r.area_m2, "diện tích mái"), (r.thickness_mm, "dày bản mái")) if v is None]
         ok = not missing
-        works.append(_work("MAI", r.area_m2 * r.thickness_mm / 1000 if ok else None, element=r.name, source="manual",
+        dimensions = [dict(label=r.name, area_m2=r.area_m2, thickness_m=r.thickness_mm/1000 if r.thickness_mm is not None else None,
+                           source="Thông số mái người dùng nhập", note="Biết diện tích không suy ra dài/rộng")]
+        works.append(_work("MAI", r.area_m2 * r.thickness_mm / 1000 if ok else None, dimensions=dimensions, element=r.name, source="manual",
                            missing=missing, formula=f"{_fmt(r.area_m2) if r.area_m2 else 'diện tích'} m² × "
                                                     f"{_fmt(r.thickness_mm / 1000) if r.thickness_mm else 'dày'} m"))
-        works.append(_work("COP_PHA", r.area_m2, element=f"cốp pha {r.name}", formwork_of="MAI", source="manual",
+        works.append(_work("COP_PHA", r.area_m2, dimensions=dimensions, element=f"cốp pha {r.name}", formwork_of="MAI", source="manual",
                            missing=[] if r.area_m2 is not None else ["diện tích mái"],
                            formula=f"{_fmt(r.area_m2) if r.area_m2 else 'diện tích'} m² (đáy bản mái)"))
     return works, warnings

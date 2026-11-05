@@ -1,0 +1,32 @@
+{
+  "status": "source_frozen_and_integration_tested",
+  "manifest_sha256": "f4badd409ad9600a334925c0949a14cf1e0c93ad9a32fa7a9618211eb59dd433",
+  "ports": {
+    "3002": {
+      "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3002-candidate",
+      "build": "5STud4qMZi47UJU3U-_3-",
+      "patch_sha256": "097d280196d36cfe18b35f5e0fe477aed14ff68ab605d39d259a4f23f4c9461b",
+      "viewer17_patch_sha256": "70ef4bd2e28facd8e1f57deb04b9ddf4cd68cffcd2b8bd654c8672beb513a9ca",
+      "logs": [
+        "fit.log",
+        "confirm.log",
+        "worklist.log",
+        "tested-viewer.json",
+        "integrated-types.json"
+      ]
+    },
+    "3001": {
+      "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3001-candidate",
+      "build": "UthdKbmMyzssbWeIX9H04",
+      "patch_sha256": "6c9336022ac687ffeb20c807b04f7a05a1e956d7637270755e6c62ba4b0e942d",
+      "viewer17_patch_sha256": "70ef4bd2e28facd8e1f57deb04b9ddf4cd68cffcd2b8bd654c8672beb513a9ca",
+      "logs": [
+        "fit.log",
+        "confirm.log",
+        "worklist.log",
+        "tested-viewer.json",
+        "integrated-types.json"
+      ]
+    }
+  }
+}

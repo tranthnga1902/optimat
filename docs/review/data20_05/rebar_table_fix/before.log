@@ -1,0 +1,66 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+_____________ test_side_by_side_tables_keep_their_own_rows[False] _____________
+
+reverse = False
+
+    @pytest.mark.parametrize("reverse", [False, True])
+    def test_side_by_side_tables_keep_their_own_rows(reverse):
+        texts = table(0, "C1", 3200, 32) + table(6000, "D1", 2000, 5)
+        tables, _ = collect_rebar_tables(drawing(list(reversed(texts)) if reverse else texts))
+        assert len(tables) == 2
+>       assert [[(r.element, r.cut_length_mm, r.total_bars) for r in t.rows] for t in tables] == [
+            [("C1", 3200, 32)], [("D1", 2000, 5)]]
+E       AssertionError: assert [[('C1', 3200...200.0, 32.0)]] == [[('C1', 3200...1', 2000, 5)]]
+E         
+E         At index 1 diff: [('C1', 3200.0, 32.0)] != [('D1', 2000, 5)]
+E         Use -v to get more diff
+
+tests\test_rebar_table_boundaries.py:34: AssertionError
+_____________ test_side_by_side_tables_keep_their_own_rows[True] ______________
+
+reverse = True
+
+    @pytest.mark.parametrize("reverse", [False, True])
+    def test_side_by_side_tables_keep_their_own_rows(reverse):
+        texts = table(0, "C1", 3200, 32) + table(6000, "D1", 2000, 5)
+        tables, _ = collect_rebar_tables(drawing(list(reversed(texts)) if reverse else texts))
+        assert len(tables) == 2
+>       assert [[(r.element, r.cut_length_mm, r.total_bars) for r in t.rows] for t in tables] == [
+            [("C1", 3200, 32)], [("D1", 2000, 5)]]
+E       AssertionError: assert [[('D1', 2000...2000.0, 5.0)]] == [[('C1', 3200...1', 2000, 5)]]
+E         
+E         At index 0 diff: [('D1', 2000.0, 5.0)] != [('C1', 3200, 32)]
+E         Use -v to get more diff
+
+tests\test_rebar_table_boundaries.py:34: AssertionError
+_______ test_title_without_local_valid_header_does_not_borrow_neighbor ________
+
+    def test_title_without_local_valid_header_does_not_borrow_neighbor():
+        tables, warnings = collect_rebar_tables(drawing(table(0, "C1", 3200, 32, valid=False)
+                                                       + table(6000, "D1", 2000, 5)))
+>       assert tables[0].rows == []
+E       AssertionError: assert [RebarRow(tab...on_sha256='')] == []
+E         
+E         Left contains one more item: RebarRow(table='THỐNG KÊ THÉP C1', row=1, element='C1 Ø16', element_code='COT', mark='', shape='', dia_mm=1.0, cut_len...dai': '3200', 'tong_thanh': '32', 'duong_kinh': 'D1 Ø16 2000', '_length_unit': 'mm'}, source_id='', revision_sha256='')
+E         Use -v to get more diff
+
+tests\test_rebar_table_boundaries.py:41: AssertionError
+_________________ test_header_on_two_rows_stays_in_its_table __________________
+
+    def test_header_on_two_rows_stays_in_its_table():
+        tables, _ = collect_rebar_tables(drawing(table(0, "C1", 3200, 32, multiline=True)
+                                               + table(6000, "D1", 2000, 5, multiline=True)))
+>       assert [[r.total_bars for r in t.rows] for t in tables] == [[32], [5]]
+E       assert [[], []] == [[32], [5]]
+E         
+E         At index 0 diff: [] != [32]
+E         Use -v to get more diff
+
+tests\test_rebar_table_boundaries.py:49: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rebar_table_boundaries.py::test_side_by_side_tables_keep_their_own_rows[False]
+FAILED tests/test_rebar_table_boundaries.py::test_side_by_side_tables_keep_their_own_rows[True]
+FAILED tests/test_rebar_table_boundaries.py::test_title_without_local_valid_header_does_not_borrow_neighbor
+FAILED tests/test_rebar_table_boundaries.py::test_header_on_two_rows_stays_in_its_table
+4 failed in 6.79s

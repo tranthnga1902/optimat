@@ -1,0 +1,80 @@
+SỔ ĐIỂM ĐỐI CHIẾU TẠM — NHÀ HƯƠNG 7×12 M
+03/11/2026. CHƯA KHÓA PHIÊN BẢN. Chờ bộ kiến trúc, kết cấu và dự toán người dùng sẽ bổ sung.
+Cơ sở đã được người dùng chọn: theo bản vẽ; dự toán dùng đối chiếu. Không tự giải quyết mâu thuẫn nội bộ bản vẽ hoặc xác nhận số chuẩn.
+
+QUYẾT ĐỊNH ĐẦU RA VẬT TƯ — người dùng xác nhận trong chat ngày 03/11/2026:
+“Tách lượng lắp đặt và lượng mua (đề xuất)”. Trình bày riêng hai cơ sở lượng, đơn vị/quy cách, phần hao hụt hoặc điều chỉnh và nguồn hệ số. Thiếu căn cứ quy đổi thì lượng mua ở trạng thái chưa đủ dữ liệu, không điền 0 hoặc tự nhân hệ số. Không cộng hai cột thành tổng vật tư. Quyết định này không chốt hệ số 1,1/1,3 của nguồn, không xác nhận số chuẩn và không khóa phiên bản.
+
+Nguồn rà lượt này: đọc đủ tên/đơn vị/khối lượng/vị trí của 215 công tác trong nha_huong_hai_duong_7x12.estimate.json và diễn giải các nhóm nêu dưới; đọc báo cáo kiểm móng/thép sẵn có. Chưa đo lại toàn bộ CAD hoặc rà trực quan toàn bộ tờ PDF. “Cần kiểm” không có nghĩa “đã xác định lỗi”.
+Wxxx bên dưới là hậu tố id nha_huong_hai_duong_7x12-Wxxx; trang là trang PDF dự toán trừ khi ghi PDF kết cấu.
+
+DC01 — Phiên bản và đồng bộ file [CHỜ BỘ MỚI]
+Đối chiếu khung tên, ngày sửa, danh mục tờ; DWG kết cấu hiện có tên SUA THEP DAM. So bộ mới với cả PDF, DWG/DXF và dự toán; không chỉ so tên file. Người dùng đã yêu cầu chưa khóa phiên bản.
+
+DC02 — Dài và rộng BM-2 [CẦN ĐỐI CHIẾU]
+W002/W004/W006; PDF kết cấu trang 8 KC-01-02, 10 KC-01-04. Dài tổng 7,29 m, dài trừ ba giao 0,80 m là 4,89 m. Bề rộng đáy chi tiết 1,00 m khác 0,80 m trong diễn giải bê tông. Cần tính theo bản vẽ sau xác định phần giao và cao độ; chưa thay tổng móng.
+
+DC03 — Phần giao và phần vát móng [CẦN TÍNH LẠI]
+Diện tích hợp lớp đáy đã được kiểm 47,172 m², dày 0,25 m ra 11,793 m³ theo báo cáo trước. Đây chỉ là một lớp, không thay tổng W006. Cần kiểm phần vát, sườn, giằng, bể, lớp lót theo từng cao độ, không trừ cùng một khối hai lần.
+
+DC04 — Tên BM-4/BM-5 [CẦN SO BỘ MỚI]
+W002/W004 có dòng ghi BM-5 dài 10,48 m tương ứng BM-4 theo báo cáo rà; dòng 10,99 m mới tương ứng BM-5. Giữ văn bản nguồn, gắn ánh xạ riêng sau đối chiếu vị trí.
+
+DC05 — Đào đất và hệ số 1,3 [CẦN CĂN CỨ]
+W002 trang 3–4, tổng nguồn 104,101 m³. Diễn giải có sâu 1,15 và nhân 1,3. Cần kiểm cốt tự nhiên, đáy, kích thước hố, mở rộng/taluy; phân biệt hình học hố và hệ số nguồn. Tên công tác gộp máy, thủ công, vận chuyển, biện pháp: chỉ phần khối lượng đất thuộc luồng hiện tại; không đưa giá/dịch vụ gộp vào vật tư.
+
+DC06 — Cát tôn nền gộp cát dưới cấu kiện [CẦN TÁCH]
+W003 trang 4, 40,2 m³: DCT 0,097 + MG1-1 0,255 + tôn nền 39,848. Cần kiểm chiều dày 0,45 m, cao độ và hệ số 1,1, k=0,95; tách lượng cát đầm chặt, lượng mua và phần dưới từng cấu kiện. Không coi 40,2 m³ là riêng nền nhà.
+
+DC07 — Thép móng/giằng/bể [ĐANG CÁCH LY]
+W005 trang 6, 2,12 t nguồn; nhãn tổng bị gate chặn vì mâu thuẫn thống kê. Chi tiết bể: PDF kết cấu trang 13–14. Cần kiểm số thanh hai lớp a150, miền rải/lớp bảo vệ, chân chó a600, đầu/cuối đai, thanh cong 628 mm, đơn trọng/uốn/làm tròn. Tham chiếu BOC_TUNG_THANH_THEP_BE.md. Không duyệt tổng bể từ ô tổng hợp.
+
+DC08 — Bê tông gộp móng/giằng/bể [CẦN TÁCH]
+W006 trang 6–8, 26,918 m³, mác 250, tên có cả ca bơm. Cần bảng cấu kiện riêng, ranh giới giao và mác theo bản vẽ; không suy toàn bộ công tác là móng băng. Ca bơm không chuyển thành vật tư.
+
+DC09 — Bể: trát/chống thấm/thử tải gộp [CẦN TÁCH CẤU TẠO]
+W008 trang 9, 22,633 m². Diễn giải là ba diện tích thành bể nhân 1,1. Cần kiểm đáy, mặt trong/ngoài, ngăn và diện tích thực chống thấm; mác/dày vữa, lớp chống thấm. Thử tải là dịch vụ, không dùng cùng diện tích để mặc nhiên quy đổi một vật liệu tổng hợp.
+
+DC10 — Cột/dầm/sàn và thép theo tầng [CẦN ĐO/ĐỐI CHIẾU]
+W010–W015 trang 9–12: thép cột 0,836 t; bê tông cột 4,703 m³; thép dầm 1,59 t; bê tông dầm 7,804 m³; thép sàn 2,404 t; bê tông sàn 21,736 m³. Đây là số nguồn, chưa phải số chuẩn. Cần nối từng mã/tầng, cốt và giao cột–dầm–sàn, lỗ sàn, chiều dày; đối chiếu thống kê từng thanh khi cần. Không chứng minh đúng hình học bằng bảng tổng thép.
+
+DC11 — Thang và bậc xây [CẦN KIỂM CÔNG THỨC]
+W016 trang 12: bản thang 6,5×0,12×1,1 = 0,858 m³. Cần xác định 6,5 là diện tích nghiêng hay chiếu bằng, chiếu nghỉ/dầm thang đã ở đâu.
+W038 trang 26–27: bậc thang 21×0,9×0,25×0,181×1,3 = 1,112; TC-1 = 0,837; TC-2 = 0,72; tổng 2,669 m³. Cần kiểm hình học bậc/tam cấp và cơ sở 1,3; không tự thêm/bỏ hệ số tam giác hoặc suy công thức đúng từ việc cộng khớp.
+
+DC12 — Lanh tô khác đường kính [CHỜ CHỐT SAU BỘ MỚI]
+W017 trang 12; PDF kết cấu trang 30–31: Ø16 92,9 kg trong bản vẽ, Phi12 trong tiên lượng. Quy tắc ưu tiên bản vẽ đã được chọn, nhưng vẫn cần kiểm đồng bộ phiên bản và phạm vi nhãn trước ghi đáp án. W018 bê tông lanh tô 1,348 m³ phải đối chiếu từng mã riêng, không thay bằng nhãn thép.
+
+DC13 — Tường và sai khác phép tính [CẦN KIỂM NGUỒN]
+W023 11,06 m³ trang 14–15; W024 55,9 m³ trang 15–19. Ba cảnh báo số học của bộ Hương nằm ở hai dòng (3,54+2,84)×0,11×3,4×1,1 ghi 2,63 thay giá trị 2,624732; và 2,84×0,22×0,4×1,1 ghi 0,28 thay 0,274912. Chưa gọi sai đo hình học: cần kiểm PDF, độ chính xác kích thước và quy tắc làm tròn.
+Cần đo tường theo tầng, trừ cửa và kết cấu, xác nhận gạch đặc 6×10,5×22 và hệ số 1,1.
+
+DC14 — Cửa/lỗ mở [CÓ DỮ LIỆU NGUỒN, CẦN SO BẢN VẼ]
+W026 trang 21–22 có kích thước/mã D1–D3, DW, S1–S8, SW trong công thức trát dạ cửa. W043–W046 trang 28–29 là công tác lắp cửa ngoài phạm vi, nhưng kích thước có thể dùng làm nguồn kiểm lỗ mở.
+Cần nối mã→vị trí/tầng/số lượng và kích thước xây thô hay thành phẩm. Không coi đơn vị diện tích cửa hoàn thiện là diện tích lỗ xây mà chưa đối chiếu.
+
+DC15 — Trát gộp nhiều bề mặt [CẦN PHÂN LOẠI VÀ ĐO]
+W026 trang 19–22, 1135,81 m²: tường, trần, cột, thang, dầm, lanh tô và dạ cửa. Công thức tường suy từ khối xây; trần/thang suy từ thể tích chia dày; nhiều dòng nhân 1,1.
+Cần tách bề mặt IN theo M01; rà riêng trát thang/lanh tô/dạ cửa, giao tường–cột/dầm, lỗ mở, diện tích trần thực. Tổng gộp không đủ chứng minh từng phần đúng hoặc tránh trùng.
+
+DC16 — Chống thấm mái/ban công/WC [CẦN CẤU TẠO]
+W029 trang 23, 82,77 m²: ban công 6,393 + mái 76,379 (các công thức có 1,1), Sika Proof Membrane hai lớp.
+W030 trang 24, 8,36 m²: lấy bằng khối lượng lát WC, ba lớp. Cần kiểm phần chân tường, ngưỡng cửa, cổ ống, diện tích/lỗ mở và định mức theo cấu tạo. Không lấy bằng diện tích lát làm bằng chứng đã đủ chống thấm.
+
+DC17 — Cán nền/cầu thang [CẦN TÁCH]
+W033 trang 24–25, 280,68 m², dày 3 cm M75: sàn tầng 181,133 + cầu thang 7,15 + nền tầng 1 92,4. Hai thành phần đầu phụ thuộc số bê tông/dày, nền 7×12×1,1. Cần diện tích cán thực và cấu tạo, tránh coi diện tích thô toàn nhà là diện tích cán đủ căn cứ.
+
+DC18 — Cốp pha và vật tư phụ [CẦN ĐÁP ÁN RIÊNG]
+Trong 215 tên công tác chưa thấy dòng diện tích cốp pha riêng; không suy thiết kế không cần cốp pha. W020 trang 13 ghi đinh 47,84 kg theo 7 kg/100 m², chưa chỉ rõ diện tích gốc trong dòng diễn giải. Cần đo diện tích tiếp xúc, loại ván, hệ số luân chuyển/hao hụt có nguồn.
+W021 dây buộc 71,67 kg theo 7 kg/tấn thép: cần đối chiếu tổng thép cơ sở và định mức. W019 bạt 164,667 m² cần xác định lớp cấu tạo hay biện pháp thi công trước phân loại; không tự đưa vào vật tư phần thô.
+
+DC19 — Đáp án vật tư chưa đủ [CẦN LẬP]
+Tiên lượng có tên gạch, mác bê tông/vữa và vật tư phụ nhưng chưa chứng minh có bảng vật tư đủ theo từng công tác IN. Chờ Excel mới; rà định mức, đơn vị và nguồn hệ số. Tách lượng lắp đặt, hao hụt và lượng mua; không dùng tổng vật tư có MEP/hoàn thiện làm chuẩn phần thô.
+
+DC20 — Phạm vi và tiêu chí đạt [CHƯA CHỐT TOÀN BỘ]
+215 dòng bao gồm MEP/hoàn thiện/biện pháp; không lấy 215 làm mẫu số phần thô. Cần sổ tồn tại hạng mục M01 theo hồ sơ, tách dòng gộp, giữ mục thiếu/chưa rõ. Chưa có ngưỡng sai số theo nhóm hoặc mẫu xuất được người dùng duyệt.
+
+HÀNH ĐỘNG TIẾP
+1. Khi nhận bộ mới: lập danh mục file/phiên bản, đối chiếu từng DC; không tự thay nguồn đã dùng.
+2. Trong lúc chờ: chuẩn bị bảng tính/ảnh theo nhóm móng, bể, tường/cửa, thang, sàn/mái; hỏi quyết định không phụ thuộc bản sửa trước.
+3. Người dùng cùng Codex chốt từng điểm có bằng chứng. Chưa nâng da_kiem/human_approval, chưa sửa số đáp án hoặc DB.

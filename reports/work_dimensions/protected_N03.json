@@ -1,0 +1,11 @@
+{
+  "AST_unchanged": [
+    "_axis",
+    "_tie_rect",
+    "normalize_ties",
+    "_tie_evidence",
+    "_tie_formwork_support",
+    "deduct_ties"
+  ],
+  "note": "Chỉ đọc AST, chưa thực thi test/probe."
+}

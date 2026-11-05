@@ -1,0 +1,18 @@
+[
+  {
+    "path": "src/optimat/drawing/viewer.py",
+    "sha256": "c58d12f0bd0cdcfd736f5f995187523e2bde2304746a823597eb69f43101767f"
+  },
+  {
+    "path": "src/optimat/drawing/render.py",
+    "sha256": "40fb0d1e8c2f61f65bf7cce71f64b4ec4271859eb46c7784750d66c077ca5797"
+  },
+  {
+    "path": "tests/test_viewer_display_bounds.py",
+    "sha256": "b0c844b5b9e6a279fde99e32d92431f51a5b0811001b1b26995f5482b6de3c75"
+  },
+  {
+    "path": "tests/test_viewer_work_signals.py",
+    "sha256": "6691885ebd53bc049e1a972b893748ef921306555ced9619c9519a76d582db16"
+  }
+]

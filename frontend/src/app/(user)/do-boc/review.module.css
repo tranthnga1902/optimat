@@ -30,7 +30,7 @@ html[data-theme="dark"] .app {
   --concrete: #8e9895; --open: #ff7a6e; --accent: #5cb6d6; --accent-ink: #0f1514; --sel: #ffd23f; --ok: #5cc98a; --warn: #f0b85a;
   color-scheme: dark;
 }
-.app { display: grid; grid-template-rows: auto 1fr; height: 100%; min-height: 0; background: var(--panel); color: var(--ink); font: 14px/1.45 var(--f-ui); }
+.app { container: takeoff / inline-size; display: grid; grid-template-rows: auto 1fr; height: 100%; min-height: 0; background: var(--panel); color: var(--ink); font: 14px/1.45 var(--f-ui); }
 :where(.app) button, :where(.app) select, :where(.app) input { font: inherit; color: inherit; }   /* độ ưu tiên thấp như bản cũ để .btn, .rmain… thắng */
 .head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
 .head h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
@@ -68,6 +68,7 @@ html[data-theme="dark"] .app {
 .chipset { display: inline-flex; gap: 4px; background: var(--panel); border: 1px solid var(--rule); border-radius: 7px; padding: 3px 6px; font-size: 12.5px; }
 .chipset label { display: inline-flex; gap: 4px; align-items: center; cursor: pointer; }
 .hint { position: absolute; left: 12px; bottom: 12px; max-width: min(520px, calc(100% - 140px)); background: var(--panel); border: 1px solid var(--rule); border-radius: 7px; padding: 6px 10px; font-size: 12.5px; color: var(--muted); }
+.hint:has(button) { bottom: 18%; max-width: min(520px, calc(100% - 24px)); }
 .scale { position: absolute; right: 12px; bottom: 12px; font-family: var(--f-num); font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 3px 8px; }
 .tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 9px; font-size: 12px; box-shadow: 0 4px 14px rgb(0 0 0 / .12); }
 .aside { border-left: 1px solid var(--rule); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
@@ -103,6 +104,9 @@ html[data-theme="dark"] .app {
 .qty { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
 .app table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
 .app th, .app td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--rule); font-size: 12.5px; vertical-align: middle; white-space: normal; }
+.app table :is(th, td):not(:last-child), .app table:has(thead) tr::before { border-inline-end: 1px solid var(--rule); }
+.app table thead { background: var(--sunk); }
+.app table tbody tr:hover { background-color: color-mix(in srgb, var(--sel) 6%, transparent); }
 .app th { color: var(--muted); font-weight: 600; font-size: 11.5px; }
 .app td.num, .app th.num { text-align: right; font-family: var(--f-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .app tfoot td { font-weight: 700; border-bottom: 0; }
@@ -129,16 +133,30 @@ html[data-theme="dark"] .app {
 .overviewRow { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
 @media (max-width: 900px) {
   .app { height: auto; }
-  .main { grid-template-columns: 1fr; }
-  .board { height: 60vh; }
+}
+/* Đo phần còn lại sau menu: hai cột cần ít nhất 480px cho CAD và 470px cho danh sách. */
+@container takeoff (max-width: 950px) {
+  .main { grid-template-columns: minmax(0, 1fr); grid-auto-rows: max-content; align-content: start; overflow-y: auto; }
+  .board {
+    display: grid;
+    grid-template: "tools" auto "drawing" clamp(260px, 46dvh, 520px) "help" auto / minmax(0, 1fr);
+    touch-action: auto;
+  }
+  /* Cả SVG chính và lớp xem nét trong lúc đọc dùng chung một vùng. */
+  .board > svg, .board > div:has(> svg), .board > .scale { grid-area: drawing; }
+  .board svg { touch-action: none; }
+  .toolbar { grid-area: tools; position: static; padding: 8px; background: var(--sunk); }
+  .seg button, .chipset label { white-space: nowrap; }
+  .chipset, .toolbar .field { flex-wrap: wrap; max-width: 100%; }
+  .hint, .hint:has(button) { grid-area: help; position: static; max-width: none; border-radius: 0; overflow-wrap: anywhere; }
   .aside { border-left: 0; border-top: 1px solid var(--rule); }
-  .list { max-height: 70vh; }
+  .aside .list { flex: none; }
 }
 @media (prefers-reduced-motion: no-preference) { .tab, .row { transition: background .12s, color .12s; } }
 /* cột # tự đánh số cho mọi bảng có dòng tiêu đề */
 .app table:has(thead) { counter-reset: rn; }
 .app table:has(thead) tr::before { display: table-cell; width: 1%; padding: 5px 6px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; border-bottom: 1px solid var(--rule); }
-.app table:has(thead) thead tr::before { content: "#"; font-weight: 600; position: sticky; top: 0; background: transparent; }
+.app table:has(thead) thead tr::before { content: "STT"; font-weight: 600; position: sticky; top: 0; background: transparent; }
 .app table:has(thead) tbody tr::before { counter-increment: rn; content: counter(rn); }
 .app table:has(thead) tbody tr:has(> td[colspan]:only-child)::before { counter-increment: none; content: ""; }
 .app table:has(thead) tfoot tr::before { content: ""; border-bottom: 0; }

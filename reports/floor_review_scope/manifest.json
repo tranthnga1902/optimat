@@ -1,0 +1,88 @@
+{
+  "3002": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\p0-3002-release-r2",
+    "build": "XLGfOY4MIuGt8ZUp-wppq",
+    "files": {
+      "src/app/(user)/dieu-chinh/materials.tsx": {
+        "base": "8800e17217e69e3a4a0cabbf55f28cc01965e4f81e0a8a2e86dd4f510e6cf8f5",
+        "new": "03d33b97a815439048bfadc0dcb7e11850d77870db54a596d3e36a532c9686c1"
+      },
+      "src/app/(user)/do-boc/floor-review.ts": {
+        "base": null,
+        "new": "e86d2dada9c8f498f3dce1e3cab485911fc3568afc655bb2f717ed8b8e426029"
+      },
+      "src/app/(user)/do-boc/FloorSelector.tsx": {
+        "base": null,
+        "new": "ae12904660f700e99e45068cce4b20d1c2445857362575fc0243b854bc4cbeab"
+      },
+      "src/app/(user)/do-boc/Lists.tsx": {
+        "base": "4aadf79ab554ce684ece2f587e0b42b90a86e2e8722348960f5873d532768d0a",
+        "new": "03e58179a49e98fdffb493a7e9e85479fad3b45c220fac922ac9b2b2c46884ca"
+      },
+      "src/app/(user)/do-boc/model.ts": {
+        "base": "557fbd97fb70e369d7aebf5d6a8b0a9d3fdf362ea073f0053c3ad22a98e32e95",
+        "new": "687611d7d4fe1af47c000ca7c63c907f9d6a4b7808cdf18ed543babe14b8582f"
+      },
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base": "ea395bcb02b38ad2a65015feeb92d42b35a9d3ce15cf50e08a4e4a16e741d034",
+        "new": "a55863660dddc7cd7355f07b0ff96bdee837bfab6601373408238bfcd925461c"
+      },
+      "src/app/(user)/do-boc/scope-workspace.ts": {
+        "base": null,
+        "new": "e147d81d75b918db1e79ede7c8badf0e22ad73d1df1b057ec83e2214b11e024c"
+      },
+      "src/lib/review-session.ts": {
+        "base": "2d3730e30edc119b89175a6de3cb649de4243afe989beae65c8c48a3b8aa2631",
+        "new": "fef4ba1d14c7d817ec0fe157cf445c07ccf847bad00cae5190e8f2f9ba1c4eeb"
+      },
+      "src/lib/work-review.ts": {
+        "base": "d1d9f724a9949a8426d9102da8cfd005014c18e5cb67f02af40c9ab3b3655b29",
+        "new": "92fb25a564076f86017a8ae4db7ed42c3a7ca8ca356bb2010bba415ff3d59876"
+      }
+    },
+    "patch_sha256": "89ddac2b9498a52c7006d15464ad620282114a49d5c089fcae750a5ae15ca1cd"
+  },
+  "3001": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\c2-p0-3001-release-r2",
+    "build": "LKTDjEOitNSiJBETPtyW8",
+    "files": {
+      "src/app/(user)/dieu-chinh/materials.tsx": {
+        "base": "8800e17217e69e3a4a0cabbf55f28cc01965e4f81e0a8a2e86dd4f510e6cf8f5",
+        "new": "03d33b97a815439048bfadc0dcb7e11850d77870db54a596d3e36a532c9686c1"
+      },
+      "src/app/(user)/do-boc/floor-review.ts": {
+        "base": null,
+        "new": "e86d2dada9c8f498f3dce1e3cab485911fc3568afc655bb2f717ed8b8e426029"
+      },
+      "src/app/(user)/do-boc/FloorSelector.tsx": {
+        "base": null,
+        "new": "ae12904660f700e99e45068cce4b20d1c2445857362575fc0243b854bc4cbeab"
+      },
+      "src/app/(user)/do-boc/Lists.tsx": {
+        "base": "53e11d82a116ee0d529304aa50c1cb5dc2139cfda168a98a7051b2cde76a18a3",
+        "new": "40fef82e62815ab6ff69f45ea2230696881739ecc5b0af41aebd62795ae23667"
+      },
+      "src/app/(user)/do-boc/model.ts": {
+        "base": "daf8c16497d9a1732031d66b703fbdce1ac39e889f33e319ab553214fdae6163",
+        "new": "06bcfd17710b5d4466e1dcd440d87ee609ec8043087b36e75eecd824dd30fbce"
+      },
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base": "75a9ee37fa302176050c4c1ad1d688a69ce817ffb52e33038ec48d8f4d29e595",
+        "new": "63044ca47c5b8b1a3efb17bef477d8544c49182e2c737afa8a0d5afb1d630741"
+      },
+      "src/app/(user)/do-boc/scope-workspace.ts": {
+        "base": null,
+        "new": "e147d81d75b918db1e79ede7c8badf0e22ad73d1df1b057ec83e2214b11e024c"
+      },
+      "src/lib/review-session.ts": {
+        "base": "1db96fc93d21492f52aa0d721d645da8b7976e7a79aceb7634a3432620b6bb6c",
+        "new": "402fcdc4f2eb92d71d9fea38bf1e0d262f0303b0518cea9dcbcce37879eb0bd8"
+      },
+      "src/lib/work-review.ts": {
+        "base": "d1d9f724a9949a8426d9102da8cfd005014c18e5cb67f02af40c9ab3b3655b29",
+        "new": "92fb25a564076f86017a8ae4db7ed42c3a7ca8ca356bb2010bba415ff3d59876"
+      }
+    },
+    "patch_sha256": "8ea9369bcd555a4617b7c4b9e5e9a134cd3bad1a1100c6f4bdd6a12e47b975c8"
+  }
+}

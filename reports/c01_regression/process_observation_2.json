@@ -1,0 +1,151 @@
+{
+  "ObservedAt": "2026-11-03T16:38:13.1531146+07:00",
+  "Processes": [
+    {
+      "Id": 20984,
+      "CPU": 0.03125,
+      "StartTime": "2026-11-03T16:34:13.8852121+07:00",
+      "Threads": [
+        {
+          "Id": 14184,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        }
+      ]
+    },
+    {
+      "Id": 27556,
+      "CPU": 10.546875,
+      "StartTime": "2026-11-03T16:34:13.9166737+07:00",
+      "Threads": [
+        {
+          "Id": 33944,
+          "State": "Wait",
+          "WaitReason": "Unknown"
+        },
+        {
+          "Id": 44244,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 35928,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 40664,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 42956,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 42072,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 16116,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 25108,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 25356,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 38068,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 43380,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 29292,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 25020,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 7932,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 45016,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 22620,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 9508,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 15880,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 12568,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 7440,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 31632,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 27224,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 35436,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 15952,
+          "State": "Wait",
+          "WaitReason": "UserRequest"
+        },
+        {
+          "Id": 20248,
+          "State": "Wait",
+          "WaitReason": "EventPairLow"
+        }
+      ]
+    }
+  ],
+  "LogLength": 333,
+  "LogLastWriteTime": "2026-11-03T16:34:29.204735+07:00"
+}

@@ -17,12 +17,17 @@ def test_rough_auto_then_confirm(sample_dxf):
     body = r.json()
     assert body["request"]["plans"] and any(t["code"] == "XAY" for t in body["result"]["totals"])
     req = body["request"]
-    req["plans"][0]["walls"][0]["keep"] = False                    # người dùng loại một tường
+    # B7: block cửa mẫu không ghi kích thước -> nhóm tường có lỗ đó để trống; người dùng nhập kích thước trên trang kiểm tra
+    for o in req["plans"][0]["openings"]:
+        o["w"], o["h"] = 900, 2200
     req["plans"][0]["void_area_m2"] = 0
+    full = client.post("/api/takeoff/rough", json=req)
+    assert full.status_code == 200, full.text
+    req["plans"][0]["walls"][0]["keep"] = False                    # người dùng loại một tường
     conf = client.post("/api/takeoff/rough", json=req)
     assert conf.status_code == 200, conf.text
     xay = lambda b: next(t for t in b["totals"] if t["code"] == "XAY")["quantity"]   # noqa: E731
-    assert xay(conf.json()) < xay(body["result"])
+    assert xay(full.json()) is not None and xay(conf.json()) < xay(full.json())
 
 
 def test_rough_rejects_bad_input(sample_dxf):

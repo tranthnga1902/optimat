@@ -1,0 +1,22 @@
+{
+  "status": "source_frozen_tests_pass",
+  "manifest_sha256": "b42e4fcfdd688a6b4d85f733ab2487acb453a89307c71d9db4e34d0d85dc5ae6",
+  "ports": {
+    "3002": {
+      "before": 1,
+      "after": 0,
+      "width": 0,
+      "cad": 0,
+      "restore": 0
+    },
+    "3001": {
+      "before": 1,
+      "after": 0,
+      "width": 0,
+      "cad": 0,
+      "restore": 0
+    }
+  },
+  "type_lint": "types.json",
+  "scope": "Frontend classification and preserved DTO. Server warning is delivered by the separate backend patch."
+}

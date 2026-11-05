@@ -41,8 +41,10 @@ class ReviewOpening(BaseModel):
     id: str
     wall: Optional[str] = None
     kind: str = "door"                        # door | window | block
-    w: float                                  # rộng (mm)
-    h: Optional[float] = None                 # cao (mm); trống: chưa trừ lỗ mở (Quy ước B7)
+    w: Optional[float] = Field(default=None, gt=0, allow_inf_nan=False, strict=True)
+    h: Optional[float] = Field(default=None, gt=0, allow_inf_nan=False, strict=True)
+    x: Optional[float] = Field(default=None, allow_inf_nan=False, strict=True)
+    y: Optional[float] = Field(default=None, allow_inf_nan=False, strict=True)
     keep: bool = True
     src: str = "auto"
     ev: Optional[str] = None                  # truy vết: dấu hiệu nhận ra cửa (block D1, cung cánh cửa, nét kính)
@@ -60,13 +62,29 @@ class ReviewPlan(BaseModel):
     openings: list[ReviewOpening] = Field(default_factory=list)
 
 
+class PendingWallGroup(BaseModel):
+    wall_type: str
+    role: str
+    wall_ids: list[str]
+    opening_ids: list[str]
+    gross_area_m2: float
+    known_opening_area_m2: float
+    net_area_m2: None = None
+    missing: list[str]
+
+
 class ReviewResult(BaseModel):
     file: str
     plan: str
     height_mm: float
     length_rule: str = "tim"
     groups: list[WallGroup]
-    total_net_area_m2: float
+    total_net_area_m2: Optional[float]
+    known_net_area_m2: float = 0
+    complete: bool = True
+    pending_groups: list[PendingWallGroup] = Field(default_factory=list)
+    pending_openings: list[ReviewOpening] = Field(default_factory=list)
+    outside_masonry_openings: list[ReviewOpening] = Field(default_factory=list)
     walls_kept: int
     walls_removed: int
     walls_added: int
@@ -93,6 +111,11 @@ def compute_review(plan: ReviewPlan, catalog: Catalog | None = None) -> ReviewRe
         raise ValueError(f"Quy tắc chiều dài không hợp lệ: {plan.length_rule} (chỉ nhận {', '.join(LENGTH_RULES)}).")
     walls = [w for w in plan.walls if w.keep and w.masonry]
     ids = {w.id for w in walls}
+    kept_ids = {w.id for w in plan.walls if w.keep}
+    outside_masonry = [o for o in plan.openings if o.keep and o.wall in kept_ids and o.wall not in ids]
+    incomplete = [o for o in plan.openings if o.keep and
+                  (o.wall not in kept_ids or (o.wall in ids and (o.w is None or o.h is None)))]
+    unassigned = [o for o in incomplete if o.wall not in kept_ids]
     if plan.length_rule == "thong_thuy":
         # tường bê tông giữ lại vẫn là mặt giao: tính thông thủy trên mọi tường đang giữ
         lengths = net_lengths([(w.id, w.x1, w.y1, w.x2, w.y2, float(w.cls)) for w in plan.walls if w.keep])
@@ -103,11 +126,15 @@ def compute_review(plan: ReviewPlan, catalog: Catalog | None = None) -> ReviewRe
     for o in plan.openings:
         if not o.keep:
             continue
+        if o.wall in kept_ids and o.wall not in ids:
+            warnings.append(f"{plan.plan}, lỗ {o.id} gắn tường {o.wall}: không áp dụng khối xây; chưa xét công tác khác.")
+            continue
         if o.wall not in ids:
             warnings.append(f"Lỗ mở {o.id} không gắn với tường nào đang giữ, không trừ.")
             continue
-        if o.h is None:
-            warnings.append(f"Lỗ mở {o.id} chưa có chiều cao, không trừ.")
+        if o.w is None or o.h is None:
+            missing = ', '.join(x for x, absent in (('rộng mm', o.w is None), ('cao mm', o.h is None)) if absent)
+            warnings.append(f"{plan.plan}, lỗ {o.id} (tường {o.wall}): thiếu {missing}; chưa xác định lượng trừ.")
             continue
         open_area[o.wall] = open_area.get(o.wall, 0.0) + o.w * min(o.h, H) / 1e6
     for wid, area in open_area.items():
@@ -129,6 +156,7 @@ def compute_review(plan: ReviewPlan, catalog: Catalog | None = None) -> ReviewRe
         if res.note:
             warnings.append(f"Tường {w.id}: {res.note}")
     groups = []
+    pending_groups = []
     # mỗi phương án tường (hay mã vật liệu khi chưa quy đổi được) một nhóm: bảng vật liệu áp đúng định mức từng phương án
     kind = lambda w: system_of.get(w.id) or w.mat or ""  # noqa: E731
     for cls, role, k in sorted({(w.cls, w.role, kind(w)) for w in walls}):
@@ -136,6 +164,15 @@ def compute_review(plan: ReviewPlan, catalog: Catalog | None = None) -> ReviewRe
         length_m = sum(lengths[w.id] for w in members) / 1000
         gross = length_m * H / 1000
         opening = sum(open_area.get(w.id, 0.0) for w in members)
+        pending = [o for o in incomplete if o.wall in {w.id for w in members}] + unassigned
+        if pending:
+            pending_groups.append(PendingWallGroup(wall_type=cls, role=role, wall_ids=[w.id for w in members],
+                opening_ids=[o.id for o in pending], gross_area_m2=round(gross, 2),
+                known_opening_area_m2=round(opening, 2),
+                missing=[f"lỗ {o.id}: chưa gắn tường đang giữ" if o.wall not in ids else
+                         f"lỗ {o.id} (tường {o.wall}): thiếu " + ', '.join(
+                         x for x, absent in (('rộng mm', o.w is None), ('cao mm', o.h is None)) if absent) for o in pending]))
+            continue
         by_mat: dict[str, float] = {}
         for w in members:
             if w.mat:
@@ -154,11 +191,19 @@ def compute_review(plan: ReviewPlan, catalog: Catalog | None = None) -> ReviewRe
     bill_missing = [f"Tường {b.wall_type} {role_vi.get(b.role, b.role)}, {'vữa' if b.kind == 'mortar' else 'vật liệu'}"
                     f"{' ' + b.material_id if b.material_id else ''}: thiếu {', '.join(b.missing)}" for b in bill if b.missing]
     costs = [b.est_cost for b in bill]
+    if incomplete:
+        bill_missing.extend(f"{plan.plan}, lỗ {o.id}: " +
+                            (f"tường {o.wall} chưa hợp lệ" if o.wall not in ids else
+                             'thiếu ' + ', '.join(x for x, absent in (('rộng mm', o.w is None), ('cao mm', o.h is None)) if absent))
+                            for o in incomplete)
+    known = round(sum(g.net_area_m2 for g in groups), 2)
     return ReviewResult(
         bill=bill, bill_missing=bill_missing,
-        bill_total=round(sum(costs)) if costs and all(c is not None for c in costs) else None,
+        bill_total=round(sum(costs)) if not incomplete and costs and all(c is not None for c in costs) else None,
         file=plan.file, plan=plan.plan, height_mm=H, length_rule=plan.length_rule, groups=groups,
-        total_net_area_m2=round(sum(g.net_area_m2 for g in groups), 2),
+        total_net_area_m2=known if not incomplete else None, known_net_area_m2=known,
+        complete=not incomplete, pending_groups=pending_groups, pending_openings=incomplete,
+        outside_masonry_openings=outside_masonry,
         walls_kept=len(walls), walls_removed=sum(1 for w in plan.walls if not w.keep),
         walls_added=sum(1 for w in plan.walls if w.src == "manual" and w.keep),
         walls_edited=sum(1 for w in plan.walls if w.edited and w.src != "manual" and w.keep),
@@ -167,7 +212,7 @@ def compute_review(plan: ReviewPlan, catalog: Catalog | None = None) -> ReviewRe
         confirmed_at=datetime.now(timezone.utc).isoformat(timespec="seconds"), warnings=warnings)
 
 
-def save_review(result: ReviewResult, plan: ReviewPlan) -> Optional[int]:
+def save_review(result: ReviewResult, plan: ReviewPlan, catalog_snapshot: dict | None = None) -> Optional[int]:
     """Lưu kết quả chốt vào takeoff_results (cột result: kết quả + dữ liệu người dùng đã sửa). Không có
     PostgreSQL hoặc không gắn dự án thì không lưu. Dự án không tồn tại thì báo lỗi."""
     from ..db.session import get_database_url, get_engine
@@ -182,5 +227,8 @@ def save_review(result: ReviewResult, plan: ReviewPlan) -> Optional[int]:
         row = TakeoffResultRow(project_id=plan.project_id, confirmed_at=datetime.fromisoformat(result.confirmed_at),
                                result={**result.model_dump(mode="json"), "input": plan.model_dump(mode="json")})
         session.add(row)
+        session.flush()
+        from ..db.analysis20 import store_details
+        store_details(session.connection(), row.takeoff_id, catalog_snapshot=catalog_snapshot)
         session.commit()
         return row.takeoff_id

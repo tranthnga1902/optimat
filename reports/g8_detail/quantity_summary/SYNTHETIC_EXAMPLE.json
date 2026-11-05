@@ -1,0 +1,309 @@
+{
+  "fixture_kind": "SYNTHETIC_BUILDER_EXAMPLE_NOT_REVIEWED",
+  "works": [
+    {
+      "code": "BE_TONG_LOT",
+      "name": "Lót",
+      "unit": "m³",
+      "quantity": 0.323,
+      "plan": null,
+      "element": "F-0",
+      "variant": null,
+      "masonry_geometry": null,
+      "dimensions": [],
+      "quantity_detail": {
+        "unit": "m³",
+        "rows": [
+          {
+            "row_id": "r1",
+            "label": "F-0",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": "0.3225",
+            "method": "box",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "SYNTHETIC/không phải đáp án thực"
+            ],
+            "missing": []
+          },
+          {
+            "row_id": "ref",
+            "label": "Chỉ tham khảo",
+            "group": "",
+            "role": "reference",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": "100",
+            "method": "source_quantity",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "SYNTHETIC"
+            ],
+            "missing": []
+          }
+        ],
+        "detail_level": "components",
+        "known_part_raw": "0.3225",
+        "total_raw": "0.3225",
+        "complete": true,
+        "scope_complete": true,
+        "legacy_quantity": "0.323",
+        "legacy_delta": "-0.0005"
+      },
+      "wall_system_id": null,
+      "steel_element": null,
+      "formwork_of": null,
+      "formula": "",
+      "source": "manual",
+      "basis": null,
+      "evidence": [],
+      "missing": [],
+      "status": "C",
+      "inputs": [],
+      "stage": "mong"
+    },
+    {
+      "code": "BE_TONG_LOT",
+      "name": "Lót",
+      "unit": "m³",
+      "quantity": 0.323,
+      "plan": null,
+      "element": "F-1",
+      "variant": null,
+      "masonry_geometry": null,
+      "dimensions": [],
+      "quantity_detail": {
+        "unit": "m³",
+        "rows": [
+          {
+            "row_id": "r1",
+            "label": "F-1",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": "0.3225",
+            "method": "box",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "SYNTHETIC/không phải đáp án thực"
+            ],
+            "missing": []
+          }
+        ],
+        "detail_level": "components",
+        "known_part_raw": "0.3225",
+        "total_raw": "0.3225",
+        "complete": true,
+        "scope_complete": true,
+        "legacy_quantity": "0.323",
+        "legacy_delta": "-0.0005"
+      },
+      "wall_system_id": null,
+      "steel_element": null,
+      "formwork_of": null,
+      "formula": "",
+      "source": "manual",
+      "basis": null,
+      "evidence": [],
+      "missing": [],
+      "status": "C",
+      "inputs": [],
+      "stage": "mong"
+    },
+    {
+      "code": "BE_TONG_LOT",
+      "name": "Lót",
+      "unit": "m³",
+      "quantity": null,
+      "plan": null,
+      "element": "F-2",
+      "variant": null,
+      "masonry_geometry": null,
+      "dimensions": [],
+      "quantity_detail": {
+        "unit": "m³",
+        "rows": [
+          {
+            "row_id": "r1",
+            "label": "F-2",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": null,
+            "method": "box",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "SYNTHETIC/không phải đáp án thực"
+            ],
+            "missing": [
+              "Chưa đo"
+            ]
+          }
+        ],
+        "detail_level": "components",
+        "known_part_raw": null,
+        "total_raw": null,
+        "complete": false,
+        "scope_complete": false,
+        "legacy_quantity": null,
+        "legacy_delta": null
+      },
+      "wall_system_id": null,
+      "steel_element": null,
+      "formwork_of": null,
+      "formula": "",
+      "source": "manual",
+      "basis": null,
+      "evidence": [],
+      "missing": [],
+      "status": "D",
+      "inputs": [],
+      "stage": "mong"
+    },
+    {
+      "code": "BE_TONG_LOT",
+      "name": "Lót",
+      "unit": "m³",
+      "quantity": 1.0,
+      "plan": null,
+      "element": "F-3",
+      "variant": null,
+      "masonry_geometry": null,
+      "dimensions": [],
+      "quantity_detail": null,
+      "wall_system_id": null,
+      "steel_element": null,
+      "formwork_of": null,
+      "formula": "",
+      "source": "manual",
+      "basis": null,
+      "evidence": [],
+      "missing": [],
+      "status": "C",
+      "inputs": [],
+      "stage": "mong"
+    }
+  ],
+  "quantity_summary": {
+    "schema_version": 1,
+    "quantity_snapshot_hash": "4cdc979a4ad228569f31ea0db23f66ee8b0900c681b192155279e925b3db92ab",
+    "context": {
+      "concrete_grade": null,
+      "lean_concrete_grade": "M100",
+      "concrete_supply": "site_mix",
+      "masonry_mortar_grade": null,
+      "plaster_mortar_grade": null,
+      "screed_mortar_grade": null,
+      "formwork_type": null
+    },
+    "groups": [
+      {
+        "group_id": "g:0",
+        "key": {
+          "stage": "mong",
+          "code": "BE_TONG_LOT",
+          "variant": null,
+          "unit": "m³",
+          "source": "manual",
+          "basis": null,
+          "formwork_of": null,
+          "steel_element": null,
+          "wall_system_id": null,
+          "specification": {
+            "lean_concrete_grade": "M100",
+            "concrete_supply": "site_mix"
+          },
+          "isolated_work_key": null
+        },
+        "member_work_keys": [
+          "w:0",
+          "w:1",
+          "w:2",
+          "w:3"
+        ],
+        "compatibility": "resolved",
+        "compatibility_reasons": [],
+        "calculation_methods": [
+          "box"
+        ],
+        "known_part_raw": "0.6450",
+        "total_raw": null,
+        "complete": false,
+        "coverage": {
+          "work_count": 4,
+          "components": 3,
+          "aggregate": 0,
+          "unavailable": 0,
+          "no_detail": 1,
+          "quantity_complete_works": 2,
+          "quantity_incomplete_works": 2,
+          "contribution_rows": 3,
+          "known_contribution_rows": 2,
+          "unknown_contribution_rows": 1,
+          "reference_rows": 1,
+          "compatibility_pending_works": 0,
+          "legacy_D_works": 1,
+          "legacy_missing_works": 0,
+          "complete_components": false
+        },
+        "missing_work_refs": [
+          {
+            "work_key": "w:2",
+            "row_id": "r1",
+            "reasons": [
+              "Chưa đo"
+            ]
+          },
+          {
+            "work_key": "w:2",
+            "row_id": null,
+            "reasons": [
+              "phạm vi detail chưa đủ"
+            ]
+          },
+          {
+            "work_key": "w:3",
+            "row_id": null,
+            "reasons": [
+              "chưa có diễn giải raw"
+            ]
+          }
+        ]
+      }
+    ],
+    "coverage": {
+      "work_count": 4,
+      "components": 3,
+      "aggregate": 0,
+      "unavailable": 0,
+      "no_detail": 1,
+      "quantity_complete_works": 2,
+      "quantity_incomplete_works": 2,
+      "contribution_rows": 3,
+      "known_contribution_rows": 2,
+      "unknown_contribution_rows": 1,
+      "reference_rows": 1,
+      "compatibility_pending_works": 0,
+      "legacy_D_works": 1,
+      "legacy_missing_works": 0,
+      "complete_components": false
+    }
+  }
+}

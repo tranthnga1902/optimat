@@ -1,0 +1,17 @@
+{
+  "scripts\\review_housing_quantities.py": "d53ac20b7b723948836940b4cd91ce6d3a7f44b638859310d2a4c780ae6458b2",
+  "tests\\test_review_housing_quantities.py": "db72383a7757e5b0781d9b701485aa83fcb1739885bc7937789cd5d76ee50375",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\database_receipt.json": "5a1b41943b495d5338a9538641577e938220f60d1b6e5cd730616fbf7db2fa73",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\drawing_spotcheck_evidence.json": "167b07e6256f26af5676bd7a260032fd72c93259d6458f62d92067b6c5a5c066",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_huong_hai_duong_7x12.arithmetic_review.json": "1fd1c81235b7ba6ad5424503651d3e42213268ce85c422f5a98ddf63e7a6d5c5",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_huong_hai_duong_7x12.comparison.json": "f3ea55255b9875b191b483880b286f61565f5f98173706e6d1fbf262bd7e9804",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_huong_hai_duong_7x12.estimate.json": "4025f88e374e6c1bdaad48bdd7d8d3128f7b1af4d1515a6fd7b4159b4e704d55",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_huong_hai_duong_7x12.quality_review.json": "d20e4cd69c42c9cc5706fefdb1a3f33c720fc746d181fed4acb52446a306ff79",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_huong_hai_duong_7x12.verified_quantities.json": "5592333eabce69a30922e73891327684b16c234e5577add286351122d8da3ca8",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_sang_hai_duong_4x15.arithmetic_review.json": "d1685331b828393d3fd84e3065de34334b98ca485053240b2aee14e1b8a703f4",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_sang_hai_duong_4x15.comparison.json": "99ef137c3339f91fb692fd7caa2ca16f259323c46d093ee8e6690e44931d5154",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_sang_hai_duong_4x15.estimate.json": "b5485677036543ef6590e121299aeea0aef5be94b88feddb692e86f55bcc72a2",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_sang_hai_duong_4x15.quality_review.json": "6ab1629c13393de6e3b878684bba021144958840d7b188e12eb5d3da1e73cbe2",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\nha_sang_hai_duong_4x15.verified_quantities.json": "2e665d18e4c44b15c7a778413fe619aa3158d6923c2fe4276a6754e5baeda246",
+  "data\\ground_truth\\du_toan\\normalized_20261103\\review_evidence.json": "04d96c268eda306ea5ce54cbfe3de7ab87e9ef5b7a4a042182f947eb91bbd3e8"
+}

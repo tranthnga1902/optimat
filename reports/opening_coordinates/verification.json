@@ -1,0 +1,15 @@
+{
+  "manifest_sha256": "e39a7215755fd979365774de2344ccd801b06a91a220e1c530a8606317aab0b7",
+  "status": "serializer_frozen",
+  "ports": {
+    "3001": [
+      "xy.log",
+      "parent.log"
+    ],
+    "3002": [
+      "xy.log",
+      "parent.log"
+    ]
+  },
+  "consumer": "Board guard required for nullable coordinates; owner 17."
+}

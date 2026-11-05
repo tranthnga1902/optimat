@@ -1,0 +1,362 @@
+{
+  "mode": "independent_read_only_offline_after_fix_capture_review",
+  "files": {
+    "context.local.json": "7da7031588d892bced47d226d71d02ff8f18e6251c3396f59d10124d89f9bc0c",
+    "facts.local.json": "2bea355e02c4748ee0f4d4740a5174033476ae621f7c37170e8779c3bd0f099b",
+    "outbound.replay.user.json": "65b9e76882be8a65f5cb511204f15825b18229bd3fd61cbd58548f3cced09804",
+    "verification.json": "fcf51b23254d7a6862912f5e3acf9b9381a1315a9655bf8cf48a44c01c7c2a7f",
+    "source_hashes.json": "83695bc4116921c1937709cf8edd1cf5f688d5cd73518cd5d252dbca38a9845b",
+    "live_receipt.json": "523270d5f311bb4dcefef6379e8d3fc10ccdfe14cddec868eadf97cb8506e3f4"
+  },
+  "rows": [
+    {
+      "lineId": "m5",
+      "name": "Cốt thép (chưa chia nhóm đường kính)",
+      "context_count": 22,
+      "facts_count": 26,
+      "payload_count": 26,
+      "context_prefix_facts": true,
+      "facts_equals_payload": true,
+      "elements": [
+        {
+          "index_1based": 1,
+          "context": "hàm lượng thép cột (kg/m³)",
+          "facts": "hàm lượng thép cột (kg/m³)",
+          "payload": "hàm lượng thép cột (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 2,
+          "context": "bảng thống kê thép cột",
+          "facts": "bảng thống kê thép cột",
+          "payload": "bảng thống kê thép cột",
+          "equal": true
+        },
+        {
+          "index_1based": 3,
+          "context": "bảng thống kê thép để chia nhóm đường kính",
+          "facts": "bảng thống kê thép để chia nhóm đường kính",
+          "payload": "bảng thống kê thép để chia nhóm đường kính",
+          "equal": true
+        },
+        {
+          "index_1based": 4,
+          "context": "hàm lượng thép sàn (kg/m³)",
+          "facts": "hàm lượng thép sàn (kg/m³)",
+          "payload": "hàm lượng thép sàn (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 5,
+          "context": "bảng thống kê thép sàn",
+          "facts": "bảng thống kê thép sàn",
+          "payload": "bảng thống kê thép sàn",
+          "equal": true
+        },
+        {
+          "index_1based": 6,
+          "context": "khối lượng bê tông sàn",
+          "facts": "khối lượng bê tông sàn",
+          "payload": "khối lượng bê tông sàn",
+          "equal": true
+        },
+        {
+          "index_1based": 7,
+          "context": "chiều dày sàn",
+          "facts": "chiều dày sàn",
+          "payload": "chiều dày sàn",
+          "equal": true
+        },
+        {
+          "index_1based": 8,
+          "context": "hàm lượng thép cầu thang (kg/m³)",
+          "facts": "hàm lượng thép cầu thang (kg/m³)",
+          "payload": "hàm lượng thép cầu thang (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 9,
+          "context": "bảng thống kê thép cầu thang",
+          "facts": "bảng thống kê thép cầu thang",
+          "payload": "bảng thống kê thép cầu thang",
+          "equal": true
+        },
+        {
+          "index_1based": 10,
+          "context": "khối lượng bê tông cầu thang",
+          "facts": "khối lượng bê tông cầu thang",
+          "payload": "khối lượng bê tông cầu thang",
+          "equal": true
+        },
+        {
+          "index_1based": 11,
+          "context": "dày bản thang",
+          "facts": "dày bản thang",
+          "payload": "dày bản thang",
+          "equal": true
+        },
+        {
+          "index_1based": 12,
+          "context": "hàm lượng thép dầm (kg/m³)",
+          "facts": "hàm lượng thép dầm (kg/m³)",
+          "payload": "hàm lượng thép dầm (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 13,
+          "context": "bảng thống kê thép dầm",
+          "facts": "bảng thống kê thép dầm",
+          "payload": "bảng thống kê thép dầm",
+          "equal": true
+        },
+        {
+          "index_1based": 14,
+          "context": "khối lượng bê tông dầm",
+          "facts": "khối lượng bê tông dầm",
+          "payload": "khối lượng bê tông dầm",
+          "equal": true
+        },
+        {
+          "index_1based": 15,
+          "context": "rộng dầm",
+          "facts": "rộng dầm",
+          "payload": "rộng dầm",
+          "equal": true
+        },
+        {
+          "index_1based": 16,
+          "context": "cao dầm",
+          "facts": "cao dầm",
+          "payload": "cao dầm",
+          "equal": true
+        },
+        {
+          "index_1based": 17,
+          "context": "hàm lượng thép lanh tô (kg/m³)",
+          "facts": "hàm lượng thép lanh tô (kg/m³)",
+          "payload": "hàm lượng thép lanh tô (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 18,
+          "context": "bảng thống kê thép lanh tô",
+          "facts": "bảng thống kê thép lanh tô",
+          "payload": "bảng thống kê thép lanh tô",
+          "equal": true
+        },
+        {
+          "index_1based": 19,
+          "context": "khối lượng bê tông lanh tô",
+          "facts": "khối lượng bê tông lanh tô",
+          "payload": "khối lượng bê tông lanh tô",
+          "equal": true
+        },
+        {
+          "index_1based": 20,
+          "context": "cao lanh tô",
+          "facts": "cao lanh tô",
+          "payload": "cao lanh tô",
+          "equal": true
+        },
+        {
+          "index_1based": 21,
+          "context": "chiều dài gối lanh tô",
+          "facts": "chiều dài gối lanh tô",
+          "payload": "chiều dài gối lanh tô",
+          "equal": true
+        },
+        {
+          "index_1based": 22,
+          "context": "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "facts": "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "payload": "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "equal": true
+        }
+      ],
+      "facts_and_payload_extra": [
+        "Chưa có mã vật tư/quy cách duy nhất trong danh mục",
+        "Không có phương án phù hợp trong phạm vi tra cứu và loại trừ nhận diện được",
+        "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+        "Chưa có cam kết thời gian giao có nguồn"
+      ]
+    },
+    {
+      "lineId": "m6",
+      "name": "Dây thép buộc 1 ly",
+      "context_count": 21,
+      "facts_count": 24,
+      "payload_count": 24,
+      "context_prefix_facts": true,
+      "facts_equals_payload": true,
+      "elements": [
+        {
+          "index_1based": 1,
+          "context": "hàm lượng thép cột (kg/m³)",
+          "facts": "hàm lượng thép cột (kg/m³)",
+          "payload": "hàm lượng thép cột (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 2,
+          "context": "bảng thống kê thép cột",
+          "facts": "bảng thống kê thép cột",
+          "payload": "bảng thống kê thép cột",
+          "equal": true
+        },
+        {
+          "index_1based": 3,
+          "context": "hàm lượng thép sàn (kg/m³)",
+          "facts": "hàm lượng thép sàn (kg/m³)",
+          "payload": "hàm lượng thép sàn (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 4,
+          "context": "bảng thống kê thép sàn",
+          "facts": "bảng thống kê thép sàn",
+          "payload": "bảng thống kê thép sàn",
+          "equal": true
+        },
+        {
+          "index_1based": 5,
+          "context": "khối lượng bê tông sàn",
+          "facts": "khối lượng bê tông sàn",
+          "payload": "khối lượng bê tông sàn",
+          "equal": true
+        },
+        {
+          "index_1based": 6,
+          "context": "chiều dày sàn",
+          "facts": "chiều dày sàn",
+          "payload": "chiều dày sàn",
+          "equal": true
+        },
+        {
+          "index_1based": 7,
+          "context": "hàm lượng thép cầu thang (kg/m³)",
+          "facts": "hàm lượng thép cầu thang (kg/m³)",
+          "payload": "hàm lượng thép cầu thang (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 8,
+          "context": "bảng thống kê thép cầu thang",
+          "facts": "bảng thống kê thép cầu thang",
+          "payload": "bảng thống kê thép cầu thang",
+          "equal": true
+        },
+        {
+          "index_1based": 9,
+          "context": "khối lượng bê tông cầu thang",
+          "facts": "khối lượng bê tông cầu thang",
+          "payload": "khối lượng bê tông cầu thang",
+          "equal": true
+        },
+        {
+          "index_1based": 10,
+          "context": "dày bản thang",
+          "facts": "dày bản thang",
+          "payload": "dày bản thang",
+          "equal": true
+        },
+        {
+          "index_1based": 11,
+          "context": "hàm lượng thép dầm (kg/m³)",
+          "facts": "hàm lượng thép dầm (kg/m³)",
+          "payload": "hàm lượng thép dầm (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 12,
+          "context": "bảng thống kê thép dầm",
+          "facts": "bảng thống kê thép dầm",
+          "payload": "bảng thống kê thép dầm",
+          "equal": true
+        },
+        {
+          "index_1based": 13,
+          "context": "khối lượng bê tông dầm",
+          "facts": "khối lượng bê tông dầm",
+          "payload": "khối lượng bê tông dầm",
+          "equal": true
+        },
+        {
+          "index_1based": 14,
+          "context": "rộng dầm",
+          "facts": "rộng dầm",
+          "payload": "rộng dầm",
+          "equal": true
+        },
+        {
+          "index_1based": 15,
+          "context": "cao dầm",
+          "facts": "cao dầm",
+          "payload": "cao dầm",
+          "equal": true
+        },
+        {
+          "index_1based": 16,
+          "context": "hàm lượng thép lanh tô (kg/m³)",
+          "facts": "hàm lượng thép lanh tô (kg/m³)",
+          "payload": "hàm lượng thép lanh tô (kg/m³)",
+          "equal": true
+        },
+        {
+          "index_1based": 17,
+          "context": "bảng thống kê thép lanh tô",
+          "facts": "bảng thống kê thép lanh tô",
+          "payload": "bảng thống kê thép lanh tô",
+          "equal": true
+        },
+        {
+          "index_1based": 18,
+          "context": "khối lượng bê tông lanh tô",
+          "facts": "khối lượng bê tông lanh tô",
+          "payload": "khối lượng bê tông lanh tô",
+          "equal": true
+        },
+        {
+          "index_1based": 19,
+          "context": "cao lanh tô",
+          "facts": "cao lanh tô",
+          "payload": "cao lanh tô",
+          "equal": true
+        },
+        {
+          "index_1based": 20,
+          "context": "chiều dài gối lanh tô",
+          "facts": "chiều dài gối lanh tô",
+          "payload": "chiều dài gối lanh tô",
+          "equal": true
+        },
+        {
+          "index_1based": 21,
+          "context": "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "facts": "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "payload": "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "equal": true
+        }
+      ],
+      "facts_and_payload_extra": [
+        "Có phương án chưa có giá đủ nguồn/đơn vị/điều kiện",
+        "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+        "Chưa có cam kết thời gian giao có nguồn"
+      ]
+    }
+  ],
+  "payload_file_sha256": "65b9e76882be8a65f5cb511204f15825b18229bd3fd61cbd58548f3cced09804",
+  "historical_user_hash": "65b9e76882be8a65f5cb511204f15825b18229bd3fd61cbd58548f3cced09804",
+  "payload_hash_matches_historical": true,
+  "source_hash_check": {
+    "src/optimat/agent/material_advisor.py": {
+      "actual": "543dbc03f277b67512fc80600c00c1eaf59eb2eb20613b0c66f3b527c96298c9",
+      "manifest_after": "543dbc03f277b67512fc80600c00c1eaf59eb2eb20613b0c66f3b527c96298c9",
+      "match": true
+    },
+    "tests/test_material_advisor.py": {
+      "actual": "1a24cefb0bef7193debd9308a0a05520e7dc6e0bd01e2a2a22a93491c0d6fd45",
+      "manifest_after": "1a24cefb0bef7193debd9308a0a05520e7dc6e0bd01e2a2a22a93491c0d6fd45",
+      "match": true
+    }
+  }
+}

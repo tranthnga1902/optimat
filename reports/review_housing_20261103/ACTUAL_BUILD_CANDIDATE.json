@@ -1,0 +1,163 @@
+{
+  "case_id": "nha_huong_hai_duong_7x12",
+  "data_kind": "ACTUAL",
+  "split": "build",
+  "purpose": "candidate_for_workflow_QA_not_accuracy_acceptance",
+  "files": [
+    {
+      "path": "data/drawings/build/nha_huong_hai_duong_7x12_kien_truc.dxf",
+      "bytes": 9430388,
+      "sha256": "f3721915d599a9f115fd81e9b5fc266f98d896171cba3d1a1f522debc86f0234"
+    },
+    {
+      "path": "data/drawings/build/nha_huong_hai_duong_7x12_ket_cau.dxf",
+      "bytes": 8992729,
+      "sha256": "4ea9e76ead4eb9bb0849954eabf64f0a3cab74fa566633a981c82df50e859c4f"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO DIEN 16-12-2019 NHA ANH HUONG-HAI DUONG.dwg",
+      "bytes": 1024512,
+      "sha256": "20d4fc01dd6f88e10557df48d6663e47d59bfc97921a1b7e3d44566a4e23c24e"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO KET CAU 18-12 NHA A HUONG - HAI DUONG (SUA THEP DAM).dwg",
+      "bytes": 1651872,
+      "sha256": "0b6506e0948ab09edbc8fa439900af17bb4b9cc9ef7165a772ef8a3ce0fde732"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO NUOC 14-12-2019 NHA ANH HUONG - HAI DUONG.dwg",
+      "bytes": 792384,
+      "sha256": "9c5a21021c1edc05a7c76c006440039d8c4ab92e19ce5ff93fbe8256efec424f"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HỒ SƠ DỰ TOÁN NHÀ PHỐ 2 TẦNG 7X12M.pdf",
+      "bytes": 3182938,
+      "sha256": "6798261ea7ce01c78e4913d8fff8378f1a08fe6ed9112c69ac07b6c23a2db523"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HỒ SƠ THIẾT KẾ KIẾN TRÚC.dwg",
+      "bytes": 1489664,
+      "sha256": "8579f576f1fe8a23c5968153478afe0a819785804557a9cdc661faefd8b59ea8"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ KIẾN TRÚC.pdf",
+      "bytes": 4447425,
+      "sha256": "48dafa62678b5046418de2f2d096cc8d5d97d2456c1e309886c864672a215720"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ KẾT CẤU.pdf",
+      "bytes": 9655936,
+      "sha256": "422a9175668dc8ef0a9c8a40e04d0ec4866b7b3d81ffdc3b6308f1c691bd4a1c"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ NƯỚC.pdf",
+      "bytes": 3801117,
+      "sha256": "5b5d752bcf65b5481befdc511c3c8920d9b3c55b0c5379a1d9d542daa4215970"
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ ĐIỆN.pdf",
+      "bytes": 7557735,
+      "sha256": "de831d88dda6e1acd6987dac54d3fcb893d5fe16b7a9dac67b62217011f629d0"
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_huong_hai_duong_7x12.estimate.json",
+      "bytes": 468892,
+      "sha256": "4025f88e374e6c1bdaad48bdd7d8d3128f7b1af4d1515a6fd7b4159b4e704d55"
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_huong_hai_duong_7x12.quality_review.json",
+      "bytes": 134725,
+      "sha256": "a88abff69d1c64df435623941dfa9f16988b4d0f0c5edb1781a40967235b039f"
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_huong_hai_duong_7x12.verified_quantities.json",
+      "bytes": 12750,
+      "sha256": "dac7c2381aac3ed0d39872989c256084e7d97e8da9f1d3f104a37dd99db16540"
+    }
+  ],
+  "comparison_example": {
+    "id": "nha_huong_hai_duong_7x12-W010-drawing-steel",
+    "source_work_id": "nha_huong_hai_duong_7x12-W010",
+    "scope": "steel_schedule_mass",
+    "quantity": 0.76,
+    "unit": "t",
+    "components": [
+      {
+        "group": "cột",
+        "diameter_mm": 6,
+        "quantity": 95.6,
+        "unit": "kg",
+        "evidence": {
+          "handle": "1015953",
+          "text": "%%c6 : 95.6",
+          "layer": "TEXT_THCT",
+          "position": [
+            -1790968.0,
+            -1115671.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "group": "cột",
+        "diameter_mm": 16,
+        "quantity": 556.5,
+        "unit": "kg",
+        "evidence": {
+          "handle": "1015954",
+          "text": "%%c16: 556.5",
+          "layer": "TEXT_THCT",
+          "position": [
+            -1789208.0,
+            -1115671.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "group": "cột",
+        "diameter_mm": 18,
+        "quantity": 107.9,
+        "unit": "kg",
+        "evidence": {
+          "handle": "1015955",
+          "text": "%%c18: 107.9",
+          "layer": "TEXT_THCT",
+          "position": [
+            -1787448.0,
+            -1115671.0,
+            0.0
+          ]
+        }
+      }
+    ],
+    "aggregation": "parent_equals_sum_components; do_not_sum_parent_with_children",
+    "source_quantity": 0.836,
+    "source_unit": "tấn",
+    "source_estimate_location": {
+      "page": 9,
+      "table": 1,
+      "row": 12
+    },
+    "quantity_basis": "net_design_schedule; no estimate coefficient applied",
+    "drawing": "data\\drawings\\build\\nha_huong_hai_duong_7x12_ket_cau.dxf",
+    "drawing_sha256": "4ea9e76ead4eb9bb0849954eabf64f0a3cab74fa566633a981c82df50e859c4f",
+    "eligible_for_development_comparison": true,
+    "arithmetic_status": "not_independently_certified",
+    "blocking_issue_ids": []
+  },
+  "excluded_work_ids": [
+    "nha_huong_hai_duong_7x12-W005",
+    "nha_huong_hai_duong_7x12-W006"
+  ],
+  "excluded_reason": "Inconsistent tank schedule and unresolved foundation profile/intersections; not a complete exclusion list.",
+  "human_approval": false,
+  "upload_authorized": false,
+  "workflow_executed": false,
+  "limitations": [
+    "Existing files only; user must select files or authorize upload in coordination chat.",
+    "W010 is schedule mass 0.760 t, source estimate 0.836 t includes factor1.1; never compare as same quantity basis.",
+    "Steel schedule reference is not geometry-derived column dimensions or individually verified bars.",
+    "Other works require per-row gate; no whole-project accuracy claim or zero fill for missing values."
+  ]
+}

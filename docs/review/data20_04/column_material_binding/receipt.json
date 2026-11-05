@@ -1,0 +1,31 @@
+{
+  "scope": "work material contribution per final snapshot index",
+  "source_files": {
+    "src/optimat/rough/models.py": {
+      "before": "69F12FFB9EE6E4250D8569F80281D076F461E1252E353CBB8E8A297AC9A06AC2",
+      "after": "ec6430eab39cd9ffc75261e784e857bb29062544d7f9e01d96756e89ff1b6e0c"
+    },
+    "src/optimat/rough/materials.py": {
+      "before": "AE1F83BD9503788BF568CCB7482E8164FD8E7F7CC2624CD8FCEDBC40FC5A4567",
+      "after": "5bc8c5ef06a942a2da6c1e85ddb18c10bb56c0cc164bed51d90c10bb033feb3c"
+    },
+    "tests\\test_column_material_binding.py": {
+      "after": "abb72e6572f7d6e9b91c9da3235f8ab6e56f94242bc714884e71c8a730da3ceb"
+    }
+  },
+  "source_dxf_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "red": {
+    "exit": 1,
+    "summary": "3 failed, 1 passed in 3.32s"
+  },
+  "green": {
+    "exit": 0,
+    "summary": "129 passed in 6.45s"
+  },
+  "actual_reader_fixture": "final_v3/reader.json",
+  "compute_rough_exit": 0,
+  "ui_helper_exit": 0,
+  "browser_e2e": false,
+  "db_written": false,
+  "openai_calls": 0
+}

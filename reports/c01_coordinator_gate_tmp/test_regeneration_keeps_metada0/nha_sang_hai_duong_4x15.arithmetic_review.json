@@ -1,0 +1,15 @@
+[
+  {
+    "work_id": "nha_sang_hai_duong_4x15-W028",
+    "source": {
+      "page": 14,
+      "table": 1,
+      "row": 21
+    },
+    "formula": "D : -3,56*3*0,22*1,1",
+    "source_quantity": -2.59,
+    "calculated": -2.58456,
+    "difference": 0.00544,
+    "review_status": "needs_review"
+  }
+]

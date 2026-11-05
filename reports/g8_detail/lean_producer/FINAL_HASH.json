@@ -1,0 +1,6 @@
+{
+  "src/optimat/rough/foundations.py": "18660eabb927549a12c7ae52e85321a37b0f6b41a2e8a297ae77c4859b47848a",
+  "src/optimat/rough/quantity_details.py": "2b026826413c388c70e5ee4645cad7b9a18da29d83ebc88f8d65cd9936104af2",
+  "src/optimat/rough/takeoff.py": "2ede81021e619e7ff152e3fc2edc0231613d141ff390066b8314e5a3c9c61d0d",
+  "tests/test_rough_quantity_details.py": "fae4effed89231d3aa2921ddfdeec10eb97b02821ca236f776c1d6143b1eaf6a"
+}

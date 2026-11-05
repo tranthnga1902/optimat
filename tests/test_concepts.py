@@ -84,13 +84,17 @@ def test_review_payload_has_conventions(sample_dxf):
     assert {c["trang_thai"] for c in conv["checks"]} <= {"dat", "vi_pham", "chua_kiem", "khong_ap_dung"}
 
 
-def test_concept_samples_draw_block_and_list_layers(monkeypatch):
+def test_concept_samples_draw_block_and_list_layers(monkeypatch, tmp_path):
     from optimat import config
     from optimat.drawing import concept_samples
     monkeypatch.setattr(concept_samples, "SAMPLE_DIRS", (config.DATA_DIR / "sample",))
+    monkeypatch.setattr(concept_samples, "CACHE", tmp_path / "samples.json")
     concept_samples._scan.cache_clear()
     try:
         r = concept_samples.samples()
+        concept_samples._scan.cache_clear()
+        monkeypatch.setattr(concept_samples, "_read", lambda paths: pytest.fail("phải đọc lại từ CACHE"))
+        assert concept_samples.samples() == r
     finally:
         concept_samples._scan.cache_clear()
     assert r["B01"]["svg"].startswith("<svg") and r["B01"]["matches"] == ["D1 (sample_floor)"]

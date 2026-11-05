@@ -1,0 +1,64 @@
+{
+  "project": "nha_sang_hai_duong_4x15",
+  "target_instance": "C2@4/A",
+  "target_top_level_m": 6.75,
+  "pdf_page": 24,
+  "sheet": "KC-03-02",
+  "source_kc_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "images": [
+    {
+      "path": "docs/review/data20_07/C2_SLAB_PAGE24_CONTEXT.png",
+      "sha256": "1b09ab8726424765c87b3712aeb21a6b13d392c915f3d128610e7615a5072d28"
+    },
+    {
+      "path": "docs/review/data20_07/C2_SLAB_3_4_A_B.png",
+      "sha256": "72fb0f238ac4704e56b2f29051309a1c70591c4a186d4d461c2c2008047f0522"
+    },
+    {
+      "path": "docs/review/data20_07/C2_SLAB_LEGEND.png",
+      "sha256": "e15fd994b995d78461cd92b11ed47fd4af0a9804bc599e43cc1d246980c5bd4f"
+    }
+  ],
+  "design_reading": {
+    "bay": "3–4/A–B",
+    "slab_note": "+6.750; H=120MM",
+    "legend_normal_slab": "unhatched region = reinforced concrete slab12cm",
+    "column_adjacency": "C2 at4/A is corner joint of boundary beams along grid4 and gridA; adjacent interior slab lies toward3/B",
+    "nearby_special_regions": "cross-hatched12cm lowered5cm subregion near3/B;15cm and sloping slab near2–3; opening crossedX near2–3/B; not at4/A in shown plan"
+  },
+  "cad_locators": {
+    "slab_note_height": "11767BF",
+    "slab_note_level": "11767BC",
+    "view_title": "117622B"
+  },
+  "missing": {
+    "verified_closed_slab_polygon": null,
+    "column_slab_contact_intersection": null,
+    "beam_clipping_receipt": null,
+    "automatic_region_assignment": null
+  },
+  "conclusion": "120mm is supported by design note and normal slab legend for local region next to4/A, not merely common sheet; exact overlap allocation still conditional on actual boundaries and joint convention.",
+  "human_approval": false,
+  "verification_status": "chua_kiem",
+  "additional_design_evidence": {
+    "pdf_page": 29,
+    "sheet": "KC-04-03",
+    "beam": "D1-4A SL01",
+    "longitudinal_grid": "1 through4; lastspan3–4=5180mm",
+    "levels_m": [
+      7.5,
+      6.75
+    ],
+    "level_step_mm": 750,
+    "section_near_grid4": "3–3",
+    "section_dimensions_mm": {
+      "width": 220,
+      "slab_flange": 120,
+      "web_below_slab": 280,
+      "total_depth": 400
+    },
+    "source_image": "docs/review/data20_07/C2_BEAM_D14A_PAGE29.png",
+    "source_image_sha256": "17babd2bba3a8df2a199bd5f6bc2bf40d0162d7e639b1bb7f69d0d76f70e5301",
+    "caveat": "Cross-view corroboration in same design, not independent ground truth or proof of runtime joint clipping."
+  }
+}

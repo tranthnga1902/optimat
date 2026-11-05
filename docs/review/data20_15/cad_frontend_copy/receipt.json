@@ -1,0 +1,88 @@
+[
+  {
+    "port": "3001",
+    "logs": [
+      {
+        "script": "check-cad-fit.cjs",
+        "exit_code": 0
+      },
+      {
+        "script": "check-partial-confirm.cjs",
+        "exit_code": 0
+      },
+      {
+        "script": "check-work-list.cjs",
+        "exit_code": 0
+      }
+    ],
+    "files": [
+      {
+        "path": "src/app/(user)/do-boc/ReadPreview.tsx",
+        "target": "a7542dd799adfb2b1d492627e0ef560fca44c2d090b780d086091284c5417d29",
+        "copy_stable": true,
+        "candidate_stable": true
+      },
+      {
+        "path": "src/app/(user)/do-boc/model.ts",
+        "target": "59900ecf9476a38241649f4652b03c7103e59659a8d23c097e81173734033fa9",
+        "copy_stable": true,
+        "candidate_stable": true
+      },
+      {
+        "path": "src/app/(user)/do-boc/Board.tsx",
+        "target": "12776827d945b55bed5890e4432d8609267354e52407fb7bc6d8ce6d1af56ad5",
+        "copy_stable": true,
+        "candidate_stable": true
+      },
+      {
+        "path": "src/app/(user)/do-boc/Review.tsx",
+        "target": "ef6411ae331ee9725f686488a00d2426c1d4688cde81bfb605175f0c93fb266b",
+        "copy_stable": true,
+        "candidate_stable": true
+      }
+    ]
+  },
+  {
+    "port": "3002",
+    "logs": [
+      {
+        "script": "check-cad-fit.cjs",
+        "exit_code": 0
+      },
+      {
+        "script": "check-partial-confirm.cjs",
+        "exit_code": 0
+      },
+      {
+        "script": "check-work-list.cjs",
+        "exit_code": 0
+      }
+    ],
+    "files": [
+      {
+        "path": "src/app/(user)/do-boc/ReadPreview.tsx",
+        "target": "a7542dd799adfb2b1d492627e0ef560fca44c2d090b780d086091284c5417d29",
+        "copy_stable": true,
+        "candidate_stable": true
+      },
+      {
+        "path": "src/app/(user)/do-boc/model.ts",
+        "target": "b4798ce06bb5ca74ecd55f5f12a564fc678c4f121abf55cde2312cf18fed9b80",
+        "copy_stable": true,
+        "candidate_stable": true
+      },
+      {
+        "path": "src/app/(user)/do-boc/Board.tsx",
+        "target": "97bb704d805f83f985ab13b1ab46a078079bce8a2b78b89efe07f60a5b130c2b",
+        "copy_stable": true,
+        "candidate_stable": true
+      },
+      {
+        "path": "src/app/(user)/do-boc/Review.tsx",
+        "target": "c079ab6a84c94999c53de054dfcc1ddaa7d0e81326b2435dfd92770c16eb637a",
+        "copy_stable": true,
+        "candidate_stable": true
+      }
+    ]
+  }
+]

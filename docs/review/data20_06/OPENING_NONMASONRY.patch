@@ -1,0 +1,42 @@
+--- a/src/optimat/drawing/review.py
++++ b/src/optimat/drawing/review.py
+@@ -82,6 +82,7 @@
+     complete: bool = True
+     pending_groups: list[PendingWallGroup] = Field(default_factory=list)
+     pending_openings: list[ReviewOpening] = Field(default_factory=list)
++    outside_masonry_openings: list[ReviewOpening] = Field(default_factory=list)
+     walls_kept: int
+     walls_removed: int
+     walls_added: int
+@@ -108,8 +109,11 @@
+         raise ValueError(f"Quy tắc chiều dài không hợp lệ: {plan.length_rule} (chỉ nhận {', '.join(LENGTH_RULES)}).")
+     walls = [w for w in plan.walls if w.keep and w.masonry]
+     ids = {w.id for w in walls}
+-    incomplete = [o for o in plan.openings if o.keep and (o.w is None or o.h is None or o.wall not in ids)]
+-    unassigned = [o for o in incomplete if o.wall not in ids]
++    kept_ids = {w.id for w in plan.walls if w.keep}
++    outside_masonry = [o for o in plan.openings if o.keep and o.wall in kept_ids and o.wall not in ids]
++    incomplete = [o for o in plan.openings if o.keep and
++                  (o.wall not in kept_ids or (o.wall in ids and (o.w is None or o.h is None)))]
++    unassigned = [o for o in incomplete if o.wall not in kept_ids]
+     if plan.length_rule == "thong_thuy":
+         # tường bê tông giữ lại vẫn là mặt giao: tính thông thủy trên mọi tường đang giữ
+         lengths = net_lengths([(w.id, w.x1, w.y1, w.x2, w.y2, float(w.cls)) for w in plan.walls if w.keep])
+@@ -119,6 +123,9 @@
+     warnings = []
+     for o in plan.openings:
+         if not o.keep:
++            continue
++        if o.wall in kept_ids and o.wall not in ids:
++            warnings.append(f"{plan.plan}, lỗ {o.id} gắn tường {o.wall}: không áp dụng khối xây; chưa xét công tác khác.")
+             continue
+         if o.wall not in ids:
+             warnings.append(f"Lỗ mở {o.id} không gắn với tường nào đang giữ, không trừ.")
+@@ -194,6 +201,7 @@
+         file=plan.file, plan=plan.plan, height_mm=H, length_rule=plan.length_rule, groups=groups,
+         total_net_area_m2=known if not incomplete else None, known_net_area_m2=known,
+         complete=not incomplete, pending_groups=pending_groups, pending_openings=incomplete,
++        outside_masonry_openings=outside_masonry,
+         walls_kept=len(walls), walls_removed=sum(1 for w in plan.walls if not w.keep),
+         walls_added=sum(1 for w in plan.walls if w.src == "manual" and w.keep),
+         walls_edited=sum(1 for w in plan.walls if w.edited and w.src != "manual" and w.keep),

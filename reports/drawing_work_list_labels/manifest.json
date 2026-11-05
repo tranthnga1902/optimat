@@ -1,0 +1,12 @@
+{
+  "base_manifest_sha256": "0a3b0f3f7bbc5f3ee356d4e303cd9eebfbf5dde3dd75ca30c7603b1776954e80",
+  "ports": [
+    "3002",
+    "3001"
+  ],
+  "file": "src/app/(user)/do-boc/DrawingWorkList.tsx",
+  "base_sha256": "751b83d5d7c07534bd48e72feda4d6279d3f708b4858b9cdf4ca67ff4c56e329",
+  "new_sha256": "3841e44c03b88d57342d154d4038d0dc9f7afb8f44d25258da13309a1b23d60c",
+  "patch": "drawing-work-list-labels.patch",
+  "patch_sha256": "455c56e3637230af0a893bbfd448eb278320e9e6c5ae4e19a9b308b46064cee1"
+}

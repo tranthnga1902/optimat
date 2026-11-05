@@ -1,0 +1,136 @@
+@dataclass(frozen=True)
+class _TieGroup:
+    members: tuple[LinearMember, ...]
+    segments: tuple[tuple[float, float, float, float], ...]
+    missing: tuple[str, ...]
+
+
+def _axis(m: LinearMember):
+    values = (m.x1, m.y1, m.x2, m.y2)
+    if not all(math.isfinite(v) for v in values) or m.length_mm <= 0:
+        return None
+    if m.y1 == m.y2:
+        return ("H", m.y1, min(m.x1, m.x2), max(m.x1, m.x2))
+    if m.x1 == m.x2:
+        return ("V", m.x1, min(m.y1, m.y2), max(m.y1, m.y2))
+    return None
+
+
+def normalize_ties(members: list[LinearMember], *, plan_context: bool = False) -> list[_TieGroup]:
+    """Hợp đoạn cùng cơ sở đã biết; không suy cùng tầng/cao độ từ hình chiếu."""
+    kept = [m for m in members if m.keep and m.kind == "GIANG_TUONG"]
+    reasons = [[] for _ in kept]
+    axes = [_axis(m) for m in kept]
+    for i, m in enumerate(kept):
+        if not plan_context:
+            reasons[i].append("chưa xác nhận tầng/hệ tọa độ giằng (pending K03)")
+        if m.z_bottom_mm is None:
+            reasons[i].append("cao độ đáy giằng")
+        for value, label in ((m.b_mm, "rộng giằng"), (m.d_mm, "cao giằng")):
+            if value is None or not math.isfinite(value) or value <= 0:
+                reasons[i].append(label)
+        if axes[i] is None:
+            reasons[i].append("trục giằng xiên, dài 0 hoặc tọa độ không hữu hạn: chưa hỗ trợ hợp")
+    for i, a in enumerate(kept):
+        for j in range(i):
+            b = kept[j]
+            aa, bb = axes[i], axes[j]
+            if aa is None or bb is None:
+                continue
+            if aa[:2] == bb[:2]:
+                overlaps = min(aa[3], bb[3]) > max(aa[2], bb[2])
+            elif aa[0] != bb[0]:
+                h, v = (aa, bb) if aa[0] == "H" else (bb, aa)
+                overlaps = h[2] <= v[1] <= h[3] and v[2] <= h[1] <= v[3]
+            else:
+                overlaps = False
+            if not overlaps:
+                continue
+            if all(x is not None and math.isfinite(x) for x in (a.z_bottom_mm, b.z_bottom_mm, a.d_mm, b.d_mm)):
+                if a.z_bottom_mm + a.d_mm <= b.z_bottom_mm or b.z_bottom_mm + b.d_mm <= a.z_bottom_mm:
+                    continue
+            same = (aa[:2] == bb[:2] and a.z_bottom_mm is not None
+                    and (a.z_bottom_mm, a.b_mm, a.d_mm, a.source) == (b.z_bottom_mm, b.b_mm, b.d_mm, b.source))
+            if not same:
+                reason = f"giằng {a.id}/{b.id} chồng hình chiếu nhưng chưa chứng minh cùng thể tích/nguồn"
+                reasons[i].append(reason)
+                reasons[j].append(reason)
+    buckets = {}
+    for i, m in enumerate(kept):
+        axis = axes[i]
+        key = (axis[:2] if axis else ("pending", i), m.z_bottom_mm, m.b_mm, m.d_mm, m.source)
+        buckets.setdefault(key, []).append(i)
+    out = []
+    for indices in buckets.values():
+        items = tuple(kept[i] for i in indices)
+        missing = tuple(dict.fromkeys(r for i in indices for r in reasons[i]))
+        segments = []
+        if not missing:
+            spans = sorted((axes[i][2], axes[i][3]) for i in indices)
+            merged = []
+            for lo, hi in spans:
+                if merged and lo <= merged[-1][1]:
+                    merged[-1] = (merged[-1][0], max(hi, merged[-1][1]))
+                else:
+                    merged.append((lo, hi))
+            direction, fixed = axes[indices[0]][:2]
+            segments = [(lo, fixed, hi, fixed) if direction == "H" else (fixed, lo, fixed, hi) for lo, hi in merged]
+        out.append(_TieGroup(items, tuple(segments), missing))
+    return out
+
+
+def _tie_evidence(group: _TieGroup) -> list[str]:
+    evidence = []
+    for m in group.members:
+        raw = m.length_mm * m.b_mm * m.d_mm / 1e9 if m.b_mm is not None and m.d_mm is not None else None
+        evidence.append(f"{m.id} ({m.source}) trục ({m.x1:g},{m.y1:g})–({m.x2:g},{m.y2:g}); "
+                        f"b={m.b_mm}, d={m.d_mm} mm; z đáy={m.z_bottom_mm} mm tương đối đáy tầng/tường; "
+                        f"{m.z_evidence or 'chưa ghi chứng cứ cao độ'}; BT thô trước hợp={raw} m³")
+    return evidence
+
+
+def linear_works(plan: str, members: list[LinearMember], *,
+                 tie_groups: list[_TieGroup] | None = None) -> tuple[list[WorkItem], list[str]]:
+    works, warnings = [], []
+    ties = normalize_ties(members) if tie_groups is None else tie_groups
+    for group in ties:
+        first = group.members[0]
+        b, d = first.b_mm, first.d_mm
+        missing = list(group.missing)
+        length = sum(math.hypot(x2 - x1, y2 - y1) for x1, y1, x2, y2 in group.segments) / 1000
+        evidence = _tie_evidence(group)
+        ids = ", ".join(m.id for m in group.members[:5])
+        label = f"giằng ({ids})"
+        inputs = ["cao độ đáy giằng: C (người dùng xác nhận trong mặt bằng)"] if not missing else []
+        for code, quantity, formula, extra in (
+            ("GIANG_TUONG", None if missing else length * b * d / 1e6,
+             f"dài hợp {_fmt(length)} m × b={b} mm × d={d} mm; z đáy={first.z_bottom_mm} mm", {}),
+            ("COP_PHA", None if missing else 2 * d / 1000 * length,
+             f"2 × cao {d} mm × dài hợp {_fmt(length)} m (đáy nằm trên tường)", {"formwork_of": "GIANG_TUONG"}),
+        ):
+            works.append(_work(code, quantity, plan=plan, element=label, source=first.source,
+                               formula=formula, missing=missing, evidence=evidence,
+                               status="D" if missing else "C", inputs=inputs, **extra))
+        warnings += [f"{plan}, {label}: {reason}." for reason in missing]
+    # Sê nô giữ cách tính cũ, không đi qua quy tắc hợp giằng.
+    groups = {}
+    for m in members:
+        if m.keep and m.kind == "SE_NO":
+            groups.setdefault((m.b_mm, m.d_mm, m.source), []).append(m)
+    for (b, d, source), items in sorted(groups.items(), key=lambda kv: (kv[0][0] or 0, kv[0][1] or 0, kv[0][2])):
+        length = sum(m.length_mm for m in items) / 1000
+        missing = [lab for value, lab in ((b, "rộng sê nô"), (d, "cao sê nô")) if value is None]
+        ids = ", ".join(sorted({m.id for m in items})[:5])
+        label = f"{len(items)} sê nô" + (f" {b:.0f}×{d:.0f}" if not missing else "") + f" ({ids})"
+        evidence = [f"{m.id} ({m.source}) trục ({m.x1:.0f},{m.y1:.0f})–({m.x2:.0f},{m.y2:.0f})" for m in items]
+        works.append(_work("SE_NO", length * b * d / 1e6 if not missing else None, plan=plan, element=label,
+                           missing=missing, source=source, evidence=evidence,
+                           formula=f"{_fmt(length)} m × {_fmt(b / 1000) if b else 'rộng'} m × {_fmt(d / 1000) if d else 'cao'} m"))
+        works.append(_work("COP_PHA", None if missing else (2 * d + b) / 1000 * length, plan=plan,
+                           element=f"cốp pha {label}", formwork_of="SE_NO", missing=missing, source=source,
+                           formula="(2 × cao + rộng) × dài"))
+    if groups:
+        warnings.append(f"{plan}: sê nô tính theo tiết diện chữ nhật rộng × cao (quy ước gần đúng); sê nô chữ U cần sửa tay.")
+    return works, warnings
+
+

@@ -1,0 +1,21 @@
+{
+  "pid": 28940,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_materials.py",
+    "tests/test_rough_plaster.py",
+    "tests/test_rough_status.py",
+    "tests/test_export_boq_cli.py",
+    "tests/test_rough_takeoff.py",
+    "tests/test_rough_agent.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\a01_q01_boq\\focused\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T10:12:04.947607+00:00"
+}

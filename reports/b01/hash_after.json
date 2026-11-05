@@ -1,0 +1,18 @@
+{
+  "data/catalog/labor_rates.csv": "b096494b1fc17dcb94d1a75f9d618bcaf0ab076dc376d546503f45b4a95fd2e6",
+  "data/catalog/material_aliases.csv": "aca18b7d581f02c46cee4960cb32bcc18b0e12662f94f177e627888add291fe6",
+  "data/catalog/material_families.csv": "2ec8e306997dc03e1d59f892b418e0dcf8010fcc3cf987b6237f7a92b8e3ba11",
+  "data/catalog/material_groups.csv": "6e643128f1765bcee81292cb363708cdf60582e6a079194c42d27f88b43e051c",
+  "data/catalog/material_relations.csv": "5b8233eae16c7e3edbe4b00147729241d6be83bdb10c5a842cd9fca9767793ef",
+  "data/catalog/material_standards.csv": "afeb87b30b2dabaa4470056ca7f2e3e3850f6cc6fe411de8dc7f4f71e2143582",
+  "data/catalog/materials.csv": "9b644f3d83f4f525a3ddd9d62de7bda8761367ae4998bc7b809821e6a12a2bf6",
+  "data/catalog/standards.csv": "e9a18efb42a0b4b41c9fe3a3886e4dcf7fa8aa29a1a00175dba9207a1ad5d25a",
+  "data/catalog/supplier_materials.csv": "614a4e11632391f927ec05465bbaf6c83494795fbdbbba14666323799d4673bf",
+  "data/catalog/suppliers.csv": "4892ee38bc494445f74585a882e87e18e889e9e0d42ce0062ec8957301a504e7",
+  "data/catalog/vehicles.csv": "c48ed13f6c5b8d8b24e35b96bbb33ab9bd611679ee1e01a2ba630ceb1198d310",
+  "data/catalog/wall_systems.csv": "7b135b8ae2ee64db8530d098b6aea799fa537db4f0bb8dc79ebc1029aace2408",
+  "data/rules/dinh_muc_phan_tho.csv": "0e677eaa3cffeb4affd1fa3baaafb35c288f63e05ec39481e73c437cb092d542",
+  "src/optimat/rough/materials.py": "86b32863e9a8907eb0bf8fd44e420e3279036b22fe7c44ca365776e0e2b064a1",
+  "src/optimat/rough/models.py": "42406cb78358cb48d39fe539206767599bf81c4a890d77ec97c41ff1f769dc5a",
+  "src/optimat/rough/norms.py": "160a644ecbdf5e0c3797aa90f4391e3bcf98809c4f354dc05b08fb398111e934"
+}

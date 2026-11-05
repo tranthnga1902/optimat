@@ -1,0 +1,11 @@
+ma,viet_tat,day_du,ghi_chu,nguon
+VT01,bt,be tong,"""BT"" / ""bt"" đứng riêng: bê tông (BTCT, BT lót). So nguyên từ: không đụng ""btct"", ""bt1""",Bộ 46 kiến trúc: "sàn BTCT đổ tại chỗ"
+VT02,btct,be tong cot thep,"""BTCT"": bê tông cốt thép",Bộ 46 kiến trúc: "sàn BTCT đổ tại chỗ mác 200"
+VT03,xm,xi mang,"""XM"": xi măng (vữa XM, XM PCB30)",Bộ 46 kiến trúc: "lót vữa XM mác 75"
+VT04,kg nung,khong nung,"""kg nung"": không nung",Cách ghi tắt thường gặp trên bản vẽ (đề xuất, chưa kiểm trên bản vẽ build)
+VT05,k nung,khong nung,"""k nung"": không nung",Cách ghi tắt thường gặp trên bản vẽ (đề xuất, chưa kiểm trên bản vẽ build)
+VT06,ko nung,khong nung,"""ko nung"": không nung",Cách ghi tắt thường gặp trên bản vẽ (đề xuất, chưa kiểm trên bản vẽ build)
+VT07,gach dn,gach dat nung,"""gạch ĐN"": gạch đất nung",Cách ghi tắt thường gặp trên bản vẽ (đề xuất, chưa kiểm trên bản vẽ build)
+VT08,gach bt,gach be tong,"""gạch BT"": gạch bê tông (block). Xét trước VT01 vì mẫu dài hơn",Cách ghi tắt thường gặp trên bản vẽ (đề xuất, chưa kiểm trên bản vẽ build)
+VT09,vxm,vua xi mang,"""VXM"": vữa xi măng",Cách ghi tắt thường gặp trên bản vẽ (đề xuất, chưa kiểm trên bản vẽ build)
+VT10,gach ong,gach lo,"""gạch ống"" (miền Nam): gạch lỗ",Cách gọi vùng miền, chưa kiểm trên bản vẽ build

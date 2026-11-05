@@ -1,0 +1,676 @@
+--- a/src/optimat/data_check.py
++++ b/src/optimat/data_check.py
+@@ -12,6 +12,7 @@
+ """
+ from __future__ import annotations
+ 
++import math
+ import re
+ from collections import Counter, defaultdict
+ from dataclasses import asdict, dataclass
+@@ -33,7 +34,7 @@
+ @dataclass
+ class Finding:
+     level: str          # error | warning | info
+-    area: str           # vat_lieu | phuong_an_tuong | ten_goi_khac | quy_tac | dinh_muc_phan_tho | nguon_cung | gia | dap_an | ho_so
++    area: str           # vat_lieu | phuong_an_tuong | ten_goi_khac | quy_tac | dinh_muc_phan_tho | nguon_cung | gia | dap_an | ho_so | dap_an_d02
+     item: str
+     message: str
+ 
+@@ -414,6 +415,358 @@
+     return {"ho_so": n, "bi_chan": sorted(blocked)}
+ 
+ 
++# Bộ đáp án D02 (mẫu: data/ground_truth/du_toan/d02/_mau, đặc tả docs/D02_DAC_TA_DAP_AN.md): một thư mục mỗi hồ sơ,
++# tên thư mục = cases.csv/ten. Kiểm hợp đồng dữ liệu, không tính KPI; không thực thi chuỗi công thức.
++D02_DIR = CASES_FILE.parent / "d02"
++D02_COLUMNS = {
++    "so_hang_muc.csv": ("id", "cong_trinh_id", "vi_tri", "ma_pt", "ton_tai", "nguon_ton_tai", "pham_vi", "ma_qd", "ly_do",
++                        "trang_thai_kiem", "nguoi_kiem", "ngay_kiem"),
++    "dap_an_cong_tac.csv": ("id", "cong_trinh_id", "dong_goc", "cha_id", "quan_he_cha", "hang_muc_id", "ma_pt", "pham_vi", "ma_qd",
++                            "dem_mau_so", "ma_cong_tac_goc", "ma_cong_tac", "cau_kien", "vi_tri", "noi_dung", "so_luong",
++                            "kich_thuoc", "cong_thuc", "khoi_luong", "khoi_luong_tinh_lai", "don_vi", "cong_tru", "phu_thuoc",
++                            "loai_nguon", "nguon", "trang_thai_kiem", "nguoi_kiem", "ngay_kiem", "can_kiem"),
++    "dap_an_vat_tu.csv": ("id", "cong_trinh_id", "cong_tac_id", "dong_vat_tu_goc", "material_id", "ten_vat_tu", "quy_cach",
++                          "don_vi_goc", "don_vi", "luong", "co_so_luong", "he_so", "nguon_he_so", "hao_hut", "dung_lam_dap_an",
++                          "loai_nguon", "nguon", "trang_thai_kiem", "nguoi_kiem", "ngay_kiem", "thieu"),
++    "khoa_nguon.csv": ("duong_dan", "vai_tro", "sha256", "so_byte", "trong_kho", "ngay_khoa", "ghi_chu"),
++}
++D02_CHECK = ("nhap", "cho_kiem", "da_kiem")
++D02_EXISTS = ("co", "khong", "chua_ro")
++D02_SCOPE = ("IN", "OUT", "chua_phan_loai", "hon_hop")      # hon_hop: chỉ dòng gốc có dòng con khác phạm vi
++D02_COUNT = ("co", "khong", "cho_phan_loai")
++D02_SOURCE = ("du_toan", "do_tay", "tai_lieu_khac")
++# M01 mục 5A: hạng mục OUT; PT09 vừa IN (vật tư cọc) vừa OUT (dịch vụ ép/khoan/đập đầu cọc)
++M01_PT = tuple(f"PT{i:02d}" for i in range(1, 48))
++M01_PT_OUT = ("PT22", "PT25", "PT45", "PT46", "PT47")
++M01_PT_BOTH = ("PT09",)
++M01_QD_OUT = ("QĐ-chung", "QĐ-02", "QĐ-11", "QĐ-12", "QĐ-13", "QĐ-18")     # quyết định có thể đặt OUT
++# đổi đơn vị chính xác (nhân lũy thừa 10 hoặc viết lại ký hiệu): không cần nguồn; (gốc, mới) -> hệ số nhân giá trị
++EXACT_UNITS = {("tấn", "kg"): 1000.0, ("m3", "m³"): 1.0, ("m2", "m²"): 1.0, ("100m2", "m²"): 100.0, ("100m3", "m³"): 100.0,
++               ("100m", "m"): 100.0}
++D02_ADD = ("", "cong", "tru")      # cong_tru: phần con trừ (giao nhau, lỗ mở) ghi số âm kèm cong_tru = tru
++
++
++def _num_or_none(v: str):
++    """Số hữu hạn hoặc None (chuỗi trống, chữ, NaN, ±Infinity đều không phải số dùng để tính)."""
++    try:
++        x = float(v)
++    except (TypeError, ValueError):
++        return None
++    return x if math.isfinite(x) else None
++
++
++def _same(a: float, b: float) -> bool:
++    """Bằng nhau trong sai số làm tròn số thực."""
++    return abs(a - b) <= max(1e-9, 1e-9 * max(abs(a), abs(b)))
++
++
++def _rows(path: Path) -> tuple[list[str], list[dict]]:
++    import csv
++    with path.open(encoding="utf-8-sig", newline="") as f:
++        reader = csv.DictReader(f)
++        return list(reader.fieldnames or []), [{k: (v or "").strip() for k, v in r.items() if k} for r in reader]
++
++
++def denominator_ids(works: list[dict]) -> list[str]:
++    """Dòng đáp án công tác vào mẫu số: dem_mau_so = co (một dòng mỗi dòng gốc; dòng con không bao giờ đếm)."""
++    return [r["id"] for r in works if r.get("dem_mau_so") == "co"]
++
++
++def material_totals(materials: list[dict]) -> dict[tuple[str, str, str], float]:
++    """Cộng vật tư theo (quy cách, đơn vị, cơ sở lượng): lượng lắp đặt và lượng mua không bao giờ gộp chung."""
++    out: dict[tuple[str, str, str], float] = defaultdict(float)
++    for r in materials:
++        q = _num_or_none(r.get("luong"))
++        if q is not None:
++            out[(r["quy_cach"], r["don_vi"], r["co_so_luong"])] += q
++    return dict(out)
++
++
++def check_answer_set(folder, cases_path=None, root=None) -> list[Finding]:
++    """Kiểm một bộ đáp án D02. Lỗi: cấu trúc, liên kết, phạm vi trái M01, đã kiểm thiếu bằng chứng, số 0 thay số trống,
++    tổng con lệch cha chưa ghi nhận, trộn lượng lắp đặt/mua, đổi đơn vị thiếu căn cứ. Cảnh báo: dòng chưa phân loại, phần chưa
++    tách đủ số, lệch đã ghi nhận, nguồn ngoài kho thiếu trên máy."""
++    import hashlib
++    from .rough.models import WORKS
++    folder, root = Path(folder), Path(root or config.ROOT)
++    tag = f"d02/{folder.name}"
++    out: list[Finding] = []
++
++    def f(level: str, item: str, msg: str) -> None:
++        out.append(Finding(level, "dap_an_d02", f"{tag}/{item}", msg))
++
++    data: dict[str, list[dict]] = {}
++    for name, cols in D02_COLUMNS.items():
++        p = folder / name
++        if not p.is_file():
++            f("error", name, "Thiếu file.")
++            data[name] = []
++            continue
++        have, rows = _rows(p)
++        miss = [c for c in cols if c not in have]
++        if miss:
++            f("error", name, f"Thiếu cột: {', '.join(miss)}.")
++            return out
++        data[name] = rows
++    hm, works, mats, lock = (data[n] for n in D02_COLUMNS)
++
++    # liên kết với manifest D01
++    case = None
++    if (Path(cases_path) if cases_path else CASES_FILE).is_file():
++        _, cases = _rows(Path(cases_path) if cases_path else CASES_FILE)
++        case = next((c for c in cases if c.get("ten") == folder.name), None)
++    if case is None:
++        f("error", folder.name, "Tên thư mục không khớp hồ sơ nào trong cases.csv.")
++    ct = case.get("cong_trinh_id") if case else None
++    for name in ("so_hang_muc.csv", "dap_an_cong_tac.csv", "dap_an_vat_tu.csv"):
++        bad = sorted({r["cong_trinh_id"] for r in data[name]} - {ct}) if ct else []
++        if bad:
++            f("error", name, f"cong_trinh_id {', '.join(bad)} khác manifest ({ct}).")
++
++    def unique(rows: list[dict], name: str) -> dict[str, dict]:
++        seen: dict[str, dict] = {}
++        for i, r in enumerate(rows, start=2):
++            if not r["id"]:
++                f("error", f"{name} dòng {i}", "Thiếu id.")
++            elif r["id"] in seen:
++                f("error", f"{name} dòng {i}", f"id {r['id']} trùng.")
++            seen.setdefault(r["id"], r)
++        return seen
++
++    def checked(r: dict, name: str, src_field: str) -> None:
++        if r["trang_thai_kiem"] not in D02_CHECK:
++            f("error", f"{name} {r['id']}", f"trang_thai_kiem \"{r['trang_thai_kiem']}\" không hợp lệ.")
++        if r["trang_thai_kiem"] == "da_kiem":
++            miss = [c for c in ("nguoi_kiem", "ngay_kiem", src_field) if not r.get(c)]
++            if miss:
++                f("error", f"{name} {r['id']}", f"Ghi đã kiểm nhưng thiếu {', '.join(miss)}.")
++
++    def scope(r: dict, name: str) -> None:
++        pt, pv, qd = r.get("ma_pt", ""), r["pham_vi"], r["ma_qd"]
++        if pv not in D02_SCOPE or (pv == "hon_hop" and name != "dap_an_cong_tac.csv"):
++            f("error", f"{name} {r['id']}", f"pham_vi \"{pv}\" không hợp lệ.")
++        if pt and pt not in M01_PT:
++            f("error", f"{name} {r['id']}", f"ma_pt {pt} không có trong M01.")
++        if pv == "OUT":
++            if not qd:
++                f("error", f"{name} {r['id']}", "Dòng OUT thiếu mã quyết định M01.")
++            elif not any(q in M01_QD_OUT for q in qd.split("/")):
++                f("error", f"{name} {r['id']}", f"{qd} không phải quyết định đặt ngoài phạm vi (M01 5A).")
++            if pt and pt not in M01_PT_OUT + M01_PT_BOTH:
++                f("error", f"{name} {r['id']}", f"{pt} là IN theo M01, không được đặt OUT.")
++        elif pv == "IN" and pt in M01_PT_OUT:
++            f("error", f"{name} {r['id']}", f"{pt} là OUT theo M01 (H5), không được đặt IN.")
++
++    # sổ hạng mục
++    hm_by = unique(hm, "so_hang_muc.csv")
++    for r in hm:
++        scope(r, "so_hang_muc.csv")
++        checked(r, "so_hang_muc.csv", "nguon_ton_tai")
++        if r["ton_tai"] not in D02_EXISTS:
++            f("error", f"so_hang_muc.csv {r['id']}", f"ton_tai \"{r['ton_tai']}\" không hợp lệ.")
++        if r["ton_tai"] == "chua_ro" and not r["ly_do"]:
++            f("error", f"so_hang_muc.csv {r['id']}", "Chưa rõ có/không nhưng không ghi lý do.")
++    missing_pt = [p for p in M01_PT if p not in {r["ma_pt"] for r in hm}]
++    if hm and missing_pt:
++        f("error", "so_hang_muc.csv", f"Thiếu hạng mục M01: {', '.join(missing_pt)} (không phát hiện ≠ không có; ghi chua_ro).")
++
++    # nguồn đã khóa: bắt buộc đúng một nguồn công tác (trùng manifest); thiếu thì không được bỏ qua đối chiếu số gốc
++    src_rows: list[dict] = []
++    vt_rows: list[dict] = []
++    src_ok = vt_ok = False
++    roles = Counter(r["vai_tro"] for r in lock)
++    if roles["du_toan_cong_tac"] != 1:
++        f("error", "khoa_nguon.csv", f"Phải có đúng một nguồn vai_tro = du_toan_cong_tac (đang có {roles['du_toan_cong_tac']}): "
++                                     "không đối chiếu được số gốc và kiểm kê dòng dự toán.")
++    if roles["du_toan_vat_tu"] > 1:
++        f("error", "khoa_nguon.csv", f"Có {roles['du_toan_vat_tu']} nguồn du_toan_vat_tu, chỉ được một.")
++    for r in lock:
++        p = root / r["duong_dan"]
++        if not p.is_file():
++            f("error" if r["trong_kho"] == "co" else "warning", f"khoa_nguon.csv {r['duong_dan']}",
++              "Không có file" + ("." if r["trong_kho"] == "co" else " trên máy này (ngoài kho)."))
++            continue
++        if hashlib.sha256(p.read_bytes()).hexdigest() != r["sha256"]:
++            f("error", f"khoa_nguon.csv {r['duong_dan']}", "Nội dung file đã đổi sau khi khóa (sha256 khác).")
++        if r["vai_tro"] == "du_toan_cong_tac":
++            src_rows, src_ok = _rows(p)[1], roles["du_toan_cong_tac"] == 1
++            if case and case.get("du_toan") != r["duong_dan"]:
++                f("error", f"khoa_nguon.csv {r['duong_dan']}", f"Khác file đáp án của manifest ({case.get('du_toan')}).")
++        elif r["vai_tro"] == "du_toan_vat_tu":
++            vt_rows, vt_ok = _rows(p)[1], roles["du_toan_vat_tu"] == 1
++    if roles["du_toan_cong_tac"] == 1 and not src_ok:
++        f("error", "khoa_nguon.csv", "Không đọc được nguồn du_toan_cong_tac: không đối chiếu được số gốc.")
++    if any(r["dong_vat_tu_goc"] for r in mats) and not vt_ok:
++        f("error", "khoa_nguon.csv", "Đáp án vật tư tham chiếu dong_vat_tu_goc nhưng không có nguồn du_toan_vat_tu đọc được.")
++
++    # đáp án công tác
++    w_by = unique(works, "dap_an_cong_tac.csv")
++    kids: dict[str, list[dict]] = defaultdict(list)
++    for r in works:
++        if r["cha_id"]:
++            kids[r["cha_id"]].append(r)
++    src_by = {s["stt"]: s for s in src_rows}
++    roots_by_line: dict[str, list[str]] = defaultdict(list)
++    pending = []
++    for r in works:
++        item = f"dap_an_cong_tac.csv {r['id']}"
++        scope(r, "dap_an_cong_tac.csv")
++        checked(r, "dap_an_cong_tac.csv", "nguon")
++        if r["loai_nguon"] not in D02_SOURCE:
++            f("error", item, f"loai_nguon \"{r['loai_nguon']}\" không hợp lệ.")
++        if r["hang_muc_id"] and r["hang_muc_id"] not in hm_by:
++            f("error", item, f"hang_muc_id {r['hang_muc_id']} không có trong sổ hạng mục.")
++        for dep in filter(None, r["phu_thuoc"].split(";")):
++            if dep not in w_by:
++                f("error", item, f"phu_thuoc {dep} không có.")
++        if r["ma_cong_tac"]:
++            if r["ma_cong_tac"] not in WORKS:
++                f("error", item, f"ma_cong_tac {r['ma_cong_tac']} không có trong WORKS.")
++            elif r["don_vi"] != WORKS[r["ma_cong_tac"]][1]:
++                f("error", item, f"Đơn vị {r['don_vi'] or 'trống'} khác đơn vị của {r['ma_cong_tac']} ({WORKS[r['ma_cong_tac']][1]}).")
++        q = _num_or_none(r["khoi_luong"])
++        if r["khoi_luong"] and q is None:
++            f("error", item, f"khoi_luong \"{r['khoi_luong']}\" không phải số hữu hạn.")
++        elif q == 0:
++            f("error", item, "khoi_luong = 0: chưa có số thì để trống và ghi lý do.")
++        elif not r["khoi_luong"] and not r["can_kiem"]:
++            f("error", item, "Chưa có khối lượng nhưng không ghi lý do (can_kiem).")
++        if r["khoi_luong_tinh_lai"] and _num_or_none(r["khoi_luong_tinh_lai"]) is None:
++            f("error", item, f"khoi_luong_tinh_lai \"{r['khoi_luong_tinh_lai']}\" không phải số hữu hạn.")
++        if r["cong_tru"] not in D02_ADD:
++            f("error", item, f"cong_tru \"{r['cong_tru']}\" không hợp lệ (trống, cong, tru).")
++        elif q is not None and q < 0 and not (r["cha_id"] and r["quan_he_cha"] == "phan" and r["cong_tru"] == "tru"):
++            f("error", item, "Số âm chỉ dùng cho dòng con phần trừ (quan_he_cha = phan, cong_tru = tru).")
++        elif q is not None and q > 0 and r["cong_tru"] == "tru":
++            f("error", item, "Phần trừ phải ghi số âm.")
++        if not r["don_vi"] and r["pham_vi"] != "OUT":
++            f("error", item, "Thiếu đơn vị.")
++        if r["pham_vi"] == "chua_phan_loai":
++            pending.append(r["id"])
++        if r["cha_id"]:
++            parent = w_by.get(r["cha_id"])
++            if parent is None:
++                f("error", item, f"cha_id {r['cha_id']} không có.")
++            elif parent["cha_id"]:
++                f("error", item, "Chỉ cho phép một cấp cha–con.")
++            elif parent["dong_goc"] != r["dong_goc"]:
++                f("error", item, "Dòng con khác dong_goc của dòng cha.")
++            if r["quan_he_cha"] not in ("phan", "khia_canh"):
++                f("error", item, "quan_he_cha phải là phan hoặc khia_canh.")
++            if r["dem_mau_so"] != "khong":
++                f("error", item, "Dòng con không được tính mẫu số (dem_mau_so = khong).")
++            if r["pham_vi"] == "hon_hop":
++                f("error", item, "hon_hop chỉ dùng cho dòng gốc.")
++            continue
++        roots_by_line[r["dong_goc"]].append(r["id"])
++        ks = kids.get(r["id"], [])
++        if r["pham_vi"] == "hon_hop" and not ks:
++            f("error", item, "hon_hop phải có dòng con.")
++        pv = {k["pham_vi"] for k in ks} if r["pham_vi"] == "hon_hop" else {r["pham_vi"]}
++        expect = "co" if "IN" in pv else "cho_phan_loai" if "chua_phan_loai" in pv else "khong"
++        if r["dem_mau_so"] != expect:
++            f("error", item, f"dem_mau_so = {r['dem_mau_so'] or 'trống'}, theo phạm vi phải là {expect}.")
++        s = src_by.get(r["dong_goc"])
++        if src_ok and s is None:
++            f("error", item, f"dong_goc {r['dong_goc']} không có trong dự toán gốc.")
++        elif s is not None:
++            sq = _num_or_none(s["khoi_luong"])
++            if sq is None or q is None or not _same(sq, q):
++                f("error", item, f"khoi_luong {r['khoi_luong']} khác số gốc {s['khoi_luong']} (không sửa số gốc; ghi số tính lại riêng).")
++            if (s["don_vi"] if s["don_vi"] != "nan" else "") != r["don_vi"]:
++                f("error", item, f"Đơn vị {r['don_vi'] or 'trống'} khác đơn vị gốc {s['don_vi']}.")
++        parts = [k for k in ks if k["quan_he_cha"] == "phan"]
++        if parts and q is not None:
++            if any(k["don_vi"] != r["don_vi"] for k in parts):
++                f("error", item, "Dòng con khác đơn vị dòng cha.")
++            vals = [_num_or_none(k["khoi_luong"]) for k in parts]
++            if None in vals:
++                f("warning", item, "Còn phần con chưa có số: chưa kiểm được tổng.")
++            else:
++                total, tol = sum(vals), max(1e-3, abs(q) * 1e-6)
++                if abs(total - q) > tol:
++                    noted = _num_or_none(r["khoi_luong_tinh_lai"])
++                    if noted is not None and abs(noted - total) <= tol:
++                        f("warning", item, f"Tổng phần con {total:g} lệch số gốc {q:g} (đã ghi khoi_luong_tinh_lai): người kiểm xác nhận.")
++                    else:
++                        f("error", item, f"Tổng phần con {total:g} lệch số gốc {q:g} mà chưa ghi khoi_luong_tinh_lai.")
++    for line, ids in roots_by_line.items():
++        if len(ids) > 1:
++            f("error", f"dap_an_cong_tac.csv dòng gốc {line}", f"Nhiều dòng gốc cho cùng dòng dự toán: {', '.join(ids)}.")
++    not_covered = [s["stt"] for s in src_rows if s["stt"] not in roots_by_line]
++    if not_covered:
++        f("error", "dap_an_cong_tac.csv", f"Chưa kiểm kê dòng dự toán gốc: {', '.join(not_covered)}.")
++    if pending:
++        f("warning", "dap_an_cong_tac.csv", f"{len(pending)} dòng chưa phân loại IN/OUT (giữ trong bộ, không coi là OUT): "
++                                             f"{', '.join(pending[:10])}{' …' if len(pending) > 10 else ''}.")
++
++    # đáp án vật tư
++    unique(mats, "dap_an_vat_tu.csv")
++    vt_by_line = {str(i): v for i, v in enumerate(vt_rows, start=2)}
++    for r in mats:
++        item = f"dap_an_vat_tu.csv {r['id']}"
++        checked(r, "dap_an_vat_tu.csv", "nguon")
++        for c in filter(None, r["cong_tac_id"].split(";")):
++            if c not in w_by:
++                f("error", item, f"cong_tac_id {c} không có trong đáp án công tác.")
++        if not r["quy_cach"]:
++            f("error", item, "Thiếu quy cách (giữ quy cách dù chưa có mã danh mục).")
++        if r["co_so_luong"] not in ("lap_dat", "mua"):
++            f("error", item, "co_so_luong phải là lap_dat hoặc mua.")
++        if r["hao_hut"] not in ("da_gom", "chua_gom", "chua_ro"):
++            f("error", item, f"hao_hut \"{r['hao_hut']}\" không hợp lệ.")
++        if r["co_so_luong"] == "lap_dat" and r["hao_hut"] == "da_gom":
++            f("error", item, "Lượng lắp đặt không được gồm hao hụt: trộn cơ sở lắp đặt và mua.")
++        if r["dung_lam_dap_an"] not in ("co", "khong", "cho_kiem"):
++            f("error", item, f"dung_lam_dap_an \"{r['dung_lam_dap_an']}\" không hợp lệ.")
++        if r["dung_lam_dap_an"] == "khong" and r["trang_thai_kiem"] == "da_kiem":
++            f("error", item, "Dòng không dùng làm đáp án không được ghi đã kiểm.")
++        if r["loai_nguon"] not in D02_SOURCE:
++            f("error", item, f"loai_nguon \"{r['loai_nguon']}\" không hợp lệ.")
++        if r["he_so"]:
++            hs = _num_or_none(r["he_so"])
++            if hs is None or hs <= 0:
++                f("error", item, f"he_so \"{r['he_so']}\" phải là số hữu hạn dương.")
++            if not r["nguon_he_so"]:
++                f("error", item, "Có hệ số nhưng thiếu nguồn hệ số.")
++        factor = 1.0 if r["don_vi"] == r["don_vi_goc"] else EXACT_UNITS.get((r["don_vi_goc"], r["don_vi"]))
++        if r["don_vi_goc"] and factor is None:
++            f("error", item, f"Đổi {r['don_vi_goc']} → {r['don_vi']} thiếu căn cứ (chỉ đổi đơn vị chính xác).")
++        q = _num_or_none(r["luong"])
++        if r["luong"] and q is None:
++            f("error", item, f"luong \"{r['luong']}\" không phải số hữu hạn.")
++        elif q is not None and q < 0:
++            f("error", item, "luong âm: lượng vật tư không được âm.")
++        elif q == 0:
++            f("error", item, "luong = 0: chưa có số thì để trống và ghi lý do.")
++        elif not r["luong"] and not r["thieu"]:
++            f("error", item, "Chưa có lượng nhưng không ghi dữ liệu thiếu.")
++        if r["dong_vat_tu_goc"]:
++            v = vt_by_line.get(r["dong_vat_tu_goc"])
++            if vt_ok and v is None:
++                f("error", item, f"dong_vat_tu_goc {r['dong_vat_tu_goc']} không có trong tổng hợp vật tư.")
++            elif v is not None:
++                if r["don_vi_goc"] != v["don_vi"]:
++                    f("error", item, f"don_vi_goc {r['don_vi_goc'] or 'trống'} khác đơn vị nguồn {v['don_vi']}.")
++                sq = _num_or_none(v["khoi_luong"])
++                if factor is not None and (sq is None or q is None or not _same(sq * factor, q)):
++                    f("error", item, f"luong {r['luong']} {r['don_vi']} khác số gốc {v['khoi_luong']} {v['don_vi']} sau quy đổi.")
++    return out
++
++
++def _check_answer_sets(out: list[Finding]) -> dict:
++    sets = sorted(p for p in D02_DIR.glob("*") if p.is_dir() and not p.name.startswith("_")) if D02_DIR.is_dir() else []
++    summary = {}
++    for p in sets:
++        out += check_answer_set(p)
++        _, works = _rows(p / "dap_an_cong_tac.csv") if (p / "dap_an_cong_tac.csv").is_file() else ([], [])
++        roots = [r for r in works if not r.get("cha_id")]
++        summary[p.name] = {"dong_goc": len(roots), "dong_con": len(works) - len(roots), "mau_so": len(denominator_ids(works)),
++                           "cho_phan_loai": sum(r.get("dem_mau_so") == "cho_phan_loai" for r in roots),
++                           "da_kiem": sum(r.get("trang_thai_kiem") == "da_kiem" for r in works)}
++    return summary
++
++
+ def run_checks(catalog: Catalog | None = None, today: date | None = None) -> dict:
+     if catalog is None and not get_database_url():
+         raise RuntimeError("Kiểm soát dữ liệu cần kết nối PostgreSQL (DATABASE_URL).")
+@@ -431,6 +784,7 @@
+     prices = _price_records_summary(out)
+     truth = _check_ground_truth(cat, out)
+     cases = _check_cases_manifest(out)
++    answers = _check_answer_sets(out)
+     fam = cat.materials.get("family", pd.Series(dtype=object))
+     view = cat.wall_view()
+     summary = {
+@@ -440,7 +794,7 @@
+         "phuong_an_tuong": len(view), "phuong_an_du_so_lieu": int(view.ready.sum()) if len(view) else 0,
+         "theo_lop_tuong": classes, "ten_goi_khac": len(cat.aliases), "quy_tac": len(load_rules()),
+         "nguon_cung": supply, "lich_su_gia": prices, "dap_an_do_tay": truth, "dinh_muc_phan_tho": rough,
+-        "ho_so_danh_gia": cases,
++        "ho_so_danh_gia": cases, "dap_an_d02": answers,
+     }
+     levels = Counter(f.level for f in out)
+     return {"ok": levels.get("error", 0) == 0, "counts": {k: levels.get(k, 0) for k in ("error", "warning", "info")},
+@@ -460,7 +814,9 @@
+              f"| Vật liệu tường đã có giá | {s['nguon_cung']['vat_lieu_tuong_co_gia']}/{s['nguon_cung']['vat_lieu_tuong']} |",
+              f"| Lịch sử giá ({s['lich_su_gia']['nguon']}): tổng / thật | {s['lich_su_gia']['dong']} / {s['lich_su_gia']['that']} |",
+              f"| Đáp án đo tay: bản vẽ, theo nhóm | {s['dap_an_do_tay']['ban_ve']}, {s['dap_an_do_tay']['theo_nhom']} |",
+-             f"| Hồ sơ đánh giá phần thô (cases.csv): tổng, bị chặn | {s['ho_so_danh_gia']['ho_so']}, {len(s['ho_so_danh_gia']['bi_chan'])} |", ""]
++             f"| Hồ sơ đánh giá phần thô (cases.csv): tổng, bị chặn | {s['ho_so_danh_gia']['ho_so']}, {len(s['ho_so_danh_gia']['bi_chan'])} |",
++             "| Bộ đáp án D02: dòng gốc / mẫu số / chờ phân loại / đã kiểm | " + "; ".join(
++                 f"{k}: {v['dong_goc']} / {v['mau_so']} / {v['cho_phan_loai']} / {v['da_kiem']}" for k, v in s.get("dap_an_d02", {}).items()) + " |", ""]
+     names = {"error": "Lỗi (phải sửa)", "warning": "Cảnh báo", "info": "Ghi chú"}
+     for level in ("error", "warning", "info"):
+         items = [f for f in report["findings"] if f["level"] == level]
+--- a/data/ground_truth/du_toan/README.md
++++ b/data/ground_truth/du_toan/README.md
+@@ -32,6 +32,13 @@
+ (đây là dự toán của người lập, chưa có người kiểm độc lập), nên chưa hồ sơ nào đủ điều kiện chỉ tiêu chính.
+ D01 không khóa mẫu số, không ánh xạ lại dòng đáp án (D02).
+ 
++## Bộ đáp án D02 `d02/` (03/11/2026)
++
++Mỗi hồ sơ một thư mục `d02/<ten>/` (sổ hạng mục, đáp án công tác, đáp án vật tư, khóa nguồn sha256); mẫu rỗng ở `d02/_mau/`.
++Đặc tả, số liệu bộ 46 và phiếu cho người kiểm: `docs/D02_DAC_TA_DAP_AN.md`. Kiểm: `data_check.check_answer_set` (chạy trong
++`check_data.py`). File gốc trong thư mục này và `cases.csv` không đổi; `46_nha_tan_binh` hiện là bộ **nháp**, chưa có dòng
++nào được người kiểm xác nhận (`da_kiem`), chưa dùng làm đáp án chỉ tiêu.
++
+ `46_nha_tan_binh.csv`: sheet "Công trình" của `Nha Tan Binh.xls` (bộ "46-Nha Dan 5 Tang (KT+KC+DN+BPTC+DuToan)",
+ kenhxaydung.vn, lập 2016 theo định mức 1776, đơn giá HCM). Nhà 4 × 22,6–25,6 m: trệt, lầu 1–4, sân thượng, mái.
+ 
+--- a/docs/KE_HOACH_NGHIEM_THU_PHAN_THO.md
++++ b/docs/KE_HOACH_NGHIEM_THU_PHAN_THO.md
+@@ -65,8 +65,8 @@
+ | ID / S13 tương ứng | Phạm vi một lượt | File/vùng dự kiến | Bằng chứng xong | Phụ thuộc |
+ |---|---|---|---|---|
+ | M01 / m | BA lập ma trận hạng mục; chủ đồ án chốt dạng móng, bể/vách/ô văng, bậc xây, mái; chốt mẫu số và xử lý thiếu | docs/, ho_tro_cau_kien.csv; chưa đổi code/DB | Mỗi hạng mục có in/out, auto/manual/unsupported, dữ liệu cần; quyết định được ghi rõ. **03/11/2026: 5A chủ đồ án đã duyệt, 5B Codex đã chốt:** [M01](M01_PHAM_VI_PHAN_THO.md); **M01 ✅ 03/11/2026: Codex nghiệm thu tài liệu BA (sau vòng sửa 2, mục 13)**; được tiếp tục D01 theo [prompt](review/CLAUDE_M01_D01_PROMPT.md); CSV vận hành chưa sửa | — |
+-| D01 / f,g | Lập manifest hồ sơ/phiên bản, data_kind, split và quyền dùng; không di chuyển test sang build âm thầm | ground_truth/du_toan/cases.csv, README, data_check.py | Chặn thiếu metadata, công trình trùng phiên bản ở hai tập, SAMPLE/SYNTHETIC vào chỉ tiêu chính. **03/11/2026: dev xong + sửa vòng 1 (kien_truc trống/thư mục bị chặn ở cổng; --out luôn ghi lần chạy mới), chờ Codex review** — manifest 14 cột, `data_check.check_cases`/`select_cases`, cổng `evaluate_rough.py --muc-dich`, `tests/test_ground_truth_manifest.py`; diff `docs/review/D01_diff.patch` | M01 |
+-| D02 / f,h | Lập mẫu đáp án công tác và vật tư; nhận một hồ sơ build đã kiểm tay | ground_truth/, docs/ | Có tầng/cấu kiện/công thức/đơn vị/nguồn; phân biệt thép lắp đặt và lượng mua; người kiểm xác nhận | D01 |
++| D01 / f,g | Lập manifest hồ sơ/phiên bản, data_kind, split và quyền dùng; không di chuyển test sang build âm thầm | ground_truth/du_toan/cases.csv, README, data_check.py | Chặn thiếu metadata, công trình trùng phiên bản ở hai tập, SAMPLE/SYNTHETIC vào chỉ tiêu chính. **D01 ✅ 03/11/2026: Codex nghiệm thu (sau sửa vòng 1: kien_truc trống/thư mục bị chặn ở cổng; --out luôn ghi lần chạy mới)** — manifest 14 cột, `data_check.check_cases`/`select_cases`, cổng `evaluate_rough.py --muc-dich`, `tests/test_ground_truth_manifest.py`; diff `docs/review/D01_diff.patch` | M01 |
++| D02 / f,h | Lập mẫu đáp án công tác và vật tư; nhận một hồ sơ build đã kiểm tay | ground_truth/, docs/ | Có tầng/cấu kiện/công thức/đơn vị/nguồn; phân biệt thép lắp đặt và lượng mua; người kiểm xác nhận. **03/11/2026: phần kỹ thuật chờ Codex review; phần xác nhận chờ dữ liệu** (chưa có người kiểm, 0 dòng da_kiem) — [D02](D02_DAC_TA_DAP_AN.md), `ground_truth/du_toan/d02/`, `data_check.check_answer_set`, `tests/test_ground_truth_d02.py` | D01 |
+ | C01 / c | Đường cơ sở trên build; tái dùng script có sẵn, đo bao phủ trước khi sửa thuật toán | evaluate_rough.py, compare_estimate.py, tests tương ứng | Không glob lẫn CSV vật tư/cases; báo dòng không ánh xạ/thiếu/ngoài phạm vi; không gộp C/D vào KPI A/B | D01,D02 |
+ 
+ ### B. Sửa lỗi tính trước khi mở rộng
+--- /dev/null
++++ b/tests/test_ground_truth_d02.py
+@@ -0,0 +1,238 @@
++"""D02: hợp đồng dữ liệu bộ đáp án công tác/vật tư (data/ground_truth/du_toan/d02). Fixture SYNTHETIC, không báo độ chính xác."""
++import csv
++import hashlib
++
++import pytest
++
++from optimat.data_check import (CASES_FILE, D02_COLUMNS, D02_DIR, M01_PT, M01_PT_OUT, check_answer_set, check_cases,
++                                denominator_ids, material_totals, select_cases)
++
++
++def _write(path, cols, rows):
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with path.open("w", encoding="utf-8", newline="") as f:
++        w = csv.DictWriter(f, fieldnames=cols)
++        w.writeheader()
++        w.writerows([{c: r.get(c, "") for c in cols} for r in rows])
++
++
++def _work(id, dong, kl, **kw):
++    r = dict(id=id, cong_trinh_id="ct_fx", dong_goc=dong, pham_vi="IN", dem_mau_so="co", khoi_luong=kl, don_vi="m³",
++             loai_nguon="du_toan", nguon=f"gt/fx.csv stt {dong}", trang_thai_kiem="nhap")
++    r.update(kw)
++    return r
++
++
++def _base():
++    """Bộ SYNTHETIC hợp lệ: 3 dòng dự toán (lót gộp móng + nền, cột, sơn OUT), 47 hạng mục, thép lắp đặt và mua."""
++    src = [dict(stt="1", ten_cong_tac="Bê tông lót", don_vi="m³", khoi_luong="3.0", ma_cong_tac="BE_TONG_LOT"),
++           dict(stt="2", ten_cong_tac="Bê tông cột", don_vi="m³", khoi_luong="2.0", ma_cong_tac="COT"),
++           dict(stt="3", ten_cong_tac="Sơn tường", don_vi="m²", khoi_luong="10.0", ma_cong_tac="")]
++    vt = [dict(stt="1", ten_vat_tu="Thép tròn", don_vi="kg", khoi_luong="102")]
++    hm = [dict(id=f"F-HM-{p}", cong_trinh_id="ct_fx", vi_tri="toàn công trình", ma_pt=p, ton_tai="chua_ro", nguon_ton_tai="fixture",
++               pham_vi="OUT" if p in M01_PT_OUT else "IN", ma_qd="QĐ-chung", ly_do="fixture", trang_thai_kiem="nhap") for p in M01_PT]
++    works = [_work("F-C01", "1", "3", ma_cong_tac="BE_TONG_LOT"),
++             _work("F-C01.1", "1", "1", cha_id="F-C01", quan_he_cha="phan", ma_pt="PT04", hang_muc_id="F-HM-PT04", dem_mau_so="khong",
++                   ma_cong_tac="BE_TONG_LOT"),
++             _work("F-C01.2", "1", "2", cha_id="F-C01", quan_he_cha="phan", ma_pt="PT05", hang_muc_id="F-HM-PT05", dem_mau_so="khong",
++                   ma_cong_tac="BE_TONG_LOT"),
++             _work("F-C02", "2", "2", ma_pt="PT12", hang_muc_id="F-HM-PT12", ma_cong_tac="COT"),
++             _work("F-C03", "3", "10", ma_pt="PT46", pham_vi="OUT", ma_qd="QĐ-chung", dem_mau_so="khong", don_vi="m²")]
++    mats = [dict(id="F-V01", cong_trinh_id="ct_fx", cong_tac_id="F-C02", quy_cach="Thép tròn Ø ≤ 10", don_vi_goc="tấn", don_vi="kg",
++                 luong="100", co_so_luong="lap_dat", hao_hut="chua_gom", dung_lam_dap_an="cho_kiem", loai_nguon="du_toan", nguon="x",
++                 trang_thai_kiem="nhap"),
++            dict(id="F-V02", cong_trinh_id="ct_fx", cong_tac_id="F-C02", dong_vat_tu_goc="2", quy_cach="Thép tròn Ø ≤ 10",
++                 don_vi_goc="kg", don_vi="kg", luong="102", co_so_luong="mua", he_so="1.02", nguon_he_so="fixture", hao_hut="da_gom",
++                 dung_lam_dap_an="cho_kiem", loai_nguon="du_toan", nguon="x", trang_thai_kiem="nhap")]
++    return dict(src=src, vt=vt, hm=hm, works=works, mats=mats)
++
++
++def _build(tmp_path, d):
++    _write(tmp_path / "gt/fx.csv", ["stt", "ten_cong_tac", "don_vi", "khoi_luong", "ma_cong_tac"], d["src"])
++    _write(tmp_path / "gt/fx_vt.csv", ["stt", "ten_vat_tu", "don_vi", "khoi_luong"], d["vt"])
++    _write(tmp_path / "cases.csv", ["ten", "cong_trinh_id", "data_kind", "split", "du_toan"],
++           [dict(ten="fx", cong_trinh_id="ct_fx", data_kind="SYNTHETIC", split="build", du_toan="gt/fx.csv")])
++    folder = tmp_path / "d02/fx"
++    lock = [dict(duong_dan=p, vai_tro=role, sha256=hashlib.sha256((tmp_path / p).read_bytes()).hexdigest(), trong_kho="co")
++            for p, role in (("gt/fx.csv", "du_toan_cong_tac"), ("gt/fx_vt.csv", "du_toan_vat_tu"))]
++    for name, rows in (("so_hang_muc.csv", d["hm"]), ("dap_an_cong_tac.csv", d["works"]), ("dap_an_vat_tu.csv", d["mats"]),
++                       ("khoa_nguon.csv", lock)):
++        _write(folder / name, list(D02_COLUMNS[name]), rows)
++    return folder
++
++
++def _check(tmp_path, d):
++    return check_answer_set(_build(tmp_path, d), tmp_path / "cases.csv", tmp_path)
++
++
++def _err(findings):
++    return [f.message for f in findings if f.level == "error"]
++
++
++def _find(d, key, id):
++    return next(r for r in d[key] if r["id"] == id)
++
++
++def test_valid_fixture_passes(tmp_path):
++    assert _err(_check(tmp_path, _base())) == []
++
++
++def test_broken_ids_and_links_detected(tmp_path):
++    d = _base()
++    _find(d, "works", "F-C01.2")["cha_id"] = "F-C99"
++    _find(d, "works", "F-C02")["hang_muc_id"] = "F-HM-PT99"
++    d["mats"][0]["cong_tac_id"] = "F-C77"
++    d["works"].append(_work("F-C02", "2", "2", ma_pt="PT12"))
++    msgs = _err(_check(tmp_path, d))
++    assert "cha_id F-C99 không có." in msgs and "hang_muc_id F-HM-PT99 không có trong sổ hạng mục." in msgs
++    assert "cong_tac_id F-C77 không có trong đáp án công tác." in msgs and "id F-C02 trùng." in msgs
++
++
++def test_combined_line_counts_once_and_split_does_not_add(tmp_path):
++    d = _base()
++    assert denominator_ids(d["works"]) == ["F-C01", "F-C02"]       # dòng gộp F-C01 một mẫu số dù có hai dòng con
++    _find(d, "works", "F-C01.1")["dem_mau_so"] = "co"                # cố đếm dòng con để tăng mẫu số
++    assert "Dòng con không được tính mẫu số (dem_mau_so = khong)." in _err(_check(tmp_path, d))
++
++
++def test_children_sum_checked_and_mismatch_must_be_recorded(tmp_path):
++    d = _base()
++    _find(d, "works", "F-C01.2")["khoi_luong"] = "2.5"
++    assert any("Tổng phần con 3.5 lệch số gốc 3" in m for m in _err(_check(tmp_path, d)))
++    _find(d, "works", "F-C01")["khoi_luong_tinh_lai"] = "3.5"        # giữ chênh lệch, không sửa số gốc
++    f = _check(tmp_path, d)
++    assert _err(f) == [] and any(x.level == "warning" and "đã ghi khoi_luong_tinh_lai" in x.message for x in f)
++    _find(d, "works", "F-C01")["khoi_luong"] = "3.5"                 # sửa số gốc để ép khớp: bị chặn
++    assert any("khác số gốc 3.0" in m for m in _err(_check(tmp_path, d)))
++
++
++def test_unclassified_and_missing_numbers_kept_not_zero(tmp_path):
++    d = _base()
++    _find(d, "works", "F-C03").update(pham_vi="chua_phan_loai", ma_pt="", ma_qd="", dem_mau_so="cho_phan_loai")
++    f = _check(tmp_path, d)
++    assert _err(f) == [] and any("1 dòng chưa phân loại IN/OUT" in x.message and "F-C03" in x.message for x in f)
++    _find(d, "works", "F-C01.1")["khoi_luong"] = "0"
++    _find(d, "works", "F-C02")["khoi_luong"] = ""
++    msgs = _err(_check(tmp_path, d))
++    assert "khoi_luong = 0: chưa có số thì để trống và ghi lý do." in msgs
++    assert "Chưa có khối lượng nhưng không ghi lý do (can_kiem)." in msgs
++    _find(d, "works", "F-C03")["dem_mau_so"] = "khong"               # chưa phân loại không được lặng lẽ ra khỏi mẫu số
++    assert any("theo phạm vi phải là cho_phan_loai" in m for m in _err(_check(tmp_path, d)))
++
++
++def test_checked_without_evidence_blocked(tmp_path):
++    d = _base()
++    _find(d, "works", "F-C02")["trang_thai_kiem"] = "da_kiem"
++    assert "Ghi đã kiểm nhưng thiếu nguoi_kiem, ngay_kiem." in _err(_check(tmp_path, d))
++    _find(d, "works", "F-C02").update(nguoi_kiem="KS. Thử", ngay_kiem="2026-11-03")
++    assert _err(_check(tmp_path, d)) == []
++
++
++def test_m01_scope_out_and_in_items_not_dropped(tmp_path):
++    d = _base()
++    d["works"] += [_work("F-C04", "9", "", pham_vi="IN", ma_pt="PT25", dem_mau_so="co", can_kiem="x"),
++                   _work("F-C05", "9", "", pham_vi="OUT", ma_pt="PT15", ma_qd="QĐ-chung", dem_mau_so="khong", can_kiem="x")]
++    msgs = _err(_check(tmp_path, d))
++    assert "PT25 là OUT theo M01 (H5), không được đặt IN." in msgs and "PT15 là IN theo M01, không được đặt OUT." in msgs
++    d = _base()
++    d["works"].append(_work("F-C04", "2", "", pham_vi="OUT", ma_pt="PT22", ma_qd="QĐ-05", dem_mau_so="khong", can_kiem="x"))
++    assert any("QĐ-05 không phải quyết định đặt ngoài phạm vi" in m for m in _err(_check(tmp_path, d)))
++    d = _base()
++    d["hm"] = [r for r in d["hm"] if r["ma_pt"] not in ("PT15", "PT30")]     # vách, bể chưa thấy trong dự toán
++    assert any("Thiếu hạng mục M01: PT15, PT30" in m for m in _err(_check(tmp_path, d)))
++
++
++def test_installed_and_purchased_steel_not_mixed(tmp_path):
++    d = _base()
++    assert material_totals(d["mats"]) == {("Thép tròn Ø ≤ 10", "kg", "lap_dat"): 100.0, ("Thép tròn Ø ≤ 10", "kg", "mua"): 102.0}
++    d["mats"][0]["hao_hut"] = "da_gom"
++    d["mats"][1].update(don_vi_goc="m³", don_vi="viên")
++    msgs = _err(_check(tmp_path, d))
++    assert "Lượng lắp đặt không được gồm hao hụt: trộn cơ sở lắp đặt và mua." in msgs
++    assert "Đổi m³ → viên thiếu căn cứ (chỉ đổi đơn vị chính xác)." in msgs
++
++
++def test_locked_source_change_detected(tmp_path):
++    folder = _build(tmp_path, _base())
++    (tmp_path / "gt/fx.csv").write_text("stt,ten_cong_tac,don_vi,khoi_luong,ma_cong_tac\n1,x,m³,9,\n", encoding="utf-8")
++    assert "Nội dung file đã đổi sau khi khóa (sha256 khác)." in _err(check_answer_set(folder, tmp_path / "cases.csv", tmp_path))
++
++
++def test_empty_or_missing_source_lock_is_blocked(tmp_path):
++    """Không có nguồn công tác đã khóa thì không được bỏ qua đối chiếu số gốc (số gốc 999, tổng con 3)."""
++    d = _base()
++    d["src"][0]["khoi_luong"] = "999"
++    folder = _build(tmp_path, d)
++    _write(folder / "khoa_nguon.csv", list(D02_COLUMNS["khoa_nguon.csv"]), [])
++    msgs = _err(check_answer_set(folder, tmp_path / "cases.csv", tmp_path))
++    assert any("Phải có đúng một nguồn vai_tro = du_toan_cong_tac (đang có 0)" in m for m in msgs)
++    assert "Đáp án vật tư tham chiếu dong_vat_tu_goc nhưng không có nguồn du_toan_vat_tu đọc được." in msgs
++    # có nguồn công tác nhưng thiếu vai trò vật tư: vẫn chặn vì dòng vật tư tham chiếu tổng hợp
++    folder = _build(tmp_path, _base())
++    rows = [r for r in csv.DictReader((folder / "khoa_nguon.csv").open(encoding="utf-8")) if r["vai_tro"] == "du_toan_cong_tac"]
++    _write(folder / "khoa_nguon.csv", list(D02_COLUMNS["khoa_nguon.csv"]), rows)
++    assert _err(check_answer_set(folder, tmp_path / "cases.csv", tmp_path)) == [
++        "Đáp án vật tư tham chiếu dong_vat_tu_goc nhưng không có nguồn du_toan_vat_tu đọc được."]
++
++
++def test_non_finite_and_negative_numbers(tmp_path):
++    d = _base()
++    _find(d, "works", "F-C02")["khoi_luong"] = "NaN"
++    d["mats"][0]["luong"] = "inf"
++    d["mats"][1]["he_so"] = "-1"
++    msgs = _err(_check(tmp_path, d))
++    assert "khoi_luong \"NaN\" không phải số hữu hạn." in msgs and "luong \"inf\" không phải số hữu hạn." in msgs
++    assert "he_so \"-1\" phải là số hữu hạn dương." in msgs
++    assert material_totals(d["mats"]) == {("Thép tròn Ø ≤ 10", "kg", "mua"): 102.0}        # NaN/inf không lọt vào tổng
++    d = _base()
++    _find(d, "works", "F-C01.2")["khoi_luong"] = "2.5"                                   # phần trừ ghi âm, có cong_tru = tru
++    d["works"].append(_work("F-C01.3", "1", "-0.5", cha_id="F-C01", quan_he_cha="phan", cong_tru="tru", dem_mau_so="khong",
++                            ma_cong_tac="BE_TONG_LOT", ma_pt="PT05"))
++    assert _err(_check(tmp_path, d)) == []
++    _find(d, "works", "F-C02")["khoi_luong"] = "-2"
++    d["mats"][0]["luong"] = "-5"
++    msgs = _err(_check(tmp_path, d))
++    assert "Số âm chỉ dùng cho dòng con phần trừ (quan_he_cha = phan, cong_tru = tru)." in msgs
++    assert "luong âm: lượng vật tư không được âm." in msgs
++
++
++def test_exact_unit_conversion_compared_after_conversion(tmp_path):
++    d = _base()
++    d["vt"].append(dict(stt="2", ten_vat_tu="Thép tròn", don_vi="tấn", khoi_luong="0.102"))
++    d["mats"].append(dict(d["mats"][1], id="F-V03", dong_vat_tu_goc="3", don_vi_goc="tấn", don_vi="kg", luong="102"))
++    assert _err(_check(tmp_path, d)) == []                                           # 0,102 tấn = 102 kg
++    d["mats"][-1]["luong"] = "103"
++    assert any("khác số gốc 0.102 tấn sau quy đổi" in m for m in _err(_check(tmp_path, d)))
++    d["mats"][-1].update(luong="102", don_vi_goc="kg")                                 # khai báo sai đơn vị nguồn
++    assert "don_vi_goc kg khác đơn vị nguồn tấn." in _err(_check(tmp_path, d))
++
++
++def test_steel_only_known_above_10mm_not_assigned_to_le_18_group():
++    """46: stt 25, 26 chỉ ghi Ø > 10 mm; không tự xếp vào nhóm ≤ 18 mm; dòng mua ≤ 18 không mang hệ số suy từ giả thuyết."""
++    mats = list(csv.DictReader((D02_DIR / "46_nha_tan_binh/dap_an_vat_tu.csv").open(encoding="utf-8")))
++    le18 = [r for r in mats if "≤ 18" in r["quy_cach"]]
++    assert all(not ({"46-C25", "46-C26"} & set(r["cong_tac_id"].split(";"))) for r in le18)
++    gt10 = [r for r in mats if "> 10" in r["quy_cach"]]
++    assert [(r["co_so_luong"], r["cong_tac_id"], r["luong"]) for r in gt10] == [("lap_dat", "46-C25;46-C26", "1570.8")]
++    buy = next(r for r in le18 if r["co_so_luong"] == "mua")
++    assert buy["he_so"] == "" and "Giả thuyết chờ kiểm" in buy["thieu"]
++    assert material_totals(mats)[("Thép tròn Ø ≤ 18 mm", "kg", "lap_dat")] == pytest.approx(15503.4)
++
++
++def test_real_set_46_build_has_no_errors_and_nothing_confirmed_on_behalf():
++    folder = D02_DIR / "46_nha_tan_binh"
++    assert _err(check_answer_set(folder)) == []
++    for name in ("so_hang_muc.csv", "dap_an_cong_tac.csv", "dap_an_vat_tu.csv"):
++        rows = list(csv.DictReader((folder / name).open(encoding="utf-8")))
++        assert {r["trang_thai_kiem"] for r in rows} <= {"nhap", "cho_kiem"} and not any(r["nguoi_kiem"] for r in rows)
++    works = list(csv.DictReader((folder / "dap_an_cong_tac.csv").open(encoding="utf-8")))
++    assert len([r for r in works if not r["cha_id"]]) == 64 and len(denominator_ids(works)) == 34
++    assert not (D02_DIR / "banve1_nha_pho_di_an").exists()                       # D02 không làm trên bộ test
++
++
++def test_d01_manifest_and_evaluator_entry_unchanged():
++    assert _err(check_cases()[0]) == []
++    rows = {r["ten"]: r for r in csv.DictReader(CASES_FILE.open(encoding="utf-8-sig"))}
++    assert rows["46_nha_tan_binh"]["du_toan"] == "data/ground_truth/du_toan/46_nha_tan_binh.csv"
++    assert [r["ten"] for r in select_cases("phat_trien")[0]] == ["46_nha_tan_binh"]
++    assert select_cases("bao_cao")[0] == []

@@ -1,0 +1,15 @@
+{
+  "pid": 29492,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-ra",
+    "-o",
+    "faulthandler_timeout=120",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\c01_regression_outside\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T09:44:57.309826+00:00"
+}

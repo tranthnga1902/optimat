@@ -1,0 +1,25 @@
+# Review tĩnh confirm-navigation P0 — hai nền
+
+## Re-review P2 mới — finding cached/recovery CLOSED_STATIC
+
+Góiriêng `reports/confirm_navigation_p2`,khôngghiđèP0. Manifesthash `5d592c95ec1f1c64bbf0d79e4c84280effe1de74f49414d0ed3e43ca35392430` khớp01;QA15tựhashReviewoverlayvàincrementalpatchcả3001/3002khớpmanifest. Đọcfullpatch/overlay/verification,chưa chạyharness/tsc/lint/build/browser.
+
+**Cached/recoveryguardđãkhép tĩnh:**mọipublish vào `publishConfirmation` lấyWeakMapstamp,kiểmexternalChange/stampIsCurrentgồmuID/numericproject/drawingId/revision/activeplan+ownsReviewkiểmrawlocalreviewbằnglastStoredReview. Networkstampđượctạotạithờigửi,lưu trênbodychỉsaustalecheck. Cacheđãpublishedkiểmpublishedsummaryvẫnmatchtrướcđi;recoverunpublishedphảipersistatomictrướcroute. Same-tabđổicontextcùngfilename/plan/drawing khôngquađượcsosánhrawreview/numericproject. KhôngcầnPOSTlạiđểrecover.
+
+**Regressionquaytầngđãconfirm:**markDirtyxóaconfirmtầngđangsửa,invalidateworkreceipt/rough/material/optimize;chỉrefreshstampcácbodytầngkhácđãpublished sangdrawing/revisionmới khiownsReviewđúng. BodytầngkhácgiữplanIndexvàsummary,khôngnângbodypending/unpublished. Restorechỉstampbodyfile/plan/scope+publishedsummarymatch;phùhợpgiữreceiptcáctầngkhôngđổi,chưathayrecipe/approvaltoànwork.
+
+Ownerverificationghi beforeexit1/afterexit0haibase;ownerbáoharness/tsc/lintđạt,QA15khôngrerun. Khôngfindingblockermớitrongđúng2điểmgiao. Reloadkhiquota_chưalưu vẫnRAMrecoverylimit/P0runtimeneedreceiptgiữriêng;staticclosurekhôngbrowserPASS. Root01quyếtbuild/flip,khôngreloadtabuserdoQA15.
+
+Đã đọc manifestroot `reports/confirm_navigation_p0/manifest.json`,patch3001/3002 vàoverlayReview/Dialogs. Tựhash4overlay+2patch khớpmanifest. Khôngtest/build/DB/browser/sourcewrite. Owner02đangchốttests,khôngnhậnpendingtests làđạt.
+
+Đườnghappy mới hợp lýtĩnh:guidephânloạimọihình/ít nhất1count/cao hữu hạn dương,khôngtựscope/height;confirmBusycontrolled+oneflight;fetchabort/stalerevision+sameProjectguard;bodyfile/planmatch;saveTogetherreview+confirmed trước routecuối/phan-tho;partial mở nextcountchưaconfirm;localpersistfalsegiữbodyinmemory/recoverkhôngPOSTlại. Restorerough/adjustment vẫnchặnpartial hoặcpublishedmismatch,khôngskipreceipt. Khôngclaimđãkiểmđượcbrowserhappy.
+
+## Finding cần02/01 kiểm trướcaccept
+
+**[P2] Cached-confirm/recovery đi trước identityguard đầy đủ.** Cảhai `sendConfirm` gọi `publishConfirmation(confirmed[pi])` trước địnhnghĩa/kiểmsameProject/externalChange;`openConfirmation` cũnggọithẳngpublishcached;recoverbutton gọipublishbodycũ. `publishConfirmation` chỉcheckfile+planname,`persistReview` chỉprojectUid/externalChange,khôngproject numericID hoặcdrawingId/bodyrevision. Networksuccesspath cóguardđủhơn nhưngcached/recoverkhôngcùngguard. Nếuđổiprojectcontext trongcùngtab khôngstorageevent (hoặcnumericproject đổi nhưnguidchưađổi),cóthểpublish/navigatecachedconfirmationcũcùngfile/plan. Đây làlỗhổngtĩnh/caâm cầnownerfixture,khôngđãtáihiệnruntime. Đềnghịbindbodyrecovery với{projectUid,projectID,drawingId,revision,planindex} lúcsuccess vàsameguardtrướcmọipublish/noPOST;khôngbỏcaching.
+
+**Recovery/restore giới hạn cầntest:**setConfirmed(next) xảyra trướcpersist;autoeffect cóthểretrytựđộng khiquota tạm thời. Khiretrypersist thànhcông,publishPendingfalse nhưngsheetrecovercònhiệnvàchưaroute;userretryphảikhôngPOST/khôngdoublepublish. Reloadtrướclocalpersistthànhcông cóthểmấtcachedserverresponse vìchỉRAM;thôngbáo “giữtrangmở” phùhợp,khôngclaimreloadkhôiphụcserverreceipt. Chốt fixture partialsaved→reload→finishlast routesđúngchỉsau2keyconsistent;rollbackerrorgiữfailclosed.
+
+**Khôngautofill:**confirmationGuide khôngassignheight/scope;chỉfocus/loadPlan. ExistinginitState/defaultheight ngoàihunk khôngđượclấypatchnày chứngminh nguồnchiềucao. Cầnownerkiểmnhánhchangeheight/markDirtyclearconfirmation vàcachedbodykhôngđượcnhậnnếurevisionđãđổi.
+
+Phạmvi cầnassert02trêncảhai nền:doubleclickonePOST;successlast→persist→navigate;partialnext;quota2keyrollback/retry0POST;project/drawing/scope/heightđổi khiawait hoặcgiữarecover;unmountabort;reloadpartialpublishedmismatch;servererror/timeout khôngautoresubmit. ChưađóngP0runtimectrênlỗtĩnhnày,khôngmởsourcekhác/C2promotion;01giữquyềnquyếtđịnh.

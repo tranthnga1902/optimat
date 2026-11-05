@@ -1,0 +1,42 @@
+[
+  {
+    "file": "src/optimat/rough/secondary.py",
+    "sha256": "ebb864ff21f56ef14a0d0c32d527f755f1e0aed16898703b87b3108284431ca7",
+    "bytes": 25365
+  },
+  {
+    "file": "src/optimat/rough/takeoff.py",
+    "sha256": "aef9ffa5f006c940593689a322339d64f09466ad266187517fb04aa3387a2c4e",
+    "bytes": 35229
+  },
+  {
+    "file": "tests/test_rough_secondary.py",
+    "sha256": "ad554ad60ab022bc57c29a5f5a8f0786c8339f057d069bf1b089a9e29e3b5b06",
+    "bytes": 24586
+  },
+  {
+    "file": "reports/n03/N03.patch",
+    "sha256": "71b6621fcee31448639689dbd9ef32764f47add1ed025bd409781fa5ee5557ad",
+    "bytes": 40104
+  },
+  {
+    "file": "reports/n03/review1/N03_review1.patch",
+    "sha256": "ad9e0cc114180e40a598ce0e524ba01773ce81abc490ab5455c8eb559cb799e5",
+    "bytes": 8686
+  },
+  {
+    "file": "reports/n03/review1/two_issues.log",
+    "sha256": "8a5a3a4d6a4d3729685e3cac4145c54828bf304c78faaadacb1971c7a0f97e1a",
+    "bytes": 123
+  },
+  {
+    "file": "reports/n03/review1/focused.log",
+    "sha256": "13033b0026cc3aeb5c11ae4578122419396f00c8774754c8551df4d92f6e736e",
+    "bytes": 273
+  },
+  {
+    "file": "reports/n03/review1/probe.json",
+    "sha256": "2cb09d455c04168d64d564b4903c0f42ca123064eea276b4fc8292a226233164",
+    "bytes": 1068
+  }
+]

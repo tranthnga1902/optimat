@@ -1,0 +1,22 @@
+[
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\src\\optimat\\optimize\\problem.py",
+    "Hash": "AF582A5DF4901168D324300506B4E9DB3DF316E4F903CA7C2DDA5D740262B90C"
+  },
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\src\\optimat\\schemas.py",
+    "Hash": "CDF3AD62FEF7E78938A06BDF9DB53CD992532CC26D3FE290FCEF508154528B40"
+  },
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\tests\\test_optimize_procurement.py",
+    "Hash": "55A334DCE1EEEFAF6850FA42B2D41CE6618C9FF12C02590A126672E3512A28C4"
+  },
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\tests\\test_optimize.py",
+    "Hash": "693C3C318B3CACB2EFE78C5B970CC5B2DE5C5BD955F572A7766D92FE67B08176"
+  },
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\src\\optimat\\catalog\\pricing.py",
+    "Hash": "3F82875FD3DEB6C7C0BA91C0BF17A458AA1B8EA9E76179EF9983FBA1EE61B446"
+  }
+]

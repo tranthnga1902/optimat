@@ -1,0 +1,21 @@
+{
+  "pid": 15136,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_takeoff_view_concurrency.py",
+    "tests/test_takeoff_structural_concurrency.py",
+    "tests/test_rough_rebar.py",
+    "tests/test_rough_steel.py",
+    "tests/test_rough_agent.py",
+    "-ra",
+    "--runxfail",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\api_worker_n02\\focused\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T10:25:21.878805+00:00"
+}

@@ -1,0 +1,39 @@
+{
+  "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\c2-backend-candidate",
+  "files": [
+    {
+      "path": "src/optimat/drawing/review.py",
+      "base_sha256": "8f3dd5b9ac5e35e663ee4db9059619b2dd90d5d0e70e84e1cad371cbac54e7fe",
+      "patched_sha256": "7a2ecd852e5196879bcfb5071da998db21a78217947b4566e6dbba9b21d66fd1"
+    },
+    {
+      "path": "src/optimat/rough/walls.py",
+      "base_sha256": "1e1e90ad7771770ab440df6ab6207fbb395e0568124630b8de4ad169e3c24e80",
+      "patched_sha256": "f0a60245d1149eb02d6d128055ae2101aefb28558bb5c1e66e3b79e5edc25cea"
+    },
+    {
+      "path": "src/optimat/rough/secondary.py",
+      "base_sha256": "e6b1e8717d4885ebeb412f1ce3a741606edd0660da5aa8988d73816cb5e30ad1",
+      "patched_sha256": "533dc1a5f38ad4632ae5d10b739bb001324dafd91cd64f7a0aa6a234a024dbbb"
+    },
+    {
+      "path": "src/optimat/rough/checks.py",
+      "base_sha256": "fabe0c55c12dc64ccff1862b917c0a42fb1421d053ef1981bfd528b1cfad8f1e",
+      "patched_sha256": "58124c74c4d48da100f4904bf658ae262946ed1ffeb9f8b9a43253a9bbcb7736"
+    }
+  ],
+  "patch_sha256": "0eec88cf6d29d1f0765bf711f8a016ab212779ebe0d889242a2391f21bb566af",
+  "tests": "22 passed, 1 deselected (CAD fixture not rerun)",
+  "limitations": [
+    "UI must preserve all openings and consume complete/pending fields",
+    "when height missing, lintel/beam overlap not checked",
+    "partial groups must not be represented as complete in optimizer/exporter",
+    "runtime/DB not checked"
+  ],
+  "test_receipt": {
+    "path": "tests/test_incomplete_openings.py",
+    "sha256": "f933a61887269ef79270ab8e6cb5fc186c17ef8ee08636fd9af8aab1869a92ee",
+    "timestamp_utc": "2026-11-04T17:20:26.402182+00:00",
+    "coverage": "w/h: string, zero, negative, NaN, positive and negative infinity; mixed and orphan"
+  }
+}

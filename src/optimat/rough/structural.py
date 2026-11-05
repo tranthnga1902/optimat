@@ -7,6 +7,8 @@ theo data/rules/ky_hieu_cau_kien.csv: chữ đã bỏ dấu khớp trọn một 
                  nhiều ký hiệu trên cùng cặp nét thì cắt ở trung điểm giữa hai ký hiệu kề nhau
     rộng dầm   = khoảng cách cặp nét; tiết diện ghi chữ ("ĐÀ KIỀNG ĐK2 300X500") thắng, rồi tới mặt cắt dầm
     cột        = số ký hiệu C… (chỉ báo, cột vẫn bóc trên mặt bằng kiến trúc để không đếm hai lần)
+    bảng thống kê cột ("THỐNG KÊ CỘT": mã cột + SL, hàng "Từ … Đến …", ô có mặt cắt) thì bê tông, cốp pha cột lấy từ bảng,
+                 cột trên mặt bằng kiến trúc chỉ dùng trừ khối xây (read_column_schedule)
 Tỷ lệ mỗi hình vẽ = số hiển thị / số đo của đường kích thước trong hình (drawing/dimensions.py): mặt bằng vẽ TL 1/50 trên
 khung 1/100 có tỷ lệ 0,5. Không có đường kích thước thì coi là 1 và cảnh báo.
 Hình chi tiết (đọc số hiển thị của đường kích thước):
@@ -29,6 +31,7 @@ from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
+from pydantic import BaseModel
 
 from .. import config
 from ..drawing.dimensions import Dim, inside, read_dimensions, view_scale
@@ -62,6 +65,7 @@ def load_element_rules(path: str | None = None) -> tuple[tuple[re.Pattern, str, 
 def element_of(text: str) -> tuple[str, str, str] | None:
     """Ký hiệu cấu kiện -> (vai trò, tên loại, khóa chữ thường bỏ dấu). Chữ phải khớp trọn mẫu."""
     key = re.sub(r"\s+", "", normalize(text))
+    key = re.sub(r"(?<=[a-z])[-–](?=\d)", "", key)
     for pat, role, name in load_element_rules():
         if pat.fullmatch(key):
             return role, name, key
@@ -155,6 +159,9 @@ def footing_detail_sizes(views: list[View], sections: dict, dims: list[Dim]) -> 
         k = _title_key(v.title)
         if not k or k[0] != "FOUNDATION":
             continue
+        if k[1].startswith("bm"):
+            # Hình cắt ngang móng băng không cho chiều dài chạy dọc băng.
+            continue
         # khung hình nới xuống tới dưới tiêu đề (đường kích thước tổng hay nằm sát tiêu đề), mỗi bên không quá nửa
         # khoảng cách tới chi tiết móng gần nhất cùng hàng (khung tự tìm có thể lấn sang hình bên cạnh)
         x0, y0, x1, y1 = _grown(v.bbox)
@@ -167,10 +174,18 @@ def footing_detail_sizes(views: list[View], sections: dict, dims: list[Dim]) -> 
         secs = [d for s in sections.get(k, []) for d in s if d.vertical]
         heights = [d.value for d in secs if FOOTING_H_MM[0] <= d.value <= FOOTING_H_MM[1]]
         leans = [d.value for d in secs if LEAN_MM[0] <= d.value <= LEAN_MM[1]]
-        out[k[1]] = {"length_mm": max(horiz) if horiz else None, "width_mm": max(vert) if vert else None,
+        size = {"length_mm": max(horiz) if horiz else None, "width_mm": max(vert) if vert else None,
                      "height_mm": max(heights) if heights else None,
                      "lean_thickness_mm": max(Counter(leans).items(), key=lambda kv: (kv[1], kv[0]))[0] if leans else None,
-                     "nguon": f"{v.title}, {len(sections.get(k, []))} mặt cắt"}
+                     "nguon": f"{v.title} tại ({v.x:g}, {v.y:g}), {len(sections.get(k, []))} mặt cắt"}
+        previous = out.get(k[1])
+        if previous and (previous.get("conflict") or any(size[d] != previous[d] for d in size if d != "nguon")):
+            def describe(s):
+                return " × ".join("?" if s[d] is None else f"{s[d]:g}" for d in ("length_mm", "width_mm", "height_mm"))
+            earlier = previous["nguon"] if previous.get("conflict") else f"{previous['nguon']} ({describe(previous)} mm)"
+            size = {d: None for d in size if d != "nguon"} | {
+                "conflict": True, "nguon": f"{earlier} / {size['nguon']} ({describe(size)} mm)"}
+        out[k[1]] = size
     return out
 
 
@@ -182,7 +197,79 @@ class StructuralTakeoff:
     foundations: list[FoundationItem] = field(default_factory=list)
     columns: dict[str, dict[str, int]] = field(default_factory=dict)    # mặt bằng -> {C1: số lượng}
     column_sections: dict[str, tuple[float, float]] = field(default_factory=dict)   # tiết diện cột ghi chữ: {c1: (b, h)}
+    column_schedule: list[ColumnSpan] = field(default_factory=list)     # bảng thống kê cột (read_column_schedule)
+    structural_columns: list = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
+
+
+class ColumnSpan(BaseModel):
+    """Một ô của bảng thống kê cột: cột `code` (số lượng `count`) đoạn từ cao độ z_from đến z_to, tiết diện b × h."""
+    code: str
+    count: int
+    z_from_mm: float
+    z_to_mm: float
+    b_mm: float
+    h_mm: float
+    floor_key: str | None = None
+
+
+_LEVEL = re.compile(r"([+\-±]?)\s*(\d+[.,]\d+)")
+
+
+def _z(text: str) -> float | None:
+    m = _LEVEL.search(text)
+    return None if m is None else (-1 if m.group(1) == "-" else 1) * float(m.group(2).replace(",", ".")) * 1000
+
+
+def read_column_schedule(drawing, dims: list[Dim]) -> tuple[list[ColumnSpan], list[str]]:
+    """Bảng "THỐNG KÊ CỘT" dạng lưới: hàng tiêu đề có mã cột (C1…) kèm "SL: n"; mỗi hàng là một đoạn cao độ ghi
+    "Từ +a" / "Đến +b"; ô giao vẽ mặt cắt cột: rộng = số ngang lớn nhất, cao = số đứng lớn nhất của đường kích thước trong
+    ô (số nhỏ hơn là lớp bảo vệ, khoảng thép). Ô không đọc được tiết diện thì bỏ và cảnh báo (B7)."""
+    spans, warnings = [], []
+    for title in (t for t in drawing.texts if "thong ke cot" in normalize(t.text)):
+        heads = [(t, e) for t in drawing.texts if (e := element_of(t.text)) and e[0] == "COLUMN"
+                 and abs(t.x - title.x) < 40000 and 0 <= t.y - title.y <= 3000]
+        if not heads:
+            continue
+        hy = statistics.median(t.y for t, _ in heads)
+        heads = sorted(((t, e) for t, e in heads if abs(t.y - hy) < 300), key=lambda h: h[0].x)
+        xs = [t.x for t, _ in heads]
+        step = statistics.median(b - a for a, b in zip(xs, xs[1:])) if len(xs) > 1 else 5000.0
+        counts = {}
+        for t in drawing.texts:
+            if (m := re.match(r"\s*sl\s*:\s*(\d+)", normalize(t.text))) and abs(t.y - hy) < 1000:
+                near = min(heads, key=lambda h: abs(h[0].x - t.x))
+                if abs(near[0].x - t.x) < step / 2:
+                    counts[near[0].text.strip().upper()] = int(m.group(1))
+        froms = [t for t in drawing.texts if normalize(t.text).startswith("tu") and _z(t.text) is not None
+                 and t.y > hy and abs(t.x - title.x) < 40000 and t.x < xs[0]]
+        tos = [t for t in drawing.texts if normalize(t.text).startswith("den") and _z(t.text) is not None
+               and t.y > hy and abs(t.x - title.x) < 40000 and t.x < xs[0]]
+        rows = []
+        for f in froms:
+            below = [t for t in tos if 0 < f.y - t.y < 3000 and abs(t.x - f.x) < 3000]
+            if below:
+                to = min(below, key=lambda t: f.y - t.y)
+                rows.append(((f.y + to.y) / 2, _z(f.text), _z(to.text)))
+        rows.sort()
+        ys = [r[0] for r in rows]
+        for i, (y, z0, z1) in enumerate(rows):
+            lo = (ys[i - 1] + y) / 2 if i else y - (ys[1] - y if len(ys) > 1 else 3000) / 2
+            hi = (ys[i + 1] + y) / 2 if i + 1 < len(ys) else y + (y - ys[i - 1] if i else 3000) / 2
+            for t, e in heads:
+                code = t.text.strip().upper()
+                cell = [d for d in dims if abs(d.x - t.x) < step / 2 and lo <= d.y <= hi]
+                b = max((d.value for d in cell if not d.vertical), default=None)
+                h = max((d.value for d in cell if d.vertical), default=None)
+                if b and h and code in counts:
+                    spans.append(ColumnSpan(code=code, count=counts[code], z_from_mm=z0, z_to_mm=z1, b_mm=b, h_mm=h))
+                else:
+                    warnings.append(f"Bảng thống kê cột: {code} đoạn {z0 / 1000:+.3f} → {z1 / 1000:+.3f} chưa đọc được "
+                                    + ("số lượng" if code not in counts else "tiết diện") + ", chưa tính.")
+    if spans:
+        warnings.append(f"Bê tông cột lấy từ bảng thống kê cột ({len({s.code for s in spans})} loại cột, {len(spans)} đoạn "
+                        "cao độ; tiết diện đọc từ đường kích thước trong bảng): kiểm tra.")
+    return spans, warnings
 
 
 def _lines(drawing, bbox):
@@ -377,6 +464,8 @@ def read_structural(drawing, scale: float | None = None, dims: list[Dim] | None 
     dims: đường kích thước (mặc định đọc từ bản vẽ gốc)."""
     views = find_views(drawing, bbox_for=PLAN_TYPES + ("BV05",))
     out = StructuralTakeoff(views=views, sheets=sheet_inventory(views))
+    from .structural_column_instances import read_column_instances
+    out.structural_columns = read_column_instances(drawing, views)
     dims = read_dimensions(drawing) if dims is None else dims
     details = detail_sections(drawing, views, dims)
     beam_sizes = beam_detail_sizes(details)
@@ -420,9 +509,29 @@ def read_structural(drawing, scale: float | None = None, dims: list[Dim] | None 
                 out.beams[v.title] = beams
             out.warnings += warn
     out.column_sections = {k: v for k, v in sections.items() if (e := element_of(k)) and e[0] == "COLUMN"}
+    out.column_schedule, warn = read_column_schedule(drawing, dims)
+    out.warnings += warn
     sizes = footing_detail_sizes(views, details, dims)
+    strip_sections = {_title_key(v.title) for v in views if v.ma == "BV05" and "mong bang" in normalize(v.title)}
+    strip_notes: dict[str, set[tuple[float, int | None]]] = {}
+    for t in drawing.texts:
+        note = re.fullmatch(r"(bm[-–]?\d+[a-z]?)\s*:\s*l\s*=\s*(\d+(?:[.,]\d+)?)\s*mm(?:\s*;\s*sl\s*=\s*(\d+))?",
+                            t.text.strip(), re.IGNORECASE)
+        if note and (mark := element_of(note[1])) and ("FOUNDATION", mark[2]) in strip_sections:
+            length = float(note[2].replace(",", "."))
+            if length > 0:
+                strip_notes.setdefault(mark[2], set()).add((length, int(note[3]) if note[3] else None))
     for n, pts in sorted(spots.items()):
-        size = sizes.get(element_of(n)[2], {})
+        mark = element_of(n)[2]
+        size = sizes.get(mark, {})
+        is_strip = mark.startswith("bm")
+        if is_strip:
+            lengths = {length for length, _ in strip_notes.get(mark, set())}
+            if len(lengths) == 1:
+                length = next(iter(lengths))
+                size = {"gross_length_mm": length, "nguon": f"ghi chú {n}: L={length:g} mm và mặt cắt móng băng cùng ký hiệu"}
+            out.warnings.append(f"{n}: cần kiểm phạm vi băng, phần giao và tiết diện móng trước khi tính thể tích."
+                                + (f" Có nhiều chiều dài ghi trên bản vẽ: {sorted(lengths)} mm." if len(lengths) > 1 else ""))
         plans = {p[0] for p in pts}
         uniq = []                                  # ký hiệu vẽ trùng chỗ (copy đè) chỉ đếm một lần
         for p in pts:
@@ -437,7 +546,9 @@ def read_structural(drawing, scale: float | None = None, dims: list[Dim] | None 
                 ctr = _footing_center(plan_lines[title], x, y, size["length_mm"] / sc, size["width_mm"] / sc)
                 centers.append(None if ctr is None else (round(ctr[0] * sc, 1), round(ctr[1] * sc, 1)))
         found_all = bool(centers) and None not in centers
-        f = FoundationItem(name=n, count=c, **{k: v for k, v in size.items() if k != "nguon"},
+        if size.get("conflict"):
+            out.warnings.append(f"Móng {n}: các chi tiết cùng ký hiệu có kích thước khác nhau; cần xác định chi tiết cho từng vị trí. {size['nguon']}")
+        f = FoundationItem(name=n, count=c, kind="bang" if is_strip else None, **{k: v for k, v in size.items() if k.endswith("_mm")},
                            positions=centers if found_all else [], plan=next(iter(plans)) if found_all else None,
                            source=f"{n} trên {', '.join(sorted(plans))}" + (f"; kích thước: {size['nguon']}" if size else ""))
         if centers and not found_all:
@@ -447,6 +558,23 @@ def read_structural(drawing, scale: float | None = None, dims: list[Dim] | None 
         dims_txt = " × ".join(f"{v:.0f}" if v is not None else "?" for v in (f.length_mm, f.width_mm, f.height_mm))
         out.warnings.append(f"Móng {n}: {c} khối, {dims_txt} mm"
                             + (f", lót {f.lean_thickness_mm:.0f} mm" if f.lean_thickness_mm else "")
-                            + (f" (đọc từ chi tiết {size['nguon']}; móng coi là khối hộp, móng có bậc hoặc vát cần sửa)."
+                            + (" (móng băng: chờ kiểm tra tiết diện và phần giao)." if is_strip else
+                               " (chờ đối chiếu các chi tiết cùng ký hiệu)." if size.get("conflict") else
+                               f" (đọc từ chi tiết {size['nguon']}; móng coi là khối hộp, móng có bậc hoặc vát cần sửa)."
                                if size else " (không có chi tiết móng: nhập kích thước trong thông số công trình)."))
+    located_marks = {element_of(n)[2] for n in spots}
+    for mark, notes in sorted(strip_notes.items()):
+        if mark in located_marks:
+            continue
+        if len(notes) != 1:
+            out.warnings.append(f"{mark.upper()}: các ghi chú L/SL khác nhau, cần đối chiếu từng vị trí trên mặt bằng.")
+            continue
+        length, count = next(iter(notes))
+        if not count:
+            out.warnings.append(f"{mark.upper()}: đọc được L={length:g} mm, thiếu số lượng và vị trí trên mặt bằng.")
+            continue
+        name = f"BM-{mark[2:].upper()}"
+        source = f"Chi tiết móng băng {name}, L={length:g} mm, SL={count}; chưa nối vị trí trên mặt bằng"
+        out.foundations.append(FoundationItem(name=name, kind="bang", count=count, gross_length_mm=length, source=source))
+        out.warnings.append(f"{source}. Chưa tính thể tích: thiếu tiết diện và phạm vi giao nhau.")
     return out

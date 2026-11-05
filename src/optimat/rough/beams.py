@@ -183,12 +183,24 @@ def beam_works(plan: str, beams: list[Beam], params: ProjectParams) -> tuple[lis
             warnings.append(f"{plan}: cao dầm {depth:.0f} mm không lớn hơn dày sàn {slab:.0f} mm.")
         sec = f"{_fmt(width / 1000) if width else 'rộng'} m × {_fmt(web) if web is not None else '(cao − dày sàn)'} m"
         note = f" (đã trừ {_fmt(cut)} m trong cột, dầm chính, móng)" if cut > 0 else ""
-        works.append(_work("DAM", length * width / 1000 * web if ok else None, plan=plan, element=label,
+        dimensions = [dict(label=b.id, count=1, length_m=b.length_mm/1000,
+                           gross_length_m=math.hypot(b.x2-b.x1, b.y2-b.y1)/1000, deducted_length_m=b.cut_mm/1000,
+                           width_m=width/1000 if width is not None else None,
+                           height_m=depth/1000 if depth is not None else None, concrete_height_m=web,
+                           source=f"{plan}: {b.id} ({b.source})",
+                           field_sources={"length_m": f"Trục {b.id} và khoản trừ giao beam_joints",
+                               "width_m": f"Beam.{b.id}.b_mm ({b.source})" if b.b_mm else "ProjectParams.beam_width_mm",
+                               "height_m": f"Beam.{b.id}.d_mm ({b.source})" if b.d_mm else "ProjectParams.beam_depth_mm",
+                               "concrete_height_m": "Cao toàn tiết diện" if tie else "Cao toàn tiết diện − ProjectParams.slab_thickness_mm"},
+                           note=f"Dài net; đã trừ giao {b.cut_mm/1000:g} m. Cao là toàn tiết diện; " +
+                                ("giằng không trừ sàn" if tie else "cao tính bê tông là phần dưới sàn") +
+                                "; CP còn khoản trừ đầu dầm phụ riêng, không nhân kích thước để thay lượng CP") for b in members]
+        works.append(_work("DAM", length * width / 1000 * web if ok else None, dimensions=dimensions, plan=plan, element=label,
                            formula=f"{_fmt(length)} m × {sec}{note}", missing=missing))
         framed = [(bw, bd) for b in members for bw, bd in b.framed]
         hole = sum(bw * (bd - slab) / 1e6 for bw, bd in framed if bw and bd and slab is not None and bd > slab) if ok else 0.0
         bottom = 0.0 if tie else width / 1000 if width else None     # giằng đặt trên lót: không ván đáy
-        works.append(_work("COP_PHA", (2 * web + bottom) * length - hole if ok else None, plan=plan,
+        works.append(_work("COP_PHA", (2 * web + bottom) * length - hole if ok else None, dimensions=dimensions, plan=plan,
                            element=f"cốp pha {label}", formwork_of="DAM",
                            formula=f"(2 × {_fmt(web) if web is not None else '(cao − dày sàn)'} + "
                                    f"{_fmt(bottom) if bottom is not None else 'rộng'}) m × {_fmt(length)} m"

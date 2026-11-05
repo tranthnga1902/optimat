@@ -1,8 +1,3 @@
-import type { Metadata } from "next";
-import { Rough } from "./rough";
-
-export const metadata: Metadata = { title: "Phần thô" };
-
-export default function Page() {
-  return <Rough />;
-}
+import { Review } from "../do-boc/Review";
+export const metadata = { title: "Kiểm tra công tác và khối lượng" };
+export default function Page() { return <Review roughOnly />; }

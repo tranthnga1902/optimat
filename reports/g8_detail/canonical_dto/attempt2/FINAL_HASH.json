@@ -1,0 +1,5 @@
+{
+  "src/optimat/rough/models.py": "56a507cf9cc4841756258415aa80a8fa3c9293cfc93ae306304d58cc85d5c841",
+  "src/optimat/rough/quantity_details.py": "ecf62f7e8aee229cdbfb8228c35d64e187964370b215e06590cdb1288f7b7ad2",
+  "tests/test_rough_quantity_details.py": "600a5538d6cc9930c1c2e04df8aa861d980d89eae5db1f33ed37aa358e545e28"
+}

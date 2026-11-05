@@ -1,0 +1,69 @@
+--- reports/demo_0511/q01/status.before.py
++++ src/optimat/rough/status.py
+@@ -101,6 +101,8 @@
+         out.append(("C", "kích thước móng, cao độ: C (nhập tay)"))
+     elif code == "CAU_THANG":
+         out.append(_src(w.source, "thang", "B", "suy từ nét mũi bậc trên mặt bằng"))
++        out.append(_param(params.stair_slab_thickness_mm, "dày bản thang"))
++        out.append((h or "D", f"chiều cao tầng: {h or 'D (chưa có nguồn)'}"))
+     else:   # MAI, GIANG_TUONG, SE_NO, BE_TONG_LOT chung
+         out.append(_src(w.source, w.name.lower(), "C", "nhập tay"))
+     return out
+--- reports/demo_0511/q01/test_rough_status.before.py
++++ tests/test_rough_status.py
+@@ -5,7 +5,8 @@
+ from optimat.drawing.review import ReviewOpening
+ from optimat.rough.checks import cross_checks, envelope_by_orientation, load_ranges, wall_orientation
+ from optimat.rough.models import ProjectParams, WorkItem, worst_status
+-from optimat.rough.status import height_status
++from optimat.rough.status import assign_status, height_status
++from optimat.rough.stairs import Stair, stair_works
+ from optimat.rough.takeoff import PlanInput, RoughRequest, compute_rough
+ from tests.test_rough_takeoff import FULL, plan, walls
+ 
+@@ -14,6 +15,45 @@
+     assert worst_status("A", "B") == "B" and worst_status("C", "A", "D") == "D" and worst_status(None, "A") == "A"
+     assert worst_status() is None and worst_status(None) is None
+     assert height_status("cao độ tầng trên") == "B" and height_status("nhập tay") == "C" and height_status("chưa có") == "D"
++
++
++def test_auto_stair_status_includes_thickness_height_and_formwork():
++    params = ProjectParams(stair_slab_thickness_mm=120)
++    stair = Stair(steps=22, flight_width_mm=1000, tread_mm=250, source="auto")
++    works, _ = stair_works("Tầng 1", [stair], 3300, params)
++    quantities = [w.quantity for w in works]
++    assign_status(works, params, {"Tầng 1": "cao độ tầng trên"})
++    concrete, formwork = works
++    assert concrete.status == "C" and formwork.status == "C"
++    assert any(i.startswith("thang: B") for i in concrete.inputs)
++    assert "dày bản thang: C (thông số công trình)" in concrete.inputs
++    assert "chiều cao tầng: B" in concrete.inputs
++    assert [w.quantity for w in works] == quantities
++
++
++@pytest.mark.parametrize("source, expected", [("auto", "B"), ("manual", "C"), ("structural", "A")])
++def test_stair_status_keeps_geometry_source(source, expected):
++    w = WorkItem(code="CAU_THANG", name="Bê tông cầu thang", unit="m³", quantity=1.0,
++                 plan="Tầng 1", source=source)
++    assign_status([w], ProjectParams(stair_slab_thickness_mm=120), {"Tầng 1": "nhập tay"})
++    assert w.status == "C" and w.inputs[0].startswith(f"thang: {expected}")
++    assert "chiều cao tầng: C" in w.inputs
++
++
++def test_stair_without_thickness_stays_missing():
++    params = ProjectParams()
++    works, _ = stair_works("Tầng 1", [Stair(steps=22, flight_width_mm=1000, tread_mm=250, source="auto")], 3300, params)
++    assign_status(works, params, {"Tầng 1": "cao độ tầng trên"})
++    assert all(w.quantity is None and w.status == "D" for w in works)
++    assert all("thiếu: dày bản thang" in w.inputs for w in works)
++
++
++def test_stair_without_height_source_is_not_reported_complete():
++    params = ProjectParams(stair_slab_thickness_mm=120)
++    works, _ = stair_works("Tầng 1", [Stair(steps=22, flight_width_mm=1000, tread_mm=250, source="auto")], 3300, params)
++    assign_status(works, params, {})
++    assert all(w.status == "D" for w in works)
++    assert "chiều cao tầng: D (chưa có nguồn)" in works[0].inputs
+ 
+ 
+ def test_status_on_full_house():

@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 4.45,
+  "summary": "============================= 12 passed in 2.85s ==============================",
+  "protected_file_count": 16,
+  "protected_hash_diff": {
+    "changed": []
+  },
+  "test_sha256_after": "f7d9be73f346f9cc8bf3e7d7dac3c39fded18f06fa57dae504773f412e6eb8bf"
+}

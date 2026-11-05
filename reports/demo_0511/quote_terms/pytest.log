@@ -1,0 +1,3 @@
+.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_catalog_pricing.py
+.........................................                                [100%]
+41 passed in 3.98s

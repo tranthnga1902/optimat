@@ -1,0 +1,53 @@
+{
+  "mode": "REPLAY_NGUON_SCOPED_KHONG_PHAI_KET_QUA_TU_NHAN_CAD",
+  "source": "docs\\review\\data20_07\\STAIR_T1_SOURCE.json",
+  "source_sha256": "421f6830cf37999151d9454e3c8db93f97d01792269bbeb92e05e88113d1354f",
+  "source_human_approval": false,
+  "source_approval_status": "chua_kiem",
+  "candidate_flights": 3,
+  "expected_output_not_loaded": true,
+  "steel_schedule_not_multiplied_or_bound": true,
+  "stair_works": [
+    {
+      "code": "XAY",
+      "quantity": null,
+      "status": "D",
+      "missing": [
+        "hình học bậc xây từng vế và quy cách gạch/vữa; chưa bóc riêng"
+      ]
+    },
+    {
+      "code": "CAU_THANG",
+      "quantity": null,
+      "status": "D",
+      "missing": [
+        "candidate-flight-1: run_mm hoặc nguồn",
+        "candidate-flight-1: rise_mm hoặc nguồn",
+        "candidate-flight-1: width_mm hoặc nguồn",
+        "candidate-flight-2: run_mm hoặc nguồn",
+        "candidate-flight-2: rise_mm hoặc nguồn",
+        "candidate-flight-2: width_mm hoặc nguồn",
+        "candidate-flight-3: run_mm hoặc nguồn",
+        "candidate-flight-3: rise_mm hoặc nguồn",
+        "candidate-flight-3: width_mm hoặc nguồn",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ]
+    },
+    {
+      "code": "COP_PHA",
+      "quantity": null,
+      "status": "D",
+      "missing": [
+        "candidate-flight-1: hình học và nguồn đáy bản nghiêng",
+        "candidate-flight-2: hình học và nguồn đáy bản nghiêng",
+        "candidate-flight-3: hình học và nguồn đáy bản nghiêng",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ]
+    }
+  ]
+}

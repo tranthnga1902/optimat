@@ -1,0 +1,114 @@
+{
+  "case": "VN002",
+  "mode": "local_actual_dxf_and_validated_live_response",
+  "drawings": [
+    {
+      "file": "nha_sang_hai_duong_4x15_kien_truc.dxf",
+      "sha256": "719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6"
+    },
+    {
+      "file": "nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    }
+  ],
+  "direct_cad_exit": 0,
+  "reviewed_work_count": 0,
+  "work_count": 61,
+  "materials": [
+    {
+      "line": "m0",
+      "name": "Gạch xây (chưa chọn phương án tường)",
+      "known_id": null,
+      "options": [],
+      "source_gaps": 2,
+      "preserved": true
+    },
+    {
+      "line": "m1",
+      "name": "Nhu cầu vữa xây hoặc vật liệu liên kết",
+      "known_id": null,
+      "options": [],
+      "source_gaps": 3,
+      "preserved": true
+    },
+    {
+      "line": "m2",
+      "name": "Vữa trát",
+      "known_id": null,
+      "options": [],
+      "source_gaps": 3,
+      "preserved": true
+    },
+    {
+      "line": "m3",
+      "name": "Bê tông (chưa chọn mác)",
+      "known_id": null,
+      "options": [],
+      "source_gaps": 9,
+      "preserved": true
+    },
+    {
+      "line": "m4",
+      "name": "Vữa cán nền",
+      "known_id": null,
+      "options": [],
+      "source_gaps": 3,
+      "preserved": true
+    },
+    {
+      "line": "m5",
+      "name": "Cốt thép (chưa chia nhóm đường kính)",
+      "known_id": null,
+      "options": [],
+      "source_gaps": 22,
+      "preserved": true
+    },
+    {
+      "line": "m6",
+      "name": "Dây thép buộc 1 ly",
+      "known_id": "TH10",
+      "options": [
+        "TH10"
+      ],
+      "source_gaps": 21,
+      "preserved": true
+    },
+    {
+      "line": "m7",
+      "name": "Vật liệu cốp pha",
+      "known_id": null,
+      "options": [],
+      "source_gaps": 10,
+      "preserved": true
+    }
+  ],
+  "commercial_prices": 0,
+  "catalog": "ACTUAL lookup in local CSV; no app DB query",
+  "live_provider_responses": 1,
+  "dns_failure_before_provider": 1,
+  "original_response_checks": "single strings rejected by original output schema",
+  "replay_external_calls": 0,
+  "applied": false,
+  "context_sha256": "7da7031588d892bced47d226d71d02ff8f18e6251c3396f59d10124d89f9bc0c",
+  "outbound_replay_user_sha256": "65b9e76882be8a65f5cb511204f15825b18229bd3fd61cbd58548f3cced09804",
+  "live_user_payload_hash_matched": true,
+  "provider_reply_sha256": "a275a587c9d578a5bf7d978a1457e339e8417b33048ccca6b5e8d7cfd19177db",
+  "hashes": "source_hashes.json",
+  "patch": "advisor.patch",
+  "python_tests": "34 passed in 8.00s",
+  "frontend_checks": [
+    "procurement harness exit 0",
+    "MaterialAdvisor render and receipt callback exit 0",
+    "TypeScript exit 0",
+    "ESLint on 3 touched components exit 0"
+  ],
+  "browser": {
+    "origin": "http://127.0.0.1:3001",
+    "project": "VN002 · Kiểm luồng đề xuất phần thô 05-11",
+    "listed_drawings": 0,
+    "start_enabled": false,
+    "screen": "Phương án yêu cầu kiểm và lưu khối lượng",
+    "e2e": false
+  },
+  "snapshot": "KET_QUA.html is an offline, read-only render of the validated response; no fabricated approval or purchase"
+}

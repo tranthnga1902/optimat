@@ -1,0 +1,31 @@
+{
+  "status": "source_frozen_on_opening_candidates",
+  "manifest_sha256": "fa9d7f71b4aa2337bb3f2ac1e2aea6caea71d41731a2502db7019b6ff28b6e4c",
+  "reference_patch_00_sha256": "2fab0d7563e611e663939bb5f8f9111b4d210d60788a826ba4efaa5f9b99c0e3",
+  "reference_harness_used_unchanged": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\docs\\review\\data20_00\\input_roles_20261105\\check-panel.cjs",
+  "ports": {
+    "3001": {
+      "git_apply_check_and_apply": true,
+      "build": "UthdKbmMyzssbWeIX9H04",
+      "logs": [
+        "upload.log",
+        "panel.log",
+        "types.json"
+      ]
+    },
+    "3002": {
+      "git_apply_check_and_apply": true,
+      "build": "5STud4qMZi47UJU3U-_3-",
+      "logs": [
+        "upload.log",
+        "panel.log",
+        "types.json"
+      ]
+    }
+  },
+  "adaptations": {
+    "3001": "Một tệp CAD chờ tải. Chọn tệp mới đặt lại vai trò trống. Giữ nguyên luồng một tệp; không đưa giao diện tải hàng loạt hoặc Office sang nền này.",
+    "3002": "Hàng đợi hiện hữu giữ riêng vai trò từng tệp. CAD có ba lựa chọn KT, KC, THAM_KHAO. Vai trò mặc định cho tài liệu ngoài CAD theo nền hiện hữu."
+  },
+  "live_project_writes": false
+}

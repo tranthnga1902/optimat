@@ -1,0 +1,107 @@
+--- main.before_view_worker.py
++++ src/optimat/api/main.py
+@@ -6,6 +6,7 @@
+ from __future__ import annotations
+ 
+ import json
++import re
+ import tempfile
+ from dataclasses import asdict
+ from pathlib import Path
+@@ -122,6 +123,21 @@
+             raise HTTPException(422, str(exc)) from exc
+ 
+ 
++def _takeoff_view_payload(data: bytes, suffix: str, file_name: str, overrides: dict | None,
++                          project_id: int | None, floor_height_mm: float | None) -> dict:
++    """Đọc, đo và dựng nền CAD trong worker để không chặn các yêu cầu khác."""
++    with tempfile.TemporaryDirectory() as tmp:
++        path = Path(tmp) / f"upload{suffix}"
++        path.write_bytes(data)
++        try:
++            drawing = read_drawing(str(path), overrides)
++        except DrawingError as exc:
++            raise HTTPException(422, str(exc)) from exc
++        height, openings = _project_inputs(project_id, floor_height_mm)
++        plans = takeoff_plans(drawing, height, Catalog.load(), openings)
++        return view_payload(drawing, plans, file_name or path.name)
++
++
+ @app.post("/api/takeoff/view")
+ async def takeoff_view(file: UploadFile = File(...), floor_height_mm: float | None = Form(None),
+                        layer_overrides: str | None = Form(None), project_id: int | None = Form(None)) -> dict:
+@@ -133,16 +149,9 @@
+         overrides = json.loads(layer_overrides) if layer_overrides else None
+     except json.JSONDecodeError as exc:
+         raise HTTPException(400, "layer_overrides phải là chuỗi JSON hợp lệ.") from exc
+-    with tempfile.TemporaryDirectory() as tmp:
+-        path = Path(tmp) / f"upload{suffix}"
+-        path.write_bytes(await file.read())
+-        try:
+-            drawing = read_drawing(str(path), overrides)
+-        except DrawingError as exc:
+-            raise HTTPException(422, str(exc)) from exc
+-    height, openings = _project_inputs(project_id, floor_height_mm)
+-    plans = takeoff_plans(drawing, height, Catalog.load(), openings)
+-    return view_payload(drawing, plans, file.filename or path.name)
++    data = await file.read()
++    return await run_in_threadpool(_takeoff_view_payload, data, suffix, file.filename or "", overrides,
++                                   project_id, floor_height_mm)
+ 
+ 
+ @app.post("/api/takeoff/confirm", response_model=ReviewResult)
+@@ -202,6 +211,21 @@
+     return {"request": jsonable_encoder(req), "result": jsonable_encoder(result)}
+ 
+ 
++def _takeoff_structural_payload(data: bytes, suffix: str, file_name: str | None,
++                                project: ProjectParams, structural_scale: float | None) -> dict:
++    """Đọc kết cấu trong worker, giữ file tạm tới khi dựng đủ đầu vào phần thô."""
++    with tempfile.TemporaryDirectory() as tmp:
++        path = Path(tmp) / f"structural{suffix}"
++        path.write_bytes(data)
++        try:
++            drawing = read_drawing(str(path))
++        except DrawingError as exc:
++            raise HTTPException(422, str(exc)) from exc
++        project, parts = structural_parts([drawing], project, structural_scale)
++        return jsonable_encoder({**parts, "foundations": project.foundations, "lintel_height_mm": project.lintel_height_mm,
++                                 "file": file_name})
++
++
+ @app.post("/api/takeoff/structural")
+ async def takeoff_structural(file: UploadFile = File(...), params: str | None = Form(None),
+                              structural_scale: float | None = Form(None)) -> dict:
+@@ -215,16 +239,9 @@
+         project = ProjectParams(**json.loads(params)) if params else ProjectParams()
+     except (json.JSONDecodeError, TypeError, ValueError) as exc:
+         raise HTTPException(400, f"params không hợp lệ: {exc}") from exc
+-    with tempfile.TemporaryDirectory() as tmp:
+-        path = Path(tmp) / f"structural{Path(file.filename).suffix.lower()}"
+-        path.write_bytes(await file.read())
+-        try:
+-            drawing = read_drawing(str(path))
+-        except DrawingError as exc:
+-            raise HTTPException(422, str(exc)) from exc
+-    project, parts = structural_parts([drawing], project, structural_scale)
+-    return jsonable_encoder({**parts, "foundations": project.foundations, "lintel_height_mm": project.lintel_height_mm,
+-                             "file": file.filename})
++    data = await file.read()
++    return await run_in_threadpool(_takeoff_structural_payload, data, Path(file.filename or "").suffix.lower(),
++                                   file.filename, project, structural_scale)
+ 
+ 
+ @app.post("/api/takeoff/rough", response_model=RoughResult)
+@@ -287,6 +304,12 @@
+         "vehicles": [{"id": r.vehicle_id, "name": r.name, "payload_ton": float(r.payload_ton)} for r in veh.itertuples()],
+         "wall_classes": [{"id": k, "min_mm": lo, "max_mm": hi} for k, (lo, hi) in config.WALL_THICKNESS_CLASSES.items()],
+         "concrete_grades": variants_of("BE_TONG_TRON"),
++        "mortar_grades": sorted({"M" + match.group(1)
++            for row in catalog.materials.itertuples()
++            if row.unit == "m³" and "MORTAR" in str(row.usage_role)
++            if (match := re.search(r"mác\s*(\d+)\b", row.name, re.IGNORECASE))}, key=lambda g: int(g[1:])),
++        "plaster_thicknesses": sorted({v.split("/")[0] for v in variants_of("TRAT")}, key=float),
++        "screed_thicknesses": variants_of("CAN_NEN"),
+         "waterproof_materials": [{"id": m, "name": catalog.material_name(m) or m} for m in variants_of("CHONG_THAM")],
+         "steel_elements": [{"code": k, "name": v} for k, v in STEEL_ELEMENTS.items()],
+         "raw_classes": [{"code": k, "name": v} for k, v in RAW_CLASSES.items()],

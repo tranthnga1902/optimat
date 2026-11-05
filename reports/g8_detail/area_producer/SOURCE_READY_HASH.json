@@ -1,0 +1,5 @@
+{
+  "src/optimat/rough/areas.py": "5c2a517b2dbf1979755e5a8db31390aaaafbfaeb79fae0172b264c43b7c9b0a4",
+  "src/optimat/rough/quantity_details.py": "784df5be1a5479462a9eb711e6cce73a3905064eb90546055310cbcc4316c0f7",
+  "tests/test_rough_area_details.py": "0ff11ccb1b26e148e11043d76832421e388e11a5a1a0445cc738d3d32521ca11"
+}

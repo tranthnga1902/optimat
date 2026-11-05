@@ -1,0 +1,22 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 1.87,
+  "counts": {
+    "passed": 33,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "xpassed": 0
+  },
+  "collected": [
+    "33"
+  ],
+  "hash_before_count": 226,
+  "hash_after_count": 226,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  }
+}

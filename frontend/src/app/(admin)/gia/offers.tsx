@@ -6,7 +6,9 @@ import { TableEditor } from "@/components/TableEditor";
 import { Card, Head, Loading, Note, Pill } from "@/components/ui";
 
 type Raw = { material_id: string; material_name?: string; supplier_id: string; name?: string; province?: string; base_price: number | null;
-  price_level?: string; price_date?: string; data_kind?: string; product_url?: string; maps_url?: string };
+  price_level?: string; price_date?: string; data_kind?: string; product_url?: string; maps_url?: string;
+  vat_included?: string; transport_included?: string; lead_time_days?: number | null; quote_reference?: string };
+const YN: Record<string, string> = { YES: "có", NO: "không" };
 type Offer = Raw & { supplier: string; link: string };
 
 const COLS: Col<Offer>[] = [
@@ -17,6 +19,10 @@ const COLS: Col<Offer>[] = [
   { key: "base_price", title: "Giá", num: true, render: (r) => (r.base_price == null ? <Pill level="warn">không công khai</Pill> : money(r.base_price)) },
   { key: "price_level", title: "Mức giá" },
   { key: "price_date", title: "Ngày" },
+  { key: "vat_included", title: "Gồm VAT", render: (r) => YN[r.vat_included || ""] || "chưa rõ" },
+  { key: "transport_included", title: "Gồm giao", render: (r) => YN[r.transport_included || ""] || "chưa rõ" },
+  { key: "lead_time_days", title: "Cung ứng (ngày)", num: true },
+  { key: "quote_reference", title: "Chứng từ báo giá" },
   { key: "data_kind", title: "Loại dữ liệu", render: (r) => <Pill level={r.data_kind === "ACTUAL" ? "ok" : "info"}>{r.data_kind || "?"}</Pill> },
   { key: "link", title: "Liên kết", render: (r) => (r.link ? <a href={r.link} target="_blank" rel="noopener">mở</a> : <Pill level="warn">chưa có</Pill>) },
 ];

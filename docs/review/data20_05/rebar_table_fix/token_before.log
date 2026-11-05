@@ -1,0 +1,84 @@
+.FFFF..F.                                                                [100%]
+================================== FAILURES ===================================
+____________ test_element_token_preserves_internal_hyphen[C-1-COT] ____________
+
+value = 'C-1', expected = 'COT'
+
+    @pytest.mark.parametrize("value,expected", [
+        ("C1", "COT"), ("C-1", "COT"), ("C-2", "COT"), ("C-1A", "COT"),
+        ("D-2", "DAM"), ("MC1-1", None), ("MC 1-1", None), ("C1-C2", None),
+        ("C-2-B", None),
+    ])
+    def test_element_token_preserves_internal_hyphen(value, expected):
+>       assert element_code(value) == expected
+E       AssertionError: assert None == 'COT'
+E        +  where None = element_code('C-1')
+
+tests\test_rebar_element_tokens.py:12: AssertionError
+____________ test_element_token_preserves_internal_hyphen[C-2-COT] ____________
+
+value = 'C-2', expected = 'COT'
+
+    @pytest.mark.parametrize("value,expected", [
+        ("C1", "COT"), ("C-1", "COT"), ("C-2", "COT"), ("C-1A", "COT"),
+        ("D-2", "DAM"), ("MC1-1", None), ("MC 1-1", None), ("C1-C2", None),
+        ("C-2-B", None),
+    ])
+    def test_element_token_preserves_internal_hyphen(value, expected):
+>       assert element_code(value) == expected
+E       AssertionError: assert None == 'COT'
+E        +  where None = element_code('C-2')
+
+tests\test_rebar_element_tokens.py:12: AssertionError
+___________ test_element_token_preserves_internal_hyphen[C-1A-COT] ____________
+
+value = 'C-1A', expected = 'COT'
+
+    @pytest.mark.parametrize("value,expected", [
+        ("C1", "COT"), ("C-1", "COT"), ("C-2", "COT"), ("C-1A", "COT"),
+        ("D-2", "DAM"), ("MC1-1", None), ("MC 1-1", None), ("C1-C2", None),
+        ("C-2-B", None),
+    ])
+    def test_element_token_preserves_internal_hyphen(value, expected):
+>       assert element_code(value) == expected
+E       AssertionError: assert None == 'COT'
+E        +  where None = element_code('C-1A')
+
+tests\test_rebar_element_tokens.py:12: AssertionError
+____________ test_element_token_preserves_internal_hyphen[D-2-DAM] ____________
+
+value = 'D-2', expected = 'DAM'
+
+    @pytest.mark.parametrize("value,expected", [
+        ("C1", "COT"), ("C-1", "COT"), ("C-2", "COT"), ("C-1A", "COT"),
+        ("D-2", "DAM"), ("MC1-1", None), ("MC 1-1", None), ("C1-C2", None),
+        ("C-2-B", None),
+    ])
+    def test_element_token_preserves_internal_hyphen(value, expected):
+>       assert element_code(value) == expected
+E       AssertionError: assert None == 'DAM'
+E        +  where None = element_code('D-2')
+
+tests\test_rebar_element_tokens.py:12: AssertionError
+__________ test_element_token_preserves_internal_hyphen[C1-C2-None] ___________
+
+value = 'C1-C2', expected = None
+
+    @pytest.mark.parametrize("value,expected", [
+        ("C1", "COT"), ("C-1", "COT"), ("C-2", "COT"), ("C-1A", "COT"),
+        ("D-2", "DAM"), ("MC1-1", None), ("MC 1-1", None), ("C1-C2", None),
+        ("C-2-B", None),
+    ])
+    def test_element_token_preserves_internal_hyphen(value, expected):
+>       assert element_code(value) == expected
+E       AssertionError: assert 'COT' == None
+E        +  where 'COT' = element_code('C1-C2')
+
+tests\test_rebar_element_tokens.py:12: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rebar_element_tokens.py::test_element_token_preserves_internal_hyphen[C-1-COT]
+FAILED tests/test_rebar_element_tokens.py::test_element_token_preserves_internal_hyphen[C-2-COT]
+FAILED tests/test_rebar_element_tokens.py::test_element_token_preserves_internal_hyphen[C-1A-COT]
+FAILED tests/test_rebar_element_tokens.py::test_element_token_preserves_internal_hyphen[D-2-DAM]
+FAILED tests/test_rebar_element_tokens.py::test_element_token_preserves_internal_hyphen[C1-C2-None]
+5 failed, 4 passed in 4.73s

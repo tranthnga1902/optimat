@@ -1,0 +1,12 @@
+[
+  {
+    "patch": "3002.patch",
+    "paths": 2,
+    "applied": true
+  },
+  {
+    "patch": "cad-review-bbox.patch",
+    "paths": 2,
+    "applied": true
+  }
+]

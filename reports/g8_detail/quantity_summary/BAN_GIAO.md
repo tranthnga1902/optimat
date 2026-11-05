@@ -1,0 +1,36 @@
+# G8-SUM — tổng raw/coverage cùng snapshot
+
+## Sáu file/hunk theo01
+
+4filechính:models.py DTOcontext/key/group/coverage/summary vàparentquantityNoneguard; quantity_summary.py mớibuilder/validator; takeoff.py optionalquantity_summary,parentbindingvàgắnoutput;test_rough_quantity_summary.py mới. Bổsung đúng2hunktestparityold ởtest_rough_quantity_details.py vàtest_rough_area_details.py:excludequantity_summaryởCẢHAIpayload;giữmọiassertionlượng/status/totals/materials/giá.
+
+Snapshot, SUMMARY.patch, SOURCE_READY_HASH.json/FINAL_HASH.jsonkhóa6file. KhôngclaimmọioldmodelsASTnguyên:vẫn cóexceptionparentquantityNoneguardđượcBA01duyệt.Cácmodel/hàmcũkhácgiữ;compute_roughchỉthêmreturnfieldsummary,noguồnO01/attach_prices/N03/status/legacytotal/materialmathchange;P02areaemittervàquantity_detailshelperkhôngsửa.
+
+## Hợp đồng thực tế
+
+- RoughResult.quantity_summary optionalNonechojsoncũ. Outputmới cóschema_version1,quantity_snapshot_hash,context7tham sốđãkhai báo,groups,coverage;khôngIDregistry/hệversionmới. Hashfinalworks+contextcủacùngpayload,khônglấythờigian/IDlưu làmchứngminhđãkiểm.
+- Workkeyw:indexchỉtrongmảngworks cuối.Groupkeygiữstage/code/variant/unit/source/basis/formwork_of/steel_element/wall_system_id/specđãkhai báo. Thôngtinchưacóthìisolatework_key+kèmreason;khôngđọcevidence/formulađểđoángrade/norm/soilorsteelclass.Methodbox/area/prismoidchỉtracecalculation_methods,khôngtựtáchquycách.
+- Knownrawsumdetailknown_partmộtlần,khôngfallbacklegacykhiNone,khôngreference/count/repetition/conversionlần2.Totalrawchỉkhimọithànhviênđủ;phạmvirỗngkhôngfull.Khôngcộngm²/m³/tấnthànhmộttổng.
+- Coveragecountscomponents/aggregate/unavailable/no_detail;quantitycomplete/incomplete;known/unknowncontribution/reference;compatibilitypendingriêngvớiquantityincomplete.Khôngphầntrămaccuracy/sourceverified.Knownpartialcòncắttrừunknownkhôngphảicamkếtcận dướikhốilượngmua.
+- ParentRoughResultvalidatorrebuildEXPECTEDreadonlytừfinalworks+contextvàCOMPARE,rồiraise;khôngoverwritepayloadgiảđểlàmkhớp.Hash/membership/key/rawsum/count/missingrowrefs/orderđềuđượckiểm.
+- ParentWorkItemquantityNonekhôngđượcdetailcomplete/totalrawcósố;vẫnnhậnknownpartpartial.ĐúngguardmớiđượcBA01mở,khôngđổiquantity/statuscủacôngtác.
+
+## JSONexample và legacyparity
+
+SYNTHETIC_EXAMPLE.jsondogeneratebằngbuilder,chỉfixturehợpđồngkhôngđápánthật.Haiworkraw.3225→.6450,khôngtổnglegacy.646;thêmunknownvànoDetailworklegacy1vẫngiữknown.6450/totalNone,reference100khôngcộng.Hairow_idr1ởhaiworklàhaiđónggópđúngscope.
+
+Contextlàtham sốkhai báo,khôngchứngminhthiếtkếđãđộc lậpkiểm.Nhómresolvedchỉđủcontextđãkhai báođểgộp,khôngphảixácminhnguồn/địnhmức.BOM/giá/optimizerlegacyvẫndùngluồngcũ,khôngchuyểnsangraw.
+
+## Focusedđãterminal
+
+**Attempt1:189passed,EXIT0**,pytest12,18s/collector13,86s;session12686/PID41724terminal. **243filehashbefore/after0drift**;exact6SOURCE_READY=FINAL=checkout=before/after.
+
+7purefiles:summary,details,area_details,areas,partial,beam_sourcesO01,rough_takeoff.KhôngHTTP/DB/CADthật/full/reloadservice.Casesbaoquátnull0/sign/reference/no_detail,Decimal>28digits,compatpartition,methodtrace,coveragekhôngfullgiả,directparentNoneguard,parentC/detailpartial,JSONroundtrip,stalehash/membership/count/sum/context/rowref/order/rawsamelegacyvàfulllegacypayloadparity.
+
+14đãđọcexact6hash/log2430drift và189pass;chưapháthiệnblockermới,import1chiều,parentbindingkhôngrepair,haihunktestđúngphạmvi.01nhậncuối.
+
+## Giới hạn/cổng tiếp
+
+ChưareloadAPI31112(baselineLEANcũ),chưakiểmAPI/HTTP/UI/Excel/full/ACTUAL.Ngườikiểm/snapshotworkflowhiệnhữuvẫnlàcăn cứxácnhận,hashkhớpkhôngtựđánhda_kiem. CPâmSANchưadetail,nênsummaryđánhno_detail/incompleteđúngkhôngsumpositivegiảđủ. ProducerP03-P07vẫnchưađượcmở.Same-roundnetmutationsphảiproducerrebuildnhưcontract,khôngdùnghashđểkhẳngđịnhledgerthôđúngkhinetworksđãgiấuởproducer.
+
+Source6fileHOLD,sẵnsàng01/02/09tíchhợpconsumerđúngpayload.NooutsideHTTPretryđãbịautomaticapprovalreviewtừchối.

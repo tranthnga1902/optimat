@@ -12,8 +12,11 @@ Mọi thao tác ghi đều ghi audit_logs kèm người thực hiện.
 from __future__ import annotations
 
 from typing import Literal, Optional
+from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import FileResponse
+from .. import config
 from pydantic import BaseModel
 from sqlalchemy import Select, func, or_, select
 from sqlalchemy.exc import DBAPIError, IntegrityError
@@ -204,6 +207,32 @@ def project_detail(project_id: int) -> dict:
             "takeoffs": [{**x._mapping, "kind": x.kind or "walls", "confirmed_at": _iso(x.confirmed_at), "created_at": _iso(x.created_at)}
                          for x in takeoffs],
             "runs": [{**x._mapping, "created_at": _iso(x.created_at)} for x in runs]}
+
+
+
+@router.get("/api/admin/projects/{project_id}/files/{file_id}")
+def download_project_file(project_id: int, file_id: int) -> FileResponse:
+    """Tải tệp của dự án từ data/drawings; router đã yêu cầu quyền quản trị."""
+    _need_db()
+    files = T["project_files"]
+    with get_engine().connect() as conn:
+        row = conn.execute(select(files.c.stored_path).where(
+            files.c.project_id == project_id, files.c.file_id == file_id)).first()
+    if row is None:
+        raise HTTPException(404, "Không tìm thấy tệp của dự án.")
+    base = (config.DATA_DIR / "drawings").resolve()
+    try:
+        path = (config.ROOT / row.stored_path).resolve(strict=True)
+        if not path.is_relative_to(base) or not path.is_file():
+            raise HTTPException(404, "Không tìm thấy tệp của dự án.")
+    except (OSError, RuntimeError, ValueError):
+        raise HTTPException(404, "Không tìm thấy tệp của dự án.")
+    types = {".pdf": "application/pdf", ".dxf": "application/octet-stream",
+             ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+             ".json": "application/json", ".md": "text/plain; charset=utf-8"}
+    return FileResponse(path, media_type=types.get(path.suffix.lower(), "application/octet-stream"),
+                        filename=path.name, content_disposition_type="attachment",
+                        headers={"X-Content-Type-Options": "nosniff", "Cache-Control": "private, no-store"})
 
 
 # ------------------------------ Nhật ký ------------------------------

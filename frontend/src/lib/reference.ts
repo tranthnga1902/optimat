@@ -9,8 +9,12 @@ export type Reference = {
   vehicles: { id: string; name: string; payload_ton: number }[];
   wall_classes: { id: string; min_mm: number; max_mm: number }[];
   concrete_grades: string[];
+  mortar_grades?: string[];
+  plaster_thicknesses?: string[];
+  screed_thicknesses?: string[];
   waterproof_materials: { id: string; name: string }[];
   steel_elements: { code: string; name: string }[];
+  raw_classes?: { code: string; name: string }[];
   data_kinds: string[];
 };
 

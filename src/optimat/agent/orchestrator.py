@@ -12,7 +12,7 @@ from typing import Callable
 from .. import config
 from ..catalog.pricing import bill_of_materials
 from ..catalog.repository import Catalog
-from ..drawing.takeoff import takeoff_from_file
+from ..drawing.takeoff import takeoff_building_from_file
 from ..optimize.problem import optimize
 from ..predict.cost_model import MaterialPriceModel
 from ..schemas import Constraints
@@ -23,9 +23,9 @@ from .pipeline import describe, describe_bill, describe_rough, run_pipeline
 SYSTEM = (
     "Bạn là OptiMat AI, trợ lý chọn vật liệu xây tường cho nhà ở riêng lẻ. Bạn KHÔNG tự tính và KHÔNG tự nêu giá, "
     "khối lượng, nhà cung cấp hay liên kết: mọi số liệu phải lấy từ kết quả công cụ và chép nguyên văn. "
-    "Quy trình thường dùng: do_boc_ban_ve trước, tra_gia_theo_thiet_ke khi người dùng hỏi giá vật liệu theo bản vẽ, "
-    "rồi toi_uu_vat_lieu với ràng buộc người dùng nêu. Hỏi khối lượng phần thô (bê tông, thép, cốp pha, trát, cán nền...) "
-    "thì gọi boc_phan_tho; thông số nào người dùng không nêu thì để trống, không tự điền. "
+    "Quy trình thường dùng: do_boc_ban_ve trước, luôn gọi boc_phan_tho (khối lượng bê tông, thép, cốp pha, xây, trát...; "
+    "thông số nào người dùng không nêu thì để trống, không tự điền), tra_gia_theo_thiet_ke khi người dùng hỏi giá vật liệu "
+    "theo bản vẽ, rồi toi_uu_vat_lieu với ràng buộc người dùng nêu. "
     "Thiếu thông tin thì dùng mặc định và nói rõ. Từ chối yêu cầu về chịu lực, kết cấu, hoặc ngoài phạm vi nhà ở riêng lẻ. "
     "Trả lời bằng tiếng Việt, ngắn gọn."
 )
@@ -64,9 +64,10 @@ class AgentSession:
     """Giữ trạng thái của một lần chạy và thực thi công cụ."""
 
     def __init__(self, drawing_path: str, floor_height_mm: float | None = None, layer_overrides: dict | None = None,
-                 rough_params: ProjectParams | None = None):
+                 rough_params: ProjectParams | None = None, structural_paths: list[str] | None = None):
         self.drawing_path, self.floor_height_mm, self.layer_overrides = drawing_path, floor_height_mm, layer_overrides
         self.rough_params = rough_params or ProjectParams()
+        self.structural_paths = structural_paths or []
         self.rough = None
         self.takeoff = None
         self.result = None
@@ -87,7 +88,7 @@ class AgentSession:
         return out
 
     def tool_do_boc_ban_ve(self, floor_height_mm: float | None = None) -> str:
-        self.takeoff = takeoff_from_file(self.drawing_path, floor_height_mm or self.floor_height_mm, self.layer_overrides)
+        self.takeoff = takeoff_building_from_file(self.drawing_path, floor_height_mm or self.floor_height_mm, self.layer_overrides)
         if not self.takeoff.groups:
             return "Chưa nhận diện được tường. " + " ".join(self.takeoff.warnings)
         lines = [f"Tường {g.wall_type} ({g.role}): dài {g.length_m:.2f} m, diện tích thực {g.net_area_m2:.2f} m2, "
@@ -105,7 +106,9 @@ class AgentSession:
         from ..rough.takeoff import compute_rough, rough_from_drawing
         params = self.rough_params.model_copy(update={k: v for k, v in kwargs.items() if v not in (None, "")})
         catalog = Catalog.load()
-        req = rough_from_drawing(read_drawing(self.drawing_path, self.layer_overrides), params, self.floor_height_mm, catalog)
+        structural = [read_drawing(p) for p in self.structural_paths] or None
+        req = rough_from_drawing(read_drawing(self.drawing_path, self.layer_overrides), params, self.floor_height_mm, catalog,
+                                 structural=structural)
         self.rough = compute_rough(req, catalog)
         return describe_rough(self.rough) + "\n" + "\n".join(f"Cảnh báo: {w}" for w in self.rough.warnings[:10])
 
@@ -130,9 +133,11 @@ class AgentSession:
 
 
 def run_agent(drawing_path: str, message: str, floor_height_mm: float | None = None, layer_overrides: dict | None = None,
-              chat: Callable[..., dict] = chat_openai, rough_params: ProjectParams | None = None) -> dict:
-    """Chạy agent gọi công cụ. `chat` thay được bằng hàm giả khi kiểm thử. rough_params: thông số công trình đã nhập."""
-    session = AgentSession(drawing_path, floor_height_mm, layer_overrides, rough_params)
+              chat: Callable[..., dict] = chat_openai, rough_params: ProjectParams | None = None,
+              structural_paths: list[str] | None = None) -> dict:
+    """Chạy agent gọi công cụ. `chat` thay được bằng hàm giả khi kiểm thử. rough_params: thông số công trình đã nhập.
+    structural_paths: bản vẽ kết cấu tách file."""
+    session = AgentSession(drawing_path, floor_height_mm, layer_overrides, rough_params, structural_paths)
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": message}]
     try:
         for _ in range(config.AGENT_MAX_TURNS):
@@ -156,7 +161,7 @@ def run_agent(drawing_path: str, message: str, floor_height_mm: float | None = N
     else:
         reason = f"Mô hình không kết thúc sau {config.AGENT_MAX_TURNS} lượt."
     state = run_pipeline(drawing_path, message=message, floor_height_mm=floor_height_mm, layer_overrides=layer_overrides,
-                         use_llm=False, rough_params=rough_params)
+                         use_llm=False, rough_params=rough_params, structural_paths=structural_paths)
     return {"mode": "fallback", "reason": reason, "answer": state["explanation"], "guarded": False, "trace": session.trace,
             "takeoff": state["takeoff"], "result": state["result"], "constraints": state["constraints"], "bill": state["bill"],
             "rough": state.get("rough")}

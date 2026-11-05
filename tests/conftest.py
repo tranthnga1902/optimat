@@ -13,6 +13,8 @@ os.environ["OPTIMAT_NO_DOTENV"] = "1"
 os.environ.pop("DATABASE_URL", None)
 # script con in tiếng Việt ra ống dẫn: Windows mặc định cp1252 làm script dừng giữa chừng (init_db.py --reset)
 os.environ["PYTHONIOENCODING"] = "utf-8"
+# cache phân tích (KD01) tắt mặc định để các bài không dùng lại kết quả của nhau; bài cache tự bật với thư mục tạm
+os.environ["OPTIMAT_ANALYSIS_CACHE"] = "0"
 if not os.environ.get("OPTIMAT_CATALOG_OVERLAY"):
     os.environ["OPTIMAT_CATALOG_OVERLAY"] = str(ROOT / "data/sample/catalog")
 

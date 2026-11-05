@@ -1,0 +1,265 @@
+--- a/src/optimat/rough/structural_column_instances.py
++++ b/src/optimat/rough/structural_column_instances.py
+@@ -260,9 +260,12 @@
+                     continue
+                 if value is None or not math.isfinite(value) or not math.isfinite(measured) or measured <= 0 or value <= 0:
+                     continue
++                angle = (entity.dxf.get("angle",0) if entity.dimtype==0 else math.degrees(math.atan2(b[1]-a[1],b[0]-a[0]))) % 180
++                if min(angle,180-angle)>1 and abs(angle-90)>1:
++                    continue
+                 row.update(p=point(entity.dxf.get("text_midpoint") or entity.dxf.defpoint), a=a, b=b,
+                            value=value, measured=measured * scale,
+-                           vertical=abs(a[0] - b[0]) < abs(a[1] - b[1]))
++                           vertical=abs(angle-90)<=1)
+             else:
+                 continue
+             records.append(row)
+@@ -336,7 +339,7 @@
+     return refs
+ 
+ 
+-def _section_spans(records, heading, all_headings):
++def _section_spans(records, heading, all_headings, *, issues=None):
+     from types import SimpleNamespace
+     from .. import config
+     from ..drawing.sheets import _window
+@@ -407,13 +410,35 @@
+             upper = min(upper, max(r["p"][1] for r in levels) + 2 * caption["height"])
+             ds = [r for r in local if r["kind"] == "DIMENSION" and abs(r["p"][0] - caption["p"][0]) <= 8 * caption["height"]
+                   and caption["p"][1] < r["p"][1] < upper and config.COLUMN_SIDE_MM[0] <= r["value"] <= config.COLUMN_SIDE_MM[1]]
+-            chosen = [max((r for r in ds if r["vertical"] == vertical), key=lambda r: r["value"], default=None) for vertical in (False, True)]
+-            boundary = _section_boundary(records, *chosen) if all(chosen) else []
+-            if boundary and math.isclose(chosen[0]["value"] / chosen[0]["measured"], chosen[1]["value"] / chosen[1]["measured"], rel_tol=.01):
+-                pairs.append(dict(z0=level(low), z1=level(high), b=chosen[0]["value"], h=chosen[1]["value"], expected_count=len(levels)-1,
+-                                  refs=[heading, low, high, caption, *same, *strokes, *chosen, *boundary]))
++            cell = (caption["p"][0]-8*caption["height"],caption["p"][1],caption["p"][0]+8*caption["height"],upper)
++            geometry = [r for r in records if
++                (r["kind"]=="LINE" and _inside_box(r["a"],cell) and _inside_box(r["b"],cell)) or
++                (r["kind"]=="LWPOLYLINE" and r.get("closed") and all(_inside_box(p,cell) for p in r["vertices"]))]
++            valid = {}
++            for width in (r for r in ds if not r["vertical"]):
++                for depth in (r for r in ds if r["vertical"]):
++                    if not math.isclose(width["value"] / width["measured"], depth["value"] / depth["measured"], rel_tol=.01):
++                        continue
++                    boundary = _section_boundary(geometry, width, depth)
++                    if not boundary:
++                        continue
++                    key = (width["value"], depth["value"], *[round(v,5) for v in
++                           (*sorted((width["a"][0],width["b"][0])), *sorted((depth["a"][1],depth["b"][1])))])
++                    refs = valid.setdefault(key, [])
++                    for ref in (width, depth, *boundary):
++                        if ref not in refs:
++                            refs.append(ref)
++            if len(valid) == 1:
++                key, dimension_refs = next(iter(valid.items()))
++                pairs.append(dict(z0=level(low), z1=level(high), b=key[0], h=key[1], expected_count=len(levels)-1,
++                                  refs=[heading, low, high, caption, *same, *strokes, *dimension_refs]))
++            elif len(valid) > 1 and issues is not None:
++                issues.append(dict(reason="nhiều cặp DIM/biên kín hợp lệ cho cùng mặt cắt; chưa chọn nguồn",
++                    refs=[heading,caption,low,high,*[r for group in valid.values() for r in group]]))
+         if len(pairs) == 1:
+             spans.append(pairs[0])
++        elif len(pairs) > 1 and issues is not None:
++            issues.append(dict(reason="nhiều mặt cắt hợp lệ cùng đoạn; chưa xác định duy nhất",refs=[r for p in pairs for r in p["refs"]]))
+     return spans
+ 
+ 
+@@ -446,6 +471,32 @@
+             handles=[r["handle"] for r in refs], evidence=[f"{r['handle']}: {r['text']}" for r in refs] +
+                 ["chưa đối chiếu biên vùng sàn với vị trí cột; không dùng ứng viên để tự trừ"]))
+     return found
++
++
++def _merge_column_spans(spans):
++    """Giữ mọi provenance; cùng số đo không được xóa xung đột phạm vi nguồn."""
++    groups = {}
++    conflict = False
++    for span in spans:
++        key = (span["z0"],span["z1"],span["b"],span["h"])
++        if key not in groups:
++            groups[key] = {**span, "refs": list(span["refs"])}
++            continue
++        group = groups[key]
++        conflict |= group["expected_count"] != span["expected_count"]
++        for ref in span["refs"]:
++            if ref not in group["refs"]:
++                group["refs"].append(ref)
++    merged = sorted(groups.values(),key=lambda s:s["z0"])
++    intervals = [(s["z0"],s["z1"]) for s in merged]
++    conflict |= len(intervals) != len(set(intervals))
++    return ([] if conflict else merged), conflict
++
++
++def _plan_heads_at_axes(headings, vertical, horizontal):
++    """View phải kề footprint của hệ trục; không chọn tiêu đề gần nhất toàn tệp."""
++    box = (horizontal["limits"][0],vertical["limits"][0],horizontal["limits"][1],vertical["limits"][1])
++    return [h for h in headings if _inside_box(h["p"],box,10*h["height"])]
+ 
+ 
+ def _cad_column_instances(drawing):
+@@ -466,8 +517,11 @@
+     leaders = [r for r in records if r["kind"] == "LEADER" and len(r["vertices"]) >= 2]
+     rectangles = [(r, box) for r in records if (box := _rect(r))]
+     spans_by_code = {}
++    issues_by_code = {}
+     for heading in detail_heads:
+-        spans_by_code.setdefault(heading["code"], []).extend(_section_spans(records, heading, detail_heads))
++        issues = []
++        spans_by_code.setdefault(heading["code"], []).extend(_section_spans(records, heading, detail_heads,issues=issues))
++        issues_by_code.setdefault(heading["code"], []).extend(issues)
+     file = str(getattr(drawing.doc, "filename", "") or "")
+     source_sha256 = hashlib.sha256(Path(file).read_bytes()).hexdigest() if file and Path(file).is_file() else None
+     found = {}
+@@ -476,11 +530,6 @@
+         role = element_of(label["text"])
+         if not role or role[0] != "COLUMN":
+             continue
+-        near_heads = sorted(plan_heads, key=lambda r: math.dist(r["p"], label["p"]))
+-        if not near_heads or math.dist(near_heads[0]["p"], label["p"]) > VIEW_REACH_MM:
+-            continue
+-        heading = near_heads[0]
+-        floors = floors_of(heading["text"])
+         linked = [r for r in leaders if math.dist(r["vertices"][-1], label["p"]) <= 2 * label["height"]]
+         if len(linked) != 1:
+             continue
+@@ -497,23 +546,35 @@
+         hy = [a for a in axes if not a["vertical"] and box[1] <= a["coord"] <= box[3] and a["limits"][0] <= (box[0]+box[2])/2 <= a["limits"][1]]
+         if len(vx) != 1 or len(hy) != 1:
+             key = hashlib.sha256(f"{file}|{shape['handle']}|chưa nối trục".encode()).hexdigest()[:24]
+-            trace = [label, leader, shape, heading]
++            trace = [label, leader, shape]
+             found[key] = StructuralColumnInstance(instance_id=key, code=label["text"], file=file,
+                 source_sha256=source_sha256,
+                 grid_x=vx[0]["label"] if len(vx) == 1 else None, grid_y=hy[0]["label"] if len(hy) == 1 else None,
+-                sheet=heading["text"], evidence=[f"{r['handle']}: {r.get('text',r['kind'])}" for r in trace],
++                evidence=[f"{r['handle']}: {r.get('text',r['kind'])}" for r in trace],
+                 handles=[r["handle"] for r in trace], layers=sorted({r["layer"] for r in trace}),
+                 missing=["đã nối nhãn/leader/hình cột, chưa xác định duy nhất hai trục"])
+             continue
++        eligible_heads = _plan_heads_at_axes(plan_heads,vx[0],hy[0])
++        if len(eligible_heads) != 1:
++            key = hashlib.sha256(f"{file}|{shape['handle']}|view pending".encode()).hexdigest()[:24]
++            trace = [label,leader,shape,*eligible_heads,*vx[0]["refs"],*hy[0]["refs"]]
++            found[key] = StructuralColumnInstance(instance_id=key,code=label["text"],file=file,source_sha256=source_sha256,
++                grid_x=vx[0]["label"],grid_y=hy[0]["label"],
++                handles=sorted({r["handle"] for r in trace}),layers=sorted({r["layer"] for r in trace}),
++                evidence=[f"{r['handle']}: {r.get('text',r['kind'])}" for r in trace],
++                missing=["chưa xác định duy nhất view cột trong footprint hệ trục; không chọn tiêu đề gần nhất"])
++            continue
++        heading = eligible_heads[0]
++        floors = floors_of(heading["text"])
+         spans = spans_by_code.get(role[2], [])
+         refs = [label, leader, shape, heading, *vx[0]["refs"], *hy[0]["refs"]]
++        issues = issues_by_code.get(role[2],[])
++        refs += [r for issue in issues for r in issue["refs"]]
+         # Chỉ gán tầng khi số đoạn liên tiếp khớp toàn bộ phạm vi ghi trên mặt bằng.
+-        unique_spans = {(s["z0"], s["z1"], s["b"], s["h"]): s for s in spans}
+-        spans = sorted(unique_spans.values(), key=lambda s: s["z0"])
+-        intervals = [(s["z0"], s["z1"]) for s in spans]
+-        conflict = len(intervals) != len(set(intervals))
++        original_span_refs = [r for s in spans for r in s["refs"]]
++        spans, conflict = _merge_column_spans(spans)
+         if conflict:
+-            spans = []
++            refs += original_span_refs
+         floor_ready = bool(spans) and len(floors) == len(spans) and all(s["expected_count"] == len(spans) for s in spans)
+         floor_ready = floor_ready and all(a["z1"] == b["z0"] for a,b in zip(spans, spans[1:]))
+         if not spans:
+@@ -534,7 +595,8 @@
+                 file=file, source_sha256=source_sha256, sheet=heading["text"], layers=sorted({r["layer"] for r in trace}),
+                 top_slab_candidates=slab_candidates,
+                 handles=sorted({r["handle"] for r in trace if r["handle"]}),
+-                missing=(["mâu thuẫn tiết diện cùng đoạn; chưa chọn nguồn"] if conflict else []) +
++                missing=(["mâu thuẫn tiết diện hoặc phạm vi nguồn cùng đoạn; chưa chọn nguồn"] if conflict else []) +
++                        [issue["reason"] for issue in issues] +
+                         (["chưa nối đầy đủ đoạn cột với phạm vi tầng"] if not floor_ready else []),
+                 evidence=[f"{r['handle']}: {r.get('text', r['kind'])}; layer {r['layer']}" for r in trace], **values)
+     return list(found.values())
+--- a/tests/test_structural_column_instances.py
++++ b/tests/test_structural_column_instances.py
+@@ -299,3 +299,85 @@
+     assert len(records) == 1 and records[0]["p"] == pytest.approx((1000,2000))
+     assert records[0]["handle"].startswith(root.dxf.handle + "/")
+     assert records[0]["handle"].endswith("/" + text.dxf.handle)
++
++
++@pytest.mark.parametrize("text,pos",[("Mặt bằng cột tầng 2",(2100,5500)),
++    ("Mặt bằng cột tầng 3",(2000,5500)),("Mặt bằng cột tầng 3",(1500,5100))])
++def test_two_eligible_plan_heads_stay_pending_even_if_one_is_closer(monkeypatch,text,pos):
++    from optimat.rough import structural_column_instances as m
++    records=geometric_records()+[dict(kind="TEXT",handle="competing-plan",layer="text",text=text,p=pos,height=200)]
++    monkeypatch.setattr(m,"_cad_records",lambda _:records)
++    found=m.read_column_instances(SimpleNamespace(doc=SimpleNamespace(filename="x.dxf")),[])
++    assert len(found)==1 and found[0].floor_key is None and found[0].missing
++    assert found[0].z_to_mm is None and instance_column_works(found)[0].quantity is None
++    assert "competing-plan" in found[0].handles and "plan-title" in found[0].handles
++
++
++def test_global_nearby_heading_outside_axis_footprint_cannot_supply_floor(monkeypatch):
++    from optimat.rough import structural_column_instances as m
++    records=[dict(r,p=(20000,5500)) if r["handle"]=="plan-title" else r for r in geometric_records()]
++    monkeypatch.setattr(m,"_cad_records",lambda _:records)
++    found=m.read_column_instances(SimpleNamespace(doc=SimpleNamespace(filename="x.dxf")),[])
++    assert len(found)==1 and found[0].floor_key is None and found[0].missing
++
++
++def test_duplicate_span_keeps_all_sources_and_conflicting_profile_counts_do_not_merge():
++    from optimat.rough.structural_column_instances import _merge_column_spans
++    a=dict(z0=0,z1=3000,b=200,h=300,expected_count=1,refs=[dict(handle="source-a")])
++    b={**a,"refs":[dict(handle="source-b")]}
++    spans,conflict=_merge_column_spans([a,b])
++    assert not conflict and [r["handle"] for r in spans[0]["refs"]]==["source-a","source-b"]
++    assert _merge_column_spans([a,{**b,"expected_count":2}])==([],True)
++    assert _merge_column_spans([a,{**b,"b":250}])==([],True)
++
++
++def test_larger_dimension_without_boundary_does_not_hide_valid_pair(monkeypatch):
++    from optimat.rough import structural_column_instances as m
++    records=geometric_records()+[dict(kind="DIMENSION",handle="oversized-unbound",layer="dim",
++        p=(13100,2100),a=(12750,1700),b=(13450,1700),value=350,measured=700,vertical=False)]
++    monkeypatch.setattr(m,"_cad_records",lambda _:records)
++    found=m.read_column_instances(SimpleNamespace(doc=SimpleNamespace(filename="x.dxf")),[])
++    assert (found[0].b_mm,found[0].h_mm)==(300,400)
++
++
++def test_two_valid_dimension_boundaries_stay_pending(monkeypatch):
++    from optimat.rough import structural_column_instances as m
++    records=geometric_records()+[
++        dict(kind="DIMENSION",handle="width-other",layer="dim",p=(13200,3200),a=(12800,3000),b=(13500,3000),value=350,measured=700,vertical=False),
++        dict(kind="DIMENSION",handle="depth-other",layer="dim",p=(13600,3400),a=(13600,3100),b=(13600,3900),value=400,measured=800,vertical=True),
++        dict(kind="LWPOLYLINE",handle="boundary-other",layer="concrete",vertices=[(12800,3100),(13500,3100),(13500,3900),(12800,3900)],closed=True)]
++    monkeypatch.setattr(m,"_cad_records",lambda _:records)
++    found=m.read_column_instances(SimpleNamespace(doc=SimpleNamespace(filename="x.dxf")),[])
++    assert found[0].b_mm is None and found[0].missing
++    assert {"width","width-other","depth","depth-other"} <= set(found[0].handles)
++    assert any("nhiều cặp DIM" in reason for reason in found[0].missing)
++
++
++def test_duplicate_dimensions_same_boundary_keep_provenance(monkeypatch):
++    from optimat.rough import structural_column_instances as m
++    records=geometric_records()
++    records += [dict(r,handle=r["handle"]+"-copy") for r in records if r["kind"]=="DIMENSION"]
++    monkeypatch.setattr(m,"_cad_records",lambda _:records)
++    found=m.read_column_instances(SimpleNamespace(doc=SimpleNamespace(filename="x.dxf")),[])
++    assert (found[0].b_mm,found[0].h_mm)==(300,400)
++    assert {"width","width-copy","depth","depth-copy"}<=set(found[0].handles)
++
++
++def test_conflicting_duplicate_span_preserves_both_detail_sources(monkeypatch):
++    from optimat.rough import structural_column_instances as m
++    records=geometric_records()+[dict(kind="TEXT",handle="other-detail-source",layer="text",text="Cột C-9",p=(-15000,-6000),height=200)]
++    monkeypatch.setattr(m,"_cad_records",lambda _:records)
++    def spans(_,head,heads,**kw):
++        return [dict(z0=3300,z1=6900,b=300,h=400,expected_count=1 if head["handle"]=="detail-title" else 2,refs=[head])]
++    monkeypatch.setattr(m,"_section_spans",spans)
++    found=m.read_column_instances(SimpleNamespace(doc=SimpleNamespace(filename="x.dxf")),[])
++    assert found[0].b_mm is None and found[0].missing
++    assert {"detail-title","other-detail-source"} <= set(found[0].handles)
++
++
++def test_native_diagonal_dimension_is_not_a_horizontal_section_measurement():
++    import ezdxf
++    from optimat.rough.structural_column_instances import _cad_records
++    doc=ezdxf.new()
++    doc.modelspace().add_aligned_dim(p1=(0,0),p2=(1000,1000),distance=100)
++    assert not [r for r in _cad_records(SimpleNamespace(doc=doc,unit_scale=1)) if r["kind"]=="DIMENSION"]

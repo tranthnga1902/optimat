@@ -11,8 +11,12 @@ Bộ quy tắc nằm trong data/rules/material_rules.csv, sửa được bằng 
 
 Cách áp dụng cho tường:
     text  : ghi chú có số chiều dày (110, 220...) áp dụng cho mọi tường cùng lớp chiều dày;
-            ghi chú không có số chỉ áp dụng cho tường trong bán kính TEXT_RADIUS_MM
-    hatch : áp dụng cho tường có điểm giữa nằm trong vùng hatch
+            ghi chú không có số chỉ áp dụng cho tường trong bán kính TEXT_RADIUS_MM.
+            Viết tắt giãn trước theo data/rules/viet_tat.csv ("gạch kg nung" -> gạch không nung); ghi chú nhiều dòng
+            xếp cột được ghép thành một đoạn làm tín hiệu bổ sung (text_blocks.py), từng dòng vẫn so như cũ
+    hatch : áp dụng cho tường có ≥ NG10 chiều dài trục nằm trong vùng hatch. Hatch bị phá thành nét rời (trong block
+            hoặc thẳng ra model) được dựng lại thành vùng "ANSI31" đoán (HatchItem.synthetic): nguồn "hatch_doan",
+            tin cậy thấp hơn. Quy tắc không có target (H01) chỉ ghi căn cứ "là khối xây", không tranh với quy tắc có vật liệu
     layer : áp dụng cho tường nằm trên layer có tên khớp
 Không quy tắc nào khớp thì vật liệu để trống: hệ thống không đoán.
 
@@ -35,12 +39,14 @@ from ..catalog.repository import Catalog, default_catalog
 from ..db.session import read_rule_table
 from ..schemas import WallSegment
 from .dxf_reader import BlockRef, Drawing
-from .encoding import normalize
+from .encoding import expand_abbreviations, normalize
+from .text_blocks import TextBlock, group_text_lines
 
 RULES_PATH = config.DATA_DIR / "rules" / "material_rules.csv"
 TEXT_RADIUS_MM = 2000.0
 ALIAS_PRIORITY = 95
-CONFIDENCE = {"text_thickness": 0.8, "hatch": 0.7, "text_near": 0.5, "layer": 0.5}
+# hatch_doan: vùng hatch dựng lại từ nét rời (HatchItem.synthetic, tên mẫu đoán): tin cậy thấp hơn hatch đọc được thẳng
+CONFIDENCE = {"text_thickness": 0.8, "hatch": 0.7, "text_near": 0.5, "layer": 0.5, "hatch_doan": 0.4}
 MATERIAL_HINTS = ("gach", "tuong", "xay", "be tong", "vua")     # ghi chú có các từ này mà không khớp quy tắc sẽ được báo
 _THICKNESS = {"100": "110", "105": "110", "110": "110", "150": "150", "200": "220", "220": "220", "300": "330", "330": "330"}
 
@@ -98,9 +104,32 @@ def alias_rules(catalog: Catalog) -> tuple[Rule, ...]:
     return tuple(out)
 
 
+# bộ quy tắc gộp theo từng danh mục: Catalog chứa DataFrame nên không hash được, cache theo id() và giữ tham chiếu để
+# id không bị tái dùng; apply_material_rules gọi cho từng mặt bằng của một file (takeoff_plans) và cho từng bản vẽ khi
+# chạy hàng loạt (batch_takeoff), trước đây mỗi lần đều quét lại bảng material_aliases
+_RULES_CACHE: dict[int, tuple[Catalog, tuple[Rule, ...], tuple[Rule, ...]]] = {}   # id(catalog) -> (catalog, csv, gộp)
+_RULES_CACHE_MAX = 8
+
+
 def all_rules(catalog: Catalog | None = None) -> tuple[Rule, ...]:
-    """Quy tắc trong CSV + quy tắc sinh từ tên gọi khác của danh mục vật liệu."""
-    return _sorted(load_rules() + alias_rules(catalog or default_catalog()))
+    """Quy tắc trong CSV + quy tắc sinh từ tên gọi khác của danh mục vật liệu (cache theo danh mục).
+    Khóa cache gồm cả tuple của load_rules(): sau load_rules.cache_clear() (trang quản trị sửa quy tắc) bản gộp tự tính lại."""
+    catalog = catalog or default_catalog()
+    base = load_rules()
+    hit = _RULES_CACHE.get(id(catalog))
+    if hit is not None and hit[0] is catalog and hit[1] is base:
+        return hit[2]
+    rules = _sorted(base + alias_rules(catalog))
+    if len(_RULES_CACHE) >= _RULES_CACHE_MAX:
+        _RULES_CACHE.pop(next(iter(_RULES_CACHE)))
+    _RULES_CACHE[id(catalog)] = (catalog, base, rules)
+    return rules
+
+
+def clear_rule_cache() -> None:
+    """Xóa cache quy tắc (sau khi sửa material_rules.csv / danh mục trong cùng tiến trình, hoặc trong kiểm thử)."""
+    _RULES_CACHE.clear()
+    load_rules.cache_clear()
 
 
 def rule_label(rule: Rule) -> str:
@@ -120,6 +149,19 @@ def _best(rules, signal: str, value: str) -> Rule | None:
         if signal in ("text", "layer") and _word(rule.pattern).search(value):
             return rule
     return None
+
+
+def _best_text(rules, normalized: str) -> Rule | None:
+    """Quy tắc ghi chú ưu tiên cao nhất, so trên chuỗi gốc đã bỏ dấu VÀ chuỗi đã giãn viết tắt (data/rules/viet_tat.csv):
+    "gach kg nung" -> khớp T07 "gach khong nung"; quy tắc / tên gọi khác viết sẵn dạng tắt vẫn khớp như cũ."""
+    expanded = expand_abbreviations(normalized)
+    a = _best(rules, "text", normalized)
+    if expanded == normalized:
+        return a
+    b = _best(rules, "text", expanded)
+    if a is None or b is None:
+        return a or b
+    return a if (a.priority, len(a.pattern)) >= (b.priority, len(b.pattern)) else b
 
 
 @lru_cache(maxsize=2048)
@@ -170,14 +212,17 @@ def apply_material_rules(drawing: Drawing, walls: list[WallSegment], catalog: Ca
     catalog = catalog or default_catalog()
     rules = rules or all_rules(catalog)
     candidates: dict[str, list[tuple[int, float, Rule, str]]] = {w.wall_id: [] for w in walls}
+    confirm_only: dict[str, list[tuple[int, float, Rule, str]]] = {w.wall_id: [] for w in walls}   # H01: chỉ xác nhận xây
     hits: dict[str, int] = {}
     unmatched = {"hatch": set(), "text": set(), "block": set()}
 
-    for text in drawing.texts:
+    # ghi chú: từng dòng TEXT như trước, cộng thêm đoạn ghép từ nhiều dòng xếp cột (text_blocks.py) làm tín hiệu bổ sung
+    blocks = group_text_lines(drawing.texts)
+    for text in list(drawing.texts) + blocks:
         norm = normalize(text.text)
-        rule = _best(rules, "text", norm)
+        rule = _best_text(rules, norm)
         if rule is None:
-            if any(h in norm for h in MATERIAL_HINTS):
+            if any(h in norm for h in MATERIAL_HINTS) and not isinstance(text, TextBlock):
                 unmatched["text"].add(text.text.strip()[:80])
             continue
         classes = {_THICKNESS[m] for m in re.findall(r"\b(100|105|110|150|200|220|300|330)\b", norm)}
@@ -186,17 +231,25 @@ def apply_material_rules(drawing: Drawing, walls: list[WallSegment], catalog: Ca
                 candidates[w.wall_id].append((rule.priority, CONFIDENCE["text_thickness"], rule, "text"))
             elif not classes and _dist_to_wall(text.x, text.y, w) <= TEXT_RADIUS_MM:
                 candidates[w.wall_id].append((rule.priority, CONFIDENCE["text_near"], rule, "text"))
+    if blocks:   # dòng lẻ bị báo "chưa có quy tắc" nhưng đoạn ghép chứa nó đã khớp: không báo nữa
+        matched_lines = {id(line) for b in blocks if _best_text(rules, normalize(b.text)) for line in b.lines}
+        unmatched["text"] -= {t.text.strip()[:80] for t in drawing.texts if id(t) in matched_lines}
 
     for hatch in drawing.hatches:
         rule = _best(rules, "hatch", hatch.pattern)
         if rule is None:
-            unmatched["hatch"].add(hatch.pattern)
+            # *EXPLODED* là khung bao tự dựng của hatch bị phá (đã có bản synthetic ANSI31 đi kèm): không phải mẫu lạ
+            if not getattr(hatch, "synthetic", False) and hatch.pattern != "*EXPLODED*":
+                unmatched["hatch"].add(hatch.pattern)
             continue
-        if not rule.target and rule.element == "WALL_MASONRY":
-            continue                                    # chỉ xác nhận là khối xây, không cho biết vật liệu
+        # hatch dựng lại từ nét rời (bị phá, tên mẫu đoán): ghi nguồn riêng, tin cậy thấp hơn hatch đọc được thẳng
+        source = "hatch_doan" if getattr(hatch, "synthetic", False) else "hatch"
+        # quy tắc không có target (H01 ANSI31): chỉ xác nhận là khối xây, không cho biết vật liệu -> không tranh với
+        # quy tắc có vật liệu; chỉ ghi nguồn khi tường không có quy tắc nào khác
+        bucket = confirm_only if not rule.target and rule.element == "WALL_MASONRY" else candidates
         for w in walls:
             if _hatch_share(w, hatch.polygons) >= config.threshold("NG10"):
-                candidates[w.wall_id].append((rule.priority, CONFIDENCE["hatch"], rule, "hatch"))
+                bucket[w.wall_id].append((rule.priority, CONFIDENCE[source], rule, source))
 
     for w in walls:
         rule = _best(rules, "layer", normalize(w.layer).replace("_", " ").replace("-", " "))
@@ -209,8 +262,15 @@ def apply_material_rules(drawing: Drawing, walls: list[WallSegment], catalog: Ca
             unmatched["block"].add(block.name)
 
     notes: dict[str, set[str]] = {}
+    # quy đổi (họ/mã vật liệu, lớp dày) -> phương án tường chỉ tính một lần cho mỗi cặp: resolve_wall lọc DataFrame
+    # (đo trên mặt bằng 400 tường: 95% thời gian apply_material_rules nằm ở đây khi gọi riêng cho từng tường)
+    resolved: dict[tuple[tuple[str, ...], str], object] = {}
     for w in walls:
         if not candidates[w.wall_id]:
+            if confirm_only[w.wall_id]:      # chỉ có hatch mặt cắt khối xây: ghi căn cứ, vật liệu vẫn để trống
+                _, conf, rule, source = max(confirm_only[w.wall_id], key=lambda c: (c[0], c[1]))
+                hits[rule.rule_id] = hits.get(rule.rule_id, 0) + 1
+                w.material_source, w.material_rule, w.material_confidence = source, rule.rule_id, conf
             continue
         priority, conf, rule, source = max(candidates[w.wall_id], key=lambda c: (c[0], c[1]))
         hits[rule.rule_id] = hits.get(rule.rule_id, 0) + 1
@@ -218,9 +278,12 @@ def apply_material_rules(drawing: Drawing, walls: list[WallSegment], catalog: Ca
         if rule.element == "CONCRETE":
             w.is_masonry = False
             continue
-        res = resolve(catalog, rule.target, w.thickness_class)
+        key = (rule.target, w.thickness_class)
+        if key not in resolved:
+            resolved[key] = resolve(catalog, rule.target, w.thickness_class)
+        res = resolved[key]
         w.material_family, w.material_id, w.wall_system_id = res.family, res.material_id, res.wall_system_id
-        w.material_candidates = res.candidates
+        w.material_candidates = list(res.candidates)
         if res.note:
             notes.setdefault(res.note, set()).add(w.wall_id)
     messages = [f"{note} ({len(ids)} tường)" for note, ids in sorted(notes.items())]

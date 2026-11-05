@@ -1,0 +1,14 @@
+D4D20E88134918463B15F873652C9DF7228B46ADDF33679C5FE5BAE6BCF93FFD C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\api\project_files.py
+BA8FD4DA1DA234645E35146A3A42E8BB8A5BA30F29B1DB3B49DA3371F7966AB0 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\db\project_documents.py
+6D322334A36DC8A09D72BE1352469661123F85F46D238FD34FB9F49D73467575 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\db\project_documents.sql
+E4FECC2B06E5A1BA24C64E31690286F52F0A1E43B00E9F29195D90D32292F165 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_project_files.py
+9E5508037C8F6C5FF6B994376AAD1B6553025517FD99B2A9C9A5DD7795077FDB C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_project_files_db.py
+92B4AF9CF528D22C9BA2D0EDEBFA99F9E86F64C7A589053DB35FFC9812A990E5 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\db\models.py
+E7E1005F5A6DB657735E8779BC3D09B03A135B796455A784A643FFFA1FE9B4E9 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\db\session.py
+30B9923B29E2411A5F2F1AFEFC8D31692EBA3AF4D5DFA7CB383F47C955EFBFA5 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\api\auth.py
+18A4F2BE39EDD9F545EEAFD26F9ECD9272FCFE23256237C99911AF69766A355B C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\config.py
+3C8EE0180F4308FB8E6467A69BCE05476BC9908392F77837CF8DE284CDCCBF7B C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\ingest.py
+C1886FF580090B275184C4F04E951EEA002C2CA161941EBED63AEAF82F3DFD93 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dxf_reader.py
+1EA7E579F9A6D1BACE9AE833530A73555E8C18AF4C52A73F22A819097E8ED77C C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\view_progress.py
+7058D70CC25C209424C53476D90736EBE42DF1417EC259AB4530B9613AFF839D C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\conftest.py
+D6E3E89CC6AAB7944C11E4A14FB0A4DB51C9AE36606BF263F47B7A9378F6DE65 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\pytest.ini

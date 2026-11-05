@@ -1,0 +1,463 @@
+--- a/src/app/(user)/do-boc/Review.tsx
++++ b/src/app/(user)/do-boc/Review.tsx
+@@ -6,6 +6,7 @@
+ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
+ import { Empty, Head, Steps } from "@/components/ui";
+ import { store, useStored } from "@/lib/store";
++import { checkpointDraft, draftLabel, draftOptions, installDrawing, sameOwner, newDrawingBundle, sourceFor, storedDrawingBundle, withDraftLock, type DraftOwner, type DraftSource } from "@/lib/drawing-drafts";
+ import { projectUid } from "@/lib/projects";
+ import { projectPath, type AnalysisContext, type SelectedRevision } from "@/lib/project-records";
+ import { saveTogether, type ReviewSession } from "@/lib/review-session";
+@@ -42,7 +43,7 @@
+     current.some((c) => c.plan === p.plan && fields(c) === fields(p)));
+ }
+ 
+-type SheetState = { kind: "material" } | { kind: "confirm" } | { kind: "confirmed"; body: Confirmed; total: number | null }
++type SheetState = { kind:"drafts"; rows:ReturnType<typeof draftOptions> } | { kind: "material" } | { kind: "confirm" } | { kind: "confirmed"; body: Confirmed; total: number | null }
+   | { kind: "recover"; body: Confirmed }
+   | { kind: "msg"; title: string; body?: ReactNode; primary?: boolean };
+ type ConfirmationStamp = DrawingVersion & { projectId: number | null; revision: number; planIndex: number; published?: boolean };
+@@ -81,6 +82,7 @@
+   const [confirmBusy, setConfirmBusy] = useState(false);
+   const scopeInput = useRef<HTMLSelectElement>(null);
+   const heightLabel = useRef<HTMLLabelElement>(null);
++  const draftIdentity = useRef<{draftId:string;draftSource?:DraftSource} | null>(null);
+   const drawing = useRef<DrawingVersion & { materialRevision?: string } | null>(null);
+   const [externalChange, setExternalChange] = useState(false);
+   const [saveNotice, setSaveNotice] = useState("");
+@@ -157,6 +159,7 @@
+       sessionProject.current = storedProjectId();
+       if (saved?.projectId !== undefined && saved.projectId !== sessionProject.current) { setExternalChange(true); return; }
+       const uid = projectUid();
++      draftIdentity.current = {draftId:saved?.draftId || saved?.drawingId || crypto.randomUUID(),draftSource:saved?.draftSource};
+       if (saved?.projectUid && saved.projectUid !== uid) { setMsg("Bản vẽ thuộc phiên dự án khác. Hãy mở lại dự án từ lịch sử."); return; }
+       drawing.current = { projectUid: uid, drawingId: saved?.drawingId || crypto.randomUUID(), materialRevision: saved?.materialRevision };
+     } catch { setSaveError("Chưa lưu được mã phiên dự án trên trình duyệt."); return; }
+@@ -211,7 +214,7 @@
+       setSaveError("Phiên dự án đã thay đổi. Tải phiên hiện tại để tiếp tục.");
+       return false;
+     }
+-    const snapshot = { ...drawing.current, projectId: sessionProject.current, data, states, planP, confirmed: nextConfirmed, pi,
++    const snapshot = { ...drawing.current, ...draftIdentity.current, savedAt:new Date().toISOString(), projectId: sessionProject.current, data, states, planP, confirmed: nextConfirmed, pi,
+       structural: structural && "file" in structural ? structural : null };
+     const writeSnapshot = (value: string) => {
+       if (!publishPending.current) {
+@@ -244,6 +247,36 @@
+       }
+     }
+   }, [data, states, planP, confirmed, pi, structural, roughOnly, roughVals, externalChange, ownsReview, stampIsCurrent]);
++  const latestSave = useRef(persistReview);
++  useLayoutEffect(() => { latestSave.current = persistReview; },[persistReview]);
++  const draftOwner = ():DraftOwner => {
++    if (!drawing.current || !ownsReview() || externalChange || publishPending.current || confirmRequest.current)
++      throw Error("Phiên đã đổi hoặc kết quả xác nhận chưa lưu xong. Hãy giữ bản vẽ hiện tại.");
++    return {projectUid:drawing.current.projectUid,projectId:sessionProject.current};
++  };
++  const saveBeforeSwitch = (owner:DraftOwner) => {
++    if (!sameOwner(draftOwner(),owner) || !latestSave.current())
++      throw Error("Chưa lưu được nháp hiện tại. Hãy giữ trang mở và thử lại.");
++    checkpointDraft(owner,lastStoredReview.current);
++  };
++  const showDrafts = () => {
++    try {const owner=draftOwner();setSheet({kind:"drafts",rows:draftOptions(owner).filter(r=>r.id!==draftIdentity.current?.draftId)});}
++    catch (err) {setSaveError((err as Error).message);}
++  };
++  const reopenDraft = async (id:string,raw:string) => {
++    try {
++      if (reading) return;
++      const requestAt=uploadRevision.current;
++      const owner=draftOwner();
++      await withDraftLock(owner,()=>{
++        if (requestAt!==uploadRevision.current) throw Error("Lượt mở bản vẽ đã đổi.");
++        const target=storedDrawingBundle(owner,id,raw);
++        saveBeforeSwitch(owner);
++        installDrawing(owner,lastStoredReview.current,target);
++        location.reload();
++      });
++    } catch (err) {setSheet(null);setSaveError("Chưa mở được nháp. "+(err as Error).message);}
++  };
+   useEffect(() => {
+     if (restored) persistReview();
+   }, [restored, persistReview]);
+@@ -427,26 +460,17 @@
+     setMode("select");
+     fitDrawing(D.overview);
+   };
+-  const start = (D: Data) => {
+-    confirmRequest.current?.abort(); publishPending.current = null;
+-    store.set("optimat-material-selection", null);
+-    drawing.current = { projectUid: projectUid(), drawingId: crypto.randomUUID() };
+-    store.set("optimat-work-review", null);
+-    store.set("optimat-material-draft", null);
+-    store.set("optimat-materials-ready", false);
+-    store.set("optimat-optimization", null);
+-    D.materials = D.materials || [];
+-    D.families = D.families || [];
++  const start = (session:ReviewSession) => {
++    const D=session.data;
++    draftIdentity.current={draftId:session.draftId!,draftSource:session.draftSource};
++    drawing.current={projectUid:session.projectUid!,drawingId:session.drawingId!};
+     clearTimeout(roughTimer.current);
+-    revision.current++; structuralRevision.current++; roughStarted.current = false;
+-    store.set("optimat-rough", null);
+-    store.set("optimat-materials-ready", false); store.set("optimat-material-draft", null); store.set("optimat-optimization", null);
+-    store.set("optimat-confirmed", store.get<Confirmed[]>("optimat-confirmed", []).filter((p) => p.file !== D.file));
+-    setSheet(null);
+-    setData(D); setStates({}); setPlanP({}); setConfirmed({}); setRough(null); setStructural(null); setMsg(null);
+-    if (D.overview && D.overview.cad) return showOverview(D);
+-    if (!D.plans.length) { setPi(-1); setMsg("Bản vẽ không có mặt bằng kiến trúc để đo tường (chỉ có mặt bằng kết cấu, móng hoặc điện nước)."); return; }
+-    loadPlan(0, D, {});
++    revision.current++; structuralRevision.current++; roughStarted.current=false;
++    setSheet(null);setData(D);setStates(session.states);setPlanP(session.planP);setConfirmed(session.confirmed);
++    setRough(null);setStructural(session.structural);setMsg(null);setSaveError("");
++    if (session.pi < 0 && D.overview?.cad) return showOverview(D);
++    if (!D.plans.length) {setPi(-1);setMsg("Bản vẽ không có mặt bằng kiến trúc để đo tường.");return;}
++    loadPlan(session.pi,D,session.states);
+   };
+   const cancelReading = () => {
+     uploadRevision.current++;
+@@ -455,14 +479,20 @@
+     setReading(null); setShowReadPreview(false); setMsg(data ? null : START);
+   };
+   const readFile = async (name: string, url: string, request: RequestInit, context?: AnalysisContext) => {
+-    confirmRequest.current?.abort();
+-    if (!projectReady) { setMsg("Lưu tên và thông tin ở trang Dự án của tôi trước khi mở bản vẽ."); return; }
++    if (!projectReady) {setMsg("Lưu tên và thông tin ở trang Dự án của tôi trước khi mở bản vẽ.");return false;}
++    if (publishPending.current || confirmRequest.current) {setSaveError("Hãy lưu xong bản xác nhận trước khi đổi tệp.");return false;}
+     readController.current?.abort();
+-    const controller = new AbortController(); readController.current = controller;
+-    const atUpload = ++uploadRevision.current;
+-    setShowReadPreview(true);
+-    setReading({ file: name, stage: "reading", message: context ? "Đang đọc bản gốc đã chọn trong hồ sơ dự án…" : "Đang gửi file và đọc nét bản vẽ…" });
++    const controller=new AbortController();readController.current=controller;
++    const atUpload=++uploadRevision.current;
++    const current=()=>!controller.signal.aborted && atUpload===uploadRevision.current;
+     try {
++      const owner=draftOwner();
++      await withDraftLock(owner,()=>{if (!current()) throw Error("Lượt đọc đã đổi.");saveBeforeSwitch(owner);});
++      const file=request.body instanceof FormData ? request.body.get("file") : null;
++      const source=await sourceFor(context,file instanceof File ? file : undefined);
++      if (!current() || !ownsReview()) return false;
++      setShowReadPreview(true);
++      setReading({file:name,stage:"reading",message:context ? "Đang đọc bản gốc đã chọn trong hồ sơ dự án…" : "Đang gửi tệp và đọc nét bản vẽ…"});
+       const r = await fetch(url, { ...request, method: "POST", signal: controller.signal });
+       if (!r.ok) { const body = await r.json().catch(()=>null); throw new Error(typeof body?.detail === "string" && body.detail !== "Not Found" ? body.detail : "Không phân tích được bộ phiên bản đã chọn. Hãy kiểm tra lại hồ sơ."); }
+       const body = r.headers.get("content-type")?.includes("application/x-ndjson")
+@@ -483,12 +513,24 @@
+       }
+       const result = context ? body.view : body;
+       if (!result || !Array.isArray(result.plans) || typeof result.file !== "string") throw Error("Máy chủ chưa trả kết quả mặt bằng cho bộ hồ sơ này.");
+-      localStorage.setItem("optimat-analysis-context", JSON.stringify(context || null));
+-      start(result);
+-      if (context && body.structural?.file) setStructural(body.structural);
+-      setReading(null);
++      await withDraftLock(owner,()=>{
++        if (!current()) throw Error("Lượt đọc đã đổi.");
++        saveBeforeSwitch(owner);
++        const incoming:Data=result;
++        const next:ReviewSession={...owner,draftId:crypto.randomUUID(),draftSource:source,drawingId:crypto.randomUUID(),savedAt:new Date().toISOString(),
++          data:{...incoming,materials:incoming.materials || [],families:incoming.families || []},states:{},planP:{},confirmed:{},
++          pi:incoming.overview?.cad || !incoming.plans.length ? -1 : 0,structural:context && body.structural?.file ? body.structural : null,
++        };
++        if (next.pi >= 0) next.states[next.pi]=initState(incoming.plans[next.pi]);
++        lastStoredReview.current=installDrawing(owner,lastStoredReview.current,newDrawingBundle(next,context));
++        
++        start(next);
++        setReading(null);
++      });
++      return true;
+     } catch (err) {
+       if (uploadRevision.current !== atUpload || controller.signal.aborted) return;
++      setSaveError((err as Error).message || "Chưa lưu được nháp; vẫn giữ bản vẽ hiện tại.");
+       setReading((old) => old ? { ...old, error: (err as Error).message, message: "Chưa đọc xong bản vẽ" } : old);
+     }
+   };
+@@ -506,13 +548,14 @@
+       try {
+         const handoff=JSON.parse(sessionStorage.getItem("optimat-analysis-start") || "null") as {token:string;context:AnalysisContext} | null;
+         if(!handoff || token!==handoff.token) return;
+-        sessionStorage.removeItem("optimat-analysis-start");
+         const c=handoff.context;
+         if (projectUid()!==c.projectUid || project!==c.projectId || !c.revisions.length || c.revisions.some(f=>f.project_id!==c.projectId)) throw Error("Bộ hồ sơ không còn khớp dự án. Hãy chọn lại trên trang Dự án của tôi.");
+         void readFile(c.revisions.map(f=>f.name).join(", "), projectPath(c.projectId)+"/analysis", {
+           headers:{"Content-Type":"application/json"},
+           body: JSON.stringify({files:c.revisions.filter(f=>f.role!=="THAM_KHAO").map(({file_id,revision_id,sha256,role})=>({file_id,revision_id,sha256,role})), profile_version:c.profile.profileVersion, progressive:true}),
+-        }, c);
++        }, c).then(done=>{
++          try { if (done && JSON.parse(sessionStorage.getItem("optimat-analysis-start") || "null")?.token===token) sessionStorage.removeItem("optimat-analysis-start"); } catch { /* bản vẽ đã được lưu */ }
++        });
+       } catch(e) { setSaveError(e instanceof Error?e.message:"Không mở được bộ hồ sơ đã chọn."); }
+     },0);
+     return ()=>window.clearTimeout(timer);
+@@ -793,6 +836,7 @@
+               <option value="tim">theo trục tim</option><option value="thong_thuy">thông thủy</option></select></label>
+           <span className={`${s.status} ${status[0]}`}>{status[1]}</span>
+           <span className={s.grow} />
++          <button className={s.btn} type="button" disabled={!projectReady || !!reading || confirmBusy} onClick={showDrafts}>Mở lại bản nháp…</button>
+           <label className={s.btn} title={projectReady ? "Mở bản vẽ cho dự án hiện tại" : "Nhập thông tin dự án ở đầu trang trước"}>Mở bản vẽ… <input disabled={!projectReady} type="file" accept=".dxf,.dwg" hidden onChange={(e) => {
+             const file = e.currentTarget.files?.[0];
+             e.currentTarget.value = "";
+@@ -838,6 +882,11 @@
+           ? !reading.error && reading.recognized && <DrawingWorkList data={reading.recognized} index={-1} />
+           : data && <DrawingWorkList data={data} index={pi} states={states} params={planP}
+               structural={structural && "file" in structural ? structural : null} />)}
++        {sheet?.kind === "drafts" && <Msg title="Mở lại bản nháp của dự án" onClose={closeSheet}>
++          <p>Bản đang mở sẽ được lưu trước khi tiếp tục chỉnh sửa nháp đã chọn.</p>
++          {sheet.rows.length ? <ul>{sheet.rows.map(r=><li key={r.id}><strong>{r.session.data.file}</strong> · {draftLabel(r.session)} · {r.at}{" "}
++            <button className="btn" type="button" onClick={()=>void reopenDraft(r.id,r.raw)}>Mở để tiếp tục chỉnh sửa</button></li>)}</ul> : <p>Chưa có bản nháp khác của phiên dự án này.</p>}
++        </Msg>}
+         {sheet?.kind === "material" && data && S && <MaterialDialog data={data} n={S.walls.filter((w) => w.keep && w.masonry && !w.mat).length} onClose={closeSheet}
+           onApply={(m, cl) => { edit((n) => n.walls.forEach((w) => { if (w.keep && w.masonry && !w.mat && (!cl || w.cls === cl)) { w.mat = m; w.edited = true; } })); closeSheet(); }} />}
+         {sheet?.kind === "confirm" && P && S && c && <ConfirmDialog P={P} S={S} c={c} send={sendConfirm} busy={confirmBusy} onClose={() => { if (!confirmRequest.current) closeSheet(); }} />}
+--- a/src/app/(user)/du-an-cua-toi/ProjectWorkspace.tsx
++++ b/src/app/(user)/du-an-cua-toi/ProjectWorkspace.tsx
+@@ -3,6 +3,7 @@
+ import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
+ import { Card } from "@/components/ui";
+ import { store } from "@/lib/store";
++import { DrawingDraftHistory } from "@/components/DrawingDraftHistory";
+ import { projectUid, switchProject, type ProjectHistory, type ProjectInfo } from "@/lib/projects";
+ import { saveTogether } from "@/lib/review-session";
+ import { emptyProfile, infoFromProfile, jsonRequest, projectPath, projectResponse, profileUpdate, profileSources,
+@@ -171,6 +172,8 @@
+             ...(changed?{"optimat-work-review":"null","optimat-materials-ready":"false","optimat-optimization":"null","optimat-material-selection":"null"}:{})});
+           setProfile(rec);setSaved(updated);setForm(updated);return rec.version;
+         }}/>}
++    {showDetails && saved.name && !creating && !editing && (!linkedId || verified?.project_id === linkedId) &&
++      <DrawingDraftHistory key={sessionUid} owner={{projectUid:sessionUid,projectId:linkedId}} history={history} />}
+     {showDetails && saved.name && !creating && !editing && (!linkedId || verified && profile) && <div className="flex flex-wrap items-center gap-2">
+       <button type="button" className="btn" onClick={()=>{setEditing(true);setNotice("");requestAnimationFrame(()=>nameInput.current?.focus());}}>Sửa</button>
+       <button type="button" className="btn" disabled aria-describedby="delete-status">Xóa</button>
+--- /dev/null
++++ b/src/components/DrawingDraftHistory.tsx
+@@ -0,0 +1,43 @@
++"use client";
++
++import { useState } from "react";
++import { draftLabel, listProjectDrafts, type DraftEntry, type DraftOwner } from "@/lib/drawing-drafts";
++import type { ProjectHistory } from "@/lib/projects";
++
++const measure = (v:unknown) => typeof v === "number" && Number.isFinite(v) ? v.toLocaleString("vi-VN",{maximumFractionDigits:8}) : "chưa có";
++export function DraftPreview({ entry }: { entry:DraftEntry }) {
++  const s=entry.session;
++  return <section aria-label="Chi tiết bản nháp" className="mt-3">
++    <h3>{s.data.file}</h3>
++    <p>{entry.source} · {draftLabel(s)} · UID nguồn {entry.sourceUid}{entry.otherSession && " · phiên cũ, chưa ghép"}</p>
++    {s.data.plans.map((plan,i)=>{
++      const state=s.states?.[i];
++      const openings=state?.openings ?? [];
++      return <div key={i}><h4>{plan.plan.name}</h4>
++        {!state ? <p>Chưa có trạng thái chỉnh sửa cho mặt bằng này.</p> : !openings.length ? <p>Nháp này không chứa lỗ mở.</p> :
++          <div className="overflow-auto"><table><thead><tr>
++            {["ID lỗ","Tường cha","Nguồn","Giữ / bỏ","x (mm)","y (mm)","Rộng (mm)","Cao (mm)"].map(h=><th key={h}>{h}</th>)}
++          </tr></thead><tbody>{openings.map((o,j)=><tr key={j}>
++            <td>{o.id || "chưa có"}</td><td>{o.wall || "chưa có"}</td><td>{o.src==="manual" ? "Thêm tay" : o.src==="auto" ? "Tự động" : o.src || "chưa có"}</td>
++            <td>{o.keep===true ? "Giữ" : o.keep===false ? "Bỏ" : "chưa có"}</td><td>{measure(o.x)}</td><td>{measure(o.y)}</td><td>{measure(o.w)}</td><td>{measure(o.h)}</td>
++          </tr>)}</tbody></table></div>}
++      </div>;
++    })}
++  </section>;
++}
++export function DrawingDraftHistory({ owner,history }: { owner:DraftOwner; history:ProjectHistory[] }) {
++  const [rows,setRows]=useState<DraftEntry[]|null>(null),[selected,setSelected]=useState(""),[error,setError]=useState("");
++  const read=()=>{
++    try {setRows(listProjectDrafts(owner,history));setError("");setSelected("");}
++    catch {setRows(null);setSelected("");setError("Không đọc được bản nháp của phiên dự án này.");}
++  };
++  const entry=rows?.find(r=>r.key===selected);
++  return <section aria-label="Bản nháp bản vẽ" className="rounded-xl border border-rule p-4">
++    <h2>Bản nháp bản vẽ</h2><p>Xem dữ liệu đã lưu trên trình duyệt của dự án đang mở.</p>
++    <button className="btn" type="button" onClick={read}>{rows ? "Đọc lại danh sách" : "Xem danh sách bản nháp"}</button>
++    {error && <p role="alert">{error}</p>}{rows && !rows.length && <p>Chưa tìm thấy bản nháp thuộc dự án này.</p>}
++    {rows && rows.length>0 && <ul>{rows.map(r=><li key={r.key}><button className="btn" type="button" onClick={()=>setSelected(r.key)} aria-pressed={selected===r.key}>Xem nháp · {r.session.data.file}</button>
++      {" · "}{r.source} · {draftLabel(r.session)}{r.otherSession && " · phiên cũ, chưa ghép · UID "+r.sourceUid}{r.time && " · "+r.time}</li>)}</ul>}
++    {entry && <><DraftPreview entry={entry}/><button type="button" className="btn" onClick={()=>setSelected("")}>Đóng xem trước</button></>}
++  </section>;
++}
+--- /dev/null
++++ b/src/lib/drawing-drafts.ts
+@@ -0,0 +1,160 @@
++import { saveTogether, type ReviewSession } from "./review-session";
++import type { AnalysisContext } from "./project-records";
++import type { ProjectHistory } from "./projects";
++
++export const DRAFTS_KEY = "optimat-drawing-drafts";
++export type DraftOwner = { projectUid:string; projectId:number|null };
++export type DraftSource = { kind:"file"; sha256:string } | {
++  kind:"revisions"; profileVersion:number; files:{file_id:number;revision_id:number;sha256:string;role:string}[];
++};
++type Bundle = { review:string; values:Record<string,string> };
++type SavedDraft = Bundle & { id:string; at:string };
++type Archive = DraftOwner & { version:1; items:SavedDraft[] };
++export type DraftEntry = { key:string; source:string; sourceUid:string; otherSession:boolean; time?:string; session:ReviewSession };
++const defaults:Record<string,string> = {
++  "optimat-rough-params":"{}","optimat-confirmed":"[]","optimat-analysis-context":"null","optimat-rough":"null","optimat-work-review":"null",
++  "optimat-material-draft":"null","optimat-material-selection":"null","optimat-materials-ready":"false","optimat-optimization":"null",
++};
++const mismatched = () => new Error("Phiên dự án hoặc bản vẽ đã thay đổi. Hãy mở lại trang hiện tại.");
++function parse<T>(raw:string | null | undefined):T | null { return raw ? JSON.parse(raw) as T : null; }
++function projectId(raw:string|null|undefined) {
++  const value = parse<number|string>(raw);
++  if (value == null || value === "") return null;
++  const n = Number(value);
++  if (!Number.isSafeInteger(n) || n < 1) throw mismatched();
++  return n;
++}
++export function sameOwner(a:DraftOwner,b:DraftOwner) {
++  return !!a.projectUid && a.projectUid === b.projectUid && a.projectId === b.projectId;
++}
++function checkCurrent(owner:DraftOwner,expected:string|null) {
++  const actual = {projectUid:parse<string>(localStorage.getItem("optimat-project-uid")) || "",projectId:projectId(localStorage.getItem("optimat-project"))};
++  if (!sameOwner(actual,owner) || localStorage.getItem("optimat-review") !== expected) throw mismatched();
++}
++function empty(owner:DraftOwner):Archive { return {...owner,version:1,items:[]}; }
++function archiveOf(raw:string|null|undefined,owner:DraftOwner):Archive {
++  const archive=parse<Archive>(raw);
++  if (!archive) return empty(owner);
++  if (archive.version !== 1 || !sameOwner(archive,owner) || !Array.isArray(archive.items)) throw mismatched();
++  return archive;
++}
++function reviewOf(raw:string,owner:DraftOwner,legacy=false) {
++  const s=parse<ReviewSession>(raw);
++  if (!s || !Array.isArray(s.data?.plans) || !s.states || typeof s.data.file !== "string" ||
++    (!s.projectUid && !owner.projectUid && !(legacy && s.projectId!=null && s.projectId===owner.projectId)) ||
++    (s.projectUid !== owner.projectUid && !(legacy && !s.projectUid && s.projectId === owner.projectId && owner.projectId !== null)) ||
++    (s.projectId !== undefined && s.projectId !== owner.projectId)) throw mismatched();
++  return s;
++}
++function compact(raw:string) {
++  const s=JSON.parse(raw) as ReviewSession;
++  for (const plan of s.data.plans) delete plan.cad;
++  if (s.data.overview) delete s.data.overview.cad;
++  return JSON.stringify(s);
++}
++function related() {
++  return Object.fromEntries(Object.keys(defaults).map(key=>[key,localStorage.getItem(key) ?? defaults[key]]));
++}
++// Serialize cooperating tabs, and check the active project/snapshot again inside the lock.
++export function withDraftLock<T>(owner:DraftOwner,action:()=>T):Promise<T> {
++  return typeof navigator !== "undefined" && navigator.locks
++    ? navigator.locks.request("optimat-drafts:"+owner.projectUid,action)
++    : Promise.resolve().then(action);
++}
++function revisionSource(context:AnalysisContext):DraftSource {
++  const files = context.revisions.filter(f=>f.role !== "THAM_KHAO").map(({file_id,revision_id,sha256,role})=>{
++    if (!Number.isSafeInteger(file_id) || !Number.isSafeInteger(revision_id) || !sha256 || !/^[a-f0-9]{64}$/i.test(sha256) || !role) throw mismatched();
++    return {file_id,revision_id,sha256,role};
++  });
++  const version=context.profile.profileVersion;
++  if (!files.length || version == null || !Number.isSafeInteger(version) || version < 1) throw mismatched();
++  return {kind:"revisions",profileVersion:version,files};
++}
++export async function sourceFor(context?:AnalysisContext,file?:File):Promise<DraftSource> {
++  if (context) return revisionSource(context);
++  if (!file) throw new Error("Không xác định được nguồn bản vẽ.");
++  const digest=await crypto.subtle.digest("SHA-256",await file.arrayBuffer());
++  return {kind:"file",sha256:Array.from(new Uint8Array(digest),n=>n.toString(16).padStart(2,"0")).join("")};
++}
++// Call under withDraftLock. Leave the active drawing untouched on every failed checkpoint.
++export function checkpointDraft(owner:DraftOwner,raw:string|null) {
++  checkCurrent(owner,raw);
++  if (!raw) return;
++  const s=reviewOf(raw,owner);
++  if (!s.draftId) throw new Error("Thiếu mã nháp. Hãy giữ bản vẽ đang mở.");
++  const archive=archiveOf(localStorage.getItem(DRAFTS_KEY),owner);
++  const rest=archive.items.filter(item=>item.id!==s.draftId);
++  const entry:SavedDraft={id:s.draftId,at:s.savedAt || new Date().toISOString(),review:raw,values:related()};
++  const save=(row:SavedDraft)=>localStorage.setItem(DRAFTS_KEY,JSON.stringify({...archive,items:[row,...rest]}));
++  try {save(entry);} catch {
++    try {save({...entry,review:compact(raw)});} catch {throw Error("Bộ nhớ chưa lưu được nháp. Bản đang mở và nháp trước đó vẫn được giữ.");}
++  }
++}
++export function draftOptions(owner:DraftOwner) {
++  return archiveOf(localStorage.getItem(DRAFTS_KEY),owner).items.map(row=>({
++    id:row.id,at:row.at,raw:row.review,session:reviewOf(row.review,owner)
++  }));
++}
++export function draftLabel(s:ReviewSession) {
++  if (s.draftSource?.kind==="file") return "Tệp cục bộ · SHA-256 "+s.draftSource.sha256;
++  if (s.draftSource?.kind==="revisions") return "Hồ sơ v"+s.draftSource.profileVersion+" · "+s.draftSource.files.map(f=>"tệp "+f.file_id+" / revision "+f.revision_id+" ("+f.role+")").join(", ");
++  return "Bản cũ · chưa xác định phiên bản nguồn";
++}
++export function newDrawingBundle(session:ReviewSession,context?:AnalysisContext):Bundle {
++  return {review:JSON.stringify(session),values:{...defaults,"optimat-rough-params":localStorage.getItem("optimat-rough-params") || "{}","optimat-analysis-context":JSON.stringify(context || null)}};
++}
++export function storedDrawingBundle(owner:DraftOwner,id:string,expectedRaw:string):Bundle {
++  const row=archiveOf(localStorage.getItem(DRAFTS_KEY),owner).items.find(r=>r.id===id && r.review===expectedRaw);
++  if (!row || reviewOf(row.review,owner).draftId!==id) throw mismatched();
++  const s=reviewOf(row.review,owner), values={...row.values};
++  const source=s.draftSource;
++  if (!source) {
++    // Không gắn biên nhận hay tọa độ từ bản máy chủ khác vào nháp cũ chưa rõ nguồn.
++    return {review:JSON.stringify({...s,confirmed:{},materialRevision:undefined}),values:{...defaults,"optimat-rough-params":values["optimat-rough-params"] || "{}"}};
++  }
++  if (source.kind==="revisions") {
++    const context=parse<AnalysisContext>(values["optimat-analysis-context"]);
++    if (!context || context.projectUid!==owner.projectUid || context.projectId!==owner.projectId ||
++      JSON.stringify(revisionSource(context))!==JSON.stringify(source)) throw mismatched();
++  } else if (source.kind!=="file" || !/^[a-f0-9]{64}$/i.test(source.sha256)) throw mismatched();
++  const rough=parse<{projectUid?:string;drawingId?:string;file?:string;reviewId?:string}>(values["optimat-rough"]);
++  const receipt=parse<{projectUid?:string;drawingId?:string;file?:string;reviewId?:string}>(values["optimat-work-review"]);
++  if (!rough || rough.projectUid!==s.projectUid || rough.drawingId!==s.drawingId || rough.file!==s.data.file || !rough.reviewId) {
++    for (const key of ["optimat-rough","optimat-work-review","optimat-material-draft","optimat-material-selection","optimat-materials-ready","optimat-optimization"]) values[key]=defaults[key];
++  } else if (!receipt || receipt.projectUid!==rough.projectUid || receipt.drawingId!==rough.drawingId || receipt.file!==rough.file || receipt.reviewId!==rough.reviewId) {
++    for (const key of ["optimat-work-review","optimat-materials-ready","optimat-optimization","optimat-material-selection"]) values[key]=defaults[key];
++  }
++  return {review:row.review,values};
++}
++// Commit all active per-drawing keys before changing React state. Never touch the archive here.
++export function installDrawing(owner:DraftOwner,expected:string|null,next:Bundle) {
++  checkCurrent(owner,expected);reviewOf(next.review,owner);
++  const values=Object.fromEntries(Object.keys(defaults).map(k=>[k,next.values[k] ?? defaults[k]]));
++  const install=(review:string)=>{saveTogether({...values,"optimat-review":review});return review;};
++  try {return install(next.review);} catch {
++    try {return install(compact(next.review));} catch {throw Error("Chưa lưu được phiên mới. Bản vẽ hiện tại chưa chuyển.");}
++  }
++}
++export function listProjectDrafts(owner:DraftOwner,history:ProjectHistory[]):DraftEntry[] {
++  const result:DraftEntry[]=[];
++  const add=(raw:string|undefined,key:string,source:string,bound:DraftOwner,time?:string)=>{
++    if (!raw) return;
++    try {const session=reviewOf(raw,bound,true);result.push({key,source,sourceUid:session.projectUid || bound.projectUid || "chưa có",otherSession:bound.projectUid!==owner.projectUid,time:session.savedAt || time,session});} catch { /* Foreign or unreadable legacy entry. */ }
++  };
++  const current=localStorage.getItem("optimat-review");checkCurrent(owner,current);
++  add(current || undefined,"current","Đang mở",owner);
++  for (const item of archiveOf(localStorage.getItem(DRAFTS_KEY),owner).items) add(item.review,"draft:"+item.id,"Đã lưu trước khi đổi bản vẽ",owner,item.at);
++  for (const h of history) {
++    try {
++      const id=projectId(h.values["optimat-project"]);
++      if (id !== owner.projectId) continue;
++      const inner=parse<ReviewSession>(h.values["optimat-review"]);
++      const uid=parse<string>(h.values["optimat-project-uid"]) || (id!==null && inner?.projectId===id ? inner.projectUid : undefined) || "";
++      if (id===null && (!uid || uid!==owner.projectUid)) continue;
++      const bound={projectUid:uid,projectId:id};
++      add(h.values["optimat-review"],"history:"+h.id,"Lịch sử dự án trên trình duyệt",bound,h.at);
++      for (const row of archiveOf(h.values[DRAFTS_KEY],bound).items) add(row.review,"history:"+h.id+":"+row.id,"Nháp trong lịch sử dự án",bound,row.at);
++    } catch { /* Do not expose another project's or an invalid container's geometry. */ }
++  }
++  return result;
++}
+--- a/src/lib/projects.ts
++++ b/src/lib/projects.ts
+@@ -1,6 +1,6 @@
+ import { store } from "./store";
+ 
+-const KEYS = ["optimat-project-uid", "optimat-project-files-selected", "optimat-analysis-context", "optimat-work-review", "optimat-project", "optimat-confirmed", "optimat-rough", "optimat-review", "optimat-rough-params", "optimat-constraints", "optimat-optimization", "optimat-project-name", "optimat-project-info", "optimat-material-draft", "optimat-material-selection", "optimat-materials-ready"];
++const KEYS = ["optimat-drawing-drafts", "optimat-project-uid", "optimat-project-files-selected", "optimat-analysis-context", "optimat-work-review", "optimat-project", "optimat-confirmed", "optimat-rough", "optimat-review", "optimat-rough-params", "optimat-constraints", "optimat-optimization", "optimat-project-name", "optimat-project-info", "optimat-material-draft", "optimat-material-selection", "optimat-materials-ready"];
+ export function projectUid() {
+   const saved = store.get<string>("optimat-project-uid", "");
+   if (saved) return saved;
+--- a/src/lib/review-session.ts
++++ b/src/lib/review-session.ts
+@@ -1,9 +1,10 @@
++import type { DraftSource } from "./drawing-drafts";
+ import type { Confirmed, Data, PlanParams, PlanState, Structural } from "@/app/(user)/do-boc/model";
+ import type { DrawingVersion, WorkReceipt, WorkSnapshot } from "./work-review";
+ import { approvedWork, sameWorkVersion } from "./work-review";
+ import { adviceScope, type AdviceSelection, type SavedAdvice } from "@/app/(user)/dieu-chinh/advice-scope";
+ 
+-export type ReviewSession = Partial<DrawingVersion> & { materialRevision?: string; data: Data; states: Record<number, PlanState>; planP: Record<number, PlanParams>; confirmed: Record<number, Confirmed>; structural: Structural | null; pi: number };
++export type ReviewSession = Partial<DrawingVersion> & { projectId?:number|null; draftId?:string; draftSource?:DraftSource; savedAt?:string; materialRevision?: string; data: Data; states: Record<number, PlanState>; planP: Record<number, PlanParams>; confirmed: Record<number, Confirmed>; structural: Structural | null; pi: number };
+ export const MATERIAL_PARAMS = new Set(["concrete_supply", "concrete_grade", "lean_concrete_grade", "masonry_mortar_grade", "plaster_mortar_grade", "screed_mortar_grade", "formwork_type", "waterproof_material_id", "material_classes"]);
+ 
+ type PlanChoice = { lineId:string; originalId:string|null; materialId:string; needsDesignReview:boolean; needsGeometryReview:boolean };

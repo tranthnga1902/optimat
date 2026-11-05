@@ -1,0 +1,3 @@
+{
+  "/(user)/mapping/page": "app/(user)/mapping/page.js"
+}

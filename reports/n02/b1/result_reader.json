@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_rebar.py",
+    "-k",
+    "not schedule_steel_separate_from_ratio and not no_schedule_leaves_steel_blank and not boq_excel_sheets",
+    "-q",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=reports/n02/b1/temp_reader"
+  ],
+  "exit_code": 0,
+  "seconds": 8.301846981048584,
+  "database_env_removed": true,
+  "scope": "pure reader synthetic/model tests; no TestClient/real CAD/full suite"
+}

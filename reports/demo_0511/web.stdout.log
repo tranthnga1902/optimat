@@ -1,0 +1,104 @@
+▲ Next.js 16.4.2 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+✓ Ready in 12.1s
+✓ Running next.config.ts took 1583ms
+- Cache Components enabled
+- Partial Prefetching enabled
+- Experiments (use with caution):
+  · proxyClientMaxBodySize: "1000mb"
+  · proxyTimeout: 300000
+
+○ Compiling /do-boc ...
+ GET /do-boc 200 in 1815ms (next.js: 1214ms, application-code: 600ms)
+ GET /dang-nhap?next=%2Fdo-boc 200 in 103ms (next.js: 19ms, application-code: 83ms)
+ GET /dang-nhap?next=%2Fdo-boc 200 in 81ms (next.js: 4ms, application-code: 77ms)
+ GET /dang-nhap 200 in 160ms (next.js: 3ms, application-code: 156ms)
+ GET /dang-nhap 200 in 313ms (next.js: 12ms, application-code: 301ms)
+✓ Compiled in 160ms
+ GET /tong-quan 200 in 173ms (next.js: 25ms, application-code: 148ms)
+ GET /dang-nhap 200 in 152ms (next.js: 4ms, application-code: 148ms)
+ GET /tong-quan 200 in 126ms (next.js: 3ms, application-code: 123ms)
+✓ Compiled in 251ms
+ GET /kiem-soat 200 in 131ms (next.js: 22ms, application-code: 108ms)
+ GET /dang-nhap?next=%2Fdo-boc 200 in 111ms (next.js: 5ms, application-code: 106ms)
+ GET /tong-quan 200 in 149ms (next.js: 13ms, application-code: 137ms)
+ GET /kiem-soat 200 in 76ms (next.js: 3ms, application-code: 74ms)
+ GET /du-an 200 in 151ms (next.js: 27ms, application-code: 123ms)
+ GET /do-boc 200 in 128ms (next.js: 5ms, application-code: 123ms)
+ GET /nguoi-dung 200 in 102ms (next.js: 24ms, application-code: 78ms)
+ GET /nhan-dien 200 in 137ms (next.js: 23ms, application-code: 114ms)
+ GET /quy-tac 200 in 93ms (next.js: 22ms, application-code: 71ms)
+ GET /danh-muc 200 in 151ms (next.js: 29ms, application-code: 122ms)
+ GET /dai-ly 200 in 103ms (next.js: 21ms, application-code: 83ms)
+ GET /gia 200 in 100ms (next.js: 21ms, application-code: 79ms)
+ GET /mo-hinh 200 in 96ms (next.js: 23ms, application-code: 73ms)
+ GET /co-so-du-lieu 200 in 88ms (next.js: 20ms, application-code: 68ms)
+ GET /do-boc 200 in 74ms (next.js: 3ms, application-code: 72ms)
+ GET /vat-lieu 200 in 113ms (next.js: 32ms, application-code: 82ms)
+✓ Compiled in 322ms
+ GET /phan-tho 200 in 101ms (next.js: 24ms, application-code: 77ms)
+ GET /toi-uu 200 in 100ms (next.js: 37ms, application-code: 63ms)
+✓ Compiled in 1734ms
+ GET /tong-quan 200 in 1354ms (next.js: 144ms, application-code: 1211ms)
+ GET /tong-quan 200 in 381ms (next.js: 13ms, application-code: 368ms)
+ GET /do-boc 200 in 260ms (next.js: 13ms, application-code: 247ms)
+ GET /do-boc 200 in 137ms (next.js: 5ms, application-code: 132ms)
+✓ Compiled in 854ms
+ GET /toi-uu 200 in 142ms (next.js: 11ms, application-code: 131ms)
+ GET /toi-uu 200 in 117ms (next.js: 5ms, application-code: 112ms)
+✓ Compiled in 365ms
+✓ Compiled in 304ms
+✓ Compiled in 242ms
+ GET /do-boc 200 in 172ms (next.js: 3ms, application-code: 169ms)
+ GET /toi-uu 200 in 131ms (next.js: 7ms, application-code: 124ms)
+ GET /do-boc 200 in 63ms (next.js: 3ms, application-code: 60ms)
+ GET /do-boc 200 in 101ms (next.js: 2ms, application-code: 99ms)
+ GET /dieu-chinh 200 in 76ms (next.js: 15ms, application-code: 62ms)
+ GET /vat-lieu 200 in 82ms (next.js: 5ms, application-code: 77ms)
+ GET /phan-tho 200 in 77ms (next.js: 4ms, application-code: 73ms)
+ GET /do-boc 200 in 105ms (next.js: 2ms, application-code: 102ms)
+ GET /co-so-du-lieu 200 in 133ms (next.js: 8ms, application-code: 126ms)
+✓ Compiled in 690ms
+✓ Compiled in 127ms
+✓ Compiled in 191ms
+ GET /do-boc 200 in 433ms (next.js: 37ms, application-code: 396ms)
+ GET /do-boc 200 in 92ms (next.js: 8ms, application-code: 83ms)
+ GET /do-boc 200 in 877ms (next.js: 5ms, application-code: 871ms)
+ GET /do-boc 200 in 508ms (next.js: 3ms, application-code: 505ms)
+ GET /co-so-du-lieu 200 in 296ms (next.js: 16ms, application-code: 280ms)
+ GET /tong-quan 200 in 216ms (next.js: 45ms, application-code: 171ms)
+ GET /do-boc 200 in 107ms (next.js: 2ms, application-code: 105ms)
+✓ Compiled in 590ms
+✓ Compiled in 226ms
+ GET /do-boc 200 in 77ms (next.js: 3ms, application-code: 74ms)
+ GET /do-boc 200 in 107ms (next.js: 1.8ms, application-code: 105ms)
+ GET /do-boc 200 in 119ms (next.js: 3ms, application-code: 117ms)
+ GET /do-boc 200 in 75ms (next.js: 1.7ms, application-code: 73ms)
+ GET /do-boc 200 in 386ms (next.js: 43ms, application-code: 343ms)
+ GET /dang-nhap?next=%2Fdo-boc 200 in 160ms (next.js: 58ms, application-code: 102ms)
+ GET /dang-nhap?next=%2Fdo-boc 200 in 99ms (next.js: 6ms, application-code: 94ms)
+ GET /do-boc 200 in 129ms (next.js: 5ms, application-code: 124ms)
+ GET /do-boc 200 in 110ms (next.js: 2.0ms, application-code: 108ms)
+ GET /do-boc 200 in 117ms (next.js: 6ms, application-code: 111ms)
+ GET /do-boc 200 in 84ms (next.js: 1.7ms, application-code: 82ms)
+ GET /do-boc 200 in 105ms (next.js: 3ms, application-code: 102ms)
+ GET /do-boc 200 in 98ms (next.js: 2ms, application-code: 96ms)
+ GET /dieu-chinh 200 in 92ms (next.js: 9ms, application-code: 83ms)
+ GET /vat-lieu 200 in 80ms (next.js: 6ms, application-code: 74ms)
+ GET /phan-tho 200 in 67ms (next.js: 6ms, application-code: 61ms)
+ GET /toi-uu 200 in 60ms (next.js: 6ms, application-code: 54ms)
+ GET /tiep-nhan 200 in 83ms (next.js: 18ms, application-code: 65ms)
+✓ Compiled in 592ms
+ GET /do-boc 200 in 585ms (next.js: 12ms, application-code: 574ms)
+ GET /tiep-nhan 200 in 432ms (next.js: 2ms, application-code: 430ms)
+ GET /do-boc 200 in 317ms (next.js: 3ms, application-code: 314ms)
+✓ Compiled in 101ms
+ GET /do-boc 200 in 181ms (next.js: 5ms, application-code: 176ms)
+ GET /do-boc 200 in 170ms (next.js: 1.6ms, application-code: 168ms)
+✓ Compiled in 1474ms
+ GET /do-boc 200 in 123ms (next.js: 13ms, application-code: 110ms)
+ GET /co-so-du-lieu 200 in 133ms (next.js: 47ms, application-code: 86ms)
+ GET /do-boc 200 in 175ms (next.js: 6ms, application-code: 170ms)
+ GET /tong-quan 200 in 115ms (next.js: 8ms, application-code: 107ms)
+ GET /dang-nhap?next=%2Ftong-quan 200 in 577ms (next.js: 46ms, application-code: 530ms)

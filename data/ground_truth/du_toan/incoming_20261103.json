@@ -1,0 +1,242 @@
+{
+  "date": "2026-11-03",
+  "sources": 4,
+  "new_projects": 2,
+  "existing_aliases": 2,
+  "records": [
+    {
+      "source_id": "VN001_nha_pho_2_tang_7x12",
+      "cong_trinh_id": "nha_huong_hai_duong_7x12",
+      "split": "build",
+      "existing_case": null,
+      "source_url": "https://thietkethicongnhadep.net/bo-ho-so-thiet-ke-nha-pho-day-du-tu-a-z/",
+      "data_kind": "ACTUAL",
+      "quyen_dung": "chua_ro",
+      "dap_an_trang_thai": "chua_kiem",
+      "files": [
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO DIEN 16-12-2019 NHA ANH HUONG-HAI DUONG.dwg",
+          "sha256": "20d4fc01dd6f88e10557df48d6663e47d59bfc97921a1b7e3d44566a4e23c24e",
+          "bytes": 1024512,
+          "stored_as": "data/uploads/20d4fc01dd6f88e10557df48d6663e47d59bfc97921a1b7e3d44566a4e23c24e.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO KET CAU 18-12 NHA A HUONG - HAI DUONG (SUA THEP DAM).dwg",
+          "sha256": "0b6506e0948ab09edbc8fa439900af17bb4b9cc9ef7165a772ef8a3ce0fde732",
+          "bytes": 1651872,
+          "stored_as": "data/uploads/0b6506e0948ab09edbc8fa439900af17bb4b9cc9ef7165a772ef8a3ce0fde732.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO NUOC 14-12-2019 NHA ANH HUONG - HAI DUONG.dwg",
+          "sha256": "9c5a21021c1edc05a7c76c006440039d8c4ab92e19ce5ff93fbe8256efec424f",
+          "bytes": 792384,
+          "stored_as": "data/uploads/9c5a21021c1edc05a7c76c006440039d8c4ab92e19ce5ff93fbe8256efec424f.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HỒ SƠ DỰ TOÁN NHÀ PHỐ 2 TẦNG 7X12M.pdf",
+          "sha256": "6798261ea7ce01c78e4913d8fff8378f1a08fe6ed9112c69ac07b6c23a2db523",
+          "bytes": 3182938
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HỒ SƠ THIẾT KẾ KIẾN TRÚC.dwg",
+          "sha256": "8579f576f1fe8a23c5968153478afe0a819785804557a9cdc661faefd8b59ea8",
+          "bytes": 1489664,
+          "stored_as": "data/uploads/8579f576f1fe8a23c5968153478afe0a819785804557a9cdc661faefd8b59ea8.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ KIẾN TRÚC.pdf",
+          "sha256": "48dafa62678b5046418de2f2d096cc8d5d97d2456c1e309886c864672a215720",
+          "bytes": 4447425
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ KẾT CẤU.pdf",
+          "sha256": "422a9175668dc8ef0a9c8a40e04d0ec4866b7b3d81ffdc3b6308f1c691bd4a1c",
+          "bytes": 9655936
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ NƯỚC.pdf",
+          "sha256": "5b5d752bcf65b5481befdc511c3c8920d9b3c55b0c5379a1d9d542daa4215970",
+          "bytes": 3801117
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ ĐIỆN.pdf",
+          "sha256": "de831d88dda6e1acd6987dac54d3fcb893d5fe16b7a9dac67b62217011f629d0",
+          "bytes": 7557735
+        }
+      ],
+      "drawings": [
+        "data/drawings/build/nha_huong_hai_duong_7x12_kien_truc.dxf",
+        "data/drawings/build/nha_huong_hai_duong_7x12_ket_cau.dxf"
+      ],
+      "du_toan": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HỒ SƠ DỰ TOÁN NHÀ PHỐ 2 TẦNG 7X12M.pdf",
+      "status": "database_imported_pending_review",
+      "database_project_id": 1,
+      "normalized_estimate": "data\\ground_truth\\du_toan\\normalized_20261103\\nha_huong_hai_duong_7x12.estimate.json",
+      "comparison": "data\\ground_truth\\du_toan\\normalized_20261103\\nha_huong_hai_duong_7x12.comparison.json"
+    },
+    {
+      "source_id": "VN002_nha_pho_4_tang_4x15",
+      "cong_trinh_id": "nha_sang_hai_duong_4x15",
+      "split": "build",
+      "existing_case": null,
+      "source_url": "https://thietkethicongnhadep.net/bo-ho-so-thiet-ke-nha-pho-day-du-tu-a-z/",
+      "data_kind": "ACTUAL",
+      "quyen_dung": "chua_ro",
+      "dap_an_trang_thai": "chua_kiem",
+      "files": [
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/BO KY THUAT NHA A SANG.dwg",
+          "sha256": "36f2b110f04522e97ba481275f4594d3ea8b71442743f72f4b8fecc8f8489bc6",
+          "bytes": 2403936,
+          "stored_as": "data/uploads/36f2b110f04522e97ba481275f4594d3ea8b71442743f72f4b8fecc8f8489bc6.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/DU TOAN NHA PHO 4 TANG 4X15M.pdf",
+          "sha256": "31a9cbd2b0662f3d57cf069b2ad109f6a4702a8dc92b74d5ba24bd2acfcce92b",
+          "bytes": 3378621
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HO SO DIEN NHA ANH SANG - HAI DUONG - 15-10-2021.dwg",
+          "sha256": "c152b169a9171c3a19615e09a0b851f3932426aa34f20ec93893330e9ad05cee",
+          "bytes": 1470848,
+          "stored_as": "data/uploads/c152b169a9171c3a19615e09a0b851f3932426aa34f20ec93893330e9ad05cee.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HO SO KET CAU NHA A SANG - HAI DUONG   15-10-2021.dwg",
+          "sha256": "8e049401408d381aae3aa50b624f41cc13cf2f3d7955334ecbd213b6392cd51e",
+          "bytes": 2199392,
+          "stored_as": "data/uploads/8e049401408d381aae3aa50b624f41cc13cf2f3d7955334ecbd213b6392cd51e.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HO SO NUOC NHA ANH SANG - HAI DUONG 14-10-2021.dwg",
+          "sha256": "e6b9df01062d142af2191c4d79ae44d02477f5fd10d8fe1715093ce4b448d5b7",
+          "bytes": 916992,
+          "stored_as": "data/uploads/e6b9df01062d142af2191c4d79ae44d02477f5fd10d8fe1715093ce4b448d5b7.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ KIẾN TRÚC PDF.pdf",
+          "sha256": "59cad635a392c11f061d5a4f78406c00b4248f810643b9332d4b085e0809ea88",
+          "bytes": 6991492
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ KẾT CẤU.pdf",
+          "sha256": "4b6ca4f97e80b85ae4d1df555f13ad1b531c8243f52f300ec34d436357060344",
+          "bytes": 13325257
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ NƯỚC.pdf",
+          "sha256": "89191e31fade0412d8245fb2e3247be9c73a0f6e4c3afb47465c9920a30de7d2",
+          "bytes": 4125712
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ ĐIỆN.pdf",
+          "sha256": "75ea204930ba59861fa1938d8e6dab7f0c3197bdcf2283bc575f03fe2b0b6b91",
+          "bytes": 4983467
+        }
+      ],
+      "drawings": [
+        "data/drawings/build/nha_sang_hai_duong_4x15_kien_truc.dxf",
+        "data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf"
+      ],
+      "du_toan": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/DU TOAN NHA PHO 4 TANG 4X15M.pdf",
+      "status": "database_imported_pending_review",
+      "database_project_id": 2,
+      "normalized_estimate": "data\\ground_truth\\du_toan\\normalized_20261103\\nha_sang_hai_duong_4x15.estimate.json",
+      "comparison": "data\\ground_truth\\du_toan\\normalized_20261103\\nha_sang_hai_duong_4x15.comparison.json"
+    },
+    {
+      "source_id": "VN003_nha_pho_3_tang",
+      "cong_trinh_id": "di_an_banve1",
+      "split": "test",
+      "existing_case": "banve1_nha_pho_di_an",
+      "source_url": "https://forum.rdsic.edu.vn/threads/full-b%E1%BA%A3n-v%E1%BA%BD-thi%E1%BA%BFt-k%E1%BA%BF-ki%E1%BA%BFn-tr%C3%BAc-%C4%91i%C3%AAn-n%C6%B0%E1%BB%9Bc-d%E1%BB%B1-to%C3%A1n-nh%C3%A0-ph%E1%BB%91-3-t%E1%BA%A7ng-chi-ti%E1%BA%BFt.1904/",
+      "data_kind": "ACTUAL",
+      "quyen_dung": "chua_ro",
+      "dap_an_trang_thai": "chua_kiem",
+      "files": [
+        {
+          "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN DIEN.dwg",
+          "sha256": "c4ecaf88307a9324333512ce0e6190b47922918985237e134f5e137533cddf30",
+          "bytes": 571680,
+          "stored_as": "data/uploads/c4ecaf88307a9324333512ce0e6190b47922918985237e134f5e137533cddf30.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN DU TOAN.xls",
+          "sha256": "c1ce7cdc1eee430a3b147f0933787e09244d92d11cd8a4db4353a1aa76f3b412",
+          "bytes": 487424
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN KET CAU.dwg",
+          "sha256": "f4d22d83ce04ca1654a610a1707c78c32ee97d7bc86eab61ec228c8b8cee394a",
+          "bytes": 550976,
+          "stored_as": "data/uploads/f4d22d83ce04ca1654a610a1707c78c32ee97d7bc86eab61ec228c8b8cee394a.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN KIEN TRUC.dwg",
+          "sha256": "54fc2ad7c2e085ae3e8ab97faf517869542204033f519ce721f6d6fd4166cd16",
+          "bytes": 2700160,
+          "stored_as": "data/uploads/54fc2ad7c2e085ae3e8ab97faf517869542204033f519ce721f6d6fd4166cd16.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN NUOC.dwg",
+          "sha256": "e0567eac9b05d6d03e089ae556d9359df27096a8e32edd3a1628f1e8e3a06afa",
+          "bytes": 569760,
+          "stored_as": "data/uploads/e0567eac9b05d6d03e089ae556d9359df27096a8e32edd3a1628f1e8e3a06afa.dwg"
+        }
+      ],
+      "drawings": [
+        "data/drawings/test/banve1_kien_truc.dxf",
+        "data/drawings/test/banve1_ket_cau.dxf"
+      ],
+      "du_toan": "data/ground_truth/du_toan/banve1_nha_pho_di_an.csv",
+      "status": "linked_existing_case"
+    },
+    {
+      "source_id": "VN004_nha_o_Tan_Binh",
+      "cong_trinh_id": "tan_binh_46",
+      "split": "build",
+      "existing_case": "46_nha_tan_binh",
+      "source_url": "https://www.filethietke.vn/kien-thuc-thiet-ke/bang-du-toan-tong-chi-phi-xay-dung-1-can-nha-pho-5-tang-804.htm",
+      "data_kind": "ACTUAL",
+      "quyen_dung": "chua_ro",
+      "dap_an_trang_thai": "chua_kiem",
+      "files": [
+        {
+          "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/BIEN PHAP THI CONG.dwg",
+          "sha256": "45275aa3ae716104a5c4bdff4982b1f892282776515179e2d097230d0a5933a7",
+          "bytes": 2965248,
+          "stored_as": "data/uploads/45275aa3ae716104a5c4bdff4982b1f892282776515179e2d097230d0a5933a7.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/dien nuoc nguen binh.dwg",
+          "sha256": "36513ac4ad1827560aa23c3a055dad584495f1e9f893983a83a414ad6b739d0c",
+          "bytes": 792096,
+          "stored_as": "data/uploads/36513ac4ad1827560aa23c3a055dad584495f1e9f893983a83a414ad6b739d0c.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/ketcauNGUYENBINH.dwg",
+          "sha256": "467ed02988e6fcc7e2e22cbb141889b4769d17f90f4d84a0fbd202ea7f7bad3c",
+          "bytes": 1866176,
+          "stored_as": "data/uploads/467ed02988e6fcc7e2e22cbb141889b4769d17f90f4d84a0fbd202ea7f7bad3c.dwg"
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/Nha Tan Binh.xls",
+          "sha256": "b252d28a966266eb1fe7c0943515a952611bbef430e181f1267caebcf61d96ae",
+          "bytes": 1089536
+        },
+        {
+          "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/tk nguen binh.dwg",
+          "sha256": "f3c76142a44ce06a4fb2e1fa911d521ec73cda3801b6f2e4489b423a617c5d50",
+          "bytes": 2057376,
+          "stored_as": "data/uploads/f3c76142a44ce06a4fb2e1fa911d521ec73cda3801b6f2e4489b423a617c5d50.dwg"
+        }
+      ],
+      "drawings": [
+        "data/drawings/build/tan_binh_kien_truc.dxf",
+        "data/drawings/build/tan_binh_ket_cau.dxf"
+      ],
+      "du_toan": "data/ground_truth/du_toan/46_nha_tan_binh.csv",
+      "status": "linked_existing_case"
+    }
+  ]
+}

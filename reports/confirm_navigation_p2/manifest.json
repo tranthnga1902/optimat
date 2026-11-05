@@ -1,0 +1,25 @@
+{
+  "status": "verified_source_only",
+  "targets": {
+    "3002": {
+      "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\rules-demo-stage",
+      "base_build_id": "XAER9r8guzcs7heKavA8s",
+      "p0_review_sha256": "4480d52ef1bc21b6ecc2540ae4d99820c3f1889612b6464bce87228601e1e010",
+      "review_sha256": "ea395bcb02b38ad2a65015feeb92d42b35a9d3ce15cf50e08a4e4a16e741d034",
+      "dialogs_sha256": "a07e4038d9e401626d6c61c2daa8c533fdc49071aa435bc7a9eb6f21e700522a",
+      "incremental_patch_sha256": "55213d43b01ede1f930a027dc6a3e56eb6b46203b221d0a9d69cd09d65dafdcb",
+      "full_patch_sha256": "48ae7e90726d6592e2715ea029eefa659300c6a7df39c500547167c2c1c4d583"
+    },
+    "3001": {
+      "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\c2-frontend-candidate",
+      "base_build_id": "H6w7Rhgb_8Aew79ERRLSc",
+      "p0_review_sha256": "6e80addbe29197127c9ec49d0d156edc1836bff3496b78b850186eb79f8fd1c1",
+      "review_sha256": "75a9ee37fa302176050c4c1ad1d688a69ce817ffb52e33038ec48d8f4d29e595",
+      "dialogs_sha256": "a07e4038d9e401626d6c61c2daa8c533fdc49071aa435bc7a9eb6f21e700522a",
+      "incremental_patch_sha256": "e1b83e7090e281c8d74461eab09b3c2caf6b4ed52e984e83185dbfdbd5bc34a6",
+      "full_patch_sha256": "52db655c9d09cef2d2831d1c39272f68b0efafdbedc187431ae24df781037c4c"
+    }
+  },
+  "test_sha256": "ca4f10bd30e3b6baae4248c0d1d72943878600bcf6b0b1330d0eadac558a4dd6",
+  "verification_sha256": "dfd0e6029768969f924c3b95a4ba4615e71e8346768278d02df163755a748ce0"
+}

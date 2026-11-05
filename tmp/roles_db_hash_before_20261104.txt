@@ -1,0 +1,10 @@
+547B8B44BC2154FE97C4E236F7239283EA55ABCA5A3E12397E21E4ACFAED9A6D C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\db\project_document_roles.sql
+0C547C4DDD73E73DDC655C60CD86D47EAA42C4A73BE5985AA583472276ADC5F2 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\db\project_document_roles_rollback.sql
+6D322334A36DC8A09D72BE1352469661123F85F46D238FD34FB9F49D73467575 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\db\project_documents.sql
+E0CD62DB19A60A13D4CD83786605243E979BC09832D23309B9CA7A296EA18D9A C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_project_document_roles_db.py
+9E5508037C8F6C5FF6B994376AAD1B6553025517FD99B2A9C9A5DD7795077FDB C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_project_files_db.py
+328F8101D1B3DD5FB4ECB8956DBB84003BE9B307398DFEF9CE5E69160731438D C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\requirements.txt
+7B0CAFEBD8F61503335931C5AEDE009B2210424CABA3331F06175209D91DDC78 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\api\project_document_io.py
+ADF8B92293791E3ABDED17711483C7B7E3D143D910AD9347276884E30A821458 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\api\project_files.py
+0581D19A5798033E7DA86F854F41E950FCA63BFDFE7627BEE699044F1932D36E C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_project_document_io.py
+9DEFA7526C56A1053E10B9F12C1E21EEE21AB53ECD85B2423000B7FCAAD781F9 C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_project_files.py

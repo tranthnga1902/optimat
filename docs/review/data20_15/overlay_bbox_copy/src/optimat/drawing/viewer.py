@@ -1,0 +1,251 @@
+"""Dữ liệu cho trang Kiểm tra bóc tách (/do-boc của frontend): bản vẽ, kết quả đo bóc từng mặt bằng, vật liệu chọn được.
+Chỉ gom kết quả đo bóc thật (cùng mã với API), không tính lại gì."""
+from __future__ import annotations
+import math
+
+from ..catalog.repository import Catalog, default_catalog
+from ..schemas import PlanTakeoff, TakeoffResult
+from .dxf_reader import Drawing, crop
+from .render import DrawingRenderer
+from .material_rules import _best, load_rules, rule_label
+from ..rough.areas import room_labels
+from ..rough.columns import detect_columns
+from ..rough.takeoff import rough_parts
+
+
+def _r(v: float) -> float:
+    return round(v, 1)
+
+
+def _display_fields(box):
+    return {"display_bbox": list(box), "display_size": [box[2]-box[0],box[3]-box[1]]}
+
+
+def _primitive_display_bbox(drawing, origin):
+    """Phạm vi minh họa dự phòng; không thay bbox/crop dùng nhận diện."""
+    points=[(s.x1,s.y1) for s in drawing.segments]+[(s.x2,s.y2) for s in drawing.segments]
+    span=max([1.0,*[abs(v) for s in drawing.segments for v in (s.x2-s.x1,s.y2-s.y1)]])
+    for t in drawing.texts:
+        h=max(t.height,span/350)
+        points.extend([(t.x,t.y),(t.x+len(t.text[:120])*h,t.y+h)])
+    for a in drawing.arcs:
+        points.extend([(a.cx-a.r,a.cy-a.r),(a.cx+a.r,a.cy+a.r)])
+    points.extend(p for h in drawing.hatches for poly in h.polygons for p in poly)
+    points=[p for p in points if all(math.isfinite(v) for v in p)] or [(0.,0.),(1.,1.)]
+    ox,oy=origin
+    return (min(p[0] for p in points)-ox,oy-max(p[1] for p in points),
+            max(p[0] for p in points)-ox,oy-min(p[1] for p in points))
+
+
+def _union_display_bbox(a,b):
+    return (min(a[0],b[0]),min(a[1],b[1]),max(a[2],b[2]),max(a[3],b[3]))
+
+
+def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: dict | None = None) -> dict:
+    """Gom dữ liệu cho trang xem. Tọa độ đổi về gốc góc trên trái, trục y hướng xuống (mm)."""
+    xs = [c for s in drawing.segments for c in (s.x1, s.x2)] or [0.0, 1.0]
+    ys = [c for s in drawing.segments for c in (s.y1, s.y2)] or [0.0, 1.0]
+    x0, y1 = min(xs), max(ys)
+
+    def tx(x: float) -> float:
+        return _r(x - x0)
+
+    def ty(y: float) -> float:
+        return _r(y1 - y)
+
+    layer_names = sorted({s.layer for s in drawing.segments})
+    index = {name: i for i, name in enumerate(layer_names)}
+    role_of_class = {g.wall_type: g.role for g in result.groups}
+    rules = load_rules()
+    hatches = []
+    for h in drawing.hatches:
+        rule = _best(rules, "hatch", h.pattern)
+        hatches.append({
+            "pattern": h.pattern, "layer": h.layer,
+            "rule": rule.rule_id if rule else None,
+            "result": rule_label(rule) if rule else None,
+            "concrete": bool(rule and rule.element == "CONCRETE"),
+            "polys": [[[tx(x), ty(y)] for x, y in poly] for poly in h.polygons],
+        })
+    return {
+        "file": file_name,
+        "height_mm": result.floor_height_mm,
+        "length_rule": result.length_rule,
+        "size": [_r(max(xs) - x0), _r(y1 - min(ys))],
+        **_display_fields(_primitive_display_bbox(drawing,(_r(x0),_r(y1)))),
+        "layers": [{"name": n, "role": result.layer_classes.get(n, "UNKNOWN")} for n in layer_names],
+        "segs": [[tx(s.x1), ty(s.y1), tx(s.x2), ty(s.y2), index[s.layer], 1 if s.kind == "hatch" else 0]
+                 for s in drawing.segments],
+        "walls": [{
+            "id": w.wall_id, "cls": w.thickness_class, "layer": w.layer,
+            "x1": tx(w.x1), "y1": ty(w.y1), "x2": tx(w.x2), "y2": ty(w.y2),
+            "len": round(w.length_mm / 1000, 3), "open": round(w.opening_area_m2, 2),
+            "conf": w.confidence, "masonry": w.is_masonry, "role": w.role or role_of_class.get(w.thickness_class),
+            "mat": w.material_id, "fam": w.material_family, "sys": w.wall_system_id, "cand": w.material_candidates,
+            "t": w.thickness_mm, "src": w.material_source,
+            "rule": w.material_rule, "mconf": w.material_confidence,
+        } for w in result.walls],
+        "rejected": [{"reason": r["reason"], "cls": r["cls"], "x1": tx(r["x1"]), "y1": ty(r["y1"]), "x2": tx(r["x2"]),
+                      "y2": ty(r["y2"])} for r in result.rejected],
+        "openings": [{"name": o.name, "x": tx(o.x), "y": ty(o.y), "w": o.width_mm, "h": o.height_mm,
+                      "wall": o.wall_id, "kind": o.kind, "ev": o.evidence} for o in result.openings],
+        "hatches": hatches,
+        "texts": [{"t": t.text.strip()[:120], "x": tx(t.x), "y": ty(t.y), "enc": t.encoding}
+                  for t in drawing.texts if t.text.strip()],
+        "arcs": [[tx(a.cx), ty(a.cy), _r(a.r), round(a.start, 1), round(a.end, 1)] for a in drawing.arcs if a.r > 0],
+        "hatchsegs": len([s for s in drawing.segments if s.kind == "hatch"]),
+        "plan": plan or {"name": file_name},
+        "origin": [_r(x0), _r(y1)], "bbox_mm": [_r(x0), _r(min(ys)), _r(max(xs)), _r(y1)],
+        "wall_layers": result.wall_layers, "auto_wall_layers": result.auto_wall_layers,
+        "wall_layer_scores": result.wall_layer_scores,
+        "groups": [g.model_dump() for g in result.groups],
+        "warnings": result.warnings,
+        "unmatched": result.unmatched,
+        "rule_hits": result.rule_hits,
+        # phần thô: cột (vùng tô đặc, ký hiệu cột), tên phòng (WC, ban công) để tính chống thấm, bộ phận phần thô thấy
+        # theo ký hiệu (dầm, thang, móng...) để nhắc nhập; cùng hệ tọa độ trang
+        "columns": [{"id": c.id, "x": tx(c.x), "y": ty(c.y), "b_mm": c.b_mm, "h_mm": c.h_mm, "source": c.source}
+                    for c in detect_columns(drawing)],
+        "found": rough_parts(drawing),
+        "labels": [{"kind": k, "text": t, "x": tx(x), "y": ty(y)} for k, t, x, y in room_labels(drawing)],
+    }
+
+
+def plans_data(drawing: Drawing, plans: list[PlanTakeoff], file_name: str) -> dict:
+    from ..rough.stairs import building_stairs
+    from ..rough.takeoff import ground_index
+    ground = ground_index([p.name for p in plans], [p.level_m for p in plans])
+    subs = [crop(drawing, tuple(p.bbox)) if p.name != "Toàn bộ bản vẽ" else drawing for p in plans]
+    stairs, notes = building_stairs(subs, [p.name for p in plans])   # thang tự nhận (B) để điền sẵn ô thang
+    out = []
+    for i, (p, sub) in enumerate(zip(plans, subs)):
+        info = {"name": p.name, "level_m": p.level_m, "height_mm": p.height_mm, "height_source": p.height_source,
+                "is_ground": i == ground}
+        data = viewer_data(sub, p.result, file_name, info)
+        if p.name != "Toàn bộ bản vẽ":
+            x0,y0,x1,y1=p.bbox
+            ox,oy=data["origin"]
+            data.update(_display_fields((x0-1500-ox,oy-y1-1500,x1+1500-ox,oy-y0+1500)))
+        data["stairs"] = [s.model_dump() for s in stairs[i]]
+        data["warnings"] = data["warnings"] + [n for n in notes if n.startswith(p.name + ":")]
+        out.append(data)
+    return {"file": file_name, "plans": out}
+
+
+def material_options(catalog: Catalog | None = None) -> list[dict]:
+    """Vật liệu tường người dùng chọn được trên trang: lấy từ danh mục (cùng mã dùng để tra giá).
+    systems: lớp chiều dày -> phương án tường; ready: phương án đủ số liệu để tối ưu."""
+    catalog = catalog or default_catalog()
+    view = catalog.wall_view()
+    if not view.empty:
+        view = view.dropna(subset=["detect_class"])
+    families = catalog.wall_families()
+    mats = catalog.materials[catalog.materials.get("family").isin(list(families))] if "family" in catalog.materials else []
+    out = []
+    for m in (mats.itertuples() if len(mats) else []):
+        rows = view[view.material_id == m.material_id] if len(view) else view
+        out.append({
+            "id": m.material_id, "name": m.name, "label": f"{m.material_id} · {m.name}", "unit": m.unit,
+            "family": m.family, "family_label": families[m.family],
+            "systems": {r.detect_class: r.wall_system_id for r in rows.itertuples() if r.detect_class},
+            "ready": {r.detect_class: bool(r.ready) for r in rows.itertuples() if r.detect_class},
+        })
+    order = list(families)
+    return sorted(out, key=lambda o: (order.index(o["family"]), o["id"]))
+
+
+def add_cad_layers(drawing: Drawing, payload: dict, plans: list[PlanTakeoff] | None) -> None:
+    """Thêm nền bản vẽ gốc vẽ đúng như phần mềm CAD cho từng mặt bằng ("cad") và trang tổng thể cả file ("overview")."""
+    if getattr(drawing, "doc", None) is None:
+        return
+    try:
+        renderer = DrawingRenderer(drawing.doc, drawing.unit_scale)
+    except Exception as exc:  # noqa: BLE001 - vẽ nền lỗi không được làm hỏng kết quả nhận dạng
+        payload.setdefault("warnings", []).append(f"Không vẽ được nền bản vẽ gốc: {exc}")
+        return
+    for i, p in enumerate(payload["plans"]):
+        box = tuple(plans[i].bbox) if plans and plans[i].name != "Toàn bộ bản vẽ" else None
+        try:
+            rendered = renderer.view(box,tuple(p["origin"]))
+        except Exception as exc:  # lỗi dựng nền riêng view; giữ nguyên dữ liệu nhận diện
+            p.pop("cad", None)
+            p["cad_missing"] = True
+            p.setdefault("warnings", []).append(f"Thiếu nền CAD của view này: {exc}")
+            continue
+        p["cad"] = rendered.svg
+        if rendered.display_bbox is not None:
+            display = rendered.display_bbox if box is not None else _union_display_bbox(p["display_bbox"],rendered.display_bbox)
+            p.update(_display_fields(display))
+    xs = [c for s in drawing.segments for c in (s.x1, s.x2)] or [0.0, 1.0]
+    ys = [c for s in drawing.segments for c in (s.y1, s.y2)] or [0.0, 1.0]
+    ox, oy = min(xs), max(ys)
+    boxes = []
+    for i, p in enumerate(payload["plans"]):
+        bx = plans[i].bbox if plans else p["bbox_mm"]
+        boxes.append({"name": p["plan"]["name"], "x": _r(bx[0] - ox), "y": _r(oy - bx[3]),
+                      "w": _r(bx[2] - bx[0]), "h": _r(bx[3] - bx[1])})
+    overview_origin = (_r(ox),_r(oy))
+    display = _primitive_display_bbox(drawing,overview_origin)
+    payload["overview"] = {"origin": [_r(ox), _r(oy)], "size": [_r(max(xs) - ox), _r(oy - min(ys))],
+                           **_display_fields(display),
+                           "plans": boxes}
+    try:
+        overview = renderer.view(None,overview_origin)
+    except Exception as exc:
+        payload["overview"]["cad_missing"] = True
+        payload["overview"]["warnings"] = [f"Thiếu nền CAD tổng thể: {exc}"]
+    else:
+        payload["overview"]["cad"] = overview.svg
+        if overview.display_bbox is not None:
+            payload["overview"].update(_display_fields(_union_display_bbox(display,overview.display_bbox)))
+
+
+def view_payload(drawing: Drawing, result, file_name: str, cad: bool = True) -> dict:
+    """result: một TakeoffResult (cả bản vẽ) hoặc danh sách PlanTakeoff (từng mặt bằng).
+    cad: thêm nền bản vẽ gốc vẽ như phần mềm CAD (chậm hơn với file lớn)."""
+    plans = result if isinstance(result, list) else None
+    if plans is not None:
+        payload = plans_data(drawing, result, file_name)
+    else:
+        payload = {"file": file_name, "plans": [viewer_data(drawing, result, file_name)]}
+    if plans is not None and not any(p.result.walls or p.result.openings for p in plans):
+        from .sheets import sheet_type_of
+        from .encoding import normalize
+        signals = rough_parts(drawing)
+        roles = {"FOUNDATION", "BEAM", "COLUMN", "SLAB", "STAIR", "LINTEL", "REBAR"}
+        has_structural_title = False
+        for text in drawing.texts:
+            sheet = sheet_type_of(text.text)
+            if sheet is None or sheet.nhom != "ket_cau":
+                continue
+            has_structural_title = True
+            title_roles = set(sheet.bo_phan) & roles
+            if "thep" in normalize(text.text):
+                title_roles.add("REBAR")
+            for role in sorted(title_roles):
+                evidence = f"tiêu đề {text.text.strip()}"
+                sources = signals.setdefault(role, [])
+                if evidence not in sources:
+                    sources.append(evidence)
+        if plans == [] or has_structural_title:
+            payload["drawing_work_signals"] = signals
+    if cad:
+        add_cad_layers(drawing, payload, plans)
+    if plans is not None:
+        payload["conventions"] = convention_summary(drawing, plans, file_name)
+    payload["materials"] = material_options()
+    payload["families"] = [{"id": k, "label": v} for k, v in default_catalog().wall_families().items()]
+    return payload
+
+
+def convention_summary(drawing: Drawing, plans: list, file_name: str) -> dict:
+    """Đối chiếu Quy ước v1.0 cho tab Cảnh báo: kết luận và từng điều khoản (chi tiết: scripts/concept_report.py).
+    Phần này chỉ để báo; lỗi ở đây không được chặn việc mở bản vẽ, nên trả lời báo lỗi thay vì ném ngoại lệ."""
+    from .convention_check import analyze_drawing
+    try:
+        r = analyze_drawing(drawing, plans, file_name)
+    except Exception as exc:   # noqa: BLE001
+        return {"error": f"Chưa đối chiếu được quy ước: {exc}"}
+    return {"trong_quy_uoc": r.trong_quy_uoc,
+            "checks": [c.model_dump(include={"ma", "muc", "nhom", "dieu_khoan", "trang_thai", "ket_qua", "bang_chung"})
+                       for c in r.checks]}

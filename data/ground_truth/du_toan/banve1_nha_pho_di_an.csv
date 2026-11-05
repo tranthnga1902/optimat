@@ -1,0 +1,56 @@
+﻿stt,ma_dinh_muc,ten_cong_tac,don_vi_goc,khoi_luong_goc,don_vi,khoi_luong,ma_cong_tac,cau_kien,dien_giai
+1,TT,Công tác chuẩn bị mặt bằng thi công,,1.0,,1.0,,,1 1
+2,TT,Đào đất móng+hầm phân+ bể nước ngầm,m3,51.364999999999995,m³,51.365,DAO_DAT,,"Móng M2: 1,4 x 2 x 1,7 x 1,3 x 2 12.376 | M3: 2,8 x 1,4 x 1,7 x 1,3 x 2 17.326 | Móng M1: 1,4 x 1,4 x 2 x 1,7 x 1,3 8.663 | Hầm phân: 8 8 | Bể nước ngầm: 5 5"
+3,TT,Vận chuyển đất ra khỏi công trình,m3,34.267,m³,34.267,,,"Bằng 2/3 khối lượng đào: 2 / 3 x 51,4 34.267"
+4,AF.11122,"Bê tông lót móng, đá 4x6 mác 150 chiều rộng >250cm",M3,5.024,m³,5.024,BE_TONG_LOT,,"Móng M2: 1,4 x 2 x 0,1 0.28 | M3: 2,8 x 1,4 x 0,1 0.392 | Móng M1: 1,4 x 1,4 x 2 x 0,1 0.392 | Đà kiềng: 51 x 0,3 x 0,1 x 2 3.06 | Hầm phân: 6 x 0,1 0.6 | Bể nước ngầm: 3 x 0,1 0.3"
+5,AL.61210,"Lắp dựng dàn giáo trong, chiều cao chuẩn 3,6m",bộ,12.0,bộ,12.0,,,Toàn bộ giàn giáo thi công trong nhà và mặt tiền trong vòng 4tháng: 3 x 4 12
+6,TT,Xây gạch hố móng+gạch bó nền,m,35.0,m,35.0,,,Gạch bó nền: 35 35
+7,AF.83321,"SXLD, tháo dỡ ván khuôn xà dầm, giằng (BT đổ tại chỗ) bằng ván ép công nghiệp, có khung xương, cao <=50m",100M2,3.186,m²,318.6,COP_PHA,DAM,"Móng,đà kiềng: | Đà kiềng dọc: 2 x (21,2 + 20) / 2 x 0,8 / 100 0.33 | Dầm ngang: 5 x 5 x (0,2 + 0,4 x 2) / 100 0.25 | Dầm lầu 1,2: | Dầm dọc: 16,4 x (0,2 + 0,4 x 2) x 2 / 100 x 4 1.312 | Dầm ngang: 6 x 5 x (0,2 + 0,4 x 2) / 100 x 2 0.6 | Dầm cầu thang: 2 x (0,2 + 0,3 x 2) / 100 x 2 0.032 | Dầm mái | Dầm dọc: 15,6 x (0,2 + 0,4 x 2) x 2 / 100 0.312 | Dầm ngang: 7 x 5 x (0,2 + 0,4 x 2) / 100 0.35"
+8,AF.83411,"SXLD, tháo dỡ ván khuôn cột vuông, chữ nhật (BT đổ tại chỗ) bằng ván ép công nghiệp, có khung xương, cao <=16m",100M2,1.2,m²,120.0,COP_PHA,COT,"Cột từ móng-->sân thượng: | 10 x (0,2 + 0,3) x 2 / 100 x 12 1.2"
+9,AF.83121,"SXLD, tháo dỡ ván khuôn sàn mái (BT đổ tại chỗ) bằng ván ép công nghiệp, có khung xương, cao <=50m",100M2,1.94,m²,194.0,COP_PHA,SAN,Sàn lầu 1: 82 / 100 0.82 | Sàn lầu 2: 82 / 100 0.82 | Mặt bằng mái: 30 / 100 0.3
+10,AF.12414,Bê tông sàn mái đá 1x2 mác 250,M3,17.91,m³,17.91,SAN,,"Sàn lầu 1,2, mái: (2,3 + 18,4 + 7) x 0,1 + (82 - 6,3) x 0,1 x 2 17.91"
+11,AF.12314,"Bê tông xà dầm, giằng nhà, đá 1x2 mác 250",M3,33.071999999999996,m³,33.072,DAM,,"Móng,đà kiềng: | Móng: | M2: 1,4 x 2 x 0,4 x 2 2.24 | M3: 2,8 x 1,4 x 0,4 x 2 3.136 | Móng M1: 1,4 x 1,4 x 0,4 x 2 1.568 | Đà kiềng dọc: 2 x (21,2 + 20) / 2 x 0,2 x 0,4 3.296 | Dầm ngang: 5 x 5 x 0,2 x 0,4 2 | Dầm lầu 1,2: | Dầm dọc: 16,4 x 0,2 x 0,4 x 2 x 4 10.496 | Dầm ngang: 6 x 5 x 0,2 x 0,4 x 2 4.8 | Dầm cầu thang: 2 x 0,2 x 0,3 x 2 0.24 | Dầm mái | Dầm dọc: 15,6 x 0,2 x 0,4 x 2 2.496 | Dầm ngang: 7 x 5 x 0,2 x 0,4 2.8"
+12,AF.12224,"Bê tông cột, đá 1x2 mác 250, tiết diện <= 0,1m, cao <= 16m",M3,5.52,m³,5.52,COT,,"Cột trệt-->sân thượng: | 8 x 0,2 x 0,25 x 12 + 0,1 x 0,3 x 12 x 2 5.52"
+13,AF.12614,Bê tông cầu thang thường đá 1x2 mác 250,M3,21.0,m³,21.0,CAU_THANG,,"Toàn bộ cầu thang: 42 x 0,5 21"
+14,AF.617123,"Sản xuất lắp dựng cốt thép sàn mái cao <=50m, đường kính 10 mm",Tấn,1.79,tấn,1.79,COT_THEP,SAN,"Bằng 100kg thép trên 1m3 BT: 0,1 x 17,9 1.79"
+15,AF.61811,"Sản xuất lắp dựng cốt thép cầu thang cao <=4m, đường kính <=10 mm",Tấn,0.24,tấn,0.24,COT_THEP,CAU_THANG,"bằng 120kg/1m3 BT: 2 x 0,12 0.24"
+16,AF.615331,Sản xuất lắp dựng cốt thép Móng dk <20 mm,Tấn,0.72,tấn,0.72,COT_THEP,MONG,"bằng 12% khối lượng BT: 0,12 x 6 0.72"
+17,AF.615331,"Sản xuất lắp dựng cốt thép  xà dầm, giằng cao <=50m, đường kính <20 mm",Tấn,4.16,tấn,4.16,COT_THEP,DAM,"Bằng 160Kg/1m3bt: 0,16 x (41 - 15) 4.16"
+18,AF.61513,"Sản xuất lắp dựng cốt thép xà dầm, giằng cao <=50m, đường kính <=10 mm",Tấn,3.669,tấn,3.669,COT_THEP,DAM,"Bằng 50Kg thép/1m3 bt: 0,05 x (99,376 - 26) 3.669"
+19,AF.61423,"Sản xuất lắp dựng cốt thép cột, trụ cao <=50m, đường kính <= 18 mm",Tấn,1.38,tấn,1.38,COT_THEP,COT,"Bằng 250Kg/1m3 bt: 0,25 x 5,52 1.38"
+20,AE.63233,"Xây tường bằng gạch ống 8x8x19, dày<= 30cm, cao <= 50m, vữa xi măng mác 50",M3,78.402,m³,78.402,XAY,,"Tầng trệt: | Tường trục A,B: 22,4 x 0,1 x 3,4 7.616 | Tường cổng: 2 x 0,2 x 2,5 1 | Tường trục 1: 2 x 3,4 x 0,2 1.36 | Tường trục 2: 3 x 3,4 x 0,2 2.04 | Tường trục 3: 3 x 3,4 x 0,2 2.04 | Tường trục 4,5: 5 x 3,4 x 0,1 x 2 3.4 | Tường trục 6: 5 x 3,4 x 0,1 1.7 | Lầu 1: | Tường trục A: 21,5 x 3,2 x 0,1 6.88 | Tường trục B: 19,4 x 3,2 x 0,1 6.208 | Tường trục 1: 5 x 3,2 x 0,1 1.6 | Tường trục 2,3,4,5: 4 x 5 x 3,2 x 0,1 6.4 | Tường trục 6: 5 x 3,2 x 0,1 1.6 | Tường WC: 6 x 3,2 x 0,1 1.92 | Tường lầu 2: | Tường trục A: 15,4 x 3,2 x 0,1 4.928 | Tường trục B: 14,5 x 3,2 x 0,1 4.64 | Tường trục 1: 5 x 3,2 x 0,1 1.6 | Tường trục 2,3,4: 3 x 5 x 3,2 x 0,1 4.8 | Tường bao lan can sân thượng: 13 x 0,9 x 0,1 1.17 | Tường WC: 6 x 3,2 x 0,1 1.92 | Tường sân thượng | Tường trục A: 8,5 x 3,2 x 0,1 2.72 | Tường trục B: 4 x 3,2 x 0,1 1.28 | Tường trục 2: 5 x 3,2 x 0,1 1.6 | Tường trục 3: 2,95 x 3,2 x 0,1 0.944 | Tường trục 4: 5 x 3,2 x 0,1 1.6 | Tường ngăn WC: 10,3 x 3,2 x 0,1 3.296 | Tường bao lan can trước: 16 x 0,9 x 0,1 1.44 | Tường mái: 30 x 0,9 x 0,1 2.7"
+21,AL.73310,Bốc xếp và vận chuyển xi măng lên cao,Tấn,25.0,tấn,25.0,,,25 25
+22,AL.72210,"Bốc xếp và vận chuyển đá ốp, lát các loại lên cao",10m2,285.0,10m2,285.0,,,95 x 3 285
+23,AL.71130,"Bốc xếp và vận chuyển các loại sơn, bột (bột đá, bột bả,..) lên cao",Tấn,3.0,tấn,3.0,,,3 3
+24,AL.71110,"Bốc xếp và vận chuyển cát các loại, than xĩ lên cao",m3,40.0,m³,40.0,,,40 40
+25,AK.21134,"Trát tường ngoài, chiều dày trát 2cm, vữa mác 75",M2,1503.6400000000003,m²,1503.64,TRAT,,"Tầng trệt: | Tường trục A,B: 22,4 x 2 x 3,4 152.32 | Tường cổng: 2 x 2 x 2,5 10 | Tường trục 1: 2 x 3,4 x 2 13.6 | Tường trục 2: 3 x 3,4 x 2 20.4 | Tường trục 3: 3 x 3,4 x 2 20.4 | Tường trục 4,5: 5 x 3,4 x 2 x 2 68 | Tường trục 6: 5 x 3,4 x 2 34 | Lầu 1: | Tường trục A: 21,5 x 3,2 x 2 137.6 | Tường trục B: 19,4 x 3,2 x 2 124.16 | Tường trục 1: 5 x 3,2 x 2 32 | Tường trục 2,3,4,5: 4 x 5 x 3,2 x 2 128 | Tường trục 6: 5 x 3,2 x 2 32 | Tường WC: 6 x 3,2 x 2 38.4 | Tường lầu 2: | Tường trục A: 15,4 x 3,2 x 2 98.56 | Tường trục B: 14,5 x 3,2 x 2 92.8 | Tường trục 1: 5 x 3,2 x 2 32 | Tường trục 2,3,4: 3 x 5 x 3,2 x 2 96 | Tường bao lan can sân thượng: 13 x 0,9 x 2 23.4 | Tường WC: 6 x 3,2 x 2 38.4 | Tường sân thượng | Tường trục A: 8,5 x 3,2 x 2 54.4 | Tường trục B: 4 x 3,2 x 2 25.6 | Tường trục 2: 5 x 3,2 x 2 32 | Tường trục 3: 2,95 x 3,2 x 2 18.88 | Tường trục 4: 5 x 3,2 x 2 32 | Tường ngăn WC: 10,3 x 3,2 x 2 65.92 | Tường bao lan can trước: 16 x 0,9 x 2 28.8 | Tường mái: 30 x 0,9 x 2 54"
+26,AK.22134,"Trát trụ, cột, lam đứng, cầu thang, chiều dày trát 2cm, vữa mác 75",M2,120.0,m²,120.0,,,"Cột trệt-->sân thượng: | 10 x (0,2 + 0,3) x 2 x 12 120"
+27,AK.23114,"Trát xà dầm, vữa mác 75",M2,340.7,m²,340.7,,,"bằng diện tích ván khuôn: 340,7 340.7"
+28,AK.23214,"Trát trần, vữa mác 75",M2,195.0,m²,195.0,,,195 195
+29,TT,"Bả matit + Sơn tường+dầm +cột+trần nhà đã bả bằng sơn ICI dulux,1 nước lót 2 nước phủ",,2155.7,,2155.7,,,"bằng diện tích bả: 1500 + 120 + 340,7 + 195 2155.7"
+30,AK.51280,"Lát nền, sàn, kích thước gạch 800x800mm, vữa mác 75",M2,156.2,m²,156.2,,,"Nền trệt: 31 + 26,4 57.4 | Lầu 1: 36 + 3,5 + 3 42.5 | Lầu 2: 27 + 3,3 + 26 56.3"
+31,AK.51250,"Lát nền, sàn, kích thước gạch 400x400mm, vữa mác 75",M2,44.4,m²,44.4,,,"Sân sau: 20 20 | Ban công lầu 1: 2 2 | Ban công lầu 2: 2,4 2.4 | Mái: 20 20"
+32,AK.51260,"Lát nền, sàn, kích thước gạch 250x250mm, vữa mác 75",M2,17.2,m²,17.2,,,"Nền WC: | WC trệt: 2,2 2.2 | Nền WC lầu 1: 6 6 | Nền WC lầu 2: 5,4 + 3,6 9"
+33,AK.31260,"Ốp chân tường, viền tường, viền trụ, cột, kích thước gạch 250x400mm",M2,87.88,m²,87.88,,,"Tường WC: | WC trệt: 7,4 x 2,6 19.24 | WC lầu 1: 9 x 2,6 23.4 | WC lầu 2: 9,6 x 2,6 + 7,8 x 2,6 45.24"
+34,AK.41114,"Láng nền, sàn không đánh mầu, chiều dầy 2cm, vữa mác 75",M2,299.0,m²,299.0,CAN_NEN,,Nền trệt: 103 103 | Nền lầu 1: 83 83 | Nền lầu 2: 83 83 | Mái: 30 30
+35,AK.92111,"Quét flinkote chống thấm mái, sê nô, ô văng ...",M2,55.4,m²,55.4,CHONG_THAM,,"wc lầu 1: 6 6 | WC lầu 2: 5,4 + 5,6 11 | Ban công lầu 1: 1,7 1.7 | Ban công lầu 2: 5 + 1,7 6.7 | Mái: 30 30"
+36,AK.56220,"Lát đá granít tự nhiên bậc cầu thang, vữa lót mác 75",M2,53.81,m²,53.81,,,"mặt tiền: 20 20 | Ngạch cửa trệt: 0,8 + 0,2 + 0,06 1.06 | Tam cấp phòng khách: 2 2 | mặt bếp: 5 5 | Bàn rửa sân sau: 2 2 | Cầu thang: 20 20 | mặt Lavabo: 0,6 x 4 2.4 | Ngạch cửa lầu 1,lầu 2: 10 x 0,9 x 0,15 1.35"
+37,TT,Vách tắm đứng WC:,bộ,3.0,bộ,3.0,,,3 3
+38,TT,Lắp bể nước ngầm+bồn nước mái,bộ,2.0,bộ,2.0,,,2 2
+39,TT,Máy bơm nước+khoan giếng,bộ,1.0,bộ,1.0,,,1 1
+40,TT,Máy bơm nước lên bồn nước mái,bộ,1.0,bộ,1.0,,,1 1
+41,TT,"Vật tư điện nước hoàn thiện ( không bao gồm đèn chùm,đèn trang trí,đèn tranh.)",m2,300.0,m²,300.0,,,300 300
+42,TT,Lắp hệ thống máy nước nóng năng lượng mặt trời(bao gồm đường ống+máy 180 lít),bộ,1.0,bộ,1.0,,,1 1
+43,TT,Lan can cầu thang sắt tay vịn gỗ,m,30.0,m,30.0,,,Toàn bộ cầu thang: 30 30
+44,TT,Lan can mặt tiền:,m,2.2,m,2.2,,,"toàn bộ mặt tiền: 2,2 2.2"
+45,TT,Khung sắt Lavabo,bộ,4.0,bộ,4.0,,,4 4
+46,TT,Lắp đặt bàn cầu+lavabo+phụ kiện bàn cầu+lavabo,bộ,4.0,bộ,4.0,,,4 4
+47,TT,"Lắp đặt gương soi,kệ kính +giá treo khăn+hộp khăn giấy",bộ,4.0,bộ,4.0,,,4 4
+48,TT,Cửa chính,m2,9.996,m²,9.996,,,"2,8 x 3,57 9.996"
+49,TT,"Cửa sắt,cửa nhôm",m2,30.744000000000003,m²,30.744,,,"D2: 0,8 x 2,32 1.856 | DW: 4 x 0,78 x 2,15 6.708 | D3: 0,95 x 2,6 2.47 | D4: 1,34 x 2,18 2.921 | Dp: 4 x 2,22 x 0,97 8.614 | S1: 1,35 x 1,7 2.295 | S21,84*1,7 | S3: 4 x 0,46 x 1,7 3.128 | S4: 3 x 0,46 x 0,69 0.952 | S4: 0,5 x 0,6 x 6 1.8"
+50,TT,Cửa cuốn,m2,10.067,m²,10.067,,,"2,82 x 3,57 10.067"
+51,TT,"Hệ thống ống cho máy lạnh 1,5HP",bộ,4.0,bộ,4.0,,,4 4
+52,TT,Trần thạch cao khung nhôm chìm,m2,350.0,m²,350.0,,,Bằng diện tích trần BT: 350 350
+54,TT,Vách kiến mặt tiền:,m2,6.0,m²,6.0,,,6 6
+55,TT,Xà gồ+tôn mái,m2,84.0,m²,84.0,,,"14 x 5 x 1,2 84"
+56,TT,Mái ngói,m2,10.0,m²,10.0,,,10 10 | TỔNG CỘNG False False

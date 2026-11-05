@@ -1,0 +1,11 @@
+--- a/src/optimat/drawing/viewer.py
++++ b/src/optimat/drawing/viewer.py
+@@ -144,7 +144,7 @@
+         bx = plans[i].bbox if plans else p["bbox_mm"]
+         boxes.append({"name": p["plan"]["name"], "x": _r(bx[0] - ox), "y": _r(oy - bx[3]),
+                       "w": _r(bx[2] - bx[0]), "h": _r(bx[3] - bx[1])})
+-    payload["overview"] = {"cad": renderer.view(None, (ox, oy)).svg, "size": [_r(max(xs) - ox), _r(oy - min(ys))],
++    payload["overview"] = {"origin": [_r(ox), _r(oy)], "cad": renderer.view(None, (ox, oy)).svg, "size": [_r(max(xs) - ox), _r(oy - min(ys))],
+                            "plans": boxes}
+ 
+ 

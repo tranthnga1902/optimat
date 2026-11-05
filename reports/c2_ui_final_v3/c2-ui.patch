@@ -1,0 +1,299 @@
+--- a/src/app/(user)/do-boc/model.ts
++++ b/src/app/(user)/do-boc/model.ts
+@@ -1,15 +1,17 @@
+ // Dữ liệu và công thức của trang Kiểm tra bóc tách (công thức tính tạm; số chốt do review.py trả).
+ import type { Reference } from "@/lib/reference";
++import type { SelectedRevision } from "@/lib/project-records";
+ 
+ export type Material = { id: string; name?: string; label: string; family: string; systems?: Record<string, string>; ready?: Record<string, boolean> };
+ export type Family = { id: string; label: string };
+ export type RawWall = { id: string; cls: string; role?: string; x1: number; y1: number; x2: number; y2: number; mat?: string | null; fam?: string | null;
+   cand?: string[]; masonry: boolean; conf: number; layer?: string; src?: string; rule?: string | null };
+ export type RawOpening = { name?: string; x: number; y: number; w: number; h: number | null; wall?: string | null; kind?: string; ev?: string | null };
+-export type Column = { id: string; x: number; y: number; b_mm: number; h_mm: number; source?: string };
++export type Column = { id: string; x: number; y: number; b_mm: number; h_mm: number; source?: string; role?: "ket_cau" | "kien_truc" | null };
+ export type Plan = {
+   texts?: { t: string; x: number; y: number }[];
+-  plan: { name: string; height_source?: string | null; is_ground?: boolean };
++  source_revision?: SelectedRevision;
++  plan: { name: string; level_m?: number | null; height_source?: string | null; is_ground?: boolean };
+   height_mm: number; length_rule?: string; size: [number, number]; origin?: [number, number];
+   layers: { name: string; role: string }[]; segs: [number, number, number, number, number, number][];
+   walls: RawWall[]; openings: RawOpening[]; rejected?: { reason: string; cls: string; x1: number; y1: number; x2: number; y2: number }[];
+@@ -219,8 +221,20 @@
+   return out;
+ }
+ 
++/** Một đoạn cột tại một vị trí. Nhiều đoạn có thể dùng cùng mã chi tiết cột. */
++export type StructuralColumnInstance = {
++  instance_id: string; code: string; grid_x?: string | null; grid_y?: string | null; floor_key?: string | null;
++  z_from_mm?: number | null; z_to_mm?: number | null; b_mm?: number | null; h_mm?: number | null;
++  deduct_top_slab?: boolean; top_slab_thickness_mm?: number | null; top_slab_source?: string | null;
++  file?: string; source_sha256?: string | null; sheet?: string; layers?: string[]; handles?: string[]; evidence?: string[];
++  missing?: string[];
++  top_slab_candidates?: { thickness_mm: number; level_mm: number; floor_key: string; handles: string[]; evidence: string[]; region_confirmed: false }[];
++  matched_plan?: string | null; matched_column_id?: string | null; mapping_evidence?: string | null;
++};
++
+ /** Phần đọc từ bản vẽ kết cấu tách file (/api/takeoff/structural): dầm, cột, móng, bảng thép, cấu kiện phụ. */
+ export type Structural = { file: string; foundations: unknown[]; lintel_height_mm: number | null; notes: string[];
++  structural_columns?: StructuralColumnInstance[];
+   structural_beams: Record<string, unknown>; sheets: unknown[]; structural_floors: unknown; column_sections: unknown;
+   column_schedule: unknown[]; rebar: unknown[]; members: unknown[] };
+ 
+@@ -251,12 +265,13 @@
+       tread_mm: numOr(pp.stair_tread), landing_area_m2: numOr(pp.stair_landing) || 0, source: stairSource(p, pp) }] : [];
+     // Biểu mẫu hiện sửa thang đầu tiên; các thang còn lại phải giữ nguyên dữ liệu máy chủ.
+     const stairs = [...stair, ...(p.stairs || []).slice(1)];
+-    return [{ name: p.plan.name, is_ground: pp.is_ground, height_mm: st.height_mm, height_source: st.height_source || p.plan.height_source || null,
++    return [{ name: p.plan.name, source_revision: p.source_revision, level_m: p.plan.level_m,
++      is_ground: pp.is_ground, height_mm: st.height_mm, height_source: st.height_source || p.plan.height_source || null,
+       void_area_m2: numOr(pp.void_area_m2), balcony_area_m2: numOr(pp.balcony_area_m2),
+       outline_area_m2: numOr(pp.outline_area_m2), usable_area_m2: numOr(pp.usable_area_m2),
+       walls: st.walls.map(({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited }) => ({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited })),
+       openings: st.openings.map(({ id, wall, kind, w, h, keep, src }) => ({ id, wall, kind, w, h, keep, src })),
+-      columns: pp.cols.map(({ id, x, y, b_mm, h_mm, keep, source }) => ({ id, x, y, b_mm, h_mm, keep, source })),
++      columns: pp.cols.map(col => ({ ...col })),
+       stairs, labels: p.labels || [], found: p.found || {} }];
+   }) };
+ }
+--- a/src/app/(user)/do-boc/WorkReview.tsx
++++ b/src/app/(user)/do-boc/WorkReview.tsx
+@@ -1,8 +1,9 @@
+ "use client";
+-import { useEffect, useState } from "react";
++import { useEffect, useMemo, useState } from "react";
+ import { canConfirmWork, needsInput, type WorkReceipt, type WorkSnapshot } from "@/lib/work-review";
+ import { fmt, type RoughWork, type WorkDimensions } from "./model";
+ import { Sheet } from "@/components/Sheet";
++import { ColumnTrace, gridLabel, indexColumnWorks } from "./ColumnTrace";
+ 
+ const fields = [["count", "Số lượng"], ["length_m", "Dài (m)"], ["width_m", "Rộng (m)"], ["height_m", "Cao/sâu (m)"],
+   ["thickness_m", "Dày (m)"], ["area_m2", "Diện tích (m²)"], ["opening_area_m2", "Lỗ mở (m²)"]] as const;
+@@ -22,6 +23,11 @@
+   if (values.length === 0) return w.basis === "not_supported" || w.basis === "ham_luong" ? "—" : "Chưa có";
+   return values.length === 1 ? values[0] : `${values.length} giá trị`;
+ }
++function quantityText(w: RoughWork) {
++  if (w.basis === "structural_instance" && w.quantity_detail)
++    return w.quantity_detail.total_raw?.replace(".", ",") ?? "Chưa đủ dữ liệu";
++  return w.quantity == null ? "Chưa có" : w.quantity.toLocaleString("vi-VN", { maximumFractionDigits: 12 });
++}
+ export function WorkReview({ snapshot, initial, onSave }: {
+   snapshot: WorkSnapshot; initial: WorkReceipt | null; onSave: (receipt: WorkReceipt, destination?: "/dieu-chinh" | "/toi-uu") => void;
+ }) {
+@@ -34,6 +40,7 @@
+   const [partial, setPartial] = useState(!!initial?.partial);
+   const [error, setError] = useState("");
+   const rows = snapshot.result.works;
++  const columns = useMemo(() => indexColumnWorks(snapshot), [snapshot]);
+   const missing = rows.filter(needsInput);
+   const unsupported = rows.filter(w => w.basis === "not_supported");
+   const current = selected == null ? null : rows[selected];
+@@ -67,32 +74,33 @@
+       <label>Nguồn <select className="field" value={source} onChange={e => setSource(e.target.value)}><option value="">Mọi nguồn</option>{Object.entries(sources).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
+       <label>Trạng thái <select className="field" value={filter} onChange={e => setFilter(e.target.value)}><option value="">Tất cả</option><option value="unchecked">Chưa kiểm</option><option value="missing">Còn thiếu</option><option value="unsupported">Chưa hỗ trợ</option></select></label>
+     </div>
+-    <div className={current ? "grid min-w-0 gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,32%)]" : "min-w-0"}>
++    <div className={current ? "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,32%)]" : "min-w-0"}>
+       <Sheet rows={visible} file="kiem-tra-cong-tac.csv" cols={[
+         { key:"checked", title:"Đã kiểm", text:({i}) => checked.includes(i) ? "Đã kiểm" : "Chưa kiểm",
+           render:({w,i}) => <input type="checkbox" aria-label={`Đã kiểm ${level(w)} · ${w.name} · ${i + 1}`} checked={checked.includes(i)} onChange={e => {
+             const next = e.target.checked ? [...checked, i] : checked.filter(j => j !== i); setChecked(next); save(next, partial);
+           }} /> },
+         { key:"plan", title:"Tầng", text:({w}) => level(w) },
+-        { key:"work", title:"Công tác / cấu kiện", text:({w}) => [w.name,w.element].filter(Boolean).join(" · "),
+-          render:({w,i}) => <button className="btn" onClick={() => setSelected(i)}>{w.name} {w.element}</button> },
++        { key:"work", title:"Công tác / cấu kiện", text:({w,i}) => [w.name,w.element,columns[i] && gridLabel(columns[i])].filter(Boolean).join(" · "),
++          render:({w,i}) => <button className="btn" onClick={() => setSelected(i)}>{w.name} {columns[i] ? `${columns[i].code} · trục ${gridLabel(columns[i])}` : w.element}</button> },
+         ...fields.map(([k,title]) => ({ key:k, title, num:true, text:({w}:{w:RoughWork}) => summary(w,k) })),
+-        { key:"quantity",title:"Khối lượng",num:true,text:({w}) => w.quantity == null ? "Chưa có" : String(w.quantity),
+-          render:({w}) => w.quantity == null ? "Chưa có" : w.quantity.toLocaleString("vi-VN",{maximumFractionDigits:12}) },
++        { key:"quantity",title:"Khối lượng",num:true,text:({w}) => w.basis === "structural_instance" ? quantityText(w) : w.quantity == null ? "Chưa có" : String(w.quantity),
++          render:({w}) => quantityText(w) },
+         { key:"unit",title:"ĐVT",text:({w}) => w.unit }, { key:"source",title:"Nguồn",text:({w}) => w.status ? sources[w.status] : "Chưa phân loại" },
+         { key:"missing",title:"Thông tin thiếu",text:({w}) => (w.basis === "not_supported" ? "Chưa hỗ trợ. " : "") + (w.missing.join("; ") || "—") },
+       ]} />
+       {current && <aside className="min-w-0 rounded border border-rule p-3" aria-label="Chi tiết công tác">
+         <h3>{level(current)} · {current.element || current.name}</h3>
+-        <p>{current.formula || "Chưa có công thức"} · {current.quantity == null ? "Chưa có khối lượng" : fmt(current.quantity, 3) + " " + current.unit}</p>
++        {selected != null && <ColumnTrace snapshot={snapshot} selected={selected} columns={columns} />}
++        <p>{current.formula || "Chưa có công thức"} · {quantityText(current)} {current.unit}</p>
+         {current.quantity_detail ? <section aria-label="Diễn giải khối lượng">
+           <h4>Diễn giải khối lượng ({current.quantity_detail.unit})</h4>
+-          <p>Phần đã tính <b>{current.quantity_detail.known_part_raw ?? "Chưa có"}</b> · Tổng đủ phạm vi <b>{current.quantity_detail.total_raw ?? "Chưa đủ dữ liệu"}</b></p>
+-          <p>Số ở bảng khối lượng {current.quantity_detail.legacy_quantity ?? "Chưa có"} · Chênh với phần đã tính {current.quantity_detail.legacy_delta ?? "Chưa xác định"}</p>
++          <p>Phần đã tính <b>{current.quantity_detail.known_part_raw ?? "Chưa có"}</b> · {current.basis === "structural_instance" ? "Tổng theo quy ước của đoạn cột" : "Tổng đủ phạm vi"} <b>{current.quantity_detail.total_raw ?? "Chưa đủ dữ liệu"}</b></p>
++          <p>Lượng trong kết quả tổng hợp {current.quantity_detail.legacy_quantity ?? "Chưa có"} · Chênh với phần đã tính {current.quantity_detail.legacy_delta ?? "Chưa xác định"}</p>
+           <div className="tw"><table><thead><tr><th>Cấu kiện</th><th>Kích thước và hệ số</th><th>Lượng gốc</th><th>Nguồn và phần thiếu</th></tr></thead>
+             <tbody>{current.quantity_detail.rows.map(r=><tr key={r.row_id}>
+               <td>{r.group} {r.label}{r.role==="reference"&&<small> · Tham khảo</small>}</td>
+-              <td>{r.dimensions && detailFields.filter(([k])=>r.dimensions?.[k]!=null).map(([k,label])=><div key={k}>{label} · {r.dimensions![k]}</div>)}
++              <td>{r.dimensions && detailFields.filter(([k])=>r.dimensions?.[k]!=null).map(([k,label])=><div key={k}>{label} · {r.dimensions![k]} {r.dimensions?.field_sources?.[k] && <small>({r.dimensions.field_sources[k]})</small>}</div>)}
+                 {r.factors.map((f,i)=><div key={i}>{f.meaning || f.name} × {f.value} {f.unit} · {f.source}</div>)}
+                 {r.conversion && <div>{r.conversion.from_unit} → {r.conversion.to_unit} × {r.conversion.factor} · {r.conversion.source}</div>}
+                 {r.expression}</td>
+--- /dev/null
++++ b/src/app/(user)/do-boc/ColumnTrace.tsx
+@@ -0,0 +1,134 @@
++import type { WorkSnapshot } from "@/lib/work-review";
++import type { StructuralColumnInstance } from "./model";
++import { titleScale } from "./paper-scale";
++
++const missing = "Chưa có";
++const measure = (v: number | null | undefined, unit: string) =>
++  v == null ? missing : v.toLocaleString("vi-VN", { maximumFractionDigits: 9 }) + " " + unit;
++
++// Các nhãn này do instance_column_works phát ra với nguyên ID của đoạn, khác nhãn của bảng thống kê loại cột.
++// Chỉ nối các dòng trong cùng snapshot; không ghép theo mã loại, tiết diện hoặc giá trị khối lượng.
++export function indexColumnWorks(snapshot: WorkSnapshot) {
++  const byKey = new Map<string, StructuralColumnInstance | null>();
++  const key = (code: string, plan?: string | null, label?: string) => JSON.stringify([code, plan, label]);
++  for (const col of snapshot.request?.structural_columns || []) {
++    const plan = col.matched_plan || col.floor_key || col.sheet || "kết cấu chưa gắn tầng";
++    const label = `${col.code} [${col.instance_id}]`;
++    for (const k of [key("COT", plan, label), key("COP_PHA", plan, "cốp pha " + label)]) {
++      byKey.set(k, byKey.has(k) ? null : col);
++    }
++  }
++  return snapshot.result.works.map(w => w.basis === "structural_instance" ? byKey.get(key(w.code, w.plan, w.element)) ?? null : null);
++}
++
++export const gridLabel = (c: StructuralColumnInstance) => [c.grid_x || "?", c.grid_y || "?"].join("/");
++
++function columnMaterialEvidence(column: StructuralColumnInstance, rebar: unknown[] = []) {
++  const evidence = column.evidence || [];
++  // Chỉ trích nguyên lời thuộc đoạn đang mở. Tên tệp, tiêu đề định vị và ghi chú các cột bên cạnh không phải chỉ định vật liệu.
++  const notes = [...new Set(evidence.filter(s => !s.startsWith("Tệp KC ") && !/ tại \([^)]*\); layer /u.test(s)))];
++  const concrete = notes.filter(s => /bê\s*tông|concrete|\b(?:B|M)\s*\d+\b/iu.test(s));
++  const steel = notes.filter(s => /thép|reinforcement|stirrups?|[ØΦ∅]\s*\d|%%c\s*\d|\bCB[-\s]?\d+/iu.test(s));
++  const hashes = new Set(evidence.filter(s => column.file && s.startsWith(`Tệp KC ${column.file}; `))
++    .flatMap(s => s.match(/; sha256=([a-f0-9]{64})$/i)?.[1]?.toLowerCase() || []));
++  if (column.source_sha256 && /^[a-f0-9]{64}$/i.test(column.source_sha256)) hashes.add(column.source_sha256.toLowerCase());
++  const tag = (s: string) => s.normalize("NFKC").trim().toUpperCase().replace(/^CỘT\s+/, "").replace(/[-‐‑–\s]+/g, "");
++  const schedule = rebar.flatMap(value => {
++    if (!value || typeof value !== "object") return [];
++    const row = value as Record<string, unknown>;
++    if (hashes.size !== 1 || typeof row.revision_sha256 !== "string" || !hashes.has(row.revision_sha256.toLowerCase()) ||
++        row.element_code !== "COT" || typeof row.element !== "string" || !tag(column.code) || tag(row.element) !== tag(column.code) ||
++        typeof row.table !== "string" || !row.table.trim() || typeof row.row !== "number" ||
++        typeof row.dia_mm !== "number" || !Number.isFinite(row.dia_mm) || row.dia_mm <= 0) return [];
++    return [`${row.table} · dòng ${row.row} · ${row.element}${typeof row.mark === "string" && row.mark ? " · thanh " + row.mark : ""} · Ø${row.dia_mm} mm`];
++  });
++  return { concrete, steel, schedule };
++}
++
++export function ColumnTrace({ snapshot, selected, columns }: { snapshot: WorkSnapshot; selected: number; columns: (StructuralColumnInstance | null)[] }) {
++  const works = snapshot.result.works;
++  const work = works[selected];
++  if (work?.basis !== "structural_instance") return work?.code === "COT"
++    ? <p>Chưa có liên kết từ dòng cột này đến một vị trí trục và đoạn cao độ riêng trong hồ sơ kết cấu.</p> : null;
++  const col = columns[selected];
++  if (!col) return <p>Chưa nối được dòng này với một đoạn cột duy nhất trong hồ sơ nguồn.</p>;
++  const specs = columnMaterialEvidence(col, snapshot.request.rebar);
++  const scale = titleScale(col.sheet || "", (col.evidence || []).map(t => ({ t })));
++  const architectural = col.mapping_evidence && col.matched_column_id
++    ? snapshot.request.plans.find(p => p.name === col.matched_plan && p.columns.some(c => c.id === col.matched_column_id)) : undefined;
++  const related = works.flatMap((row, index) => columns[index] === col ? [{ row, index }] : []);
++  const concrete = related.find(r => r.row.code === "COT");
++  const gross = concrete?.row.quantity_detail?.rows?.find(r => r.row_id === "gross");
++  const formwork = related.find(r => r.row.code === "COP_PHA");
++  const materialLines = snapshot.result.materials.flatMap(m => {
++    const uses = (m.uses || []).flatMap(use => {
++      const source = related.find(({ row, index }) => {
++        if (use.work !== row.code) return false;
++        if (use.rowIndex != null) return use.rowIndex === index && (!use.plan || use.plan === row.plan);
++        return use.plan === row.plan && works.filter(w => w.code === row.code && w.plan === row.plan).length === 1;
++      });
++      return source ? [{ use, source: source.row }] : [];
++    });
++    if (!uses.length) return [];
++    const amount = uses.every(({use}) => use.quantity != null) ? uses.reduce((n, {use}) => n + (use.quantity ?? 0), 0) : null;
++    const reasons = new Set(uses.flatMap(({source}) => source.missing || []));
++    // missing ở cấp vật tư gộp cả dự án. Chỉ hiện lý do chắc chắn thuộc các đóng góp đang mở.
++    for (const reason of m.missing || []) {
++      const sharedConcreteGrade = reason === "mác bê tông" && uses.every(({source}) => source.code === "COT")
++        && !snapshot.request.params?.concrete_grade;
++      const sharedFormworkType = reason === "loại ván khuôn (gỗ | ván ép)" && uses.every(({source}) => source.code === "COP_PHA")
++        && !snapshot.request.params?.formwork_type;
++      if (uses.length === m.uses?.length || sharedConcreteGrade || sharedFormworkType) reasons.add(reason);
++    }
++    return [{ m, amount, reasons: [...reasons] }];
++  });
++  return <section aria-label="Truy vết đoạn cột" className="my-3 min-w-0 break-words rounded border border-rule p-3">
++    <h4>{col.code} · trục {gridLabel(col)} · {col.floor_key || "Chưa rõ tầng"}</h4>
++    <p>Đoạn cột {col.instance_id}</p>
++    <dl>
++      <dt>Nguồn kết cấu</dt><dd>{col.file || "Chưa rõ tệp"} · {col.sheet || "Chưa rõ tờ"}</dd>
++      <dt>Đối chiếu kiến trúc</dt><dd>{architectural ? <>
++        {architectural.name} · {col.matched_column_id} · {col.mapping_evidence}
++        {architectural.source_revision && <> · Tệp #{architectural.source_revision.file_id}, mã phiên bản #{architectural.source_revision.revision_id}</>}
++      </> : "Chưa có liên kết với cột trên mặt bằng kiến trúc."}</dd>
++      <dt>Layer CAD</dt><dd>{col.layers?.join(", ") || missing}</dd>
++      <dt>Mã thực thể CAD (handle)</dt><dd>{col.handles?.join(", ") || missing}</dd>
++      <dt>Tỷ lệ in của hình kết cấu</dt><dd>{scale ? `1:${scale.denominator} · ${scale.source}` : "Chưa xác định từ tiêu đề hình"}</dd>
++      <dt>Tiết diện</dt><dd>{measure(col.b_mm, "mm")} × {measure(col.h_mm, "mm")}</dd>
++      <dt>Cao độ dưới → trên</dt><dd>{measure(col.z_from_mm == null ? null : col.z_from_mm / 1000, "m")} → {measure(col.z_to_mm == null ? null : col.z_to_mm / 1000, "m")}</dd>
++      <dt>Dày sàn đã gắn với nút cột</dt><dd>{measure(col.top_slab_thickness_mm, "mm")} · {col.top_slab_source || "Chưa có căn cứ khấu trừ sàn tại nút"}</dd>
++    </dl>
++    {!!col.top_slab_candidates?.length && <details><summary>Vùng sàn cần đối chiếu ({col.top_slab_candidates.length}) · chưa dùng để khấu trừ</summary>
++      <ul>{col.top_slab_candidates.map((candidate,i) => <li key={i}>
++        {candidate.floor_key} · dày {measure(candidate.thickness_mm, "mm")} · cao độ {measure(candidate.level_mm / 1000, "m")}.
++        {candidate.handles.length > 0 && <> Mã thực thể CAD: {candidate.handles.join(", ")}.</>}
++        {candidate.evidence.map((s,j) => <div key={j}>{s}</div>)}
++      </li>)}</ul></details>}
++    {!!col.missing?.length && <p>Căn cứ nhận diện còn thiếu: {col.missing.join("; ")}.</p>}
++    <details><summary>Căn cứ nhận diện và đo</summary>
++      {col.source_sha256 && <p>SHA-256 tệp kết cấu: <code>{col.source_sha256}</code></p>}
++      {col.evidence?.length ? <ul>{col.evidence.map((item,i) => <li key={i}>{item}</li>)}</ul> : <p>Chưa có bằng chứng nhận diện.</p>}
++    </details>
++    <h4>Phương án vật liệu cho đoạn cột · {col.code} · {gridLabel(col)}</h4>
++    {gross && <p>Thể tích hình học theo hai cao độ: {gross.raw_quantity == null ? missing : gross.raw_quantity.replace(".", ",") + " m³"}.</p>}
++    <p>Bê tông theo quy ước của bản tính: {concrete?.row.quantity_detail?.total_raw != null
++      ? concrete.row.quantity_detail.total_raw.replace(".", ",") + " m³" : missing}. Cần kiểm phân bổ phần giao với dầm và sàn trước khi chốt.</p>
++    {specs.concrete.length ? <><p>Ghi chú bê tông được gắn với đoạn cột:</p><ul>{specs.concrete.map(s => <li key={s}>{s}</li>)}</ul></>
++      : <p>Chưa có ghi chú cấp bê tông gắn với đoạn cột trong kết quả đọc.</p>}
++    <p><b>Bê tông thương phẩm.</b> Đối chiếu cấp bê tông trong ghi chú thiết kế với quy cách nhà cung cấp; cần báo giá giao theo đợt đổ và lượng tối thiểu.</p>
++    <p><b>Bê tông trộn tại chỗ.</b> Cần cấp phối đã duyệt cho đúng cấp bê tông trước khi tính xi măng, cát, đá và nước. Đây là phương án thay thế cho thương phẩm.</p>
++    <p><b>Cốt thép.</b> {specs.steel.length ? "Ghi chú thép được gắn với đoạn cột:" : "Chưa có ghi chú đường kính, mác hoặc bước đai gắn với riêng đoạn này."}</p>
++    {!!specs.steel.length && <ul>{specs.steel.map(s => <li key={s}>{s}</li>)}</ul>}
++    {!!specs.schedule.length && <details><summary>Bảng thép cùng loại cột, cùng bản KC ({specs.schedule.length} dòng)</summary>
++      <ul>{specs.schedule.map((s,i) => <li key={i}>{s}</li>)}</ul><p>Các dòng này chưa được phân bổ theo trục và đoạn cao độ.</p></details>}
++    <p>Khối lượng thép riêng của đoạn (kg): chưa xác định. Bước đai ghi trên mặt cắt áp dụng tại vị trí cắt.
++      {" "}Cần đối chiếu từng vùng bước đai trên hình dọc, số thanh, chiều dài cắt uốn và neo nối của đoạn để tính kg.</p>
++    <p><b>Cốp pha.</b> Diện tích: {measure(formwork?.row.quantity, "m²")}{formwork?.row.missing.length ? " · " + formwork.row.missing.join("; ") : ""}.
++      {" "}Để tính số tấm cần có quy cách tấm, cách ghép và số lần luân chuyển.</p>
++    {materialLines.length ? <ul>{materialLines.map(({m,amount,reasons},i) => <li key={i}>
++      <strong>{m.name}</strong> · {m.material_id || "Chưa có mã vật tư tương ứng trong danh mục"} · Lượng quy đổi: {measure(amount,m.unit)}
++      {m.material_id && m.best_price != null && m.price_source ? ` · Đơn giá theo nguồn ${m.best_price.toLocaleString("vi-VN")} đ/${m.unit} (${m.price_source})` : " · Chưa có đơn giá có nguồn"}.
++      {!!reasons.length && <p>Cần bổ sung: {reasons.join("; ")}.</p>}
++    </li>)}</ul> : <p>Chưa truy được dòng vật tư riêng cho đoạn cột.</p>}
++  </section>;
++}
+--- a/src/app/(user)/dieu-chinh/advice-scope.ts
++++ b/src/app/(user)/dieu-chinh/advice-scope.ts
+@@ -46,9 +46,23 @@
+         quantity = known.reduce((sum, value) => sum + value, 0);
+       }
+     }
++    let missing = m.missing || [];
++    if (target && selected != null) {
++      // missing của vật tư là hợp các lý do từ nhiều công tác. Giữ điều kiện vật tư chung và lý do của chính dòng chọn.
++      const otherWorkGaps = new Set<string>();
++      for (const u of all) {
++        const indices = u.rowIndex == null ? rowsByCode.get(workKey(u.work, u.plan)) || [] : [u.rowIndex];
++        for (const j of indices) {
++          const row = result.works[j];
++          if (j !== selected && row?.code === u.work && (!u.plan || row.plan === u.plan))
++            for (const gap of row.missing) otherWorkGaps.add(gap);
++        }
++      }
++      missing = [...target.missing, ...missing.filter(gap => !otherWorkGaps.has(gap))];
++    }
+     return [{ lineId: "m" + i, material_id: m.material_id ?? null, name: m.name, raw_class: m.raw_class || "khac", unit: m.unit,
+       quantity, quantity_with_waste: whole ? m.quantity_with_waste : null, complete: exact && m.complete,
+-      missing: distinct([...(m.missing || []), ...(!exact ? [selected == null
++      missing: distinct([...missing, ...(!exact ? [selected == null
+         ? "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua."
+         : "Chưa tách được lượng theo từng dòng đã kiểm."] : []),
+         ...(!whole && exact ? ["Chưa có lượng sau hao hụt riêng cho phạm vi này."] : [])]),

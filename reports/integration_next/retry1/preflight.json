@@ -1,0 +1,16 @@
+{
+  "observed_utc": "2026-11-03T15:50:26.334799+00:00",
+  "snapshot_interval_seconds": 3,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "other_pytest_process_check": {
+    "observed_at": "2026-11-03T22:50:01.2153563+07:00",
+    "pytest_processes": []
+  },
+  "release": "root full backend retry1; metadata/price_source FINAL; backend writers HOLD; AI staging tmp not applied",
+  "api_reload_evidence": "reports/module_ui_qa_20261103/api_reload_verified.json",
+  "test_started": true
+}

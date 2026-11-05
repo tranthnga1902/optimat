@@ -1,0 +1,19 @@
+{
+  "status": "source_frozen_on_opening_v3",
+  "manifest_sha256": "0a3b0f3f7bbc5f3ee356d4e303cd9eebfbf5dde3dd75ca30c7603b1776954e80",
+  "qa_only_route": "qa-only/src/app/qa-work-list/page.tsx",
+  "ports": {
+    "3002": {
+      "patch_sha256": "5e233597a8ea7345f841b43f9484ffd0a57a199f7cef198af66f5b95f55156bf",
+      "git_apply_verified": true,
+      "focused_test": "work-list.log",
+      "type_lint_including_fixture": "types.json"
+    },
+    "3001": {
+      "patch_sha256": "cf0d5ff14c45293480c2995c7be466a45c8a3aa62f2fbbdc1e9afed15aa1d41b",
+      "git_apply_verified": true,
+      "focused_test": "work-list.log",
+      "type_lint_including_fixture": "types.json"
+    }
+  }
+}

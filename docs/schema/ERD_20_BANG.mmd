@@ -1,0 +1,107 @@
+erDiagram
+  users ||--o{ audit_logs : user_id
+  materials ||--o{ material_relations : material_id
+  materials ||--o{ material_relations : related_material_id
+  materials ||--o{ price_records : material_id
+  suppliers ||--o{ price_records : supplier_id
+  users ||--o{ projects : user_id
+  suppliers ||--o{ supplier_materials : supplier_id
+  materials ||--o{ supplier_materials : material_id
+  materials ||--o{ wall_systems : material_id
+  materials ||--o{ wall_systems : mortar_material_id
+  projects ||--o{ analysis_runs : project_id
+  projects ||--o{ document_revisions : project_id
+  analysis_runs ||--o{ building_elements : analysis_id
+  analysis_runs ||--o{ evidence_sources : analysis_id
+  document_revisions ||--o{ evidence_sources : revision_id
+  users ||--o{ evidence_sources : created_by
+  projects ||--o{ optimization_runs : project_id
+  analysis_runs ||--o{ optimization_runs : takeoff_id
+  building_elements ||--o{ element_measurements : element_id
+  analysis_runs ||--o{ material_scenarios : analysis_id
+  optimization_runs ||--o{ material_scenarios : run_id
+  analysis_runs ||--o{ takeoff_items : analysis_id
+  building_elements ||--o{ takeoff_items : element_id
+  cost_parameters {
+    BIGINT parameter_id PK
+  }
+  materials {
+    VARCHAR material_id PK
+  }
+  rule_sets {
+    BIGINT set_id PK
+  }
+  suppliers {
+    VARCHAR supplier_id PK
+  }
+  users {
+    INTEGER user_id PK
+  }
+  work_norms {
+    INTEGER id PK
+  }
+  audit_logs {
+    BIGINT log_id PK
+    INTEGER user_id FK
+  }
+  material_relations {
+    INTEGER id PK
+    VARCHAR material_id FK
+    VARCHAR related_material_id FK
+  }
+  price_records {
+    BIGINT id PK
+    VARCHAR material_id FK
+    VARCHAR supplier_id FK
+  }
+  projects {
+    INTEGER project_id PK
+    INTEGER user_id FK
+  }
+  supplier_materials {
+    INTEGER id PK
+    VARCHAR supplier_id FK
+    VARCHAR material_id FK
+  }
+  wall_systems {
+    VARCHAR wall_system_id PK
+    VARCHAR material_id FK
+    VARCHAR mortar_material_id FK
+  }
+  analysis_runs {
+    INTEGER takeoff_id PK
+    INTEGER project_id FK
+  }
+  document_revisions {
+    BIGINT document_id PK
+    INTEGER project_id FK
+  }
+  building_elements {
+    BIGINT element_id PK
+    INTEGER analysis_id FK
+  }
+  evidence_sources {
+    BIGINT evidence_id PK
+    INTEGER analysis_id FK
+    BIGINT revision_id FK
+    INTEGER created_by FK
+  }
+  optimization_runs {
+    INTEGER run_id PK
+    INTEGER project_id FK
+    INTEGER takeoff_id FK
+  }
+  element_measurements {
+    BIGINT measurement_id PK
+    BIGINT element_id FK
+  }
+  material_scenarios {
+    BIGINT scenario_id PK
+    INTEGER analysis_id FK
+    INTEGER run_id FK
+  }
+  takeoff_items {
+    BIGINT item_id PK
+    INTEGER analysis_id FK
+    BIGINT element_id FK
+  }

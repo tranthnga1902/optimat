@@ -1,0 +1,14 @@
+{
+  "status": "SOURCE-READY_FINAL_BEFORE_PARTIAL_RECHECK",
+  "files": [
+    "src/optimat/rough/steel.py",
+    "src/optimat/rough/status.py",
+    "src/optimat/rough/takeoff.py",
+    "src/optimat/rough/materials.py",
+    "tests/test_rough_partial.py",
+    "src/optimat/rough/boq.py"
+  ],
+  "boq_scope": "two neutral labels only; separately authorized",
+  "prior_run": "105 passed before added empty-input cases and BOQ labels",
+  "pending": "final pure partial; no API/full/DB"
+}

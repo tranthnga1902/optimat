@@ -1,0 +1,45 @@
+{
+  "base_root": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-backend-candidate",
+  "files": [
+    {
+      "path": "src/optimat/drawing/viewer.py",
+      "base_sha256": "9e1857950985802eba40091737b4cf2f9e59f187489f3a0d161e3a0f1c2c38f6",
+      "target_sha256": "c58d12f0bd0cdcfd736f5f995187523e2bde2304746a823597eb69f43101767f",
+      "applied_sha256": "c58d12f0bd0cdcfd736f5f995187523e2bde2304746a823597eb69f43101767f",
+      "base_sha256_after": "9e1857950985802eba40091737b4cf2f9e59f187489f3a0d161e3a0f1c2c38f6",
+      "applied_sha256_after_tests": "c58d12f0bd0cdcfd736f5f995187523e2bde2304746a823597eb69f43101767f"
+    },
+    {
+      "path": "src/optimat/drawing/render.py",
+      "base_sha256": "a5235e2962dbdfa8602f3146f5eb66bf26edcac2bcfd1c60f3c215afb39d6145",
+      "target_sha256": "40fb0d1e8c2f61f65bf7cce71f64b4ec4271859eb46c7784750d66c077ca5797",
+      "applied_sha256": "40fb0d1e8c2f61f65bf7cce71f64b4ec4271859eb46c7784750d66c077ca5797",
+      "base_sha256_after": "a5235e2962dbdfa8602f3146f5eb66bf26edcac2bcfd1c60f3c215afb39d6145",
+      "applied_sha256_after_tests": "40fb0d1e8c2f61f65bf7cce71f64b4ec4271859eb46c7784750d66c077ca5797"
+    },
+    {
+      "path": "tests/test_viewer_display_bounds.py",
+      "base_sha256": null,
+      "target_sha256": "b0c844b5b9e6a279fde99e32d92431f51a5b0811001b1b26995f5482b6de3c75",
+      "applied_sha256": "b0c844b5b9e6a279fde99e32d92431f51a5b0811001b1b26995f5482b6de3c75",
+      "applied_sha256_after_tests": "b0c844b5b9e6a279fde99e32d92431f51a5b0811001b1b26995f5482b6de3c75"
+    },
+    {
+      "path": "tests/test_viewer_work_signals.py",
+      "base_sha256": null,
+      "target_sha256": "6691885ebd53bc049e1a972b893748ef921306555ced9619c9519a76d582db16",
+      "applied_sha256": "6691885ebd53bc049e1a972b893748ef921306555ced9619c9519a76d582db16",
+      "applied_sha256_after_tests": "6691885ebd53bc049e1a972b893748ef921306555ced9619c9519a76d582db16"
+    }
+  ],
+  "scope": "viewer/render and two tests only; no API/Office/stair source",
+  "candidate_modified": false,
+  "apply_command": "git -c core.autocrlf=false apply --check release.patch",
+  "tests": {
+    "passed": 16,
+    "exit_code": 0,
+    "seconds": 6.89,
+    "log": "focused.log"
+  },
+  "patch_sha256": "6ce7d18f2d04961683f40b4a621eb873b1d09fdf9d3409b25fa69b53d2b4b3e7"
+}

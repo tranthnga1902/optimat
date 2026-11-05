@@ -1,0 +1,79 @@
+{
+  "status": "clean_build_verified_not_deployed",
+  "distDir": ".next-web80-20261104",
+  "buildId": "9YNZoA-zaLYiXseciOaUF",
+  "exit": 0,
+  "typescript": true,
+  "staticPagesGenerated": 24,
+  "appManifestEntries": 24,
+  "rewrites": {
+    "/api/:path*": "http://127.0.0.1:8001/api/:path*",
+    "/docs": "http://127.0.0.1:8001/docs",
+    "/openapi.json": "http://127.0.0.1:8001/openapi.json"
+  },
+  "pages": {
+    "/du-an-cua-toi": {
+      "serverEntry": "app/(user)/du-an-cua-toi/page.js",
+      "htmlSha256": "1454eafcd2acec52b30a27b7faa51d25051fb402232590991dca7c3d8234b4b5",
+      "assetsCount": 13,
+      "assetTypes": {
+        "js": 11,
+        "css": 2
+      },
+      "assetsSha256": {
+        "static/chunks/0__ejemj7365l.js": "130a0f3882db6ca35c35f6d98f15dc5737e1fec56e1ca2be5ae7eaaed98fad59",
+        "static/chunks/0cz1d0mv5g_q7.js": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+        "static/chunks/0s_0smniij33k.css": "1c7c221fe351a68ceeff46c44b690f91dd2314c447320e5a794ce3ff25cd9a60",
+        "static/chunks/0sa7uvt3h0kdf.css": "a7394123d063aade9531391f9a7728ed5e169521f54b6cb50be48faebd3a3d21",
+        "static/chunks/0ssqr03lk-c8r.js": "7365416994155485e238654e306f4ba6202381927f044d983f8f107b38853f24",
+        "static/chunks/1_txwh4m4zbbx.js": "af8e61c66ef89c646e39dd374ac3c53f8d7c21d7170df29e4fcb08a5ffd885cb",
+        "static/chunks/1tq6ppe__m8m-.js": "3ac471b1370c62c670c29ba66167a8f9eb56132716933774276a9ee188421f1f",
+        "static/chunks/1vo0wohvofgd7.js": "e1ae6d6b14991a7802e3bcaf5d030547bfa3fee71199dee34b9896b3b8d1adb4",
+        "static/chunks/1x6obpmlu1_c2.js": "7c0be00bfd43494dcddc8817168e952d9900555c3e80355686a423eedd2bab22",
+        "static/chunks/21poqdgvjdll4.js": "62e1ae1d25ecacfda6f04e104359b9a953f83baa29fb734fc8ad506aa92d80b6",
+        "static/chunks/2j5x_ukdjbtxo.js": "b493238c7933d3d61f7db6d46dcb0f4abacc236994e767fd0732cf49899e463e",
+        "static/chunks/3eljhetyxix8q.js": "5ee8c3c8d12e974243c88054718b931e1438fa15266467ce8d313d6e27fe74cb",
+        "static/chunks/turbopack-3-ry682tkyiqk.js": "8bbb58cbfd4633c1d828c6bc37bc32abc768a149c01b1dfc4f5131fd81274551"
+      }
+    },
+    "/toi-uu": {
+      "serverEntry": "app/(user)/toi-uu/page.js",
+      "htmlSha256": "0061dcbcba31d283e6905aa67f5ef16e75d7fb0d149152561b8adfe6d544b89f",
+      "assetsCount": 13,
+      "assetTypes": {
+        "js": 11,
+        "css": 2
+      },
+      "assetsSha256": {
+        "static/chunks/0cz1d0mv5g_q7.js": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+        "static/chunks/0s_0smniij33k.css": "1c7c221fe351a68ceeff46c44b690f91dd2314c447320e5a794ce3ff25cd9a60",
+        "static/chunks/0sa7uvt3h0kdf.css": "a7394123d063aade9531391f9a7728ed5e169521f54b6cb50be48faebd3a3d21",
+        "static/chunks/0ssqr03lk-c8r.js": "7365416994155485e238654e306f4ba6202381927f044d983f8f107b38853f24",
+        "static/chunks/1_txwh4m4zbbx.js": "af8e61c66ef89c646e39dd374ac3c53f8d7c21d7170df29e4fcb08a5ffd885cb",
+        "static/chunks/1tq6ppe__m8m-.js": "3ac471b1370c62c670c29ba66167a8f9eb56132716933774276a9ee188421f1f",
+        "static/chunks/1vo0wohvofgd7.js": "e1ae6d6b14991a7802e3bcaf5d030547bfa3fee71199dee34b9896b3b8d1adb4",
+        "static/chunks/1x6obpmlu1_c2.js": "7c0be00bfd43494dcddc8817168e952d9900555c3e80355686a423eedd2bab22",
+        "static/chunks/21poqdgvjdll4.js": "62e1ae1d25ecacfda6f04e104359b9a953f83baa29fb734fc8ad506aa92d80b6",
+        "static/chunks/2j5x_ukdjbtxo.js": "b493238c7933d3d61f7db6d46dcb0f4abacc236994e767fd0732cf49899e463e",
+        "static/chunks/2rotb-xm8inja.js": "77e2198f4082f3e88897bb1d1ff6d7f602e013494d2f895782dbd3618a023aaa",
+        "static/chunks/3eljhetyxix8q.js": "5ee8c3c8d12e974243c88054718b931e1438fa15266467ce8d313d6e27fe74cb",
+        "static/chunks/turbopack-3-ry682tkyiqk.js": "8bbb58cbfd4633c1d828c6bc37bc32abc768a149c01b1dfc4f5131fd81274551"
+      }
+    }
+  },
+  "manifestsSha256": {
+    "routes-manifest.json": "c91be268d2d28e4152265fc876b7463da6f1872a5f16f45a9c45929b18450554",
+    "server/app-paths-manifest.json": "d6f7d8bb77ecbba52f5464dff394cd6ef7b7e4efc1f61a4026fab28e77c46bcc",
+    "app-path-routes-manifest.json": "7c0929fbc3fc6e05951d06cccc7e847db003828934347c49bb0a6276ac67ec5a"
+  },
+  "log": "web80_clean_build.log",
+  "logSha256": "95f4ed090a0c6f72d74c771f990be560af1e93c2a5c81aed0a62d845ae624579",
+  "sourceAndDependenciesUnchanged": true,
+  "inputsBefore": "web80_inputs_before.json",
+  "inputsAfter": "web80_inputs_after.json",
+  "inputsSha256": "957ffb52a4a095ab7e555add47e79c999ed912d95ad211ebe287ea0ca5396277",
+  "oldBuilds": {
+    ".next": "31Tsz2vLf5JymYeu5kmDw",
+    ".next-404-stage": "H7eQgDZ8u5vo-N2SW_pLT"
+  }
+}

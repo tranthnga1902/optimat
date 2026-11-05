@@ -1,0 +1,25 @@
+{
+  "exit_code": 0,
+  "finished_utc": "2026-11-04T02:45:04.743635+00:00",
+  "elapsed_seconds": 150.14,
+  "collection_line": "collected 1130 items / 15 deselected / 1115 selected",
+  "summary_lines": [
+    "========= 1096 passed, 19 skipped, 15 deselected in 146.16s (0:02:26) ========="
+  ],
+  "counts": {
+    "passed": 1096,
+    "failed": 0,
+    "skipped": 19,
+    "deselected": 15,
+    "xfailed": 0,
+    "xpassed": 0,
+    "errors": 0
+  },
+  "hash_before_count": 263,
+  "hash_after_count": 263,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  }
+}

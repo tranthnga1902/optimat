@@ -1,0 +1,25 @@
+{
+  "data_kind": "SYNTHETIC",
+  "fixture_sha256": "af4efc2420327ae2a4f8a032cce0ffcd291a5b6ee4dff35bf1ffebd39558ff52",
+  "source_sha256": "84457d7dbeab3ea9a369d5ca401baa9069fd5e60502a278dc2fb52dddfb39a14",
+  "expected": [
+    {
+      "x": 2112.5,
+      "y": 3167.5,
+      "b_mm": 225,
+      "h_mm": 335
+    }
+  ],
+  "expected_m3": 0.262305,
+  "actual": [
+    {
+      "x": 2112.5,
+      "y": 3167.5,
+      "b_mm": 225.0,
+      "h_mm": 335.0
+    }
+  ],
+  "actual_works": [
+    0.262
+  ]
+}

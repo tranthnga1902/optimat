@@ -65,10 +65,43 @@ function linePaths(P: Plan) {
   return { wall: out.wall.join(""), other: out.other.join(""), hatch: out.hatch.join("") };
 }
 
+type ReadPlan = Plan & {arcs?:number[][]; hatches?:{polys?:number[][][]}[]};
+function overviewOffset(plan:Plan, origin?:number[]) {
+  if (!plan.origin || !origin) return null;
+  return `translate(${plan.origin[0]-origin[0]} ${origin[1]-plan.origin[1]})`;
+}
+function fallbackArc([x,y,r,start,end]:number[]) {
+  const point=(angle:number)=>[x+r*Math.cos(angle*Math.PI/180),y-r*Math.sin(angle*Math.PI/180)].join(" ");
+  const sweep=((end-start)%360+360)%360;
+  if(!sweep && end!==start)return `M${point(start)} A${r} ${r} 0 1 0 ${point(start+180)} A${r} ${r} 0 1 0 ${point(start)}`;
+  return `M${point(start)} A${r} ${r} 0 ${sweep>180?1:0} 0 ${point(end)}`;
+}
+function ReadGeometry({plan}:{plan:ReadPlan}) {
+  const paths=useMemo(()=>linePaths(plan),[plan]);
+  const arcs=useMemo(()=>plan.arcs?.map(fallbackArc).join(" "),[plan]);
+  return <g pointerEvents="none">
+    {plan.hatches?.map((h,i)=><path key={i} d={h.polys?.filter(poly=>poly.length>=3).map(poly=>"M"+poly.map(pt=>pt.join(" ")).join("L")+"Z").join(" ")} fill="var(--line)" fillOpacity={0.12} fillRule="evenodd" stroke="var(--line)" strokeWidth={0.55} vectorEffect="non-scaling-stroke"/>)}
+    <path d={paths.hatch} fill="none" stroke="var(--line)" strokeWidth={0.5} vectorEffect="non-scaling-stroke"/>
+    <path d={paths.other} fill="none" stroke="var(--line)" strokeWidth={0.85} vectorEffect="non-scaling-stroke"/>
+    <path d={paths.wall} fill="none" stroke="var(--wall-line)" strokeWidth={1.1} vectorEffect="non-scaling-stroke"/>
+    <path d={arcs} fill="none" stroke="var(--line)" strokeWidth={1} vectorEffect="non-scaling-stroke"/>
+    {plan.texts?.map((v,i)=><text key={i} x={v.x} y={v.y} fontSize={Math.max(...plan.size)/350} fill="var(--wall-line)">{v.t}</text>)}
+  </g>;
+}
+
+export function displayBounds(view: {size:[number,number];display_bbox?:unknown} | null | undefined): [number,number,number,number] | null {
+  const b=view?.display_bbox;
+  return Array.isArray(b) && b.length===4 && b.every(Number.isFinite) && b[0]<=b[2] && b[1]<=b[3]
+    ? [b[0],b[1],b[2],b[3]] : null;
+}
+
 export type BoardProps = {
+  fitBox?: Viewport["fitBox"];
+  zoomRef: Viewport["zoomRef"]; zoomLabel: Viewport["zoomLabel"]; zoomTo: Viewport["zoomTo"];
+  preview?: ReactNode;
   svgRef: VP["svgRef"]; scaleRef: VP["scaleRef"]; movedRef: VP["movedRef"]; toWorld: VP["toWorld"]; onPointerDown: VP["onPointerDown"]; fitSize: VP["fitSize"];
   data: Data | null; pi: number; P: Plan | null; S: PlanState | null; selected: string | null;
-  mode: Mode; onMode: (m: Mode) => void; hint: string; draft: Pt | null; snap: (p: Pt) => Pt; unit: number;
+  mode: Mode; onMode: (m: Mode) => void; hint: ReactNode; draft: Pt | null; snap: (p: Pt) => Pt; unit: number;
   bg: string; hasCad: boolean; onBg: (v: string) => void; showRec: boolean; onShowRec: (v: boolean) => void; showLabels: boolean; onShowLabels: (v: boolean) => void;
   newCls: string; onNewCls: (v: string) => void; newKind: string; onNewKind: (v: string) => void; newW: string; onNewW: (v: string) => void; newH: string; onNewH: (v: string) => void;
   cols: PlanCol[]; onToggleCol: (j: number) => void; onSvgClick: (e: MouseEvent<SVGSVGElement>) => void; onSelect: (id: string) => void; onOpenPlan: (i: number) => void;
@@ -76,6 +109,7 @@ export type BoardProps = {
 
 export function Board(p: BoardProps) {
   const { svgRef, scaleRef, movedRef, toWorld, data, pi, P, S, selected, mode, bg, unit } = p;
+  const { zoomRef, zoomLabel, zoomTo, preview, hint } = p;
   const boardRef = useRef<HTMLDivElement>(null), tip = useRef<TipHandle>(null);
   const classes = useWallClasses(p.newCls);
   const T = (c: ReactNode) => ({
@@ -83,11 +117,12 @@ export function Board(p: BoardProps) {
     onPointerMove: (e: PointerEvent) => tip.current?.move(e),
     onPointerLeave: () => tip.current?.hide(),
   });
-  const rec = p.showRec ? undefined : "none", lines = bg === "lines";
+  const rec = p.showRec ? undefined : "none";
   const overview = !!data && pi < 0 && !!data.overview;
   // bản vẽ gốc vẽ đúng như phần mềm CAD (máy chủ dựng bằng ezdxf); SVG do máy chủ sinh nên chèn nguyên văn
   const cad = overview ? data!.overview!.cad || "" : P?.cad || "";
-  const L = useMemo(() => (P ? linePaths(P) : null), [P]);
+  const overviewOrigin=(data?.overview as {origin?:number[]}|undefined)?.origin;
+  const lines = bg === "lines" || !cad;
   const byId = S ? Object.fromEntries(S.walls.map((w) => [w.id, w])) : {};
   const pick = (id: string) => (e: MouseEvent) => { if (mode === "select") { e.stopPropagation(); p.onSelect(id); } };
 
@@ -97,22 +132,17 @@ export function Board(p: BoardProps) {
         {data && (overview || P) && <>
           <g className={s.cadlayer} style={{ display: lines ? "none" : undefined }} dangerouslySetInnerHTML={{ __html: cad }} />
           {overview ? (
-            <g style={{ display: rec }}>
+            <g>
               {data.overview!.plans.map((b, i) => (
                 <g key={i} onClick={(e) => { if (movedRef.current) return; e.stopPropagation(); p.onOpenPlan(i); }}>
-                  <rect x={b.x} y={b.y} width={b.w} height={b.h} className={s.ovlRect} strokeWidth={2} vectorEffect="non-scaling-stroke" />
-                  <text x={b.x + b.w / 2} y={b.y - unit * 0.6} textAnchor="middle" fontSize={unit * 1.2} fill="#5cb6d6" paintOrder="stroke" stroke="#000" strokeWidth={unit * 0.25}>{`${i + 1}. ${b.name}`}</text>
+                  {lines && data.plans[i] && overviewOffset(data.plans[i],overviewOrigin) && <g transform={overviewOffset(data.plans[i],overviewOrigin)!}><ReadGeometry plan={data.plans[i]}/></g>}
+                  <g style={{display:rec}}><rect x={b.x} y={b.y} width={b.w} height={b.h} className={s.ovlRect} strokeWidth={2} vectorEffect="non-scaling-stroke" />
+                  <text x={b.x + b.w / 2} y={b.y - unit * 0.6} textAnchor="middle" fontSize={unit * 1.2} fill="#5cb6d6" paintOrder="stroke" stroke="#000" strokeWidth={unit * 0.25}>{`${i + 1}. ${b.name}`}</text></g>
                 </g>
               ))}
             </g>
           ) : P && S && <>
-            <g style={{ display: lines ? undefined : "none" }}>
-              <path d={L?.hatch} fill="none" stroke="var(--line)" strokeWidth={0.4} opacity={0.3} vectorEffect="non-scaling-stroke" />
-            </g>
-            <g style={{ display: lines ? undefined : "none" }}>
-              <path d={L?.other} fill="none" stroke="var(--line)" strokeWidth={0.7} opacity={0.75} vectorEffect="non-scaling-stroke" />
-              <path d={L?.wall} fill="none" stroke="var(--wall-line)" strokeWidth={1.1} vectorEffect="non-scaling-stroke" />
-            </g>
+            {lines && <ReadGeometry plan={P}/>}
             {/* cặp nét giống tường nhưng đã loại (bậc thang, lan can, khung cửa sổ): nét đứt xám, rê chuột xem lý do */}
             <g style={{ display: rec }}>
               {(P.rejected || []).map((r, i) => (
@@ -146,7 +176,7 @@ export function Board(p: BoardProps) {
             <g style={{ display: rec }}>
               {S.openings.map((o) => {
                 const w = byId[o.wall];
-                if (!w) return null;
+                if (!w || o.w == null) return null;
                 const L2 = (w.x2 - w.x1) ** 2 + (w.y2 - w.y1) ** 2 || 1;
                 const t = Math.max(0, Math.min(1, ((o.x - w.x1) * (w.x2 - w.x1) + (o.y - w.y1) * (w.y2 - w.y1)) / L2));
                 const px = w.x1 + t * (w.x2 - w.x1), py = w.y1 + t * (w.y2 - w.y1);
@@ -167,7 +197,9 @@ export function Board(p: BoardProps) {
           </>}
         </>}
       </svg>
-      <div className={s.toolbar}>
+      {preview}
+      {overview && lines && !overviewOrigin && <span role="status" className="text-xs">Bản lưu thiếu gốc tọa độ tổng thể. Chọn khung để xem nét của từng mặt bằng.</span>}
+      <div className={s.toolbar} inert={!!preview}>
         <div className={s.seg} role="group" aria-label="Chế độ">
           {([["select", "Chọn"], ["wall", "Vẽ thêm tường"], ["open", "Thêm cửa"]] as [Mode, string][]).map(([m, t]) => (
             <button key={m} type="button" aria-pressed={mode === m} onClick={() => p.onMode(m)}>{t}</button>
@@ -178,6 +210,13 @@ export function Board(p: BoardProps) {
           <select value={p.newKind} onChange={(e) => p.onNewKind(e.target.value)}><option value="door">Cửa đi</option><option value="window">Cửa sổ</option></select>
           <input type="number" step={50} min={200} value={p.newW} onChange={(e) => p.onNewW(e.target.value)} aria-label="Rộng (mm)" /> ×{" "}
           <input type="number" step={50} min={200} value={p.newH} onChange={(e) => p.onNewH(e.target.value)} aria-label="Cao (mm)" /> mm</label>}
+        <button className={s.btn} type="button" onClick={() => { const view = pi < 0 ? data?.overview : P;
+          const bounds = displayBounds(view);
+          if (bounds && p.fitBox) p.fitBox(...bounds, 0.03, true);
+          else if (view) p.fitSize(view.size); }}>Vừa khung</button>
+        <details className="min-w-0 rounded-md border border-current/20 px-2 py-1">
+          <summary className="cursor-pointer select-none text-sm font-medium">Hiển thị và thu phóng</summary>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
         <span className={s.chipset}>
           <label>Nền <select aria-label="Nền bản vẽ" value={bg} onChange={(e) => p.onBg(e.target.value)}>
             <option value="cad" disabled={!p.hasCad}>Bản vẽ gốc · nền đen</option><option value="cad-light" disabled={!p.hasCad}>Bản vẽ gốc · nền trắng</option><option value="lines">Nét đã đọc</option>
@@ -185,10 +224,13 @@ export function Board(p: BoardProps) {
           <label><input type="checkbox" checked={p.showRec} onChange={(e) => p.onShowRec(e.target.checked)} /> Nhận dạng</label>
           <label><input type="checkbox" checked={p.showLabels} onChange={(e) => p.onShowLabels(e.target.checked)} /> Nhãn</label>
         </span>
-        <button className={s.btn} type="button" onClick={() => { const sz = pi < 0 ? data?.overview?.size : P?.size; if (sz) p.fitSize(sz); }}>Vừa khung</button>
+        <label className={s.chipset}>Phóng/thu <input ref={zoomRef} aria-label="Phóng/thu trên màn hình" type="range" min="5" max="1600" step="1"
+          defaultValue="100" disabled={!data} onChange={e => zoomTo(Number(e.currentTarget.value))} /><output ref={zoomLabel}>100%</output></label>
+          </div>
+        </details>
       </div>
-      <div className={s.hint}>{p.hint}</div>
-      <div className={s.scale} ref={scaleRef} />
+      <div className={s.hint}>{hint}</div>
+      <div className={s.scale} ref={scaleRef} hidden={!!preview} />
       <Tip ref={tip} boardRef={boardRef} />
     </div>
   );

@@ -16,33 +16,19 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from report_labels import display  # noqa: E402
 from optimat.catalog.repository import Catalog  # noqa: E402
 from optimat.drawing.dxf_reader import read_drawing  # noqa: E402
-from optimat.rough.models import WORKS, ProjectParams  # noqa: E402
+from optimat.rough.estimate_check import check_quantities  # noqa: E402
+from optimat.rough.models import ProjectParams  # noqa: E402
 from optimat.rough.takeoff import compute_rough, rough_from_drawing  # noqa: E402
 from optimat.schemas import OpeningDefaults  # noqa: E402
 
 
 def compare(estimate: pd.DataFrame, works) -> pd.DataFrame:
-    """estimate: cột ma_cong_tac, cau_kien, khoi_luong; works: WorkItem của compute_rough."""
-    est = estimate[estimate.ma_cong_tac.fillna("") != ""].fillna({"cau_kien": ""})
-    got: dict[tuple, list] = {}
-    for w in works:
-        elem = w.formwork_of if w.code == "COP_PHA" else w.steel_element if w.code == "COT_THEP" else ""
-        got.setdefault((w.code, elem or ""), []).append(w.quantity)
-    rows = []
-    for (code, elem), g in est.groupby(["ma_cong_tac", "cau_kien"], sort=False):
-        q = got.get((code, elem), [])
-        known = [x for x in q if x is not None]
-        sys_q = round(sum(known), 3) if known else None
-        complete = bool(q) and len(known) == len(q)
-        ref = round(g.khoi_luong.sum(), 3)
-        rows.append({"ma_cong_tac": code, "cau_kien": elem, "ten": WORKS[code][0], "don_vi": WORKS[code][1],
-                     "du_toan": ref, "he_thong": sys_q,
-                     "trang_thai": "không có" if not q else "đủ" if complete else "thiếu",
-                     "lech_pct": round((sys_q - ref) / ref * 100, 1) if complete and ref else None,
-                     "ma_dinh_muc": ", ".join(sorted(set(g.ma_dinh_muc.astype(str))))})
-    return pd.DataFrame(rows)
+    """estimate: cột ma_cong_tac, cau_kien, khoi_luong; works: WorkItem của compute_rough. Logic chung ở rough/estimate_check."""
+    est = estimate.fillna({"ma_cong_tac": "", "cau_kien": ""})
+    return pd.DataFrame(check_quantities(est, works)).rename(columns={"trang_thai_he_thong": "trang_thai"})
 
 
 def main() -> None:
@@ -61,9 +47,9 @@ def main() -> None:
     req = rough_from_drawing(read_drawing(a.drawing), params, None, catalog, Path(a.drawing).name, openings=openings,
                              structural=[read_drawing(s) for s in a.structural])
     table = compare(pd.read_csv(a.estimate, encoding="utf-8-sig"), compute_rough(req, catalog).works)
-    print(table.drop(columns="ma_dinh_muc").to_string(index=False))
+    print(table.to_string(index=False))
     if a.out:
-        table.to_excel(a.out, index=False)
+        display(table).to_excel(a.out, sheet_name="Đối chiếu dự toán", index=False)
         print(f"Đã ghi {a.out}")
 
 

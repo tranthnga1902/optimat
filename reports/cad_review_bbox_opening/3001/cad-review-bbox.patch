@@ -1,0 +1,82 @@
+--- a/src/app/(user)/do-boc/model.ts
++++ b/src/app/(user)/do-boc/model.ts
+@@ -8,7 +8,9 @@
+   cand?: string[]; masonry: boolean; conf: number; layer?: string; src?: string; rule?: string | null };
+ export type RawOpening = { name?: string; x: number; y: number; w: number; h: number | null; wall?: string | null; kind?: string; ev?: string | null };
+ export type Column = { id: string; x: number; y: number; b_mm: number; h_mm: number; source?: string; role?: "ket_cau" | "kien_truc" | null };
++export type DisplayBounds = [number,number,number,number];
+ export type Plan = {
++  display_bbox?: DisplayBounds;
+   texts?: { t: string; x: number; y: number }[];
+   source_revision?: SelectedRevision;
+   plan: { name: string; level_m?: number | null; height_source?: string | null; is_ground?: boolean };
+@@ -23,7 +25,7 @@
+ export type Data = {
+   drawing_work_signals?: Record<string,string[]>;
+   file: string; plans: Plan[]; materials: Material[]; families: Family[];
+-  overview?: { cad?: string; size: [number, number]; plans: { name: string; x: number; y: number; w: number; h: number }[] };
++  overview?: { display_bbox?: DisplayBounds; cad?: string; size: [number, number]; plans: { name: string; x: number; y: number; w: number; h: number }[] };
+   conventions?: { error?: string; trong_quy_uoc?: boolean | null; checks: Check[] };
+ };
+ 
+--- a/src/app/(user)/do-boc/Review.tsx
++++ b/src/app/(user)/do-boc/Review.tsx
+@@ -11,7 +11,7 @@
+ import { saveTogether, type ReviewSession } from "@/lib/review-session";
+ import { sameWorkVersion, type WorkSnapshot, type WorkReceipt, type DrawingVersion } from "@/lib/work-review";
+ import s from "./review.module.css";
+-import { Board, type Mode, type Pt } from "./Board";
++import { Board, displayBounds, type Mode, type Pt } from "./Board";
+ import { DrawingWorkList } from "./DrawingWorkList";
+ import { ChangeInput } from "./ChangeInput";
+ import { ConfirmDialog, ConfirmedDialog, MaterialDialog, Msg } from "./Dialogs";
+@@ -87,7 +87,13 @@
+   const [reading, setReading] = useState<ReadProgress | null>(null);
+   const [showReadPreview, setShowReadPreview] = useState(false);
+   const readController = useRef<AbortController | null>(null);
+-  const { svgRef, scaleRef, zoomRef, zoomLabel, zoomTo, vbRef, movedRef, fitSize, focusOn, toWorld, onPointerDown } = useViewport();
++  const { svgRef, scaleRef, zoomRef, zoomLabel, zoomTo, vbRef, movedRef, fitBox, fitSize, focusOn, toWorld, onPointerDown } = useViewport();
++  const fitDrawing = (view?: { size:[number,number]; display_bbox?: [number,number,number,number] }) => {
++    if (!view) return;
++    const box = displayBounds(view);
++    if (box) fitBox(...box,0.03,true);
++    else fitSize(view.size);
++  };
+   const listRef = useRef<HTMLDivElement>(null), scrollTo = useRef<string | null>(null);
+   const [data, setData] = useState<Data | null>(null);
+   const [msg, setMsg] = useState<string | null>(START);      // thông báo chiếm danh sách: chưa mở bản vẽ, đang đọc, lỗi đọc
+@@ -194,8 +200,7 @@
+         setRough(valid ? result.result : null);
+         roughStarted.current = valid;
+       }
+-      const size = saved.data.plans[restoredPi]?.size || saved.data.overview?.size;
+-      if (size) fitSize(size);
++      fitDrawing(saved.data.plans[restoredPi] || saved.data.overview);
+     }
+     setRestored(true);
+     // eslint-disable-next-line react-hooks/exhaustive-deps -- khôi phục một lần khi mở trang
+@@ -414,13 +419,13 @@
+     setStates({ ...st, [i]: st[i] || initState(D.plans[i]) });
+     setPi(i); setHist([]); setSelected(null); setMsg(null);
+     setMode(mode);
+-    fitSize(D.plans[i].size);
++    fitDrawing(D.plans[i]);
+   };
+   const showOverview = (D: Data = data!) => {
+     confirmRequest.current?.abort();
+     setPi(-1); setSelected(null); setHist([]); setMsg(null);
+     setMode("select");
+-    fitSize(D.overview!.size);
++    fitDrawing(D.overview);
+   };
+   const start = (D: Data) => {
+     confirmRequest.current?.abort(); publishPending.current = null;
+@@ -798,7 +803,7 @@
+             {guide?.action || (confirmed[pi] ? "Tiếp tục từ bản đã xác nhận" : adjustment ? "Lưu điều chỉnh mặt bằng" : "Xác nhận kích thước, khối lượng")}</button>
+         </header>
+         <div className={s.main}>
+-          <Board svgRef={svgRef} scaleRef={scaleRef} zoomRef={zoomRef} zoomLabel={zoomLabel} zoomTo={zoomTo} movedRef={movedRef} toWorld={toWorld} onPointerDown={onPointerDown} fitSize={fitSize} data={data} pi={pi} P={P} S={S} selected={selected} mode={mode} onMode={setMode} draft={draft} snap={snap} unit={unit}
++          <Board fitBox={fitBox} svgRef={svgRef} scaleRef={scaleRef} zoomRef={zoomRef} zoomLabel={zoomLabel} zoomTo={zoomTo} movedRef={movedRef} toWorld={toWorld} onPointerDown={onPointerDown} fitSize={fitSize} data={data} pi={pi} P={P} S={S} selected={selected} mode={mode} onMode={setMode} draft={draft} snap={snap} unit={unit}
+             preview={showReadPreview && reading?.preview && !reading.error && <ReadPreview preview={reading.preview} recognized={reading.recognized} />}
+             hint={reading ? <div className="flex flex-wrap items-center gap-2">
+               <span className="break-words" role={reading.error ? "alert" : "status"}>{reading.file} · {reading.error || reading.message}

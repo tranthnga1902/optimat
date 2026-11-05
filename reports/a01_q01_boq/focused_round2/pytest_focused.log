@@ -1,0 +1,18 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 108 items
+
+tests\test_rough_materials.py ..................................         [ 31%]
+tests\test_rough_plaster.py ...................                          [ 49%]
+tests\test_rough_status.py .................                             [ 64%]
+tests\test_export_boq_cli.py ...                                         [ 67%]
+tests\test_rough_takeoff.py ..........                                   [ 76%]
+tests\test_rough_agent.py .....                                          [ 81%]
+tests\test_rough_secondary.py ............x.......                       [100%]
+
+=========================== short test summary info ===========================
+XFAIL tests/test_rough_secondary.py::test_overlapping_ties_deduct_masonry_once - Hai giằng cùng đoạn trừ khối xây hai lần
+======================= 107 passed, 1 xfailed in 39.66s =======================

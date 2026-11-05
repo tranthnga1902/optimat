@@ -1,0 +1,18 @@
+{
+  "data_kind": "SYNTHETIC",
+  "raw_TK2_ATTRIB_loaded": true,
+  "attrs": {
+    "DK": "20",
+    "DAI": "4300",
+    "SL1": "2",
+    "SLA": "4",
+    "DT": "17.2",
+    "TL": "42.4"
+  },
+  "schedule_rows": 0,
+  "warnings": [
+    "Bảng 'THỐNG KÊ THÉP C-2': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng."
+  ],
+  "VN002_actual_verified": false,
+  "conclusion": "Reader giữ raw BlockRef.attribs và TextItem; parser header chưa có adapter TK_2 tags→hàng bảng/group/mark."
+}

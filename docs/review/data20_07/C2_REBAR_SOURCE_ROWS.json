@@ -1,0 +1,663 @@
+{
+  "scope": "C2 bars3 and4 installation batch associated with section2-2, not clipped steel inside floor-to-floor prism",
+  "source_file": "data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf",
+  "source_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "pdf_page": 22,
+  "sheet": "KC-02-04",
+  "group_headers": [
+    {
+      "handle": "118CD0D",
+      "raw": "C-1",
+      "xy": [
+        -1726496.458390178,
+        -1104234.697712751,
+        0.0
+      ],
+      "layer": "TEXT_TCK"
+    },
+    {
+      "handle": "118CD8A",
+      "raw": "C-1A",
+      "xy": [
+        -1726496.458390178,
+        -1110806.213401701,
+        0.0
+      ],
+      "layer": "TEXT_TCK"
+    },
+    {
+      "handle": "118CDEF",
+      "raw": "C-2",
+      "xy": [
+        -1726496.458390178,
+        -1117194.697712751,
+        0.0
+      ],
+      "layer": "TEXT_TCK"
+    }
+  ],
+  "raw_rows": [
+    {
+      "insert_handle": "118CCC5",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1103294.0974399,
+        0.0
+      ],
+      "attributes": [
+        {
+          "handle": "118CCC7",
+          "tag": "L2",
+          "raw": "4300",
+          "xy": [
+            -1722869.541609823,
+            -1103032.63574352,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCC8",
+          "tag": "TL",
+          "raw": "42.4",
+          "xy": [
+            -1712744.302864939,
+            -1103034.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCC9",
+          "tag": "DT",
+          "raw": "17.2",
+          "xy": [
+            -1714504.302864939,
+            -1103034.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCCA",
+          "tag": "SLA",
+          "raw": "4",
+          "xy": [
+            -1715813.0,
+            -1103034.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCCB",
+          "tag": "SL1",
+          "raw": "2",
+          "xy": [
+            -1716813.0,
+            -1103034.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCCC",
+          "tag": "DAI",
+          "raw": "4300",
+          "xy": [
+            -1718322.624829468,
+            -1103034.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCCD",
+          "tag": "DK",
+          "raw": "20",
+          "xy": [
+            -1719833.0,
+            -1103032.801396244,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCCE",
+          "tag": "SH",
+          "raw": "3",
+          "xy": [
+            -1725514.804211528,
+            -1103032.73318342,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118CCD1",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1104014.0974399,
+        0.0
+      ],
+      "attributes": [
+        {
+          "handle": "118CCD3",
+          "tag": "L2",
+          "raw": "4300",
+          "xy": [
+            -1722869.541609823,
+            -1103752.63574352,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCD4",
+          "tag": "TL",
+          "raw": "42.4",
+          "xy": [
+            -1712744.302864939,
+            -1103754.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCD5",
+          "tag": "DT",
+          "raw": "17.2",
+          "xy": [
+            -1714504.302864939,
+            -1103754.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCD6",
+          "tag": "SLA",
+          "raw": "4",
+          "xy": [
+            -1715813.0,
+            -1103754.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCD7",
+          "tag": "SL1",
+          "raw": "2",
+          "xy": [
+            -1716813.0,
+            -1103754.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCD8",
+          "tag": "DAI",
+          "raw": "4300",
+          "xy": [
+            -1718322.624829468,
+            -1103754.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCD9",
+          "tag": "DK",
+          "raw": "20",
+          "xy": [
+            -1719833.0,
+            -1103752.801396244,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CCDA",
+          "tag": "SH",
+          "raw": "4",
+          "xy": [
+            -1725514.804211528,
+            -1103754.0974399,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118CD2A",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1109054.0974399,
+        0.0
+      ],
+      "attributes": [
+        {
+          "handle": "118CD2C",
+          "tag": "L2",
+          "raw": "4300",
+          "xy": [
+            -1722869.541609823,
+            -1108792.63574352,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD2D",
+          "tag": "TL",
+          "raw": "84.8",
+          "xy": [
+            -1712744.302864939,
+            -1108794.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD2E",
+          "tag": "DT",
+          "raw": "34.4",
+          "xy": [
+            -1714504.302864939,
+            -1108794.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD2F",
+          "tag": "SLA",
+          "raw": "8",
+          "xy": [
+            -1715813.0,
+            -1108794.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD30",
+          "tag": "SL1",
+          "raw": "2",
+          "xy": [
+            -1716813.0,
+            -1108794.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD31",
+          "tag": "DAI",
+          "raw": "4300",
+          "xy": [
+            -1718322.624829468,
+            -1108794.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD32",
+          "tag": "DK",
+          "raw": "20",
+          "xy": [
+            -1719833.0,
+            -1108792.801396244,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD33",
+          "tag": "SH",
+          "raw": "3",
+          "xy": [
+            -1725514.804211528,
+            -1108792.73318342,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118CD36",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1109774.0974399,
+        0.0
+      ],
+      "attributes": [
+        {
+          "handle": "118CD38",
+          "tag": "L2",
+          "raw": "4300",
+          "xy": [
+            -1722869.541609823,
+            -1109512.63574352,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD39",
+          "tag": "TL",
+          "raw": "84.8",
+          "xy": [
+            -1712744.302864939,
+            -1109514.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD3A",
+          "tag": "DT",
+          "raw": "34.4",
+          "xy": [
+            -1714504.302864939,
+            -1109514.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD3B",
+          "tag": "SLA",
+          "raw": "8",
+          "xy": [
+            -1715813.0,
+            -1109514.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD3C",
+          "tag": "SL1",
+          "raw": "2",
+          "xy": [
+            -1716813.0,
+            -1109514.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD3D",
+          "tag": "DAI",
+          "raw": "4300",
+          "xy": [
+            -1718322.624829468,
+            -1109514.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD3E",
+          "tag": "DK",
+          "raw": "20",
+          "xy": [
+            -1719833.0,
+            -1109512.801396244,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CD3F",
+          "tag": "SH",
+          "raw": "4",
+          "xy": [
+            -1725514.804211528,
+            -1109514.0974399,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118CDA7",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1116254.0974399,
+        0.0
+      ],
+      "attributes": [
+        {
+          "handle": "118CDA9",
+          "tag": "L2",
+          "raw": "4300",
+          "xy": [
+            -1722869.541609823,
+            -1115992.63574352,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDAA",
+          "tag": "TL",
+          "raw": "42.4",
+          "xy": [
+            -1712744.302864939,
+            -1115994.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDAB",
+          "tag": "DT",
+          "raw": "17.2",
+          "xy": [
+            -1714504.302864939,
+            -1115994.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDAC",
+          "tag": "SLA",
+          "raw": "4",
+          "xy": [
+            -1715813.0,
+            -1115994.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDAD",
+          "tag": "SL1",
+          "raw": "2",
+          "xy": [
+            -1716813.0,
+            -1115994.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDAE",
+          "tag": "DAI",
+          "raw": "4300",
+          "xy": [
+            -1718322.624829468,
+            -1115994.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDAF",
+          "tag": "DK",
+          "raw": "20",
+          "xy": [
+            -1719833.0,
+            -1115992.801396244,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDB0",
+          "tag": "SH",
+          "raw": "3",
+          "xy": [
+            -1725514.804211528,
+            -1115992.73318342,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118CDB3",
+      "block": "TK_2",
+      "layer": "TEXT_TK",
+      "xy": [
+        -1725856.458390178,
+        -1116974.0974399,
+        0.0
+      ],
+      "attributes": [
+        {
+          "handle": "118CDB5",
+          "tag": "L2",
+          "raw": "4300",
+          "xy": [
+            -1722869.541609823,
+            -1116712.63574352,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDB6",
+          "tag": "TL",
+          "raw": "42.4",
+          "xy": [
+            -1712744.302864939,
+            -1116714.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDB7",
+          "tag": "DT",
+          "raw": "17.2",
+          "xy": [
+            -1714504.302864939,
+            -1116714.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDB8",
+          "tag": "SLA",
+          "raw": "4",
+          "xy": [
+            -1715813.0,
+            -1116714.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDB9",
+          "tag": "SL1",
+          "raw": "2",
+          "xy": [
+            -1716813.0,
+            -1116714.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDBA",
+          "tag": "DAI",
+          "raw": "4300",
+          "xy": [
+            -1718322.624829468,
+            -1116714.0,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDBB",
+          "tag": "DK",
+          "raw": "20",
+          "xy": [
+            -1719833.0,
+            -1116712.801396244,
+            0.0
+          ]
+        },
+        {
+          "handle": "118CDBC",
+          "tag": "SH",
+          "raw": "4",
+          "xy": [
+            -1725514.804211528,
+            -1116714.0974399,
+            0.0
+          ]
+        }
+      ]
+    }
+  ],
+  "selected_source_row_handles": [
+    "118CDA7",
+    "118CDB3"
+  ],
+  "rejected_other_group_row_handles": [
+    "118CCC5",
+    "118CCD1",
+    "118CD2A",
+    "118CD36"
+  ],
+  "unit_mass_source": {
+    "pdf_page": 3,
+    "sheet": "KC-00",
+    "table": 3,
+    "diameter_mm": 20,
+    "grade": "CB-400V",
+    "value": 2.47,
+    "unit": "kg/m"
+  },
+  "cases": [
+    {
+      "physical_columns": 1,
+      "bars_per_mark_per_column": 2,
+      "marks": [
+        3,
+        4
+      ],
+      "length_per_bar_m": 4.3,
+      "total_length_m": 17.2,
+      "mass_from_length_kg": "42.48400",
+      "source_printed_mass_apportioned_kg": "42.4",
+      "difference_kg": "0.08400"
+    },
+    {
+      "physical_columns": 2,
+      "bars_per_mark_per_column": 2,
+      "marks": [
+        3,
+        4
+      ],
+      "length_per_bar_m": 4.3,
+      "total_length_m": 34.4,
+      "mass_from_length_kg": "84.96800",
+      "source_printed_mass_group_kg": "84.8",
+      "difference_kg": "0.16800"
+    }
+  ],
+  "group_mixing_case": {
+    "rule": "reject matching SH/DAI/DK alone; require C-2 group boundary and quantity context",
+    "candidate_same_specs_other_groups": [
+      "118CCC5",
+      "118CCD1",
+      "118CD2A",
+      "118CD36"
+    ],
+    "runtime_reader_executed": false
+  },
+  "stirrups": {
+    "mark": 7,
+    "quantity_per_column_whole_height": 77,
+    "quantity_for_selected_segment": null,
+    "reason": "Whole-height schedule; cannot assign77 to this segment."
+  },
+  "human_approval": false,
+  "verification_status": "chua_kiem",
+  "limitations": [
+    "Installation length4300 includes extension/lap beyond selected3600mm segment; not4*3.6m nor geometrically clipped mass.",
+    "42.4840 rounded to0.1kg=42.5, differs from42.4 printed-apportioned; do not claim rounding match.",
+    "Source parsing here reads raw CAD attrs; generic production reader not executed."
+  ]
+}

@@ -1,0 +1,267 @@
+"""Phần thô bước 1: công tác -> vật liệu mua về (định mức phương án tường, cấp phối vữa, bê tông, định mức CSV)."""
+from dataclasses import replace
+
+import pytest
+
+from optimat.catalog.repository import Catalog
+from optimat.rough.materials import materials_for_works, mortar_material, ready_mix_material
+from optimat.rough.models import WORKS, ProjectParams, WorkItem
+from optimat.rough.norms import Norm, load_norms
+
+
+@pytest.fixture(scope="module")
+def cat():
+    return Catalog.from_csv(None)           # danh mục thật, không đè số mẫu
+
+
+def work(code, qty, **kw):
+    name, unit = WORKS[code]
+    return WorkItem(code=code, name=name, unit=unit, quantity=qty, **kw)
+
+
+def line(bill, key):
+    return next(m for m in bill.materials if (m.material_id or m.name) == key)
+
+
+def test_catalog_has_mix_relations(cat):
+    assert {"VU01", "VU02"} <= set(cat.relations[cat.relations.relation_type == "COMPOSED_OF"].material_id)
+    assert mortar_material(cat, "M75") == "VU02" and mortar_material(cat, "M50") == "VU01" and mortar_material(cat, None) is None
+    assert ready_mix_material(cat, "M250") == "BT03" and ready_mix_material(cat, "M400") is None
+
+
+def test_masonry_bricks_and_mortar_split(cat):
+    bill = materials_for_works([work("XAY", 10.0, wall_system_id="W-GN01-220")], ProjectParams(), cat)
+    assert line(bill, "GN01").quantity == pytest.approx(5500)              # 550 viên/m³ (AE.222)
+    assert line(bill, "XM01").quantity == pytest.approx(10 * 0.29 * 307 / 1000, abs=1e-3)   # tấn
+    sand = line(bill, "CA02")
+    assert sand.quantity == pytest.approx(10 * 0.29 * 1.13, abs=1e-3) and sand.waste_pct == 2.0
+    # định mức AE.222 đã gồm hao hụt thi công (TT 38 PL II): không cộng thêm 2% của cát, không báo thiếu hao hụt gạch
+    assert sand.quantity_with_waste == sand.quantity
+    assert "hao hụt thi công (%)" not in line(bill, "GN01").missing and all(u.waste_included for u in line(bill, "GN01").uses)
+    assert bill.intermediates[0].material_id == "VU02" and bill.intermediates[0].quantity == pytest.approx(2.9)
+
+
+def test_masonry_mortar_grade_from_params(cat):
+    bill = materials_for_works([work("XAY", 10.0, wall_system_id="W-GN01-220")],
+                               ProjectParams(masonry_mortar_grade="M50"), cat)
+    assert line(bill, "XM01").quantity == pytest.approx(10 * 0.29 * 224 / 1000, abs=1e-3)   # cấp phối M50 PCB30: TT 38/2026 PL VII 12.10133
+    assert [(m.material_id, m.grade) for m in bill.intermediates] == [("VU01", "M50")]
+
+
+@pytest.mark.parametrize("grade", [None, "M50"])
+def test_masonry_without_wall_system_is_blank(cat, grade):
+    bill = materials_for_works([work("XAY", 5.0)], ProjectParams(masonry_mortar_grade=grade), cat)
+    assert len(bill.materials) == 2
+    assert all(m.quantity is None and not m.complete for m in bill.materials)
+    binder = next(m for m in bill.materials if "liên kết" in m.name)
+    assert binder.material_id is None and binder.uses[0].work == "XAY"
+    assert grade is None or grade in binder.name
+
+
+@pytest.mark.parametrize("grade", ["M999", "M75/M100", "M75.5"])
+def test_masonry_unknown_grade_keeps_volume_without_default_recipe(cat, grade):
+    bill = materials_for_works([work("XAY", 10, wall_system_id="W-GN01-220")], ProjectParams(masonry_mortar_grade=grade), cat)
+    assert [m.material_id for m in bill.materials] == ["GN01", None]
+    binder = bill.materials[1]
+    assert grade in binder.name and any(grade in reason for reason in binder.missing)
+    assert binder.quantity == pytest.approx(2.9) and binder.status == "D" and not binder.complete
+    assert binder.uses[0].waste_included and binder.est_cost is None
+
+
+@pytest.mark.parametrize("mortar_id,rate,work_qty,known", [
+    (None, 0.29, 10, 2.9), ("VU_INCONNU", 0.29, 10, 2.9), (None, None, 10, None),
+    (None, 0.29, 0, 0), (None, 0.29, None, None),
+])
+def test_masonry_missing_binder_retains_only_known_volume(cat, mortar_id, rate, work_qty, known):
+    systems = cat.wall_systems.copy()
+    systems.loc[systems.wall_system_id == "W-GN01-220", ["mortar_material_id", "mortar_m3_per_m3"]] = [mortar_id, rate]
+    bill = materials_for_works([work("XAY", work_qty, wall_system_id="W-GN01-220")],
+                               ProjectParams(masonry_mortar_grade="M50"), replace(cat, wall_systems=systems))
+    assert [m.material_id for m in bill.materials] == ["GN01", None]
+    binder = bill.materials[1]
+    assert binder.quantity == known and not binder.complete and binder.status == "D" and binder.est_cost is None
+    assert "M50" in binder.name and any("W-GN01-220" in reason for reason in binder.missing)
+    if rate is None:
+        assert any("định mức" in reason for reason in binder.missing)
+
+
+@pytest.mark.parametrize("sourced", [True, False])
+def test_masonry_zero_binder_norm_needs_source(cat, sourced):
+    systems = cat.wall_systems.copy()
+    mask = systems.wall_system_id == "W-GN01-220"
+    systems.loc[mask, ["mortar_material_id", "mortar_m3_per_m3", "norm_code", "norm_source"]] = [
+        None, 0, None, "Hồ sơ giả lập xác nhận định mức vữa bằng 0" if sourced else None]
+    bill = materials_for_works([work("XAY", 10, wall_system_id="W-GN01-220")], ProjectParams(), replace(cat, wall_systems=systems))
+    if sourced:
+        assert [m.material_id for m in bill.materials] == ["GN01"] and not bill.intermediates
+    else:
+        binder = next(m for m in bill.materials if m.material_id is None)
+        assert binder.quantity is None and not binder.complete and any("nguồn" in reason for reason in binder.missing)
+
+
+def test_masonry_specialty_mortar_needs_grade_compatibility(cat):
+    bill = materials_for_works([work("XAY", 10, wall_system_id="W-AAC01-100")], ProjectParams(masonry_mortar_grade="M50"), cat)
+    assert [m.material_id for m in bill.materials] == ["AAC01", None]
+    binder = bill.materials[1]
+    assert binder.quantity == pytest.approx(0.35) and any("VU04" in reason and "M50" in reason for reason in binder.missing)
+    specified = materials_for_works([work("XAY", 10, wall_system_id="W-AAC01-100")], ProjectParams(), cat)
+    assert line(specified, "VU04").unit == "tấn"
+
+
+def test_concrete_ready_mix_and_site_mix(cat):
+    w = [work("COT", 2.0), work("SAN", 8.0)]
+    ready = materials_for_works(w, ProjectParams(concrete_supply="ready_mix", concrete_grade="M250"), cat)
+    assert line(ready, "BT03").quantity == pytest.approx(10.0) and not line(ready, "BT03").complete
+    assert line(ready, "BT03").quantity_with_waste is None and line(ready, "BT03").status == "D"
+    assert "hao hụt thi công (%)" in line(ready, "BT03").missing           # thương phẩm: m³ kết cấu, chưa qua định mức 1,025
+    site = materials_for_works(w, ProjectParams(concrete_supply="site_mix", concrete_grade="M250"), cat)
+    cement = line(site, "XM02")   # TT 38/2026 PL VII 11.12323: 310 kg / m³ vữa × 1,025 m³ vữa / m³ kết cấu, đổi ra tấn
+    assert cement.quantity == pytest.approx(10 * 310 * 1.025 / 1000, abs=1e-3) and cement.complete
+    assert line(site, "DA01").quantity == pytest.approx(10 * 0.817 * 1.025, abs=1e-3)
+    none = materials_for_works(w, ProjectParams(), cat)
+    assert any("mác bê tông" in m for m in none.materials[0].missing)
+
+
+def test_plaster_uses_norm_and_mortar_mix(cat):
+    # J05c: khóa định mức trát = dày/họ vật liệu nền của phương án tường (tests/test_rough_plaster.py)
+    norms = (Norm("TRAT", "15/CLAY_SOLID", "@VUA", "Vữa trát", 0.017, "m³ / m²", "BẢNG-THỬ", "", ""),)
+    w = [work("TRAT", 100.0, variant="15", wall_system_id="W-GN01-220")]
+    bill = materials_for_works(w, ProjectParams(plaster_mortar_grade="M75"), cat, norms)
+    assert line(bill, "XM01").quantity == pytest.approx(1.7 * 307 / 1000, abs=1e-3)
+    csv = materials_for_works(w, ProjectParams(plaster_mortar_grade="M75"), cat)
+    assert line(csv, "XM01").quantity == line(bill, "XM01").quantity    # CSV: AK.211/212 0,017 m³ / m² nền gạch đặc
+    blank = materials_for_works([work("TRAT", 100.0, variant="15")], ProjectParams(plaster_mortar_grade="M75"), cat)
+    assert blank.materials[0].quantity is None and not blank.materials[0].complete      # chưa có phương án: thiếu nền
+
+
+def test_steel_and_tie_wire(cat):
+    bill = materials_for_works([work("COT_THEP", 1.5, steel_element="COT")], ProjectParams(), cat)
+    steel = next(m for m in bill.materials if m.name.startswith("Cốt thép"))
+    assert steel.quantity == pytest.approx(1.5) and steel.material_id is None
+    wire = line(bill, "TH10")    # AF.61xxx 7,85–16,07 kg / tấn tùy đường kính: chưa chia đường kính -> khoảng, tạm tính C
+    assert wire.quantity == pytest.approx(1.5 * (7.85 + 16.07) / 2, abs=1e-3)
+    assert wire.quantity_min == pytest.approx(1.5 * 7.85, abs=1e-3) and wire.quantity_max == pytest.approx(1.5 * 16.07, abs=1e-3)
+
+
+def test_missing_work_quantity_warns(cat):
+    bill = materials_for_works([work("SAN", None, missing=["chiều dày sàn"])], ProjectParams(concrete_supply="ready_mix",
+                                                                                            concrete_grade="M250"), cat)
+    assert line(bill, "BT03").quantity is None and any("chiều dày sàn" in w for w in bill.warnings)
+
+
+def test_norms_csv_valid_and_no_unsourced_numbers(cat):
+    norms = load_norms()
+    known = set(cat.materials.material_id)
+    for n in norms:
+        assert n.material_id in (None, "@VUA") or n.material_id in known, n
+        # Quy ước B7 mở rộng theo đặc tả 30/10/2026 (1A, 3B): số không có số hiệu bảng TT 38 phải là hệ số tham khảo
+        # ghi đủ mức xác nhận, nguồn và ngày tra (vật liệu tính từ đó là tạm tính C)
+        assert n.value is None or n.norm_code or (n.confirmation and n.source and n.checked_on), \
+            f"Định mức có số mà không có số hiệu bảng và thiếu mức xác nhận / nguồn / ngày tra: {n}"
+        assert n.qty_min is None or n.qty_max is None or n.qty_min <= n.qty_max
+
+
+def test_formwork_materials_by_type_and_element(cat):
+    """Ván khuôn gỗ (formwork_type = go): gỗ (CP03) và đinh (CP06) theo định mức AF.81 đúng cấu kiện, không cộng thêm hao
+    hụt; chưa chọn loại hoặc ván ép (chưa có định mức) thì vật liệu cốp pha trống kèm lý do."""
+    w = [work("COP_PHA", 100.0, formwork_of="COT"), work("COP_PHA", 200.0, formwork_of="SAN")]
+    go = materials_for_works(w, ProjectParams(formwork_type="go"), cat)
+    wood = line(go, "CP03")
+    assert wood.quantity == pytest.approx((0.794 + 0.149 + 0.496) + 2 * (0.794 + 0.112 + 0.668), abs=1e-3)   # AF.81130, AF.81150
+    assert line(go, "CP06").quantity == pytest.approx(15.0 + 2 * 8.05, abs=1e-3)
+    assert "hao hụt thi công (%)" not in wood.missing and wood.quantity_with_waste == wood.quantity
+    none = materials_for_works(w, ProjectParams(), cat)
+    assert any("loại ván khuôn" in m for x in none.materials for m in x.missing)
+    plywood = materials_for_works(w, ProjectParams(formwork_type="van_ep"), cat)
+    assert line(plywood, "CP01").quantity is None
+
+
+# A01 fixtures are SYNTHETIC quantities/rates; never edit the catalog on disk.
+def _waste_bill(cat, parts, pct=3.5):
+    from optimat.rough.materials import _Bill
+    bill = _Bill(cat)
+    bill.mats = bill.mats.copy(deep=True)
+    bill.mats.loc["XM02", "waste_pct"] = pct
+    for quantity, included in parts:
+        bill.add("XM02", "fixture", "tấn", quantity, work("COT", 1, status="A"),
+                 "A01 SYNTHETIC", waste_included=included)
+    return bill
+
+
+@pytest.mark.parametrize("parts,pct,quantity,purchase", [
+    ([(10, True), (10, False)], 3.5, 20, 20.350),
+    ([(10, False), (10, False)], 3.5, 20, 20.700),
+    ([(10, False), (10, False)], 0, 20, 20),
+    ([(10, True), (-2, False)], 3.5, 8, 7.930),
+    ([(-2, True), (10, False)], 3.5, 8, 8.350),
+    ([(0, False)], None, 0, 0),
+])
+def test_waste_is_added_only_to_contributions_without_it(cat, parts, pct, quantity, purchase):
+    m = line(_waste_bill(cat, parts, pct).result([]), "XM02")
+    assert m.quantity == pytest.approx(quantity) and m.quantity_with_waste == pytest.approx(purchase)
+    assert m.complete and m.status == "A"
+    assert [u.quantity for u in m.uses] == [q for q, _ in parts]
+
+
+@pytest.mark.parametrize("pct", [None, -1, float("nan"), float("inf"), float("-inf")])
+def test_included_waste_needs_no_rate(cat, pct):
+    m = line(_waste_bill(cat, [(10, True), (10, True)], pct).result([]), "XM02")
+    assert m.quantity_with_waste == 20 and m.complete and m.status == "A"
+    assert not any("hao hụt" in reason for reason in m.missing)
+
+
+@pytest.mark.parametrize("pct", [None, -1, float("nan"), float("inf"), float("-inf")])
+def test_missing_or_invalid_purchase_rate_keeps_known_quantity(cat, pct):
+    m = line(_waste_bill(cat, [(10, True), (10, False)], pct).result([]), "XM02")
+    assert m.quantity == 20 and m.quantity_with_waste is None
+    assert not m.complete and m.status == "D" and m.waste_pct is None
+    assert any("hao hụt thi công (%)" in reason for reason in m.missing)
+
+
+def test_cancelling_unincluded_contributions_still_need_rate(cat):
+    m = line(_waste_bill(cat, [(10, False), (-10, False)], None).result([]), "XM02")
+    assert m.quantity == 0 and m.quantity_with_waste is None and not m.complete and m.status == "D"
+
+
+@pytest.mark.parametrize("parts,pct,quantity,purchase", [
+    ([(10, True), (None, False)], None, 10, 10),
+    ([(10, False), (None, False)], 3.5, 10, 10.350),
+    ([(10, False), (None, True)], None, 10, None),
+    ([(None, True), (None, False)], None, None, None),
+])
+def test_unknown_contribution_retains_only_known_part(cat, parts, pct, quantity, purchase):
+    from types import SimpleNamespace
+    from optimat.rough.boq import export_for_optimizer
+    m = line(_waste_bill(cat, parts, pct).result([]), "XM02")
+    assert m.quantity == quantity and m.quantity_with_waste == purchase
+    assert not m.complete and m.status == "D"
+    exported = export_for_optimizer(SimpleNamespace(materials=[m], status="D", by_group=[], by_class=[],
+                                                     envelope_by_orientation={}))
+    assert exported["materials"] == [] and exported["missing"][0]["known_part"] == quantity
+
+
+def test_waste_uses_raw_subtotals_before_final_rounding(cat):
+    m = line(_waste_bill(cat, [(0.000049, False)] * 100).result([]), "XM02")
+    assert m.quantity == 0.005 and m.quantity_with_waste == 0.005
+    assert sum(u.quantity for u in m.uses) == 0   # rounded trace must not drive the purchase sum
+
+
+def test_missing_density_does_not_mark_purchase_quantity_incomplete(cat):
+    bill = _waste_bill(cat, [(10, True)], None)
+    bill.mats.loc["XM02", "unit_weight_kg"] = None
+    m = line(bill.result([]), "XM02")
+    assert m.quantity_with_waste == 10 and m.complete and m.status == "A"
+    assert any("khối lượng riêng" in reason for reason in m.missing)
+
+
+def test_incomplete_purchase_quantity_has_no_estimated_cost(cat, monkeypatch):
+    from types import SimpleNamespace
+    from optimat.catalog import pricing
+    from optimat.rough.takeoff import attach_prices
+    monkeypatch.setattr(pricing, "price_offers", lambda *args: {"XM02": [SimpleNamespace(
+        price=100, unit="tấn", price_level="QUOTE", supplier_name="fixture", price_date="", data_kind="SYNTHETIC")]})
+    incomplete = line(_waste_bill(cat, [(10, True), (10, False)], None).result([]), "XM02")
+    complete = line(_waste_bill(cat, [(10, True), (10, False)], 3.5).result([]), "XM02")
+    attach_prices([incomplete, complete], cat)
+    assert incomplete.best_price == 100 and incomplete.est_cost is None
+    assert complete.est_cost == 2035

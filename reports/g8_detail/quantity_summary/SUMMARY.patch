@@ -1,0 +1,542 @@
+--- a/src/optimat/rough/models.py
++++ b/src/optimat/rough/models.py
+@@ -423,8 +423,8 @@
+             if (legacy is None) != (detail.legacy_quantity is None) or (
+                     legacy is not None and Decimal(legacy) != Decimal(detail.legacy_quantity)):
+                 raise ValueError("Lượng legacy trong detail không khớp công tác của snapshot.")
+-            if (self.missing or self.status == "D") and (detail.complete or detail.total_raw is not None):
+-                raise ValueError("Công tác D hoặc còn thiếu chỉ được giữ phần lượng đã biết trong detail.")
++            if (self.quantity is None or self.missing or self.status == "D") and (detail.complete or detail.total_raw is not None):
++                raise ValueError("Công tác chưa có lượng, D hoặc còn thiếu chỉ được giữ phần lượng đã biết trong detail.")
+         return self
+ 
+ 
+@@ -481,3 +481,118 @@
+     intermediates: list[IntermediateLine] = Field(default_factory=list)
+     materials: list[MaterialLine] = Field(default_factory=list)
+     warnings: list[str] = Field(default_factory=list)
++
++
++class QuantityGroupingContext(BaseModel):
++    """Chỉ các tham số đã có dùng phân nhóm; lưu cùng snapshot, không suy mã định mức."""
++    model_config = ConfigDict(extra="forbid")
++    concrete_grade: Optional[str] = None
++    lean_concrete_grade: Optional[str] = None
++    concrete_supply: Optional[str] = None
++    masonry_mortar_grade: Optional[str] = None
++    plaster_mortar_grade: Optional[str] = None
++    screed_mortar_grade: Optional[str] = None
++    formwork_type: Optional[str] = None
++
++
++class QuantityCoverage(BaseModel):
++    model_config = ConfigDict(extra="forbid")
++    work_count: int = Field(default=0, ge=0)
++    components: int = Field(default=0, ge=0)
++    aggregate: int = Field(default=0, ge=0)
++    unavailable: int = Field(default=0, ge=0)
++    no_detail: int = Field(default=0, ge=0)
++    quantity_complete_works: int = Field(default=0, ge=0)
++    quantity_incomplete_works: int = Field(default=0, ge=0)
++    contribution_rows: int = Field(default=0, ge=0)
++    known_contribution_rows: int = Field(default=0, ge=0)
++    unknown_contribution_rows: int = Field(default=0, ge=0)
++    reference_rows: int = Field(default=0, ge=0)
++    compatibility_pending_works: int = Field(default=0, ge=0)
++    legacy_D_works: int = Field(default=0, ge=0)
++    legacy_missing_works: int = Field(default=0, ge=0)
++    complete_components: bool = False
++
++    @model_validator(mode="after")
++    def _counts(self):
++        if (self.components + self.aggregate + self.unavailable + self.no_detail != self.work_count
++                or self.quantity_complete_works + self.quantity_incomplete_works != self.work_count
++                or self.known_contribution_rows + self.unknown_contribution_rows != self.contribution_rows):
++            raise ValueError("Các count coverage không khớp phạm vi công tác/dòng.")
++        if any(n > self.work_count for n in (self.compatibility_pending_works, self.legacy_D_works, self.legacy_missing_works)):
++            raise ValueError("Count theo công tác vượt phạm vi snapshot.")
++        expected = self.work_count > 0 and self.components == self.work_count and self.quantity_complete_works == self.work_count
++        if self.complete_components != expected:
++            raise ValueError("Coverage cấu kiện không khớp số dòng đủ; phạm vi rỗng không được coi là đủ.")
++        return self
++
++
++class QuantityGroupKey(BaseModel):
++    model_config = ConfigDict(extra="forbid")
++    stage: Optional[str] = None
++    code: str
++    variant: Optional[str] = None
++    unit: str
++    source: str
++    basis: Optional[str] = None
++    formwork_of: Optional[str] = None
++    steel_element: Optional[str] = None
++    wall_system_id: Optional[str] = None
++    specification: dict[str, Optional[str]] = Field(default_factory=dict)
++    isolated_work_key: Optional[str] = None
++
++    @field_validator("code", "unit")
++    @classmethod
++    def _nonempty(cls, value):
++        if not value.strip():
++            raise ValueError("Mã công tác và đơn vị nhóm không được trống.")
++        return value
++
++
++class QuantityMissingRef(BaseModel):
++    model_config = ConfigDict(extra="forbid")
++    work_key: str
++    row_id: Optional[str] = None
++    reasons: list[str]
++
++
++class QuantityRawGroup(BaseModel):
++    model_config = ConfigDict(extra="forbid")
++    group_id: str
++    key: QuantityGroupKey
++    member_work_keys: list[str]
++    compatibility: Literal["resolved", "isolated_unknown"]
++    compatibility_reasons: list[str] = Field(default_factory=list)
++    calculation_methods: list[str] = Field(default_factory=list)  # trace, không dùng để tách quy cách
++    known_part_raw: Optional[str] = None
++    total_raw: Optional[str] = None
++    complete: bool = False
++    coverage: QuantityCoverage
++    missing_work_refs: list[QuantityMissingRef] = Field(default_factory=list)
++
++    @field_validator("known_part_raw", "total_raw")
++    @classmethod
++    def _amount(cls, value):
++        return None if value is None else _quantity_decimal_text(value)
++
++    @model_validator(mode="after")
++    def _members(self):
++        if not self.member_work_keys or len(set(self.member_work_keys)) != len(self.member_work_keys):
++            raise ValueError("Nhóm cần thành viên không lặp trong snapshot.")
++        if self.coverage.work_count != len(self.member_work_keys):
++            raise ValueError("Count nhóm không khớp membership.")
++        if any(ref.work_key not in self.member_work_keys for ref in self.missing_work_refs):
++            raise ValueError("Dòng thiếu tham chiếu công tác ngoài nhóm.")
++        if (self.complete != (self.total_raw is not None) or
++                self.complete and (self.known_part_raw is None or Decimal(self.total_raw) != Decimal(self.known_part_raw))):
++            raise ValueError("Tổng raw đủ không khớp phần biết của nhóm.")
++        return self
++
++
++class QuantitySummary(BaseModel):
++    model_config = ConfigDict(extra="forbid")
++    schema_version: Literal[1] = 1
++    quantity_snapshot_hash: str = Field(pattern=r"^[0-9a-f]{64}$")
++    context: QuantityGroupingContext
++    groups: list[QuantityRawGroup] = Field(default_factory=list)
++    coverage: QuantityCoverage
+--- a/src/optimat/rough/quantity_summary.py
++++ b/src/optimat/rough/quantity_summary.py
+@@ -0,0 +1,144 @@
++"""Tổng raw/coverage từ finalized works; không chạy lại engine hoặc sửa tổng legacy."""
++from decimal import Decimal, localcontext
++import hashlib
++import json
++
++from .models import (ProjectParams, QuantityCoverage, QuantityGroupKey, QuantityGroupingContext,
++    QuantityMissingRef, QuantityRawGroup, QuantitySummary, WorkItem, _quantity_decimal_text)
++
++
++def grouping_context(params: ProjectParams) -> QuantityGroupingContext:
++    """Nguồn là tham số đã khai báo, không phải thiết kế được xác minh độc lập."""
++    return QuantityGroupingContext(**{key: getattr(params, key) for key in QuantityGroupingContext.model_fields})
++
++
++def _json(value):
++    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
++
++
++def _sum(values):
++    numbers = [Decimal(v) for v in values if v is not None]
++    if not numbers:
++        return None
++    with localcontext() as ctx:
++        ctx.prec = max(28, max(n.adjusted() for n in numbers) - min(n.as_tuple().exponent for n in numbers)
++                       + len(str(len(numbers) + 1)) + 2)
++        return _quantity_decimal_text(sum(numbers, Decimal(0)))
++
++
++def _group_key(work, work_key, context):
++    spec, reasons = {}, []
++    def require(name, value):
++        spec[name] = value
++        if value is None or not str(value).strip():
++            reasons.append(f"chưa có {name} để gộp cùng quy cách")
++    if not work.stage:
++        reasons.append("chưa có hạng mục công tác")
++    if not work.source.strip():
++        reasons.append("chưa có nguồn công tác")
++    concrete = {"COT", "DAM", "SAN", "CAU_THANG", "GIANG_TUONG", "SE_NO", "MAI", "MONG", "LANH_TO", "BE_TONG_LOT"}
++    if work.code in concrete:
++        grade_field = "lean_concrete_grade" if work.code == "BE_TONG_LOT" else "concrete_grade"
++        require(grade_field, getattr(context, grade_field))
++        require("concrete_supply", context.concrete_supply)
++    elif work.code == "COP_PHA":
++        require("formwork_type", context.formwork_type)
++        require("formwork_of", work.formwork_of)
++    elif work.code == "XAY":
++        require("masonry_mortar_grade", context.masonry_mortar_grade)
++        require("wall_system_id", work.wall_system_id)
++    elif work.code == "TRAT":
++        require("plaster_mortar_grade", context.plaster_mortar_grade)
++        require("thickness_variant", work.variant)
++        require("wall_system_id", work.wall_system_id)
++    elif work.code == "CAN_NEN":
++        require("screed_mortar_grade", context.screed_mortar_grade)
++        require("thickness_variant", work.variant)
++    elif work.code == "CHONG_THAM":
++        require("waterproof_material_variant", work.variant)
++    elif work.code in {"DAO_DAT", "DAP_DAT"}:
++        reasons.append("chưa có phân loại đất/biện pháp có cấu trúc để gộp")
++    elif work.code == "COT_THEP":
++        reasons.append("chưa có quy cách/cấp thép có cấu trúc để gộp; không đoán từ ký hiệu")
++    elif work.code == "NEN_DEM_CAT":
++        reasons.append("chưa có quy cách lớp đệm cát có cấu trúc để gộp")
++    else:
++        reasons.append("chưa có quy tắc tương thích của công tác")
++    return QuantityGroupKey(stage=work.stage, code=work.code, variant=work.variant, unit=work.unit,
++        source=work.source, basis=work.basis, formwork_of=work.formwork_of, steel_element=work.steel_element,
++        wall_system_id=work.wall_system_id, specification=spec, isolated_work_key=work_key if reasons else None), reasons
++
++
++def _quantity_complete(work):
++    d = work.quantity_detail
++    return d is not None and d.detail_level != "unavailable" and d.complete and d.total_raw is not None
++
++
++def _coverage(works, pending_count):
++    values = dict(work_count=len(works), components=0, aggregate=0, unavailable=0, no_detail=0,
++        quantity_complete_works=0, quantity_incomplete_works=0, contribution_rows=0,
++        known_contribution_rows=0, unknown_contribution_rows=0, reference_rows=0,
++        compatibility_pending_works=pending_count, legacy_D_works=0, legacy_missing_works=0)
++    for work in works:
++        d = work.quantity_detail
++        values["no_detail" if d is None else d.detail_level] += 1
++        values["quantity_complete_works" if _quantity_complete(work) else "quantity_incomplete_works"] += 1
++        values["legacy_D_works"] += work.status == "D"
++        values["legacy_missing_works"] += bool(work.missing)
++        for row in d.rows if d else []:
++            if row.role == "reference":
++                values["reference_rows"] += 1
++            else:
++                values["contribution_rows"] += 1
++                values["unknown_contribution_rows" if row.raw_quantity is None else "known_contribution_rows"] += 1
++    return QuantityCoverage(**values, complete_components=bool(works) and values["components"] == len(works)
++                           and values["quantity_complete_works"] == len(works))
++
++
++def _missing(work, key):
++    d = work.quantity_detail
++    if d is None:
++        return [QuantityMissingRef(work_key=key, reasons=["chưa có diễn giải raw"]) ]
++    refs = [QuantityMissingRef(work_key=key, row_id=r.row_id, reasons=r.missing or ["chưa có lượng"])
++            for r in d.rows if r.role == "contribution" and (r.raw_quantity is None or r.missing)]
++    if not _quantity_complete(work):
++        refs.append(QuantityMissingRef(work_key=key, reasons=work.missing or ["phạm vi detail chưa đủ"]))
++    return refs
++
++
++def build_quantity_summary(works: list[WorkItem], context: QuantityGroupingContext) -> QuantitySummary:
++    # Dump/constructor ngăn mutable/model_copy bỏ qua invariant của detail và parent.
++    finalized = [WorkItem.model_validate(w.model_dump()) for w in works]
++    context = QuantityGroupingContext.model_validate(context.model_dump())
++    snapshot = hashlib.sha256(_json(dict(schema_version=1, works=[w.model_dump(mode="json") for w in finalized],
++                                        context=context.model_dump(mode="json"))).encode("utf-8")).hexdigest()
++    partitions = {}
++    all_pending = 0
++    for index, work in enumerate(finalized):
++        work_key = f"w:{index}"
++        key, reasons = _group_key(work, work_key, context)
++        all_pending += bool(reasons)
++        partition = partitions.setdefault(_json(key.model_dump()), dict(key=key, reasons=reasons, members=[]))
++        partition["members"].append((work_key, work))
++    groups = []
++    for index, partition in enumerate(partitions.values()):
++        members = partition["members"]
++        items = [w for _, w in members]
++        known = _sum([w.quantity_detail.known_part_raw for w in items if w.quantity_detail is not None])
++        complete = all(_quantity_complete(w) for w in items)
++        methods = sorted({r.method for w in items if w.quantity_detail for r in w.quantity_detail.rows if r.role == "contribution"})
++        groups.append(QuantityRawGroup(group_id=f"g:{index}", key=partition["key"],
++            member_work_keys=[k for k, _ in members], compatibility="isolated_unknown" if partition["reasons"] else "resolved",
++            compatibility_reasons=partition["reasons"], calculation_methods=methods,
++            known_part_raw=known, total_raw=_sum([w.quantity_detail.total_raw for w in items]) if complete else None,
++            complete=complete, coverage=_coverage(items, len(items) if partition["reasons"] else 0),
++            missing_work_refs=[ref for k, w in members for ref in _missing(w, k)]))
++    return QuantitySummary(quantity_snapshot_hash=snapshot, context=context, groups=groups,
++                           coverage=_coverage(finalized, all_pending))
++
++
++def validate_quantity_summary(works: list[WorkItem], summary: QuantitySummary) -> None:
++    """So expected với payload; không ghi đè tổng/count/hash giả hoặc stale để làm hợp lệ."""
++    expected = build_quantity_summary(works, summary.context)
++    if expected.model_dump() != summary.model_dump():
++        raise ValueError("quantity_summary không khớp works/context của snapshot: hash, membership, key, raw total hoặc coverage đã đổi.")
+--- a/src/optimat/rough/takeoff.py
++++ b/src/optimat/rough/takeoff.py
+@@ -22,7 +22,8 @@
+ from .checks import cross_checks, envelope_by_orientation, floor_area_checks
+ from .columns import Column, column_overlaps, column_works, detect_columns, schedule_column_works
+ from .materials import materials_for_works
+-from .models import RAW_CLASSES, WORKS, MaterialLine, ProjectParams, RoughBill, WorkItem, worst_status
++from .models import RAW_CLASSES, WORKS, MaterialLine, ProjectParams, QuantitySummary, RoughBill, WorkItem, worst_status
++from .quantity_summary import build_quantity_summary, grouping_context, validate_quantity_summary
+ from .stairs import Stair, building_stairs, stair_works
+ from .status import assign_status
+ from .quantity_details import finalize_quantity_details
+@@ -211,6 +212,7 @@
+ 
+ class RoughResult(RoughBill):
+     plan_scope_confirmed: bool = False
++    quantity_summary: Optional[QuantitySummary] = None
+     wall_groups: list[WallGroup] = Field(default_factory=list)
+     wall_group_issues: list[str] = Field(default_factory=list)
+     totals: list[WorkTotal] = Field(default_factory=list)
+@@ -225,6 +227,12 @@
+     # tường bao theo hướng nhà (đặc tả mục 11, vỏ bao che): mặt bằng -> hướng B/Đ/N/T -> gross, cửa, net (m²), dài (m);
+     # chỉ có khi ProjectParams.north_deg được nhập
+     envelope_by_orientation: dict[str, dict[str, dict[str, float]]] = Field(default_factory=dict)
++
++    @model_validator(mode="after")
++    def _quantity_summary_matches_snapshot(self):
++        if self.quantity_summary is not None:
++            validate_quantity_summary(self.works, self.quantity_summary)
++        return self
+ 
+ 
+ def _wall_length(p: PlanInput) -> float:
+@@ -557,6 +565,7 @@
+     attach_prices(bill.materials, catalog, actual_only=req.plan_scope_confirmed)
+     wall_groups, wall_group_issues = final_wall_groups(works, params, catalog)
+     return RoughResult(works=works, intermediates=bill.intermediates, materials=bill.materials,
++                       quantity_summary=build_quantity_summary(works, grouping_context(params)),
+                        plan_scope_confirmed=req.plan_scope_confirmed,
+                        wall_groups=[] if scope_issues or wall_group_issues else wall_groups,
+                        wall_group_issues=scope_issues + wall_group_issues,
+--- a/tests/test_rough_quantity_summary.py
++++ b/tests/test_rough_quantity_summary.py
+@@ -0,0 +1,194 @@
++"""G8-SUM SYNTHETIC: nội dung snapshot, lượng raw và coverage; không API/DB/CAD."""
++from copy import deepcopy
++
++import pytest
++from pydantic import ValidationError
++
++from optimat.rough.models import (ProjectParams, QuantityDetailRow, QuantityGroupingContext,
++    QuantitySummary, WorkItem)
++from optimat.rough.quantity_details import summarize
++from optimat.rough.quantity_summary import build_quantity_summary, grouping_context, validate_quantity_summary
++from optimat.rough.takeoff import RoughResult
++
++
++def context(**kw):
++    return QuantityGroupingContext(**(dict(concrete_grade="M250", lean_concrete_grade="M100", concrete_supply="site_mix",
++        masonry_mortar_grade="M75", plaster_mortar_grade="M75", screed_mortar_grade="M75", formwork_type="go") | kw))
++
++
++def work(label="A", raw="0.3225", legacy=.323, *, no_detail=False, method="box", sign=1,
++         role="contribution", extra_rows=(), scope=True, level="components", **kw):
++    unit = kw.get("unit", "m³")
++    rows = [QuantityDetailRow(row_id="r1", label=label, unit=unit, raw_quantity=raw, sign=sign, role=role,
++        method=method, sources=["Nguồn SYNTHETIC"], missing=[] if raw is not None else ["Chưa đo"]), *extra_rows]
++    detail = None if no_detail else summarize(rows, unit, legacy, scope_complete=scope, detail_level=level)
++    return WorkItem(**(dict(code="BE_TONG_LOT", name="Bê tông lót", unit=unit, element=label,
++        source="manual", stage="mong", quantity=legacy, status="C", quantity_detail=detail) | kw))
++
++
++def partial_case():
++    ref = QuantityDetailRow(row_id="raw", label="Chỉ tham khảo", unit="m³", raw_quantity="100",
++                            role="reference", method="source_quantity", sources=["Nguồn SYNTHETIC"])
++    return [work(extra_rows=[ref]), work("B"), work("C", raw=None, legacy=None, status="D", scope=False),
++            work("D", legacy=1, no_detail=True)]
++
++
++def result(works, summary):
++    return RoughResult(works=works, materials=[], intermediates=[], quantity_summary=summary)
++
++
++def test_raw_known_partial_no_fallback_and_scoped_duplicate_row_ids():
++    items = partial_case();out = build_quantity_summary(items, context())
++    assert len(out.groups) == 1
++    g = out.groups[0]
++    assert g.member_work_keys == ["w:0", "w:1", "w:2", "w:3"]
++    assert g.known_part_raw == "0.6450" and g.total_raw is None and not g.complete
++    c = out.coverage
++    assert (c.work_count, c.components, c.no_detail, c.quantity_complete_works, c.quantity_incomplete_works) == (4, 3, 1, 2, 2)
++    assert (c.contribution_rows, c.known_contribution_rows, c.unknown_contribution_rows, c.reference_rows) == (3, 2, 1, 1)
++    assert not c.complete_components
++    assert any(r.work_key == "w:2" and r.row_id == "r1" for r in g.missing_work_refs)
++    assert any(r.work_key == "w:3" and r.row_id is None for r in g.missing_work_refs)
++
++
++def test_complete_raw_differs_from_rounded_legacy_sum():
++    items = [work(), work("B")]
++    out = build_quantity_summary(items, context())
++    assert out.groups[0].total_raw == "0.6450" and sum(w.quantity for w in items) == .646
++    assert out.groups[0].complete and out.coverage.complete_components
++    assert result(items, out).quantity_summary == out
++
++
++def test_geometry_methods_are_trace_not_specification_partition():
++    out = build_quantity_summary([work(method="box"), work("B", method="prismoid"), work("C", method="area")], context())
++    assert len(out.groups) == 1 and out.groups[0].calculation_methods == ["area", "box", "prismoid"]
++
++
++@pytest.mark.parametrize("patch", [{"variant": "khác"}, {"unit": "m²"}, {"source": "structural"},
++                                   {"basis": "bang_thong_ke"}, {"stage": "nen"}])
++def test_incompatible_fields_are_not_merged(patch):
++    out = build_quantity_summary([work(), work("B", **patch)], context())
++    assert len(out.groups) == 2
++
++
++def test_formwork_parent_families_not_merged():
++    a = work(code="COP_PHA", unit="m²", formwork_of="COT")
++    b = work("B", code="COP_PHA", unit="m²", formwork_of="SAN")
++    assert len(build_quantity_summary([a, b], context()).groups) == 2
++
++
++@pytest.mark.parametrize("ctx", [context(lean_concrete_grade=None), context(concrete_supply=None)])
++def test_unknown_specification_isolates_without_changing_quantity_complete(ctx):
++    out = build_quantity_summary([work(), work("B")], ctx)
++    assert len(out.groups) == 2 and out.coverage.compatibility_pending_works == 2
++    assert out.coverage.quantity_complete_works == 2
++    assert all(g.compatibility == "isolated_unknown" and g.compatibility_reasons and g.complete for g in out.groups)
++
++
++@pytest.mark.parametrize("code", ["DAO_DAT", "DAP_DAT", "COT_THEP"])
++def test_unavailable_soil_or_steel_class_not_inferred_from_evidence(code):
++    out = build_quantity_summary([work(code=code, evidence=["AF giả M100"]), work("B", code=code)], context())
++    assert len(out.groups) == 2 and out.coverage.compatibility_pending_works == 2
++
++
++def test_signed_amount_zero_and_reference_only():
++    positive = work(raw="1", legacy=1)
++    negative = work("B", raw="1", legacy=-1, sign=-1)
++    out = build_quantity_summary([positive, negative], context())
++    assert out.groups[0].known_part_raw == "0" and out.groups[0].total_raw == "0"
++    ref = work(role="reference", scope=False)
++    out = build_quantity_summary([ref], context())
++    assert out.groups[0].known_part_raw is None and out.groups[0].total_raw is None
++    assert out.coverage.contribution_rows == 0 and out.coverage.reference_rows == 1
++
++
++def test_aggregate_quantity_complete_is_not_component_coverage():
++    out = build_quantity_summary([work(level="aggregate")], context())
++    assert out.groups[0].complete and out.coverage.quantity_complete_works == 1
++    assert out.coverage.aggregate == 1 and not out.coverage.complete_components
++
++
++def test_empty_is_not_full_and_has_no_fabricated_zero_total():
++    out = build_quantity_summary([], context())
++    assert out.groups == [] and out.coverage.work_count == 0 and not out.coverage.complete_components
++    assert result([], out).quantity_summary == out
++
++
++def test_long_decimal_precision_and_json_roundtrip():
++    raw = "1.12345678901234567890123456789"
++    item = work(raw=raw, legacy=0)
++    out = build_quantity_summary([item, work("B", raw=".00000000000000000000000000001", legacy=0)], context())
++    assert out.groups[0].total_raw == "1.12345678901234567890123456790"
++    r = result([item, work("B", raw=".00000000000000000000000000001", legacy=0)], out)
++    assert RoughResult.model_validate_json(r.model_dump_json()) == r
++
++
++@pytest.mark.parametrize("field", ["hash", "sum", "membership", "group_key", "coverage", "context", "row_ref"])
++def test_parent_rejects_stale_or_forged_summary_without_repair(field):
++    items = partial_case();out = build_quantity_summary(items, context())
++    data = out.model_dump()
++    if field == "hash":data["quantity_snapshot_hash"] = "0" * 64
++    elif field == "sum":data["groups"][0]["known_part_raw"] = "999"
++    elif field == "membership":data["groups"][0]["member_work_keys"][0] = "w:999"
++    elif field == "group_key":data["groups"][0]["key"]["source"] = "khác"
++    elif field == "coverage":
++        data["coverage"]["reference_rows"] += 1
++    elif field == "context":data["context"]["lean_concrete_grade"] = "M200"
++    else:data["groups"][0]["missing_work_refs"][0]["row_id"] = "missing-fake"
++    copy = deepcopy(data)
++    with pytest.raises(ValueError):
++        result(items, QuantitySummary(**data))
++    assert data == copy
++
++
++def test_changed_work_order_or_raw_detail_invalidates_snapshot():
++    items = [work(), work("B")];out = build_quantity_summary(items, context())
++    with pytest.raises(ValueError):result(list(reversed(items)), out)
++    changed = [work(raw="0.3226"), items[1]]
++    with pytest.raises(ValueError):result(changed, out)
++
++
++def test_summary_revalidates_mutable_parent_and_nested_receipts():
++    item = work();item.status = "D"
++    with pytest.raises(ValueError):build_quantity_summary([item], context())
++    item = work();item.quantity_detail.rows[0].raw_quantity = "999"
++    with pytest.raises(ValueError):build_quantity_summary([item], context())
++
++
++def test_legacy_none_parent_cannot_claim_complete_detail_but_keeps_partial_known():
++    r = QuantityDetailRow(row_id="r1", label="Phần biết", unit="m³", raw_quantity="1",
++                          method="source_quantity", sources=["SYNTHETIC"])
++    full = summarize([r], "m³", None, scope_complete=True)
++    with pytest.raises(ValidationError):
++        WorkItem(code="BE_TONG_LOT", name="Lót", unit="m³", quantity=None, quantity_detail=full)
++    partial = summarize([r], "m³", None, scope_complete=False)
++    item = WorkItem(code="BE_TONG_LOT", name="Lót", unit="m³", stage="mong", source="manual", quantity=None,
++                    quantity_detail=partial, status="D", missing=["Còn thiếu phạm vi"])
++    out = build_quantity_summary([item], context())
++    assert item.quantity is None and out.groups[0].known_part_raw == "1"
++    assert not out.groups[0].complete and out.groups[0].total_raw is None
++
++
++def test_old_result_payload_has_no_summary_and_context_uses_exact_declared_params():
++    old = RoughResult(works=[work(no_detail=True)], materials=[], intermediates=[])
++    assert old.quantity_summary is None and RoughResult.model_validate_json(old.model_dump_json()) == old
++    p = ProjectParams(concrete_grade="M300", lean_concrete_grade="M150", concrete_supply="ready_mix")
++    ctx = grouping_context(p)
++    assert ctx.concrete_grade == "M300" and ctx.lean_concrete_grade == "M150"
++    assert set(ctx.model_dump()) == set(QuantityGroupingContext.model_fields)
++
++
++def test_compute_integration_only_adds_summary_and_preserves_legacy(monkeypatch):
++    from optimat.catalog.repository import Catalog
++    from optimat.rough import takeoff
++    from optimat.rough.models import FoundationItem
++    p = ProjectParams(concrete_supply="ready_mix", lean_concrete_grade="M100", foundations=[FoundationItem(
++        name="M1", count=2, length_mm=750, width_mm=2150, height_mm=500, lean_thickness_mm=100)])
++    req = takeoff.RoughRequest(plans=[], params=p)
++    cat = Catalog.from_csv(None)
++    actual = takeoff.compute_rough(req, cat)
++    assert actual.quantity_summary and any(g.known_part_raw == "0.3225" for g in actual.quantity_summary.groups)
++    monkeypatch.setattr(takeoff, "build_quantity_summary", lambda *a: None)
++    baseline = takeoff.compute_rough(req, cat)
++    assert actual.model_dump(exclude={"quantity_summary"}) == baseline.model_dump(exclude={"quantity_summary"})
++    assert RoughResult.model_validate_json(actual.model_dump_json()) == actual
+--- a/tests/test_rough_quantity_details.py
++++ b/tests/test_rough_quantity_details.py
+@@ -276,9 +276,9 @@
+         return [w.model_copy(update={"quantity_detail": None}) for w in works], warnings
+     monkeypatch.setattr(takeoff, "foundation_works", without_details)
+     baseline = takeoff.compute_rough(req, cat)
+-    actual = with_detail.model_dump()
++    actual = with_detail.model_dump(exclude={"quantity_summary"})
+     for item in actual["works"]:
+         item["quantity_detail"] = None
+-    assert actual == baseline.model_dump()  # toàn payload legacy, gồm totals/materials/status/giá
++    assert actual == baseline.model_dump(exclude={"quantity_summary"})  # toàn payload legacy, gồm totals/materials/status/giá
+     lean = next(w for w in with_detail.works if w.code == "BE_TONG_LOT")
+     assert lean.quantity == .323 and lean.quantity_detail.total_raw == "0.3225"
+--- a/tests/test_rough_area_details.py
++++ b/tests/test_rough_area_details.py
+@@ -141,6 +141,6 @@
+     assert deductions and all(w.quantity_detail is None for w in deductions)  # CP âm ngoài P02
+     monkeypatch.setattr(areas, "area_detail", lambda work, *a, **kw: work)
+     baseline = compute_rough(req, cat)
+-    dumped = actual.model_dump()
++    dumped = actual.model_dump(exclude={"quantity_summary"})
+     for w in dumped["works"]:w["quantity_detail"] = None
+-    assert dumped == baseline.model_dump()  # nguồn/status/totals/materials/giá không đổi
++    assert dumped == baseline.model_dump(exclude={"quantity_summary"})  # nguồn/status/totals/materials/giá không đổi

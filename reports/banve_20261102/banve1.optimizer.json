@@ -1,0 +1,59 @@
+{
+ "status": null,
+ "stages": {
+  "dat_mong": "Đất và móng",
+  "khung": "Khung bê tông cốt thép",
+  "tuong": "Tường xây, trát",
+  "chong_tham": "Chống thấm, nền"
+ },
+ "materials": [],
+ "missing": [],
+ "groups": [
+  {
+   "group_id": "be_tong_cot_thep",
+   "name": "Vật liệu bê tông cốt thép",
+   "in_scope": true,
+   "materials": [],
+   "weight_kg": null,
+   "weight_complete": true,
+   "status": null
+  },
+  {
+   "group_id": "phan_tho",
+   "name": "Vật liệu thi công phần thô",
+   "in_scope": true,
+   "materials": [],
+   "weight_kg": null,
+   "weight_complete": true,
+   "status": null
+  },
+  {
+   "group_id": "hoan_thien",
+   "name": "Vật liệu hoàn thiện",
+   "in_scope": false,
+   "materials": [],
+   "weight_kg": null,
+   "weight_complete": true,
+   "status": null
+  },
+  {
+   "group_id": "khac_phap_ly",
+   "name": "Vật liệu khác và khung pháp lý",
+   "in_scope": false,
+   "materials": [],
+   "weight_kg": null,
+   "weight_complete": true,
+   "status": null
+  },
+  {
+   "group_id": "ket_cau_thep_bao_che",
+   "name": "Vật liệu kết cấu thép và bao che",
+   "in_scope": false,
+   "materials": [],
+   "weight_kg": null,
+   "weight_complete": true,
+   "status": null
+  }
+ ],
+ "envelope_by_orientation": {}
+}

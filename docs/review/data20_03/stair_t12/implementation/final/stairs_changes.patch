@@ -1,0 +1,683 @@
+--- a/src/optimat/rough/stairs.py
++++ b/src/optimat/rough/stairs.py
+@@ -1,16 +1,5 @@
+-"""Cầu thang bê tông cốt thép (đặc tả mục 3.7). Quy ước B3 chưa có công thức chi tiết; công thức dưới đây là cách
+-bóc thông dụng, cần giảng viên duyệt. Thông số thang người dùng nhập (bản vẽ chỉ cho biết có thang: cặp nét bị loại vì
+-"bậc thang / lan can").
+-
+-Một thang nối mặt bằng này với tầng trên, cao H:
+-    cao bậc               = H / số bậc
+-    dài bản thang (m)     = √((số bậc × rộng bậc)² + H²)
+-    bê tông bản thang     = rộng vế × dài bản thang × dày bản thang
+-    bê tông bậc           = số bậc × (rộng bậc × cao bậc / 2) × rộng vế
+-    bê tông chiếu nghỉ    = diện tích chiếu nghỉ × dày bản thang
+-    cốp pha               = rộng vế × dài bản thang + diện tích chiếu nghỉ (đáy) + số bậc × cao bậc × rộng vế (thành bậc)
+-    dầm thang/chiếu nghỉ  = dài × rộng × cao (nhập riêng; cộng vào bê tông cầu thang), cốp pha (2 × cao + rộng) × dài
+-Quy ước đầu vào (S08-01): chỉ thang bản (kind = "ban"); thang cốn, thang xoắn ghi Not supported, không trả số.
++"""Thang bản theo từng vế/chiếu có nguồn; bậc xây tách khỏi bê tông.
++Dữ liệu legacy/nhận nét chỉ là ứng viên, không thay geometry và scope từng thang.
+ """
+ from __future__ import annotations
+ 
+@@ -18,11 +7,53 @@
+ import re
+ from typing import Literal, Optional
+ 
+-from pydantic import BaseModel
++from pydantic import BaseModel, Field, ConfigDict, model_validator
+ 
+ from .materials import _fmt
+-from .models import ProjectParams, WorkItem
++from .models import ProjectParams, WorkItem, QuantityDetailRow
++from .quantity_details import summarize
+ from .walls import _work
++
++
++class StairFlight(BaseModel):
++    model_config=ConfigDict(extra="forbid")
++    id: str
++    run_mm: float | None = None
++    rise_mm: float | None = None
++    width_mm: float | None = None
++    waist_thickness_mm: float | None = None
++    thickness_basis: Literal["normal", "vertical", "unknown"] = "unknown"
++    step_count: int | None = None
++    tread_mm: float | None = None
++    riser_mm: float | None = None
++    field_sources: dict[str,str] = Field(default_factory=dict)
++
++    @model_validator(mode="after")
++    def _measurements(self):
++        if not self.id.strip():raise ValueError("ID vế không được trống.")
++        for name in ("run_mm","rise_mm","width_mm","waist_thickness_mm","step_count","tread_mm","riser_mm"):
++            v=getattr(self,name)
++            if v is not None and (not math.isfinite(v) or v<=0):
++                raise ValueError("Số đo vế thang phải hữu hạn và dương.")
++        return self
++
++
++class StairLanding(BaseModel):
++    model_config=ConfigDict(extra="forbid")
++    id: str
++    area_m2: float | None = None
++    thickness_mm: float | None = None
++    ownership: Literal["stair","floor","beam","unknown"] = "unknown"
++    field_sources: dict[str,str] = Field(default_factory=dict)
++
++    @model_validator(mode="after")
++    def _measurements(self):
++        if not self.id.strip():raise ValueError("ID chiếu không được trống.")
++        if self.area_m2 is not None and (not math.isfinite(self.area_m2) or self.area_m2<0):
++            raise ValueError("Diện tích chiếu phải hữu hạn, không âm.")
++        if self.thickness_mm is not None and (not math.isfinite(self.thickness_mm) or self.thickness_mm<=0):
++            raise ValueError("Dày chiếu phải hữu hạn, dương.")
++        return self
+ 
+ 
+ class Stair(BaseModel):
+@@ -37,6 +68,32 @@
+     beam_depth_mm: Optional[float] = None
+     keep: bool = True
+     source: str = "manual"                   # manual (người dùng nhập) | auto (nhận từ nét mũi bậc trên mặt bằng, B)
++    steps_material: Literal["concrete","masonry","unknown"] = "unknown"
++    steps_material_source: str | None = None
++    waist_thickness_mm: float | None = None
++    waist_thickness_basis: Literal["normal","vertical","unknown"] = "unknown"
++    waist_thickness_source: str | None = None
++    scope_source: str | None = None
++    formwork_scope_source: str | None = None
++    from_floor: str | None = None
++    to_floor: str | None = None
++    flights: list[StairFlight] | None = None
++    landings: list[StairLanding] | None = None
++
++    @model_validator(mode="after")
++    def _components(self):
++        if not self.id.strip():raise ValueError("ID thang không được trống.")
++        if (self.from_floor is None)!=(self.to_floor is None):
++            raise ValueError("Phạm vi thang cần cả tầng đầu và tầng cuối.")
++        if self.waist_thickness_mm is not None and (not math.isfinite(self.waist_thickness_mm) or self.waist_thickness_mm<=0):
++            raise ValueError("Dày bản thang phải hữu hạn và dương.")
++        for components in (self.flights,self.landings):
++            if components is not None and len({x.id for x in components})!=len(components):
++                raise ValueError("ID vế hoặc chiếu bị trùng trong thang.")
++        ids=[x.id for group in (self.flights,self.landings) for x in group or []]
++        if len(ids)!=len(set(ids)):
++            raise ValueError("Vế và chiếu cần ID riêng trong cùng thang.")
++        return self
+ 
+ 
+ # Nhận thang trên mặt bằng: các nét mũi bậc là chuỗi nét thẳng song song, cùng dài (bề rộng vế), cách đều (bề rộng bậc).
+@@ -129,72 +186,131 @@
+         part = own or detect_stairs(d, 3)
+         if ref and any(abs((s.flight_width_mm or 0) - ref.flight_width_mm) < 150 for s in part) and (
+                 not own or max(s.steps or 0 for s in own) < ref.steps):
+-            out.append([ref.model_copy(update={"id": "T1"})])
+-            warnings.append(f"{name}: thang vẽ dở (đường cắt), lấy theo thang đủ nhất trong nhà: {ref.steps} bậc, "
+-                            f"vế {ref.flight_width_mm:.0f} mm, bậc {ref.tread_mm:.0f} mm; kiểm tra.")
++            out.append(part)
++            warnings.append(f"{name}: thang vẽ dở; mẫu cùng rộng vế có {ref.steps} bậc nhưng chưa xác nhận cùng phạm vi, "
++                            "không sao chép số bậc, cấu tạo hoặc cao độ sang thang này.")
+         else:
+             out.append(own)
+     return out, warnings
+ 
+ 
+-def stair_works(plan: str, stairs: list[Stair], height_mm: float, params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
+-    works, warnings = [], []
+-    t = params.stair_slab_thickness_mm
++def _component_row(row_id, label, raw, unit, sources, missing=(), dimensions=None, role="contribution"):
++    return QuantityDetailRow(row_id=row_id,label=label,raw_quantity=None if raw is None else str(raw),
++        unit=unit,method="box" if unit=="m³" else "area",sources=sources,missing=list(missing),dimensions=dimensions,role=role)
++
++
++def _component_work(code, rows, plan, stair, missing, **kwargs):
++    reasons=list(dict.fromkeys([*missing,*[reason for r in rows if r.role=="contribution" for reason in r.missing]]))
++    scope=bool(stair.scope_source and stair.scope_source.strip())
++    if not scope:
++        reasons.append("chưa xác nhận phạm vi từng thang/vế/chiếu")
++    if not stair.from_floor or not stair.to_floor:
++        reasons.append("chưa xác nhận tầng đầu/cuối của thang")
++    detail=summarize(rows,"m³" if code=="CAU_THANG" else "m²",None,scope_complete=scope and not reasons)
++    known=float(detail.known_part_raw) if detail.known_part_raw is not None else None
++    work=_work(code,known,plan=plan,element=f"thang {stair.id}",source="auto" if stair.source=="auto" else "manual",
++        basis="stair_components",missing=list(dict.fromkeys(reasons)),
++        status="D" if reasons or known is None else "C",
++        evidence=list(dict.fromkeys([v for r in rows for v in r.sources])),
++        dimensions=[r.dimensions for r in rows if r.dimensions is not None],**kwargs)
++    work.quantity_detail=summarize(rows,work.unit,work.quantity,scope_complete=scope and not reasons)
++    return work
++
++
++def stair_works(plan: str, stairs: list[Stair], height_mm: float | None, params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
++    """Tính theo component có nguồn; H tầng và ProjectParams không thay hình học từng vế."""
++    works,warnings=[],[]
+     for s in (s for s in stairs if s.keep):
+-        missing = [label for v, label in ((s.steps, "số bậc"), (s.flight_width_mm, "bề rộng vế"),
+-                                          (s.tread_mm, "bề rộng bậc"), (t, "dày bản thang")) if v is None]
+-        label = f"thang {s.id}"
+-        dimensions = [dict(label=f"{s.id}: hình học thang", count=1,
+-                           length_m=s.steps*s.tread_mm/1000 if s.steps is not None and s.tread_mm is not None else None,
+-                           slope_length_m=math.hypot(s.steps*s.tread_mm/1000, height_mm/1000) if None not in (s.steps, s.tread_mm, height_mm) else None,
+-                           width_m=s.flight_width_mm/1000 if s.flight_width_mm is not None else None,
+-                           height_m=height_mm/1000 if height_mm is not None else None,
+-                           thickness_m=t/1000 if t is not None else None,
+-                           source=f"{plan}: thang {s.id} ({s.source}); cao tầng và dày bản từ thông số",
+-                           note=f"Dài là tổng chạy ngang; {s.steps if s.steps is not None else '?'} bậc; chiếu nghỉ {s.landing_area_m2:g} m²")]
+-        dimensions.extend([
+-            dict(label=f"{s.id}: bậc thang", count=s.steps,
+-                 length_m=s.tread_mm/1000 if s.tread_mm is not None else None,
+-                 width_m=s.flight_width_mm/1000 if s.flight_width_mm is not None else None,
+-                 height_m=height_mm/1000/s.steps if s.steps is not None and s.steps > 0 and height_mm is not None else None,
+-                 source=f"{plan}: số bậc, mặt bậc và cao tầng", note="Dài là mặt bậc; cao là cao bậc, không phải cao tầng"),
+-            dict(label=f"{s.id}: chiếu nghỉ", count=1, area_m2=s.landing_area_m2,
+-                 thickness_m=t/1000 if t is not None else None,
+-                 source=f"{plan}: diện tích chiếu nghỉ và dày bản; 0 là không có chiếu nghỉ")])
++        source=s.scope_source or f"{plan}: Stair.{s.id}; chưa có nguồn phạm vi"
++        if s.kind!="ban":
++            works.append(_work("CAU_THANG",None,plan=plan,element=f"thang {s.id}",basis="not_supported",
++                missing=["thang cốn/xoắn ngoài phạm vi công thức thang bản"]))
++            continue
++        concrete,forms=[],[]
++        missing=[]
++        material_known=s.steps_material!="unknown" and bool(s.steps_material_source and s.steps_material_source.strip())
++        if not material_known:
++            missing.append("cấu tạo và nguồn vật liệu bậc chưa xác định")
++        if not s.flights:
++            reason="chưa có run/rise/width và nguồn từng vế; không lấy tổng cao tầng hoặc tổng số bậc thay thế"
++            concrete.append(_component_row("flights:unknown","Bản nghiêng chưa gán vế",None,"m³",[source],[reason]))
++            forms.append(_component_row("flights:unknown","Đáy bản nghiêng chưa gán vế",None,"m²",[source],[reason]))
++        for flight in s.flights or []:
++            sources=[source,*[v for v in flight.field_sources.values() if v.strip()]]
++            errors=[f"{flight.id}: {key} hoặc nguồn" for key in ("run_mm","rise_mm","width_mm")
++                if getattr(flight,key) is None or not flight.field_sources.get(key,"").strip()]
++            t=flight.waist_thickness_mm if flight.waist_thickness_mm is not None else s.waist_thickness_mm
++            basis=flight.thickness_basis if flight.waist_thickness_mm is not None else s.waist_thickness_basis
++            t_source=flight.field_sources.get("waist_thickness_mm") if flight.waist_thickness_mm is not None else s.waist_thickness_source
++            if t is None or basis!="normal" or not (t_source and t_source.strip()):
++                errors.append(f"{flight.id}: dày bản vuông góc và nguồn riêng")
++            if t_source and t_source.strip():sources.append(t_source)
++            geometry_ok=all(getattr(flight,k) is not None and flight.field_sources.get(k,"").strip() for k in ("run_mm","rise_mm","width_mm"))
++            slope=math.hypot(flight.run_mm,flight.rise_mm)/1000 if geometry_ok else None
++            area=slope*flight.width_mm/1000 if slope is not None else None
++            dims=dict(label=f"{s.id}/{flight.id}: bản nghiêng",count=1,
++                length_m=flight.run_mm/1000 if flight.run_mm is not None else None,
++                slope_length_m=slope,width_m=flight.width_mm/1000 if flight.width_mm is not None else None,
++                height_m=flight.rise_mm/1000 if flight.rise_mm is not None else None,
++                thickness_m=t/1000 if t is not None else None,source="; ".join(sources),
++                note="Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép")
++            concrete.append(_component_row(f"{flight.id}:waist",f"Bản nghiêng {flight.id}",area*t/1000 if area is not None and not errors else None,
++                "m³",sources,errors,dims))
++            form_errors=[] if geometry_ok else [f"{flight.id}: hình học và nguồn đáy bản nghiêng"]
++            forms.append(_component_row(f"{flight.id}:soffit",f"Đáy bản nghiêng {flight.id}",area,"m²",sources,form_errors,dims))
++            if material_known and s.steps_material=="masonry":
++                concrete.append(_component_row(f"{flight.id}:steps","Bậc xây gạch không thuộc bê tông",0,"m³",[s.steps_material_source],role="reference"))
++                forms.append(_component_row(f"{flight.id}:risers","Không đổ BT thành bậc xây",0,"m²",[s.steps_material_source],role="reference"))
++            elif material_known and s.steps_material=="concrete":
++                step_errors=[f"{flight.id}: {key} hoặc nguồn bậc bê tông" for key in ("step_count","tread_mm","riser_mm","width_mm")
++                    if getattr(flight,key) is None or not flight.field_sources.get(key,"").strip()]
++                q=flight.step_count*flight.tread_mm*flight.riser_mm*flight.width_mm/2e9 if not step_errors else None
++                a=flight.step_count*flight.riser_mm*flight.width_mm/1e6 if not step_errors else None
++                step_dims=dict(label=f"{s.id}/{flight.id}: bậc BT",count=flight.step_count,
++                    length_m=flight.tread_mm/1000 if flight.tread_mm is not None else None,
++                    width_m=flight.width_mm/1000 if flight.width_mm is not None else None,
++                    height_m=flight.riser_mm/1000 if flight.riser_mm is not None else None,
++                    source="; ".join([*sources,s.steps_material_source]),note="BT bậc tam giác có hệ số1/2; CP chỉ tính mặt đứng bậc")
++                concrete.append(_component_row(f"{flight.id}:steps",f"Bậc bê tông {flight.id}",q,"m³",[*sources,s.steps_material_source],step_errors,step_dims))
++                forms.append(_component_row(f"{flight.id}:risers",f"Thành bậc bê tông {flight.id}",a,"m²",[*sources,s.steps_material_source],step_errors,step_dims))
++            else:
++                concrete.append(_component_row(f"{flight.id}:steps","Bậc chưa rõ cấu tạo",None,"m³",sources,["vật liệu và nguồn cấu tạo bậc"]))
++                forms.append(_component_row(f"{flight.id}:risers","Thành bậc chưa rõ cấu tạo",None,"m²",sources,["vật liệu và nguồn cấu tạo bậc"]))
++        if s.landings is None:
++            reason="chưa gán các chiếu và quyền sở hữu; dữ liệu rỗng không phải diện tích0"
++            concrete.append(_component_row("landings:unknown","Chiếu chưa gán",None,"m³",[source],[reason]))
++            forms.append(_component_row("landings:unknown","Đáy chiếu chưa gán",None,"m²",[source],[reason]))
++        for landing in s.landings or []:
++            sources=[source,*[v for v in landing.field_sources.values() if v.strip()]]
++            owner_source=landing.field_sources.get("ownership","").strip()
++            errors=[]
++            if landing.ownership=="unknown" or not owner_source:
++                errors.append(f"{landing.id}: quyền sở hữu chiếu/giao chưa có nguồn")
++            excluded=landing.ownership in ("floor","beam") and bool(owner_source)
++            for key in ("area_m2","thickness_mm"):
++                if getattr(landing,key) is None or not landing.field_sources.get(key,"").strip():errors.append(f"{landing.id}: {key} hoặc nguồn")
++            raw=landing.area_m2*landing.thickness_mm/1000 if not errors else None
++            role="reference" if excluded else "contribution"
++            dims=dict(label=f"{s.id}/{landing.id}",count=1,area_m2=landing.area_m2,
++                thickness_m=landing.thickness_mm/1000 if landing.thickness_mm is not None else None,
++                source="; ".join(sources),note=f"Chiếu thuộc {landing.ownership}; không gán dày chiếu sang vế")
++            concrete.append(_component_row(f"{landing.id}:landing",f"Chiếu {landing.id}",raw,"m³",sources,errors,dims,role))
++            forms.append(_component_row(f"{landing.id}:soffit",f"Đáy chiếu {landing.id}",landing.area_m2 if not errors else None,"m²",sources,errors,dims,role))
+         if s.beam_length_mm:
+-            dimensions.append(dict(label=f"{s.id}: dầm thang", count=1, length_m=s.beam_length_mm/1000,
+-                width_m=s.beam_width_mm/1000 if s.beam_width_mm is not None else None,
+-                height_m=s.beam_depth_mm/1000 if s.beam_depth_mm is not None else None, source="Thông số dầm thang"))
+-        src = "auto" if s.source == "auto" else "manual"   # trạng thái: auto -> B (suy luận), manual -> C
+-        if s.kind != "ban":
+-            works.append(_work("CAU_THANG", None, plan=plan, dimensions=dimensions, element=label, basis="not_supported",
+-                               missing=[f"Not supported: thang {'cốn' if s.kind == 'con' else 'xoắn'} chưa có quy ước đo bóc"]))
+-            continue
+-        if s.beam_length_mm and (s.beam_width_mm is None or s.beam_depth_mm is None):
+-            missing.append("tiết diện dầm thang")
+-        if missing:
+-            works.append(_work("CAU_THANG", None, plan=plan, dimensions=dimensions, element=label, missing=missing))
+-            works.append(_work("COP_PHA", None, plan=plan, dimensions=dimensions, element=f"cốp pha {label}", formwork_of="CAU_THANG", missing=missing))
+-            continue
+-        H, n, w, b, tt = height_mm / 1000, s.steps, s.flight_width_mm / 1000, s.tread_mm / 1000, t / 1000
+-        riser = H / n
+-        if riser > RISER_MAX_M:
+-            warnings.append(f"{plan}, {label}: cao bậc {riser * 1000:.0f} mm (tầng {height_mm:.0f} / {n} bậc) quá lớn: "
+-                            "số bậc có thể thiếu (nhận sót vế), kiểm tra lại số bậc.")
+-        slope = math.hypot(n * b, H)
+-        slab = w * slope * tt
+-        steps = n * b * riser / 2 * w
+-        landing = s.landing_area_m2 * tt
+-        bl = s.beam_length_mm / 1000
+-        bb, bd = (s.beam_width_mm or 0) / 1000, (s.beam_depth_mm or 0) / 1000
+-        beam_txt = f" + dầm thang {_fmt(bl)} × {_fmt(bb)} × {_fmt(bd)}" if bl else ""
+-        works.append(_work("CAU_THANG", slab + steps + landing + bl * bb * bd, plan=plan, dimensions=dimensions, element=label, source=src,
+-                           formula=f"bản {_fmt(w)} × {_fmt(slope)} × {_fmt(tt)} + bậc {n} × {_fmt(b)} × {_fmt(riser)} / 2 × {_fmt(w)}"
+-                                   f" + chiếu nghỉ {_fmt(s.landing_area_m2)} × {_fmt(tt)}" + beam_txt))
+-        works.append(_work("COP_PHA", w * slope + s.landing_area_m2 + n * riser * w + (2 * bd + bb) * bl, plan=plan, dimensions=dimensions, source=src,
+-                           element=f"cốp pha {label}", formwork_of="CAU_THANG",
+-                           formula=f"{_fmt(w)} × {_fmt(slope)} + {_fmt(s.landing_area_m2)} + {n} × {_fmt(riser)} × {_fmt(w)}"
+-                                   + (f" + (2 × {_fmt(bd)} + {_fmt(bb)}) × {_fmt(bl)}" if bl else "")))
+-    if works:
+-        warnings.append(f"{plan}: công thức cầu thang là cách bóc thông dụng, Quy ước B3 chưa có; cần giảng viên duyệt.")
+-    return works, warnings
++            reason="dầm thang chưa có nguồn, phạm vi và khoản giao riêng; không cộng từ kích thước legacy"
++            concrete.append(_component_row("beam:unknown","Dầm thang chưa gán",None,"m³",[source],[reason]))
++            forms.append(_component_row("beam:unknown","Mặt/giao dầm thang chưa gán",None,"m²",[source],[reason]))
++        if not (s.formwork_scope_source and s.formwork_scope_source.strip()):
++            forms.append(_component_row("surfaces:unknown","Cạnh/gối/giao cốp pha chưa kiểm",None,"m²",[source],
++                ["chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện"]))
++        else:
++            forms.append(_component_row("surfaces:scope","Nguồn xác nhận phạm vi CP chỉ gồm các mặt đã liệt kê",0,"m²",
++                [s.formwork_scope_source],role="reference"))
++        works.append(_component_work("CAU_THANG",concrete,plan,s,missing,formula="Σ rộng vế × hypot(run,rise) × dày vuông góc + bậc BT có nguồn + chiếu thuộc thang"))
++        works.append(_component_work("COP_PHA",forms,plan,s,missing,formwork_of="CAU_THANG",formula="Σ đáy bản/chiếu và thành bậc đổBT có nguồn; cạnh/gối/giao còn thiếu"))
++        if material_known and s.steps_material=="masonry":
++            works.append(_work("XAY",None,plan=plan,element=f"bậc xây thang {s.id}",basis="stair_steps_masonry",
++                evidence=[s.steps_material_source],missing=["hình học bậc xây từng vế và quy cách gạch/vữa; chưa bóc riêng"],
++                formula="Bậc xây gạch tách khỏi bê tông; chưa có lượng xây"))
++        warnings.append(f"{plan}, thang {s.id}: chỉ tính component có nguồn; không dùng H tầng, mặc định BT bậc hoặc DAI thép thay hình học.")
++    return works,warnings
+--- a/src/optimat/rough/status.py
++++ b/src/optimat/rough/status.py
+@@ -101,8 +101,11 @@
+         out.append(("C", "kích thước móng, cao độ: C (nhập tay)"))
+     elif code == "CAU_THANG":
+         out.append(_src(w.source, "thang", "B", "suy từ nét mũi bậc trên mặt bằng"))
+-        out.append(_param(params.stair_slab_thickness_mm, "dày bản thang"))
+-        out.append((h or "D", f"chiều cao tầng: {h or 'D (chưa có nguồn)'}"))
++        if w.basis == "stair_components":
++            out.append(("C", "hình học, dày bản và phạm vi theo từng component có nguồn; không dùng H/t toàn nhà"))
++        else:
++            out.append(_param(params.stair_slab_thickness_mm, "dày bản thang"))
++            out.append((h or "D", f"chiều cao tầng: {h or 'D (chưa có nguồn)'}"))
+     else:   # MAI, GIANG_TUONG, SE_NO, BE_TONG_LOT chung
+         out.append(_src(w.source, w.name.lower(), "C", "nhập tay"))
+     return out
+--- a/src/optimat/rough/takeoff.py
++++ b/src/optimat/rough/takeoff.py
+@@ -440,6 +440,9 @@
+             if length[p.name] > 0:
+                 scope_issues.append(f"{p.name}: chưa có chiều cao tầng.")
+             warnings.append(f"{p.name}: chưa có chiều cao tầng, chưa tính phần thô của mặt bằng này.")
++            stair_items, stair_notes = stair_works(p.name, p.stairs, None, params)
++            works += stair_items
++            warnings += stair_notes
+             continue
+         kept_ids = {w.id for w in p.walls if w.keep}
+         if any(o.keep and o.wall not in kept_ids for o in p.openings):
+--- a/tests/test_rough_stairs.py
++++ b/tests/test_rough_stairs.py
+@@ -1,23 +1,29 @@
+-"""Phần thô S4c: cầu thang."""
++"""Thang bản có nguồn theo từng vế; không mặc định bậc bê tông."""
+ import math
+-
+ import pytest
+-
+ from optimat.rough.models import ProjectParams
+-from optimat.rough.stairs import Stair, stair_works
++from optimat.rough.stairs import Stair, StairFlight, StairLanding, stair_works
+ 
+ 
+ def test_two_flight_stair():
+-    s = Stair(steps=22, flight_width_mm=1000, tread_mm=250, landing_area_m2=2.0)
+-    works, warnings = stair_works("T1", [s], 3300, ProjectParams(stair_slab_thickness_mm=120))
+-    riser, slope = 3.3 / 22, math.hypot(22 * 0.25, 3.3)
+-    beton = next(w for w in works if w.code == "CAU_THANG")
+-    assert beton.quantity == pytest.approx(slope * 0.12 + 22 * 0.25 * riser / 2 + 2 * 0.12, abs=1e-3)
+-    cp = next(w for w in works if w.code == "COP_PHA")
+-    assert cp.quantity == pytest.approx(slope + 2.0 + 22 * riser, abs=1e-3)
+-    assert "giảng viên" in warnings[0]
++    fs={k:"SYNTHETIC mặt cắt vế" for k in ["run_mm","rise_mm","width_mm","step_count","tread_mm","riser_mm"]}
++    s=Stair(id="T1",steps_material="concrete",steps_material_source="SYNTHETIC bậc đổBT",
++        from_floor="T1",to_floor="T2",scope_source="SYNTHETIC phạm vi thang",
++        waist_thickness_mm=120,waist_thickness_basis="normal",waist_thickness_source="SYNTHETIC DIM vuông góc",
++        flights=[StairFlight(id=f"V{i}",run_mm=2750,rise_mm=1650,width_mm=1000,step_count=11,tread_mm=250,riser_mm=150,field_sources=fs) for i in (1,2)],
++        landings=[StairLanding(id="CN",area_m2=2,thickness_mm=120,ownership="stair",field_sources={k:"SYNTHETIC chiếu" for k in ["area_m2","thickness_mm","ownership"]})])
++    works,_=stair_works("T1",[s],3300,ProjectParams())
++    slope=math.hypot(2.75,1.65)*2
++    beton=next(w for w in works if w.code=="CAU_THANG")
++    assert beton.quantity==pytest.approx(slope*.12+22*.25*.15/2+2*.12,abs=1e-3)
++    assert beton.quantity_detail.complete
++    cp=next(w for w in works if w.code=="COP_PHA")
++    assert cp.quantity==pytest.approx(slope+2+22*.15,abs=1e-3)
++    assert cp.missing and not cp.quantity_detail.complete  # mặt cạnh/gối/giao chưa được kiểm
+ 
+ 
+ def test_stair_missing_inputs():
+-    works, _ = stair_works("T1", [Stair(steps=20)], 3300, ProjectParams())
+-    assert works[0].quantity is None and set(works[0].missing) == {"bề rộng vế", "bề rộng bậc", "dày bản thang"}
++    works,_=stair_works("T1",[Stair(steps=20)],3300,ProjectParams(stair_slab_thickness_mm=150))
++    assert works[0].quantity is None
++    assert any("từng vế" in m for m in works[0].missing)
++    assert works[0].quantity_detail.total_raw is None
+--- a/tests/test_rough_stairs_detect.py
++++ b/tests/test_rough_stairs_detect.py
+@@ -25,11 +25,11 @@
+     assert detect_stairs(_drawing(rows + cols)) == []
+ 
+ 
+-def test_partial_flight_takes_full_stair_of_building():
++def test_partial_flight_does_not_take_unscoped_template():
+     full = _drawing(_flight(0, 9) + _flight(1100, 9))
+     cut = _drawing(_flight(0, 3))            # tầng trệt: vài bậc trước đường cắt
+     roof = _drawing(_flight(0, 9))
+     stairs, notes = building_stairs([cut, full, roof], ["MẶT BẰNG TRỆT", "MẶT BẰNG LẦU 1", "MẶT BẰNG SÂN THƯỢNG"])
+-    assert stairs[0][0].steps == 20 and stairs[1][0].steps == 20
++    assert stairs[0][0].steps == 4 and stairs[1][0].steps == 20
+     assert stairs[2] == []                   # thang trên sân thượng là thang đi xuống, không tính thêm
+-    assert any(n.startswith("MẶT BẰNG TRỆT:") for n in notes)
++    assert any(n.startswith("MẶT BẰNG TRỆT:") and "không sao chép" in n for n in notes)
+--- /dev/null
++++ b/tests/test_rough_stair_components.py
+@@ -0,0 +1,144 @@
++"""Hình học, cấu tạo và nguồn riêng từng thang/vế/chiếu."""
++import math
++from types import SimpleNamespace
++
++import pytest
++from pydantic import ValidationError
++from optimat.catalog.repository import Catalog
++from optimat.drawing.review import ReviewWall
++from optimat.rough.models import ProjectParams
++from optimat.rough.stairs import Stair, StairFlight, StairLanding, stair_works, building_stairs
++from optimat.rough.takeoff import PlanInput, RoughRequest, compute_rough
++
++
++def flight(id="V1",**kw):
++    data=dict(id=id,run_mm=2400,rise_mm=1500,width_mm=1000,
++        field_sources={k:"SYNTHETIC DIM riêng vế" for k in ["run_mm","rise_mm","width_mm","step_count","tread_mm","riser_mm"]})
++    return StairFlight(**(data|kw))
++
++
++def stair(**kw):
++    data=dict(id="T1",from_floor="T1",to_floor="T2",scope_source="SYNTHETIC phạm vi thang",
++        steps_material="masonry",steps_material_source="SYNTHETIC note bậc xây",
++        waist_thickness_mm=120,waist_thickness_basis="normal",waist_thickness_source="SYNTHETIC DIM vuông góc",
++        flights=[flight()],landings=[])
++    return Stair(**(data|kw))
++
++
++def concrete(s,params=None,height=9999):
++    return next(w for w in stair_works("T1",[s],height,params or ProjectParams())[0] if w.code=="CAU_THANG")
++
++
++def test_masonry_does_not_add_concrete_wedges_or_cast_riser_faces():
++    works,_=stair_works("T1",[stair()],9999,ProjectParams(stair_slab_thickness_mm=999))
++    bt=next(w for w in works if w.code=="CAU_THANG")
++    assert bt.quantity==pytest.approx(round(math.hypot(2.4,1.5)*.12,3))
++    refs=[r for r in bt.quantity_detail.rows if r.row_id.endswith(":steps")]
++    assert len(refs)==1 and refs[0].role=="reference" and refs[0].raw_quantity=="0"
++    cp=next(w for w in works if w.code=="COP_PHA")
++    assert cp.quantity==pytest.approx(round(math.hypot(2.4,1.5),3))
++    assert cp.missing and not cp.quantity_detail.complete
++    assert next(w for w in works if w.code=="XAY").quantity is None
++
++
++@pytest.mark.parametrize("material,source",[("unknown",None),("masonry",None),("concrete",None)])
++def test_unconfirmed_steps_keep_known_slab_but_not_complete(material,source):
++    w=concrete(stair(steps_material=material,steps_material_source=source))
++    assert w.quantity is not None and w.missing
++    assert w.quantity_detail.total_raw is None and not w.quantity_detail.complete
++    assert next(r for r in w.quantity_detail.rows if r.row_id.endswith(":steps")).raw_quantity is None
++
++
++def test_concrete_steps_need_own_counts_dimensions_and_sources():
++    f=flight(step_count=8,tread_mm=250,riser_mm=180)
++    w=concrete(stair(steps_material="concrete",steps_material_source="SYNTHETIC BT bậc",flights=[f]))
++    assert w.quantity_detail.complete
++    assert w.quantity==pytest.approx(round(math.hypot(2.4,1.5)*.12+8*.25*.18/2,3))
++    missing=concrete(stair(steps_material="concrete",steps_material_source="SYNTHETIC",flights=[flight()]))
++    assert missing.quantity is not None and missing.missing and not missing.quantity_detail.complete
++
++
++def test_separate_flights_do_not_receive_floor_height_or_total_steps():
++    f2=flight("V2",run_mm=3000,rise_mm=1800)
++    s=stair(flights=[flight(),f2],steps=17,tread_mm=250)
++    a=concrete(s,height=3150);b=concrete(s,height=9999)
++    expected=(math.hypot(2.4,1.5)+math.hypot(3,1.8))*.12
++    assert a.quantity==b.quantity==pytest.approx(round(expected,3))
++    assert [d.height_m for d in a.dimensions]==[1.5,1.8]
++
++
++def test_landing_150_does_not_change_normal_waist_120_or_double_count_floor():
++    sources={k:"SYNTHETIC chiếu tới riêng" for k in ["area_m2","thickness_mm","ownership"]}
++    landing=StairLanding(id="CT",area_m2=2,thickness_mm=150,ownership="stair",field_sources=sources)
++    base=math.hypot(2.4,1.5)*.12
++    w=concrete(stair(landings=[landing]))
++    assert w.quantity==pytest.approx(round(base+.3,3)) and w.quantity_detail.complete
++    excluded=concrete(stair(landings=[landing.model_copy(update={"ownership":"floor"})]))
++    assert excluded.quantity==pytest.approx(round(base,3))
++    assert next(r for r in excluded.quantity_detail.rows if r.row_id=="CT:landing").role=="reference"
++
++
++@pytest.mark.parametrize("kw",[dict(flights=None),dict(landings=None),dict(scope_source=None),
++    dict(flights=[flight(rise_mm=None)]),dict(waist_thickness_basis="vertical"),dict(waist_thickness_source=None)])
++def test_missing_scope_or_measurement_does_not_become_complete(kw):
++    w=concrete(stair(**kw))
++    assert w.missing and not w.quantity_detail.complete and w.quantity_detail.total_raw is None
++
++
++def test_sources_do_not_leak_between_stairs():
++    works,_=stair_works("T1",[stair(id="A"),stair(id="B",steps_material="unknown",steps_material_source=None)],None,ProjectParams())
++    a=next(w for w in works if w.code=="CAU_THANG" and w.element=="thang A")
++    b=next(w for w in works if w.code=="CAU_THANG" and w.element=="thang B")
++    assert a.quantity_detail.complete and not b.quantity_detail.complete
++
++
++def test_component_scope_computes_when_plan_height_is_missing_and_walls_stay_blocked():
++    wall=ReviewWall(id="W",cls="220",x1=0,y1=0,x2=4000,y2=0)
++    req=RoughRequest(plans=[PlanInput(name="Tầng 1",height_mm=None,walls=[wall],stairs=[stair()])])
++    result=compute_rough(req,Catalog.from_csv())
++    bt=[w for w in result.works if w.code=="CAU_THANG"]
++    assert len(bt)==1 and bt[0].quantity is not None and bt[0].status=="C" and bt[0].quantity_detail.complete
++    assert not any(w.code=="TRAT" for w in result.works)
++    assert not any(w.code=="XAY" and not (w.element or "").startswith("bậc xây") for w in result.works)
++
++
++def test_unresolved_source_replay_is_null_not_zero():
++    s=stair(flights=[StairFlight(id=f"V{i}") for i in range(1,4)],
++        landings=[StairLanding(id="CT",thickness_mm=150,field_sources={"thickness_mm":"KC source"})])
++    result=compute_rough(RoughRequest(plans=[PlanInput(name="Tầng 1",walls=[],stairs=[s])]),Catalog.from_csv())
++    for w in result.works:
++        if w.code=="CAU_THANG" or w.formwork_of=="CAU_THANG":
++            assert w.quantity is None and w.status=="D" and w.missing
++            assert w.quantity_detail.known_part_raw is None
++
++
++@pytest.mark.parametrize("kw",[dict(width_mm=float("nan")),dict(rise_mm=-1),dict(waist_thickness_mm=float("inf"))])
++def test_bad_geometry_rejected(kw):
++    with pytest.raises(ValidationError):flight(**kw)
++
++
++def test_partial_reader_does_not_copy_material_thickness_or_confirmed_source(monkeypatch):
++    from optimat.rough import stairs as module
++    full=stair(steps=20,flight_width_mm=1000)
++    part=Stair(steps=4,flight_width_mm=1000)
++    monkeypatch.setattr(module,"detect_stairs",lambda d,*args:[full] if d=="full" else [part])
++    found,_=building_stairs(["part","full"],["Tầng 1","Tầng 2"])
++    assert found[0][0].steps==4 and found[0][0].steps_material=="unknown"
++    assert found[0][0].waist_thickness_mm is None and found[0][0].scope_source is None
++
++
++def test_formwork_scope_requires_own_source_and_cannot_fill_missing_geometry():
++    confirmed=stair(formwork_scope_source="SYNTHETIC đã kiểm chỉ đáy, không cạnh/gối/giao khác")
++    works,_=stair_works("T1",[confirmed],None,ProjectParams())
++    cp=next(w for w in works if w.code=="COP_PHA")
++    assert cp.quantity_detail.complete and cp.status=="C"
++    unresolved=confirmed.model_copy(update={"flights":[flight(rise_mm=None)]})
++    cp=next(w for w in stair_works("T1",[unresolved],None,ProjectParams())[0] if w.code=="COP_PHA")
++    assert cp.quantity is None and cp.status=="D" and not cp.quantity_detail.complete
++
++
++def test_component_ids_and_unknown_fields_are_validated():
++    with pytest.raises(ValidationError):
++        stair(landings=[StairLanding(id="V1")])
++    with pytest.raises(ValidationError):
++        StairFlight(id="V1",height_floor_mm=3300)
+--- a/tests/test_work_dimensions.py
++++ b/tests/test_work_dimensions.py
+@@ -142,19 +142,21 @@
+ 
+ 
+ def test_stair_horizontal_slope_steps_landing_and_beam_are_separate():
+-    s = Stair(id="T1", steps=20, flight_width_mm=1000, tread_mm=250, landing_area_m2=1.5,
+-              beam_length_mm=2400, beam_width_mm=220, beam_depth_mm=300)
+-    works, _ = stair_works("T2", [s], 3000, ProjectParams(stair_slab_thickness_mm=120))
+-    w = one(works, "CAU_THANG"); dims = {d.label: d for d in w.dimensions}
+-    assert dims["T1: hình học thang"].length_m == 5
+-    assert dims["T1: hình học thang"].slope_length_m == pytest.approx(math.sqrt(34))
+-    assert (dims["T1: bậc thang"].count, dims["T1: bậc thang"].height_m) == (20, 0.15)
+-    assert dims["T1: chiếu nghỉ"].area_m2 == 1.5
+-    assert dims["T1: dầm thang"].length_m == 2.4
+-    expected = math.sqrt(34) * 0.12 + 20 * 0.25 * 0.15 / 2 + 1.5 * 0.12 + 2.4 * 0.22 * 0.3
+-    assert w.quantity == pytest.approx(round(expected, 3))
+-    missing = one(stair_works("T2", [s.model_copy(update={"tread_mm": None})], 3000, ProjectParams())[0], "CAU_THANG")
+-    assert missing.quantity is None and missing.dimensions[0].length_m is None
++    from tests.test_rough_takeoff import confirmed_stair
++    s=confirmed_stair().model_copy(update={"beam_length_mm":2400,"beam_width_mm":220,"beam_depth_mm":300})
++    works,_=stair_works("T2",[s],None,ProjectParams(stair_slab_thickness_mm=999))
++    w=one(works,"CAU_THANG");dims={d.label:d for d in w.dimensions}
++    assert dims["T1/V1: bản nghiêng"].length_m==2.75
++    assert dims["T1/V1: bản nghiêng"].height_m==1.65
++    assert dims["T1/V1: bản nghiêng"].slope_length_m==pytest.approx(math.hypot(2.75,1.65))
++    assert dims["T1/CN"].area_m2==2 and dims["T1/CN"].thickness_m==.12
++    expected=2*math.hypot(2.75,1.65)*.12+22*.25*.15/2+2*.12
++    assert w.quantity==pytest.approx(round(expected,3))  # beam chưa có nguồn/giao không tự cộng
++    assert not w.quantity_detail.complete and any("dầm thang" in m for m in w.missing)
++    no_geometry=s.model_copy(update={"flights":None,"landings":None})
++    missing=one(stair_works("T2",[no_geometry],3000,ProjectParams())[0],"CAU_THANG")
++    assert missing.quantity is None and any("từng vế" in m for m in missing.missing)
++
+ 
+ 
+ def test_steel_table_keeps_diameter_cut_count_but_ratio_and_manual_have_no_fake_geometry():
+--- a/tests/test_rough_status.py
++++ b/tests/test_rough_status.py
+@@ -10,7 +10,7 @@
+ from optimat.rough.status import assign_status, height_status
+ from optimat.rough.stairs import Stair, stair_works
+ from optimat.rough.takeoff import PlanInput, RoughRequest, compute_rough
+-from tests.test_rough_takeoff import FULL, plan, walls
++from tests.test_rough_takeoff import FULL, plan, walls, confirmed_stair
+ 
+ 
+ def test_worst_status_order():
+@@ -20,17 +20,17 @@
+ 
+ 
+ def test_auto_stair_status_includes_thickness_height_and_formwork():
+-    params = ProjectParams(stair_slab_thickness_mm=120)
+-    stair = Stair(steps=22, flight_width_mm=1000, tread_mm=250, source="auto")
+-    works, _ = stair_works("Tầng 1", [stair], 3300, params)
+-    quantities = [w.quantity for w in works]
+-    assign_status(works, params, {"Tầng 1": "cao độ tầng trên"})
+-    concrete, formwork = works
+-    assert concrete.status == "C" and formwork.status == "C"
++    params=ProjectParams()
++    stair=confirmed_stair().model_copy(update={"source":"auto"})
++    works,_=stair_works("Tầng 1",[stair],None,params)
++    quantities=[w.quantity for w in works]
++    assign_status(works,params,{})
++    concrete,formwork=works
++    assert concrete.status=="C" and formwork.status=="C"
+     assert any(i.startswith("thang: B") for i in concrete.inputs)
+-    assert "dày bản thang: C (thông số công trình)" in concrete.inputs
+-    assert "chiều cao tầng: B" in concrete.inputs
+-    assert [w.quantity for w in works] == quantities
++    assert any("từng component" in i for i in concrete.inputs)
++    assert not any(i.startswith("chiều cao tầng:") or i.startswith("dày bản thang:") for i in concrete.inputs)
++    assert [w.quantity for w in works]==quantities
+ 
+ 
+ @pytest.mark.parametrize("source, expected", [("auto", "B"), ("manual", "C"), ("structural", "A")])
+@@ -47,7 +47,7 @@
+     works, _ = stair_works("Tầng 1", [Stair(steps=22, flight_width_mm=1000, tread_mm=250, source="auto")], 3300, params)
+     assign_status(works, params, {"Tầng 1": "cao độ tầng trên"})
+     assert all(w.quantity is None and w.status == "D" for w in works)
+-    assert all("thiếu: dày bản thang" in w.inputs for w in works)
++    assert all(any("từng vế" in i for i in w.inputs) for w in works)
+ 
+ 
+ def test_stair_without_height_source_is_not_reported_complete():
+@@ -55,7 +55,7 @@
+     works, _ = stair_works("Tầng 1", [Stair(steps=22, flight_width_mm=1000, tread_mm=250, source="auto")], 3300, params)
+     assign_status(works, params, {})
+     assert all(w.status == "D" for w in works)
+-    assert "chiều cao tầng: D (chưa có nguồn)" in works[0].inputs
++    assert any("từng vế" in i for i in works[0].inputs)
+ 
+ 
+ def test_status_on_full_house():
+--- a/tests/test_rough_takeoff.py
++++ b/tests/test_rough_takeoff.py
+@@ -5,7 +5,7 @@
+ from optimat.drawing.review import ReviewOpening, ReviewWall
+ from optimat.rough.columns import Column
+ from optimat.rough.models import GroundLayer, ProjectParams
+-from optimat.rough.stairs import Stair
++from optimat.rough.stairs import Stair, StairFlight, StairLanding
+ from optimat.rough.takeoff import PlanInput, RoomLabel, RoughRequest, compute_rough, ground_index
+ 
+ 
+@@ -20,11 +20,22 @@
+     [(0, 0), (5000, 0), (10000, 0), (0, 6000), (5000, 6000), (10000, 6000)])]
+ 
+ 
++def confirmed_stair():
++    source="SYNTHETIC thang: đã xác nhận phạm vi, không dầm riêng"
++    fs={k:source for k in ["run_mm","rise_mm","width_mm","step_count","tread_mm","riser_mm"]}
++    return Stair(id="T1",from_floor="T1",to_floor="T2",scope_source=source,
++        formwork_scope_source="SYNTHETIC chỉ đáy+thành bậc; không mặt cạnh hoặc giao khác",
++        steps_material="concrete",steps_material_source=source,
++        waist_thickness_mm=120,waist_thickness_basis="normal",waist_thickness_source=source,
++        flights=[StairFlight(id=f"V{i}",run_mm=2750,rise_mm=1650,width_mm=1000,step_count=11,tread_mm=250,riser_mm=150,field_sources=fs) for i in (1,2)],
++        landings=[StairLanding(id="CN",area_m2=2,thickness_mm=120,ownership="stair",field_sources={k:source for k in ["area_m2","thickness_mm","ownership"]})])
++
++
+ def plan(name, ground):
+     return PlanInput(name=name, is_ground=ground, height_mm=3300, walls=walls(), columns=COLS, void_area_m2=0 if not ground else None,
+                      openings=[ReviewOpening(id="O1", wall="A", w=1000, h=2200)],
+                      labels=[RoomLabel(kind="WET", text="WC", x=1500, y=3000)],
+-                     stairs=[] if not ground else [Stair(steps=22, flight_width_mm=1000, tread_mm=250, landing_area_m2=2)])
++                     stairs=[] if not ground else [confirmed_stair()])
+ 
+ 
+ FULL = ProjectParams(concrete_supply="ready_mix", concrete_grade="M250", lean_concrete_grade="M100", masonry_mortar_grade="M75",
+@@ -51,7 +62,10 @@
+ 
+ 
+ def test_no_params_everything_flagged_not_guessed():
+-    res = compute_rough(RoughRequest(plans=[plan("Trệt", True), plan("Tầng 2", False)]), Catalog.from_csv(None))
++    ground = plan("Trệt", True)
++    # Ca legacy chưa có nguồn thang; fixture complete ở ca khác không được điền hộ.
++    ground.stairs = [Stair(steps=22, flight_width_mm=1000, tread_mm=250, landing_area_m2=2)]
++    res = compute_rough(RoughRequest(plans=[ground, plan("Tầng 2", False)]), Catalog.from_csv(None))
+     incomplete = {t.code for t in res.totals if not t.complete}
+     assert {"LANH_TO", "DAM", "SAN", "COT_THEP", "NEN_DEM_CAT", "CHONG_THAM", "CAU_THANG"} <= incomplete
+     assert next(t for t in res.totals if t.code == "XAY").complete      # xây không cần thông số bắt buộc

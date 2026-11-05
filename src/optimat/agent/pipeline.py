@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from ..catalog.pricing import BillLine, bill_of_materials
 from ..catalog.repository import Catalog
-from ..drawing.takeoff import takeoff_from_file
+from ..drawing.takeoff import takeoff_building_from_file
 from ..optimize.problem import optimize
 from ..predict.cost_model import MaterialPriceModel
 from ..rough.models import ProjectParams
@@ -20,7 +20,7 @@ LOW_CONFIDENCE = 0.7
 
 
 def step_takeoff(state: dict) -> dict:
-    state["takeoff"] = takeoff_from_file(state["drawing_path"], state.get("floor_height_mm"), state.get("layer_overrides"))
+    state["takeoff"] = takeoff_building_from_file(state["drawing_path"], state.get("floor_height_mm"), state.get("layer_overrides"))
     return state
 
 
@@ -53,16 +53,15 @@ def step_bill(state: dict) -> dict:
 
 
 def step_rough(state: dict) -> dict:
-    """Bóc phần thô (xây, trát, bê tông, thép, cốp pha... và vật liệu mua về) khi người dùng gửi thông số công trình.
-    Không gửi thì bỏ qua: phần thô cần thông số (mác bê tông, dày sàn...) mà agent không được đoán."""
-    params: ProjectParams | None = state.get("rough_params")
-    if params is None:
-        return state
+    """Bóc phần thô (xây, trát, bê tông, thép, cốp pha... và vật liệu mua về), có bản vẽ kết cấu thì đọc thêm móng, dầm.
+    Không gửi thông số công trình thì vẫn bóc: phần cần thông số (mác bê tông, dày sàn...) để trống kèm cảnh báo (B7)."""
+    params: ProjectParams = state.get("rough_params") or ProjectParams()
     from ..drawing.dxf_reader import read_drawing
     from ..rough.takeoff import compute_rough, rough_from_drawing
     catalog = state.get("catalog") or Catalog.load()
+    structural = [read_drawing(p) for p in state.get("structural_paths") or []] or None
     req = rough_from_drawing(read_drawing(state["drawing_path"], state.get("layer_overrides")), params,
-                             state.get("floor_height_mm"), catalog)
+                             state.get("floor_height_mm"), catalog, structural=structural)
     state["rough"] = compute_rough(req, catalog)
     return state
 
@@ -141,11 +140,13 @@ STEPS = [step_takeoff, step_check, step_bill, step_rough, step_constraints, step
 
 def run_pipeline(drawing_path: str, message: str | None = None, constraints: Constraints | None = None,
                  floor_height_mm: float | None = None, layer_overrides: dict[str, str] | None = None,
-                 use_llm: bool = True, catalog: Catalog | None = None, rough_params: ProjectParams | None = None) -> dict:
-    """drawing_path: file .dxf hoặc .dwg. rough_params: thông số công trình; có thì bóc thêm phần thô."""
+                 use_llm: bool = True, catalog: Catalog | None = None, rough_params: ProjectParams | None = None,
+                 structural_paths: list[str] | None = None) -> dict:
+    """drawing_path: bản vẽ kiến trúc .dxf/.dwg. rough_params: thông số công trình (trống được).
+    structural_paths: bản vẽ kết cấu tách file (móng, dầm, cột)."""
     state = {"drawing_path": drawing_path, "message": message, "constraints": constraints,
              "floor_height_mm": floor_height_mm, "layer_overrides": layer_overrides, "use_llm": use_llm,
-             "catalog": catalog, "rough_params": rough_params}
+             "catalog": catalog, "rough_params": rough_params, "structural_paths": structural_paths}
     for step in STEPS:
         state = step(state)
     return state

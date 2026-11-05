@@ -1,0 +1,18 @@
+[
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\src\\optimat\\rough\\secondary.py",
+    "Hash": "ABAE8C82719E7EE5E9EBBF1FEC29995588ABAA721D752BBC7AB0CEC525443985"
+  },
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\tests\\test_rough_secondary.py",
+    "Hash": "FC2FE1D1E7FA0A5644B0EAA1B403407B66408C0EF77B72F755A0206F90B1451B"
+  },
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\tests\\test_rough_status.py",
+    "Hash": "E27C58BBC3F9AA4FBB186CDFEDE9E944E28A7AFE9CB7C48079DE6715FD55556C"
+  },
+  {
+    "Path": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\src\\optimat\\rough\\status.py",
+    "Hash": "F35DF97DE208E3CD9C9E7C67BE82197FB94819D291403695BC1DF1870652A812"
+  }
+]

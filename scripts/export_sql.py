@@ -15,6 +15,7 @@ from sqlalchemy.schema import CreateIndex, CreateTable
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from optimat.db.models import Base  # noqa: E402
+from optimat.db.compat20 import schema_sql  # noqa: E402
 
 RULE_TABLES = {"material_rules": "material_rules.csv", "room_rules": "room_rules.csv", "rough_norms": "dinh_muc_phan_tho.csv",
                "material_notes": "material_notes.csv", "drawing_concepts": "concepts.csv", "convention_clauses": "quy_uoc.csv"}
@@ -30,14 +31,7 @@ def literal(value) -> str:
 
 
 def main() -> None:
-    dialect = postgresql.dialect()
-    lines = [f"-- Lược đồ OptiMat AI ({len(Base.metadata.tables)} bảng). Sinh tự động từ src/optimat/db/models.py, không sửa tay.",
-             "-- Chạy trong DBeaver khi đang kết nối tới database optimat bằng tài khoản optimat.", ""]
-    for table in Base.metadata.sorted_tables:
-        lines.append(str(CreateTable(table).compile(dialect=dialect)).strip() + ";\n")
-        for index in sorted(table.indexes, key=lambda i: i.name):
-            lines.append(str(CreateIndex(index).compile(dialect=dialect)).strip() + ";\n")
-    (ROOT / "sql/01_schema.sql").write_text("\n".join(lines), encoding="utf8")
+    (ROOT / "sql/01_schema.sql").write_text(schema_sql(), encoding="utf8")
 
     seed = ["-- Dữ liệu khởi tạo: 5 nhóm vật liệu (thật) và danh mục MẪU (data_kind = SAMPLE).",
             "-- Chạy sau 01_schema.sql. Thay dữ liệu SAMPLE bằng dữ liệu thật trước khi báo cáo kết quả.", ""]
@@ -56,13 +50,22 @@ def main() -> None:
              "SET client_encoding = 'UTF8';", "BEGIN;"]
     for name, csv in RULE_TABLES.items():
         df = pd.read_csv(ROOT / "data/rules" / csv, dtype=str)
+        # cột chỉ có trong CSV (chưa đổi lược đồ) thì không đưa vào SQL
+        df = df[[c for c in df.columns if c in Base.metadata.tables[name].columns]]
         cols = ", ".join(f'"{c}"' for c in df.columns)
         rules += ["", f"-- {name}: {len(df)} dòng từ {csv}", f'DELETE FROM "{name}";']
         for row in df.itertuples(index=False):
             rules.append(f'INSERT INTO "{name}" ({cols}) VALUES ({", ".join(literal(v) for v in row)});')
     rules += ["", "COMMIT;", ""]
     (ROOT / "sql/05_rules.sql").write_text("\n".join(rules), encoding="utf8")
-    print(f"Đã ghi sql/01_schema.sql ({len(Base.metadata.tables)} bảng), sql/02_seed_sample.sql và sql/05_rules.sql")
+    parts=['01_schema.sql','02_seed_sample.sql','03_materials.sql','04_upgrade.sql','05_rules.sql','06_demo_actual.sql','07_cement_historical_actual.sql']
+    bundle=['-- OptiMat AI: khởi tạo 20 bảng vật lý và dữ liệu nguồn. Không phải backup dữ liệu người dùng.\n-- Database đã có dữ liệu: dùng migrate_schema20.py --apply, không chạy lại gói khởi tạo.']
+    for name in parts:
+        path=ROOT/'sql'/name
+        if path.exists():
+            bundle.append('-- Nguồn: '+name+'\n'+path.read_text(encoding='utf-8'))
+    (ROOT/'sql/optimat_day_du.sql').write_text('\n\n'.join(bundle),encoding='utf-8')
+    print('Đã ghi sql/01_schema.sql (20 bảng vật lý và view tương thích), sql/02_seed_sample.sql và sql/05_rules.sql')
 
 
 if __name__ == "__main__":

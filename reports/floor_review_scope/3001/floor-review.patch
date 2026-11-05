@@ -1,0 +1,659 @@
+--- a/src/app/(user)/dieu-chinh/materials.tsx
++++ b/src/app/(user)/dieu-chinh/materials.tsx
+@@ -6,6 +6,7 @@
+ import { useReference } from "@/lib/reference";
+ import { MATERIAL_PARAMS, saveMaterialSession, type ReviewSession } from "@/lib/review-session";
+ import { initState, payload, postJson, roughFields, roughValues, roughRequest, type RoughResult, type Confirmed } from "../do-boc/model";
++import { scopeReady, scopeIndices, scopedBodies, scopeLabel } from "../do-boc/floor-review";
+ import { reviewMatchesConfirmed } from "../do-boc/Review";
+ import { approvedWork, geometryChanged, sameWorkVersion, unchangedCheckedRows, type WorkSnapshot, type WorkReceipt, type WorkVersion } from "@/lib/work-review";
+ import { AdviceSheet } from "./AdviceSheet";
+@@ -46,7 +47,7 @@
+       // eslint-disable-next-line react-hooks/set-state-in-effect -- thông báo cổng khôi phục snapshot trình duyệt
+       setMessage("Hãy kiểm tra và lưu công tác, khối lượng ở bước trước khi chọn vật liệu."); return;
+     }
+-    if (current && current.data.plans.every((_, i) => !!current.states[i]?.scope) && current.data.plans.some((_, i) => current.states[i]?.scope === "count") && reviewMatchesConfirmed(current.data.file, current.confirmed, store.get<Confirmed[]>("optimat-confirmed", []))) {
++    if (current && scopeReady(current.data.plans,current.states,current.reviewScope) && reviewMatchesConfirmed(current.data.file, scopedBodies(current.data.plans,current.states,current.confirmed,current.reviewScope), store.get<Confirmed[]>("optimat-confirmed", []))) {
+       const draft = store.get<MaterialDraft | null>("optimat-material-draft", null);
+       base.current = latest;
+       const matching = sameWorkVersion(latest, draft) ? draft : null;
+@@ -107,7 +108,7 @@
+     setBusy(true); setMessage("");
+     try {
+       const currentReceipt = validate();
+-      const proposedRequest = roughRequest(session.data, session.states, session.planP, original.request.project_id, session.structural, params);
++      const proposedRequest = roughRequest(session.data, session.states, session.planP, original.request.project_id, session.structural, params, session.reviewScope);
+       if (original.materialRevision && currentReceipt && JSON.stringify(proposedRequest) === JSON.stringify(original.request)) {
+         const materialRevision = crypto.randomUUID();
+         const next = { ...session, materialRevision };
+@@ -117,15 +118,15 @@
+         setMessage("Đã lưu phương án đã chọn theo bản khối lượng hiện tại." + (selections.some(c => c.disposition === "proposed") ? " Mã thay thế vẫn chờ kiểm thiết kế." : ""));
+         return;
+       }
+-      const confirmed: Record<number, Confirmed> = {};
++      const confirmed: Record<number, Confirmed> = { ...session.confirmed };
+       for (const [i, plan] of session.data.plans.entries()) {
+-        if (session.states[i]?.scope !== "count") continue;
++        if (!scopeIndices(session.data.plans,session.reviewScope).includes(i) || session.states[i]?.scope !== "count") continue;
+         confirmed[i] = await postJson<Confirmed>("/api/takeoff/confirm", payload(session.data, plan, session.states[i], Number(store.get("optimat-project", "")) || null), "Không lưu được lựa chọn vật liệu.");
+         if (!mounted.current) return;
+       }
+       const others = store.get<Confirmed[]>("optimat-confirmed", []).filter((p) => p.file !== session.data.file);
+       const next = { ...session, confirmed };
+-      const request = roughRequest(next.data, next.states, next.planP, Number(store.get("optimat-project", "")) || null, next.structural, params);
++      const request = roughRequest(next.data, next.states, next.planP, Number(store.get("optimat-project", "")) || null, next.structural, params, next.reviewScope);
+       const calculated = await postJson<RoughResult>("/api/takeoff/rough", request, "Chưa tính được vật tư theo lựa chọn mới.");
+       if (!mounted.current) return;
+       const receipt = validate();
+@@ -139,7 +140,7 @@
+         checked: unchangedCheckedRows(original.result, calculated, receipt), partial: false, confirmed: false } : receipt;
+       // Chỉ chuyển quyết định sang kết quả mới khi dòng vật tư vẫn đúng mã và phạm vi.
+       const remaining = carrySelections(original, work, selections);
+-      saveMaterialSession(next, [...others, ...Object.values(confirmed)], params, work, pending, remaining);
++      saveMaterialSession(next, [...others, ...Object.values(scopedBodies(next.data.plans,next.states,confirmed,next.reviewScope))], params, work, pending, remaining);
+       base.current = work;
+       if (changed) {
+         setSession(null); setSaved(false);
+@@ -162,6 +163,7 @@
+     <Head title="Chọn vật liệu" actions={<Link className="btn" href="/phan-tho">Về kiểm tra khối lượng</Link>}>Chọn vật liệu theo bản khối lượng đã kiểm. Phương án đề xuất lấy từ danh mục và nhận dạng bản vẽ.</Head>
+     {message && <p role="status">{message}</p>}
+     {!session ? <Empty><Link href="/phan-tho">Mở bước Kiểm tra công tác và khối lượng</Link></Empty> : <>
++      {session.reviewScope && <p>{scopeLabel(session.data.plans,session.states,session.reviewScope)}</p>}
+       {advice && <Card title="Bảng phương án vật liệu phần thô">
+         <AdviceSheet key={advice.work.reviewId} work={advice.work} receipt={advice.receipt} version={advice.work.materialRevision}
+           params={params} onParam={changeParam} fields={roughFields(ref).flatMap(([, fields]) => fields)
+@@ -184,7 +186,7 @@
+         <div className="flex flex-wrap items-center gap-3"><button type="button" className="btn primary" disabled={busy || stale} onClick={save}>{busy ? "Đang lưu…" : "Lưu phương án đã chọn"}</button>
+           <span>{saved ? "Đã lưu vào dự án" : "Bản nháp"}</span></div>
+       </Card>}
+-      {session.data.plans.map((plan, i) => session.states[i]?.scope === "count" && <Card key={i} title={`Chi tiết tường · ${plan.plan.name}`}>
++      {session.data.plans.map((plan, i) => scopeIndices(session.data.plans,session.reviewScope).includes(i) && session.states[i]?.scope === "count" && <Card key={i} title={`Chi tiết tường · ${plan.plan.name}`}>
+         <Sheet rows={session.states[i].walls.filter(w => w.keep && w.masonry)} file={`vat-lieu-tuong-${i+1}.csv`} cols={[
+           { key: "id", title: "Tường" }, { key: "cls", title: "Loại tường (mm)", num: true },
+           { key: "mat", title: "Vật liệu", text: w => w.mat || "Chưa chọn", render: w => {
+--- /dev/null
++++ b/src/app/(user)/do-boc/floor-review.ts
+@@ -0,0 +1,76 @@
++import type { Confirmed, Plan, PlanState } from "./model";
++
++export type ReviewScope = number[];
++type States = Record<number, PlanState>;
++export type FloorGroup = { key: string; label: string; views: number[]; reasons: string[] };
++
++const normalize = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/gi, "d").toLowerCase();
++export function floorKey(title: string) {
++  const s = normalize(title).replace(/\b(?:ty le|ti le|tl)\s*:?\s*1\s*[:/]\s*\d+/g, "").replace(/[±+-]?\d+[.,]\d+/g, "");
++  if (/\b(?:lung|ham|ngam|dien hinh|cac tang)\b/.test(s) || /\d\s*(?:[-–—,/&+]|den|va|toi)\s*(?:(?:tang|lau)\s*)?\d/.test(s)) return null;
++  const matches = [...s.matchAll(/\b(tret|san thuong|mai|(?:tang|lau)\s*\d+)\b/g)];
++  const ids = new Set(matches.map(([v]) => v === "tret" ? "T1" : v === "mai" ? "MAI" : v === "san thuong" ? "ST" :
++    "T" + (Number(v.match(/\d+/)![0]) + (v.startsWith("lau") ? 1 : 0))));
++  return ids.size === 1 ? [...ids][0] : null;
++}
++
++function planFloor(plan: Plan) {
++  const source = plan.plan.floor_key;
++  return typeof source === "string" && /^(T[1-9]\d*|MAI|ST)$/.test(source) ? source : floorKey(plan.plan.name);
++}
++export function scopeIndices(plans: Plan[], scope?: ReviewScope) {
++  return plans.flatMap((_, i) => scope === undefined || scope.includes(i) ? [i] : []);
++}
++export function floorGroups(plans: Plan[], states: States): FloorGroup[] {
++  const groups = new Map<string, FloorGroup>();
++  plans.forEach((p, i) => {
++    const id = planFloor(p), key = id || "view-" + i;
++    const label = id === "ST" ? "Sân thượng" : id === "MAI" ? "Mái" : id === "T1" ? "Tầng 1 / Trệt" :
++      id ? "Tầng " + id.slice(1) + " / Lầu " + (Number(id.slice(1)) - 1) : p.plan.name || "Hình " + (i + 1);
++    const g = groups.get(key) || { key, label, views: [], reasons: [] };
++    g.views.push(i);
++    const st = states[i];
++    const reason = (v: string) => { if (!g.reasons.includes(v)) g.reasons.push(v); };
++    if (!id) reason("Chưa rõ tầng");
++    if (st?.scope !== "reference") {
++      if (!((st?.height_mm ?? p.height_mm) > 0)) reason("Thiếu chiều cao");
++      if ((st?.openings || p.openings).some(o => (!("keep" in o) || o.keep) && (!o.w || !o.h))) reason("Lỗ mở thiếu kích thước");
++      for (const warning of p.warnings || []) if (warning.trim()) reason(warning);
++    }
++    groups.set(key, g);
++  });
++  for (const g of groups.values()) if (g.views.length > 1 && g.views.filter(i => states[i]?.scope !== "reference").length > 1)
++    g.reasons.unshift("Nhiều hình cùng tầng, cần đối chiếu nguồn");
++  return [...groups.values()];
++}
++
++export function scopeConflict(plans: Plan[], states: States, scope?: ReviewScope) {
++  const indices = scopeIndices(plans, scope);
++  const used = new Map<string, number>();
++  for (const i of indices) {
++    if (states[i]?.scope !== "count") continue;
++    const name = plans[i].plan.name;
++    const id = planFloor(plans[i]), title = normalize(name);
++    const mixed = !id && (/\d\s*(?:[-–—,/&+]|den|va|toi)\s*(?:(?:tang|lau)\s*)?\d/.test(title) ||
++      (title.match(/\b(?:tang\s*\d+|lau\s*\d+|tret|mai|san thuong)\b/g) || []).length > 1);
++    if (mixed && indices.some(j => j !== i && states[j]?.scope === "count")) return i;
++    const key = id || "name:" + title.trim();
++    if (used.has(key)) return i;
++    used.set(key, i);
++  }
++  return -1;
++}
++export function scopeReady(plans: Plan[], states: States, scope?: ReviewScope) {
++  const indices = scopeIndices(plans, scope);
++  return indices.some(i => states[i]?.scope === "count") && indices.every(i => ["count","reference"].includes(states[i]?.scope || "")) &&
++    scopeConflict(plans,states,scope) < 0;
++}
++export function scopedBodies(plans: Plan[], states: States, confirmed: Record<number,Confirmed>, scope?: ReviewScope) {
++  return Object.fromEntries(scopeIndices(plans,scope).filter(i => states[i]?.scope === "count" && confirmed[i]).map(i => [i,confirmed[i]]));
++}
++export function scopeLabel(plans: Plan[], states: States, scope?: ReviewScope) {
++  const groups = floorGroups(plans,states);
++  const selected = groups.filter(g => scope === undefined || g.views.some(i => scope.includes(i)));
++  return "Phạm vi đã chọn · " + selected.length + "/" + groups.length + " tầng hoặc nhóm hình" +
++    (selected.length ? " · " + selected.map(g=>g.label).join(", ") : "");
++}
+--- /dev/null
++++ b/src/app/(user)/do-boc/FloorSelector.tsx
+@@ -0,0 +1,34 @@
++import { useMemo } from "react";
++import type { Plan, PlanState } from "./model";
++import { floorGroups, type ReviewScope } from "./floor-review";
++
++export function FloorSelector({ plans, states, selected, disabled, onChange, onOpen }: {
++  plans: Plan[]; states: Record<number, PlanState>; selected: ReviewScope; disabled: boolean;
++  onChange: (next: ReviewScope) => void; onOpen: () => void;
++}) {
++  const groups = useMemo(() => floorGroups(plans, states), [plans, states]);
++  const n = groups.filter(g => g.views.every(i => selected.includes(i))).length;
++  return <fieldset className="min-w-0 rounded-md border border-rule bg-card px-3 py-2" disabled={disabled}>
++    <legend className="px-1 font-semibold">Chọn tầng để kiểm tra</legend>
++    <div className="flex flex-wrap items-center gap-2">
++      <button className="btn" type="button" onClick={() => onChange(groups.flatMap(g => g.views))}>Chọn tất cả</button>
++      <button className="btn" type="button" onClick={() => onChange([])}>Bỏ tất cả</button>
++      <button className="btn" type="button" onClick={() => onChange(groups.filter(g => g.reasons.length).flatMap(g => g.views))}>Chỉ tầng cần kiểm tra</button>
++    </div>
++    <div className="my-2 max-h-44 overflow-auto divide-y divide-rule">
++      {groups.map(g => <div key={g.key} className="py-1">
++        <label className="flex items-baseline gap-2">
++          <input type="checkbox" checked={g.views.every(i => selected.includes(i))}
++            onChange={e => onChange(e.target.checked ? [...selected, ...g.views] : selected.filter(i => !g.views.includes(i)))} />
++          <span><strong>{g.label}</strong>{g.reasons.length > 0 && <span className="ml-2 text-muted">{" · "}{g.reasons.join(" · ")}</span>}</span>
++        </label>
++        {(g.views.length > 1 || g.key.startsWith("view-")) && <ul className="ml-6 text-sm">
++          {g.views.map(i => <li key={i}>Hình {i + 1} · {plans[i].plan.name} · {states[i]?.scope === "count" ? "Tính khối lượng" : states[i]?.scope === "reference" ? "Tham khảo" : "Chưa phân loại"}</li>)}
++        </ul>}
++      </div>)}
++    </div>
++    <div className="flex flex-wrap items-center gap-2"><span aria-live="polite">Đã chọn {n}/{groups.length}</span>
++      <button className="btn primary" type="button" disabled={!n || disabled} onClick={onOpen}>Kiểm tra {n} tầng đã chọn</button>
++    </div>
++  </fieldset>;
++}
+--- a/src/app/(user)/do-boc/Lists.tsx
++++ b/src/app/(user)/do-boc/Lists.tsx
+@@ -150,13 +150,13 @@
+ }
+ 
+ // Toàn bộ bản vẽ: mở cả file như phần mềm xem bản vẽ, khung các mặt bằng đã tách; bấm khung để kiểm tra mặt bằng đó.
+-export function OverviewList({ D, onOpen }: { D: Data; onOpen: (i: number) => void }) {
++export function OverviewList({ D, indices, onOpen }: { D: Data; indices: number[]; onOpen: (i: number) => void }) {
+   const O = D.overview!;
+   return <>
+     {!D.plans.length && <div className={s.empty}>Không tìm thấy mặt bằng kiến trúc để đo tường (bản vẽ chỉ có mặt bằng kết cấu, móng hoặc điện nước).</div>}
+     <div className={s.empty} style={{ textAlign: "left" }}>Toàn bộ bản vẽ, vẽ như phần mềm CAD. Khung xanh là các mặt bằng tầng hệ thống đã tách ({O.plans.length}).
+       Bấm vào khung hoặc chọn bên dưới để kiểm tra từng mặt bằng.</div>
+-    {O.plans.map((b, i) => (
++    {O.plans.map((b, i) => indices.includes(i) && (
+       <div key={i} className={s.overviewRow}><b style={{ flex: 1 }}>{i + 1}. {b.name}</b><button className={s.btn} type="button" onClick={() => onOpen(i)}>Kiểm tra</button></div>
+     ))}
+   </>;
+--- a/src/app/(user)/do-boc/model.ts
++++ b/src/app/(user)/do-boc/model.ts
+@@ -1,3 +1,4 @@
++import { scopeIndices, scopeLabel, scopeReady, type ReviewScope } from "./floor-review";
+ // Dữ liệu và công thức của trang Kiểm tra bóc tách (công thức tính tạm; số chốt do review.py trả).
+ import type { Reference } from "@/lib/reference";
+ import type { SelectedRevision } from "@/lib/project-records";
+@@ -11,7 +12,7 @@
+ export type Plan = {
+   texts?: { t: string; x: number; y: number }[];
+   source_revision?: SelectedRevision;
+-  plan: { name: string; level_m?: number | null; height_source?: string | null; is_ground?: boolean };
++  plan: { name: string; floor_key?: string; level_m?: number | null; height_source?: string | null; is_ground?: boolean };
+   height_mm: number; length_rule?: string; size: [number, number]; origin?: [number, number];
+   layers: { name: string; role: string }[]; segs: [number, number, number, number, number, number][];
+   walls: RawWall[]; openings: RawOpening[]; rejected?: { reason: string; cls: string; x1: number; y1: number; x2: number; y2: number }[];
+@@ -246,18 +247,23 @@
+ };
+ 
+ export function roughRequest(D: Data, states: Record<number, PlanState>, planP: Record<number, PlanParams>, project: number | null,
+-  structural?: Structural | null, values = roughValues()) {
+-  if (D.plans.some((_, i) => !states[i]?.scope)) throw new Error("Chọn tính khối lượng hoặc tham khảo cho từng hình mặt bằng trước khi tính.");
+-  if (!D.plans.some((_, i) => states[i]?.scope === "count")) throw new Error("Cần ít nhất một mặt bằng được tính khối lượng.");
++  structural?: Structural | null, values = roughValues(), reviewScope?: ReviewScope) {
++  if (!scopeReady(D.plans,states,reviewScope)) throw new Error("Phân loại các hình trong nhóm và chọn một nguồn tính cho mỗi tầng.");
++  const indices = scopeIndices(D.plans,reviewScope);
++  const partial = indices.length < D.plans.length;
+   const params = projectParams(values);
+   // móng, cao lanh tô đọc từ bản vẽ kết cấu chỉ bổ sung khi người dùng chưa nhập
+-  const { foundations, lintel_height_mm, ...parts } = structural || ({} as Partial<Structural>);
++  const { foundations, lintel_height_mm, ...parts } = (!partial && structural) || ({} as Partial<Structural>);
+   if (structural) {
+     if (foundations?.length) params.foundations = foundations;
+     if (params.lintel_height_mm == null && lintel_height_mm != null) params.lintel_height_mm = lintel_height_mm;
+   }
+-  return { ...parts, plan_scope_confirmed: true, project_id: project, file: D.file, params, plans: D.plans.flatMap((p, i) => {
+-    if (states[i]?.scope !== "count") return [];
++  const names = indices.filter(i => states[i]?.scope === "count").map(i => D.plans[i].plan.name);
++  const columns = partial && structural?.structural_columns?.filter(c => c.matched_plan && names.includes(c.matched_plan) &&
++    D.plans.filter(p => p.plan.name === c.matched_plan).length === 1);
++  return { ...parts, ...(partial ? { ...(columns && columns.length && { structural_columns:columns }),
++    notes: [scopeLabel(D.plans,states,reviewScope), "Chỉ đưa nguồn kết cấu gắn đúng mặt bằng vào phạm vi này. Bảng kết cấu toàn nhà còn chờ đối chiếu."] } : {}), plan_scope_confirmed: true, project_id: project, file: D.file, params, plans: D.plans.flatMap((p, i) => {
++    if (!indices.includes(i) || states[i]?.scope !== "count") return [];
+     const st = states[i] || initState(p), pp = planP[i] || initPlanParams(p);
+     const steps = numOr(pp.stair_steps);
+     const hasStair = !!st0(p) || [pp.stair_steps, pp.stair_width, pp.stair_tread, pp.stair_landing].some((v) => numOr(v) != null);
+--- a/src/app/(user)/do-boc/Review.tsx
++++ b/src/app/(user)/do-boc/Review.tsx
+@@ -16,6 +16,9 @@
+ import { ConfirmDialog, ConfirmedDialog, MaterialDialog, Msg } from "./Dialogs";
+ import { OpeningList, OverviewList, QtyTab, WallFilters, WallList, WarnTab, type Change } from "./Lists";
+ import { WorkReview } from "./WorkReview";
++import { FloorSelector } from "./FloorSelector";
++import { scopeIndices, scopeReady, scopedBodies, scopeConflict, scopeLabel, type ReviewScope } from "./floor-review";
++import { switchReviewScope, type ScopeHistory } from "./scope-workspace";
+ import { RoughTab } from "./Rough";
+ import {
+   REASONS, RP_KEY, base, compute, convBad, csvText, fmt, initPlanParams, initState, nearestWall, payload, roughRequest, roughValues,
+@@ -47,14 +50,17 @@
+ type ConfirmationStamp = DrawingVersion & { projectId: number | null; revision: number; planIndex: number; published?: boolean };
+ const storedProjectId = () => Number(store.get("optimat-project", "")) || null;
+ 
+-export function confirmationGuide(plans: Data["plans"], states: Record<number, PlanState>, confirmed: Record<number, Confirmed>, at: number) {
+-  if (!plans.length) return null;
+-  const unclassified = plans.flatMap((_, i) => states[i]?.scope === "count" || states[i]?.scope === "reference" ? [] : [i]);
+-  const counted = plans.flatMap((_, i) => states[i]?.scope === "count" ? [i] : []);
++export function confirmationGuide(plans: Data["plans"], states: Record<number, PlanState>, confirmed: Record<number, Confirmed>, at: number, reviewScope?: ReviewScope) {
++  const indices = scopeIndices(plans,reviewScope);
++  if (!indices.length) return null;
++  const unclassified = indices.filter(i => !["count","reference"].includes(states[i]?.scope || ""));
++  const counted = indices.filter(i => states[i]?.scope === "count");
++  const conflict = scopeConflict(plans,states,reviewScope);
++  if (conflict >= 0) return { index:conflict, field:"scope", action:"Đối chiếu hình cùng tầng", message:"Có nhiều hình tính cho cùng tầng. Giữ một hình tính, phân loại các bản còn lại trước khi cộng." };
+   if (unclassified.length || !counted.length) {
+-    const index = unclassified.includes(at) ? at : unclassified[0] ?? (plans[at] ? at : 0);
++    const index = unclassified.includes(at) ? at : unclassified[0] ?? (indices.includes(at) ? at : indices[0]);
+     return { index, field: "scope", action: `Phân loại hình ${index + 1}/${plans.length}`, message: unclassified.length
+-      ? `Còn ${unclassified.length}/${plans.length} hình chưa có phạm vi. Chọn tính khối lượng hoặc tham khảo cho “${plans[index].plan.name}”.`
++      ? `Còn ${unclassified.length}/${indices.length} hình trong phạm vi đã chọn chưa được phân loại. Chọn tính khối lượng hoặc tham khảo cho “${plans[index].plan.name}”.`
+       : "Tất cả hình đang là tham khảo. Chọn ít nhất một mặt bằng để tính khối lượng." };
+   }
+   if (!counted.includes(at)) {
+@@ -90,6 +96,10 @@
+   const listRef = useRef<HTMLDivElement>(null), scrollTo = useRef<string | null>(null);
+   const [data, setData] = useState<Data | null>(null);
+   const [msg, setMsg] = useState<string | null>(START);      // thông báo chiếm danh sách: chưa mở bản vẽ, đang đọc, lỗi đọc
++  const [reviewScope, setReviewScope] = useState<ReviewScope>();
++  const [reviewSelection, setReviewSelection] = useState<ReviewScope>();
++  const liveScope = useRef<ReviewScope | undefined>(undefined);
++  const scopeHistory = useRef<ScopeHistory>({});
+   const [pi, setPi] = useState(0);
+   const [states, setStates] = useState<Record<number, PlanState>>({});   // trạng thái sửa theo từng mặt bằng (giữ khi đổi mặt bằng)
+   const [hist, setHist] = useState<string[]>([]);
+@@ -153,43 +163,29 @@
+       if (saved?.projectUid && saved.projectUid !== uid) { setMsg("Bản vẽ thuộc phiên dự án khác. Hãy mở lại dự án từ lịch sử."); return; }
+       drawing.current = { projectUid: uid, drawingId: saved?.drawingId || crypto.randomUUID(), materialRevision: saved?.materialRevision };
+     } catch { setSaveError("Chưa lưu được mã phiên dự án trên trình duyệt."); return; }
+-    if (saved && saved.data.plans.some((_, i) => !saved.states[i]?.scope)) {
+-      saved.confirmed = {};
+-      store.set("optimat-confirmed", store.get<Confirmed[]>("optimat-confirmed", []).filter((p) => p.file !== saved.data.file));
+-      store.set("optimat-rough", null); store.set("optimat-materials-ready", false);
+-      if (adjustment || roughOnly) {
+-        setMsg("Hồ sơ cũ chưa xác nhận hình tính khối lượng và hình tham khảo. Về Bóc tách để phân loại từng mặt bằng.");
+-        setRestored(true); return;
+-      }
+-    }
+-    if (saved && (adjustment || roughOnly) && (saved.data.plans.some((_, i) => saved.states[i]?.scope === "count" && !saved.confirmed[i]) ||
+-      !reviewMatchesConfirmed(saved.data.file, saved.confirmed, store.get<Confirmed[]>("optimat-confirmed", [])))) {
+-      setMsg("Bản vẽ đã lưu chưa khớp kết quả xác nhận hiện tại. Không mở bản cũ để điều chỉnh. Hãy quay lại trang đo bóc đang mở và lưu thành công trước khi tiếp tục.");
+-      setRestored(true);
+-      return;
+-    }
+     if (saved) {
+-      if (saved.data.plans.some((_, i) => !saved.states[i]?.scope)) {
+-        saved.confirmed = {};
+-        store.set("optimat-confirmed", store.get<Confirmed[]>("optimat-confirmed", []).filter((p) => p.file !== saved.data.file));
+-        store.set("optimat-rough", null); store.set("optimat-materials-ready", false);
+-      }
+-      const restoredPi = saved.pi < 0 && (roughOnly || !saved.data.overview?.cad) ? 0 : saved.pi;
++      const indices = scopeIndices(saved.data.plans,saved.reviewScope);
++      liveScope.current = saved.reviewScope; setReviewScope(saved.reviewScope); setReviewSelection(saved.reviewSelection);
++      scopeHistory.current = saved.scopeHistory || {};
++      const restoredPi = indices.includes(saved.pi) || (saved.pi < 0 && !roughOnly && saved.data.overview?.cad) ? saved.pi : indices[0] ?? -1;
+       setData(saved.data);
+       setStates(Object.fromEntries(saved.data.plans.map((p, i) => [i, saved.states[i] || initState(p)])));
+       const published = store.get<Confirmed[]>("optimat-confirmed", []);
++      const validBodies: Record<number,Confirmed> = {};
+       for (const [key, body] of Object.entries(saved.confirmed)) {
+         const index = Number(key);
+         if (body.file === saved.data.file && body.plan === saved.data.plans[index]?.plan.name &&
+-            saved.states[index]?.scope === "count" && reviewMatchesConfirmed(body.file, { [index]: body }, published.filter(p => p.plan === body.plan)))
++            saved.states[index]?.scope === "count" && (!indices.includes(index) && saved.reviewScope || reviewMatchesConfirmed(body.file, { [index]: body }, published.filter(p => p.plan === body.plan)))) {
++          validBodies[index] = body;
+           stampByBody.current.set(body, { ...drawing.current!, projectId: sessionProject.current, revision: revision.current, planIndex: index, published: true });
++        }
+       }
+-      setPlanP(saved.planP); setConfirmed(saved.confirmed);
++      setPlanP(saved.planP); setConfirmed(validBodies);
+       setStructural(saved.structural); setPi(restoredPi); setMsg(null);
+       setTab(roughOnly ? "rough" : "qty");
+       if (roughOnly) {
+         const result = store.get<WorkSnapshot | null>("optimat-rough", null);
+-        const valid = result?.file === saved.data.file && result?.drawingId === drawing.current.drawingId && result.projectUid === drawing.current.projectUid;
++        const valid = JSON.stringify(result?.reviewScope) === JSON.stringify(saved.reviewScope) && result?.file === saved.data.file && result?.drawingId === drawing.current.drawingId && result.projectUid === drawing.current.projectUid;
+         setRough(valid ? result.result : null);
+         roughStarted.current = valid;
+       }
+@@ -201,18 +197,18 @@
+   }, []);
+   const persistReview = useCallback((nextConfirmed = confirmed) => {
+     if (!data) return true;
+-    if (externalChange || !ownsReview() || (publishPending.current && !stampIsCurrent(publishPending.current))) {
++    if (JSON.stringify(liveScope.current) !== JSON.stringify(reviewScope) || externalChange || !ownsReview() || (publishPending.current && !stampIsCurrent(publishPending.current))) {
+       setSaveError("Phiên dự án đã thay đổi. Tải phiên hiện tại để tiếp tục.");
+       return false;
+     }
+-    const snapshot = { ...drawing.current, projectId: sessionProject.current, data, states, planP, confirmed: nextConfirmed, pi,
++    const snapshot = { ...drawing.current, projectId: sessionProject.current, reviewScope, reviewSelection, scopeHistory:scopeHistory.current, data, states, planP, confirmed: nextConfirmed, pi,
+       structural: structural && "file" in structural ? structural : null };
+     const writeSnapshot = (value: string) => {
+       if (!publishPending.current) {
+         localStorage.setItem("optimat-review", value); lastStoredReview.current = value; return;
+       }
+       const previous = store.get<Confirmed[]>("optimat-confirmed", []).filter(p => p.file !== data.file);
+-      const summaries = Object.values(nextConfirmed).map(({file, plan, height_mm, groups, total_net_area_m2, confirmed_at, takeoff_id}) =>
++      const summaries = Object.values(scopedBodies(data.plans,states,nextConfirmed,reviewScope)).map(({file, plan, height_mm, groups, total_net_area_m2, confirmed_at, takeoff_id}) =>
+         ({file, plan, height_mm, groups, total_net_area_m2, confirmed_at, takeoff_id: takeoff_id || null}));
+       saveTogether({ "optimat-review": value, "optimat-confirmed": JSON.stringify([...previous, ...summaries]) });
+       publishPending.current.published = true;
+@@ -237,7 +233,7 @@
+         return false;
+       }
+     }
+-  }, [data, states, planP, confirmed, pi, structural, roughOnly, roughVals, externalChange, ownsReview, stampIsCurrent]);
++  }, [data, states, planP, confirmed, pi, structural, roughOnly, roughVals, externalChange, ownsReview, stampIsCurrent, reviewScope, reviewSelection]);
+   useEffect(() => {
+     if (restored) persistReview();
+   }, [restored, persistReview]);
+@@ -260,9 +256,12 @@
+   const paper = useMemo(() => P && titleScale(P.plan.name, P.texts), [P]);
+   const c = useMemo(() => (S ? compute(S) : null), [S]);
+   const pp = P ? planP[pi] || initPlanParams(P) : null;
+-  const scopeReady = !!data?.plans.length && data.plans.every((_, i) => !!states[i]?.scope) && data.plans.some((_, i) => states[i]?.scope === "count");
+-  const allCountedConfirmed = scopeReady && data!.plans.every((_, i) => states[i]?.scope === "reference" || !!confirmed[i]);
+-  const guide = data ? confirmationGuide(data.plans, states, confirmed, pi) : null;
++  const indices = scopeIndices(data?.plans || [],reviewScope);
++  const selection = scopeIndices(data?.plans || [],reviewSelection ?? reviewScope);
++  const selectionPending = selection.join(",") !== indices.join(",");
++  const allCountedConfirmed = !!data && scopeReady(data.plans,states,reviewScope) &&
++    indices.every(i => states[i]?.scope === "reference" || !!confirmed[i]);
++  const guide = data ? confirmationGuide(data.plans, states, confirmed, pi, reviewScope) : null;
+   const hasOverview = !!(data && data.overview && data.overview.cad);
+   const hasCad = !!data && (pi < 0 ? !!(data.overview && data.overview.cad) : !!(P && P.cad));
+   let bg = bgPref;
+@@ -272,8 +271,8 @@
+   const unit = P ? Math.max(...P.size) / 100 : data?.overview ? Math.max(...data.overview.size) / 100 : 100;
+ 
+   // ---------------------------------------------------------------- phần thô: tự tính lại sau khi sửa, chỉ khi đã bấm "Tính phần thô" ít nhất một lần
+-  const latest = useRef({ data, states, planP, project, rough, structural, roughVals });
+-  useLayoutEffect(() => { latest.current = { data, states, planP, project, rough, structural, roughVals }; });
++  const latest = useRef({ data, states, planP, project, rough, structural, roughVals, reviewScope });
++  useLayoutEffect(() => { latest.current = { data, states, planP, project, rough, structural, roughVals, reviewScope }; });
+   const roughTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined), busyRef = useRef(false);
+   const roughStarted = useRef(false), uploadRevision = useRef(0), structuralRevision = useRef(0);
+   useEffect(() => {
+@@ -304,13 +303,13 @@
+     store.set("optimat-materials-ready", false);
+     store.set("optimat-optimization", null);
+     try {
+-      const request = roughRequest(L.data, L.states, L.planP, L.project, L.structural && "file" in L.structural ? L.structural : null, L.roughVals);
++      const request = roughRequest(L.data, L.states, L.planP, L.project, L.structural && "file" in L.structural ? L.structural : null, L.roughVals, L.reviewScope);
+       const r = await fetch("/api/takeoff/rough", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request) });
+       const body = await r.json();
+       if (!r.ok) throw new Error(typeof body.detail === "string" ? body.detail
+         : "Máy chủ từ chối dữ liệu phần thô: " + ((body.detail || []) as { loc?: string[]; msg: string }[]).map((d) => (d.loc || []).slice(-1)[0] + " " + d.msg).join("; "));
+       if (revision.current !== atRevision || version.projectUid !== store.get("optimat-project-uid", "")) return;
+-      const snapshot: WorkSnapshot = { ...version, file: L.data.file, reviewId: crypto.randomUUID(), at: new Date().toISOString(), request, result: body };
++      const snapshot: WorkSnapshot = { ...version, reviewScope:L.reviewScope, file: L.data.file, reviewId: crypto.randomUUID(), at: new Date().toISOString(), request, result: body };
+       saveTogether({ "optimat-rough": JSON.stringify(snapshot) });
+       setRough(body);
+     } catch (err) {
+@@ -424,6 +423,7 @@
+   };
+   const start = (D: Data) => {
+     confirmRequest.current?.abort(); publishPending.current = null;
++    liveScope.current = undefined; setReviewScope(undefined); setReviewSelection(undefined); scopeHistory.current = {};
+     store.set("optimat-material-selection", null);
+     drawing.current = { projectUid: projectUid(), drawingId: crypto.randomUUID() };
+     store.set("optimat-work-review", null);
+@@ -585,6 +585,7 @@
+   };
+   const publishConfirmation = (body: Confirmed) => {
+     const stamp = stampByBody.current.get(body);
++    if (JSON.stringify(liveScope.current) !== JSON.stringify(reviewScope)) return;
+     if (externalChange || !stamp || !stampIsCurrent(stamp)) { setSheet(null); setExternalChange(true); return; }
+     if (!data || !P || body.plan !== P.plan.name || body.file !== data.file) {
+       setSheet(null); setSaveError("Bản xác nhận không khớp mặt bằng đang mở."); return;
+@@ -600,7 +601,7 @@
+     }
+     if (adjustment) {
+       setSheet({ kind: "msg", title: "Đã lưu điều chỉnh", body: <p>Phương án vật liệu của mặt bằng đã được cập nhật cho bước tra giá và tối ưu.</p> });
+-    } else if (data.plans.every((_, i) => states[i]?.scope === "reference" || next[i])) {
++    } else if (indices.every(i => states[i]?.scope === "reference" || next[i])) {
+       setSheet(null); router.push("/phan-tho");
+     } else {
+       setSheet({ kind: "confirmed", body, total: c?.total ?? body.total_net_area_m2 });
+@@ -608,7 +609,7 @@
+   };
+   const sendConfirm = async () => {
+     if (confirmRequest.current) return;
+-    if (externalChange || !ownsReview() || (publishPending.current && !stampIsCurrent(publishPending.current))) {
++    if (JSON.stringify(liveScope.current) !== JSON.stringify(reviewScope) || externalChange || !ownsReview() || (publishPending.current && !stampIsCurrent(publishPending.current))) {
+       setSheet(null); setExternalChange(true); return;
+     }
+     if (guide) { guideToPlan(); return; }
+@@ -698,7 +699,7 @@
+     ["qty", "Khối lượng", null], ...(adjustment ? [["rough", "Phần thô", null] as [string, string, ReactNode]] : []), ["warn", "Cảnh báo", P && S ? (P.warnings || []).length + convBad(data).length : ""]];
+   let filters: ReactNode = null, body: ReactNode = null;
+   if (msg != null || !data) body = <div className={s.empty}>{msg}</div>;
+-  else if (overview) body = <OverviewList D={data} onOpen={(i) => loadPlan(i)} />;
++  else if (overview) body = <OverviewList D={data} indices={indices} onOpen={(i) => loadPlan(i)} />;
+   else if (P && S && c && pp) {
+     if (tab === "walls") {
+       filters = <WallFilters S={S} filter={filter} onFilter={setFilter} onAllMat={adjustment ? () => setSheet({ kind: "material" }) : undefined} />;
+@@ -715,19 +716,51 @@
+     } else body = <WarnTab D={data} P={P} />;
+   }
+   const closeSheet = () => setSheet(null);
++  const applySelection = () => {
++    if (!data || !selection.length || reading || roughBusy || busyRef.current || confirmRequest.current || publishPending.current) return;
++    if (!ownsReview() || externalChange) { setExternalChange(true); return; }
++    if (!persistReview() || !lastStoredReview.current) return;
++    const first = selection.find(i => states[i]?.scope !== "reference" && !confirmed[i]) ?? selection.find(i => states[i]?.scope === "count") ?? selection[0];
++    try {
++      const session: ReviewSession = JSON.parse(lastStoredReview.current);
++      const changed = switchReviewScope(session,selection,first,store.get<Confirmed[]>("optimat-confirmed",[]));
++      lastStoredReview.current = changed.raw;
++      scopeHistory.current = changed.history;
++      liveScope.current = changed.scope; setReviewScope(changed.scope); setReviewSelection(selection);
++      drawing.current = { ...drawing.current!, materialRevision:changed.materialRevision };
++      revision.current++; clearTimeout(roughTimer.current);
++      for (const body of Object.values(confirmed)) {
++        const stamp = stampByBody.current.get(body);
++        if (stamp?.published) stampByBody.current.set(body,{...stamp,revision:revision.current});
++      }
++      const saved = store.get<WorkSnapshot | null>("optimat-rough",null);
++      const valid = !!saved && saved.drawingId === drawing.current.drawingId && saved.projectUid === drawing.current.projectUid &&
++        JSON.stringify(saved.reviewScope) === JSON.stringify(changed.scope);
++      setRough(valid ? saved.result : null); roughStarted.current = valid;
++      closeSheet(); loadPlan(first);
++      if (roughOnly && (!scopeReady(data.plans,states,selection) || selection.some(i => states[i]?.scope === "count" && !confirmed[i]))) router.push("/do-boc");
++    } catch { setSaveError("Chưa lưu được phạm vi đã chọn. Hãy giữ trang này mở và kiểm tra bộ nhớ trình duyệt."); }
++  };
++  const selector = data && data.plans.length > 0 && <FloorSelector plans={data.plans} states={states} selected={selection}
++    disabled={!!reading || roughBusy || confirmBusy || !!publishPending.current || !!sheet}
++    onChange={next => setReviewSelection(scopeIndices(data.plans,next))} onOpen={applySelection} />;
+   if (externalChange) return <Empty>Dự án đã thay đổi trong tab khác. <button className="btn" onClick={() => location.reload()}>Tải phiên hiện tại</button></Empty>;
+ 
+   if (roughOnly) return <div className="flex flex-col gap-4 p-5">
+     <Steps cur="/phan-tho" done={{ "/do-boc": allCountedConfirmed, "/phan-tho": !!receipt?.confirmed && sameWorkVersion(receipt, roughStored) }} />
+     <Head title="Kiểm tra công tác và khối lượng" actions={<Link className="btn" href="/do-boc">Về bóc tách bản vẽ</Link>}>Kiểm khối lượng theo tầng trước khi chọn vật liệu. Bổ sung kích thước còn thiếu, tính lại và kiểm từng dòng.</Head>
+     {saveError && <p role="alert">{saveError}</p>}{saveNotice && <p role="status">{saveNotice}</p>}
+-    {!data || !P || !pp ? <Empty>{msg || "Chưa có bản vẽ đã xác nhận."} <Link href="/do-boc">Về bóc tách</Link></Empty> : <>
+-      <label>Mặt bằng <select className="field" value={pi} onChange={(e) => loadPlan(Number(e.target.value))}>{data.plans.map((p, i) => <option key={i} value={i}>{p.plan.name}</option>)}</select></label>
++    {selector}
++    {data && <p>{scopeLabel(data.plans,states,reviewScope)}</p>}
++    {data && selectionPending ? <Empty>Bấm Kiểm tra để mở phạm vi đã chọn.</Empty> : data && !allCountedConfirmed
++      ? <Empty>{guide?.message || "Cần xác nhận các mặt bằng trong phạm vi đã chọn."} <Link href="/do-boc">Về bóc tách</Link></Empty>
++      : !data || !P || !pp ? <Empty>{msg || "Chưa có bản vẽ đã xác nhận."} <Link href="/do-boc">Về bóc tách</Link></Empty> : <>
++      <label>Mặt bằng <select className="field" value={pi} onChange={(e) => loadPlan(Number(e.target.value))}>{indices.filter(i => states[i]?.scope === "count").map(i => <option key={i} value={i}>{data.plans[i].plan.name}</option>)}</select></label>
+       {rough && !("error" in rough) && roughStored && !roughBusy && <WorkReview key={roughStored.reviewId} snapshot={roughStored}
+         initial={sameWorkVersion(roughStored, receipt) ? receipt : null} onSave={(next, destination) => {
+         if (!persistReview() || !sameWorkVersion(roughStored, store.get("optimat-rough", null)) || drawing.current?.drawingId !== roughStored.drawingId)
+           throw new Error("Chưa lưu được hoặc khối lượng đã đổi. Hãy kiểm tra lại phiên hiện tại.");
+-        const updates: Record<string, string> = { "optimat-work-review": JSON.stringify(next) };
++        const updates: Record<string, string> = { "optimat-work-review": JSON.stringify({ ...next, reviewScope }) };
+         if (!next.confirmed) Object.assign(updates, { "optimat-materials-ready": "false", "optimat-optimization": "null" });
+         saveTogether(updates);
+         if (next.confirmed && destination) router.push(destination);
+@@ -750,6 +783,7 @@
+       </div>
+       {saveError && <p role="alert">{saveError}</p>}
+       {saveNotice && <p role="status">{saveNotice}</p>}
++      {selector && <details className="shrink-0 border-b border-rule px-3"><summary>Chọn tầng để kiểm tra · {selection.length} hình</summary>{selector}</details>}
+       <div className={`${s.app} min-h-0 flex-1`}>
+         <header className={s.head}>
+           <h1>{adjustment ? "Điều chỉnh vật liệu và phần thô" : "Xác nhận kích thước và khối lượng"}</h1>
+@@ -771,7 +805,7 @@
+           {data && (data.plans.length > 1 || hasOverview) && <label className={s.field}>Mặt bằng{" "}
+             <select value={String(pi)} onChange={(e) => { const v = Number(e.target.value); if (v < 0) showOverview(); else loadPlan(v); }}>
+               {hasOverview && <option value="-1">Toàn bộ bản vẽ</option>}
+-              {data.plans.map((p, i) => <option key={i} value={i}>{i + 1}. {p.plan.name}</option>)}
++              {indices.map(i => <option key={i} value={i}>{i + 1}. {data.plans[i].plan.name}</option>)}
+             </select></label>}
+           <label className={s.field} ref={heightLabel}>Chiều cao tầng (m){" "}
+             <ChangeInput type="number" step={0.05} min={1} max={10} value={S ? (S.height_mm / 1000).toFixed(2) : ""} onCommit={(el) => {
+@@ -792,7 +826,7 @@
+             void upload(file);
+           }} /></label>
+           <button className={s.btn} type="button" disabled={!hist.length} onClick={undo}>Hoàn tác</button>
+-          <button className={`${s.btn} ${s.primary}`} type="button" disabled={!!reading || confirmBusy || !data?.plans.length} onClick={openConfirmation}>
++          <button className={`${s.btn} ${s.primary}`} type="button" disabled={selectionPending || !selection.length || !!reading || confirmBusy || !data?.plans.length} onClick={openConfirmation}>
+             {guide?.action || (confirmed[pi] ? "Tiếp tục từ bản đã xác nhận" : adjustment ? "Lưu điều chỉnh mặt bằng" : "Xác nhận kích thước, khối lượng")}</button>
+         </header>
+         <div className={s.main}>
+@@ -809,7 +843,7 @@
+             newCls={newCls} onNewCls={setNewCls} newKind={newKind}
+             onNewKind={(v) => { setNewKind(v); setNewH(v === "door" ? "2200" : "1400"); setNewW(v === "door" ? "900" : "1200"); }}
+             newW={newW} onNewW={setNewW} newH={newH} onNewH={setNewH}
+-            cols={pp ? pp.cols : []} onToggleCol={toggleCol} onSvgClick={onSvgClick} onSelect={(id) => select(id, true)} onOpenPlan={(i) => loadPlan(i)} />
++            cols={pp ? pp.cols : []} onToggleCol={toggleCol} onSvgClick={onSvgClick} onSelect={(id) => select(id, true)} onOpenPlan={(i) => { if (indices.includes(i)) loadPlan(i); else setSaveNotice("Hình này nằm ngoài phạm vi đã chọn."); }} />
+           <aside className={s.aside}>
+             <div className={s.tabs} role="tablist">
+               {tabs.map(([k, t, n]) => (
+@@ -833,7 +867,7 @@
+         {sheet?.kind === "recover" && <Msg title="Máy chủ đã xác nhận mặt bằng" onClose={closeSheet}><p>{saveError || "Chưa hoàn tất lưu phiên trên trình duyệt."} Giữ trang này mở để tiếp tục từ kết quả đã nhận.</p>
+           <button className={s.btn} type="button" onClick={() => publishConfirmation(sheet.body)}>Thử lưu phiên và tiếp tục</button></Msg>}
+         {sheet?.kind === "confirmed" && <ConfirmedDialog body={sheet.body} total={sheet.total} onClose={closeSheet} onNext={() => {
+-          const next = data?.plans.findIndex((_, i) => states[i]?.scope === "count" && !confirmed[i]) ?? -1;
++          const next = indices.find(i => states[i]?.scope === "count" && !confirmed[i]) ?? -1;
+           closeSheet(); if (next >= 0) loadPlan(next);
+         }} />}
+         {sheet?.kind === "msg" && <Msg title={sheet.title} primary={sheet.primary} onClose={closeSheet}>{sheet.body}</Msg>}
+--- /dev/null
++++ b/src/app/(user)/do-boc/scope-workspace.ts
+@@ -0,0 +1,36 @@
++import type { ReviewSession } from "@/lib/review-session";
++import { saveTogether } from "@/lib/review-session";
++import type { Confirmed } from "./model";
++import { scopeIndices, scopedBodies } from "./floor-review";
++
++// Mỗi nhóm giữ bản tính và biên nhận riêng; lịch sử dự án đã lưu toàn bộ optimat-review.
++const keys = ["optimat-rough", "optimat-work-review", "optimat-material-draft", "optimat-material-selection", "optimat-materials-ready", "optimat-optimization"] as const;
++type Cached = { drawingId?: string; materialRevision?: string; values: Record<string,string> };
++export type ScopeHistory = Record<string,Cached>;
++
++export function switchReviewScope(session: ReviewSession, indices: number[], pi: number, published: Confirmed[]) {
++  const from = scopeIndices(session.data.plans,session.reviewScope).join(",");
++  const to = indices.join(",");
++  const history = { ...session.scopeHistory };
++  const current = Object.fromEntries(keys.map(k => [k,localStorage.getItem(k) ?? (k === "optimat-materials-ready" ? "false" : "null")]));
++  if (from !== to && keys.some(k => !["null","false"].includes(current[k]))) {
++    history[from] = { drawingId:session.drawingId, materialRevision:session.materialRevision, values:current };
++  }
++  const cached = history[to];
++  const restore = from === to ? current : cached && cached.drawingId === session.drawingId ? cached.values : {};
++  const updates = Object.fromEntries(keys.map(k => [k, restore[k] ?? (k === "optimat-materials-ready" ? "false" : "null")]));
++  const materialRevision = from === to ? session.materialRevision : cached?.drawingId === session.drawingId ? cached?.materialRevision : undefined;
++  const scope = indices.length === session.data.plans.length ? undefined : indices;
++  const next = { ...session, reviewScope:scope, reviewSelection:indices, pi, materialRevision, scopeHistory:history };
++  const summaries = Object.values(scopedBodies(next.data.plans,next.states,next.confirmed,indices));
++  updates["optimat-confirmed"] = JSON.stringify([...published.filter(p => p.file !== next.data.file), ...summaries.map(p => {
++    const { file,plan,height_mm,groups,total_net_area_m2,confirmed_at,takeoff_id } = p;
++    const partial = Object.fromEntries(Object.entries(p).filter(([k]) => ["complete","known_net_area_m2","pending_openings","pending_groups"].includes(k)));
++    return {file,plan,height_mm,groups,total_net_area_m2,confirmed_at,takeoff_id:takeoff_id || null,...partial};
++  })]);
++  const write = (raw:string) => { saveTogether({...updates,"optimat-review":raw}); return raw; };
++  let raw: string;
++  try { raw = write(JSON.stringify(next)); }
++  catch { raw = write(JSON.stringify(next,(k,v)=>k === "cad" ? undefined : v)); }
++  return { raw, history, materialRevision, scope };
++}
+--- a/src/lib/review-session.ts
++++ b/src/lib/review-session.ts
+@@ -1,9 +1,11 @@
++import { scopeReady, scopeIndices, type ReviewScope } from "@/app/(user)/do-boc/floor-review";
++import type { ScopeHistory } from "@/app/(user)/do-boc/scope-workspace";
+ import type { Confirmed, Data, PlanParams, PlanState, Structural } from "@/app/(user)/do-boc/model";
+ import type { DrawingVersion, WorkReceipt, WorkSnapshot } from "./work-review";
+ import { approvedWork, sameWorkVersion } from "./work-review";
+ import { adviceScope, type AdviceSelection, type SavedAdvice } from "@/app/(user)/dieu-chinh/advice-scope";
+ 
+-export type ReviewSession = Partial<DrawingVersion> & { materialRevision?: string; data: Data; states: Record<number, PlanState>; planP: Record<number, PlanParams>; confirmed: Record<number, Confirmed>; structural: Structural | null; pi: number };
++export type ReviewSession = Partial<DrawingVersion> & { reviewScope?: ReviewScope; reviewSelection?: ReviewScope; scopeHistory?: ScopeHistory; materialRevision?: string; data: Data; states: Record<number, PlanState>; planP: Record<number, PlanParams>; confirmed: Record<number, Confirmed>; structural: Structural | null; pi: number };
+ export const MATERIAL_PARAMS = new Set(["concrete_supply", "concrete_grade", "lean_concrete_grade", "masonry_mortar_grade", "plaster_mortar_grade", "screed_mortar_grade", "formwork_type", "waterproof_material_id", "material_classes"]);
+ 
+ type PlanChoice = { lineId:string; originalId:string|null; materialId:string; needsDesignReview:boolean; needsGeometryReview:boolean };
+@@ -46,9 +48,9 @@
+ 
+ /** Lưu cùng snapshot và kết quả xác nhận; quota không được để hai module đọc hai phiên khác nhau. */
+ export function saveMaterialSession(session: ReviewSession, confirmed: Confirmed[], params: Record<string, string>, work: WorkSnapshot, receipt: WorkReceipt | null, choices: AdviceSelection[] = []) {
+-  if (session.data.plans.some((_, i) => !session.states[i]?.scope) || !session.data.plans.some((_, i) => session.states[i]?.scope === "count")) throw new Error("Xác nhận phạm vi từng mặt bằng trước khi lưu vật liệu.");
++  if (!scopeReady(session.data.plans,session.states,session.reviewScope)) throw new Error("Xác nhận phạm vi từng mặt bằng trước khi lưu vật liệu.");
+   if (Object.keys(session.confirmed).some((key) => session.states[Number(key)]?.scope !== "count")) throw new Error("Kết quả có hình tham khảo; xác nhận lại phạm vi trước khi lưu.");
+-  if (session.data.plans.some((_, i) => session.states[i]?.scope === "count" && !session.confirmed[i])) throw new Error("Chưa xác nhận đủ các mặt bằng được tính.");
++  if (scopeIndices(session.data.plans,session.reviewScope).some(i => session.states[i]?.scope === "count" && !session.confirmed[i])) throw new Error("Chưa xác nhận đủ các mặt bằng được tính.");
+   const updates = { "optimat-review": JSON.stringify(session),
+     "optimat-confirmed": JSON.stringify(confirmed), "optimat-rough-params": JSON.stringify(params),
+     "optimat-rough": JSON.stringify(work), "optimat-work-review": JSON.stringify(receipt), "optimat-optimization": "null",
+--- a/src/lib/work-review.ts
++++ b/src/lib/work-review.ts
+@@ -2,7 +2,7 @@
+ import type { roughRequest } from "@/app/(user)/do-boc/model";
+ 
+ export type DrawingVersion = { projectUid: string; drawingId: string };
+-export type WorkVersion = DrawingVersion & { file: string; reviewId: string };
++export type WorkVersion = DrawingVersion & { reviewScope?: number[]; file: string; reviewId: string };
+ export type WorkSnapshot = WorkVersion & { at: string; request: ReturnType<typeof roughRequest>; result: RoughResult; materialRevision?: string };
+ export type WorkReceipt = WorkVersion & { checked: number[]; partial: boolean; confirmed: boolean };
+ 
+@@ -19,9 +19,10 @@
+   const available = works.map((w, i) => w.quantity != null && w.basis !== "not_supported" ? i : -1).filter(i => i >= 0);
+   return available.length > 0 && available.every(i => indices.has(i)) && (partial || !works.some(needsInput));
+ }
+-export function approvedWork(snapshot: WorkSnapshot | null, receipt: WorkReceipt | null, drawing: Partial<DrawingVersion> | null) {
++export function approvedWork(snapshot: WorkSnapshot | null, receipt: WorkReceipt | null, drawing: (Partial<DrawingVersion> & { reviewScope?: number[] }) | null) {
+   return !!snapshot && !!receipt?.confirmed && Array.isArray(receipt.checked) && sameWorkVersion(snapshot, receipt)
+     && snapshot.drawingId === drawing?.drawingId && snapshot.projectUid === drawing?.projectUid
++    && JSON.stringify(snapshot.reviewScope ?? null) === JSON.stringify(drawing?.reviewScope ?? null)
+     && !!snapshot.request && snapshot.result.plan_scope_confirmed === true && canConfirmWork(snapshot.result.works, receipt.checked, receipt.partial);
+ }
+ 

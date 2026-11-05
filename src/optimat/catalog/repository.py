@@ -22,9 +22,9 @@ from ..db.session import get_database_url, get_engine
 READY_FIELDS = {"qty_per_m2": "số lượng vật liệu / m² tường", "labor_day_per_m2": "công / m² tường",
                 "weight_kg_per_m2": "khối lượng tường kg/m²", "lambda_w_mk": "hệ số dẫn nhiệt λ",
                 "masonry_thickness_mm": "chiều dày khối xây"}
-CSV_TABLES = {"material_families": "family_id", "materials": "material_id", "wall_systems": "wall_system_id", "material_aliases": None,
-              "material_relations": None, "suppliers": "supplier_id", "supplier_materials": None, "vehicles": "vehicle_id",
-              "labor_rates": None}
+CSV_TABLES = {"material_groups": "group_id", "material_families": "family_id", "materials": "material_id", "wall_systems": "wall_system_id",
+              "material_aliases": None, "material_relations": None, "suppliers": "supplier_id", "supplier_materials": None,
+              "vehicles": "vehicle_id", "labor_rates": None}
 
 
 @dataclass
@@ -54,6 +54,8 @@ class Catalog:
         ["material_id", "relation_type", "related_material_id", "quantity", "quantity_unit", "source", "note"]))
     families: pd.DataFrame = field(default_factory=lambda: _empty(["family_id", "name", "sort_order", "is_wall"]))
     labor_rates: pd.DataFrame = field(default_factory=lambda: _empty(["province", "grade", "rate_per_day", "valid_from"]))
+    # 5 nhóm vật liệu của đề cương (material_groups): gộp bảng vật liệu phần thô theo nhóm cho bộ tối ưu
+    material_groups: pd.DataFrame = field(default_factory=lambda: _empty(["group_id", "sort_order", "name", "description"]))
     price_records: pd.DataFrame | None = None       # chỉ nạp khi tra giá (bảng lớn)
 
     @classmethod
@@ -73,7 +75,8 @@ class Catalog:
                        vehicles=table("vehicles"), wall_systems=table("wall_systems"),
                        aliases=table("material_aliases").drop(columns=["id"]),
                        relations=table("material_relations").drop(columns=["id"], errors="ignore"),
-                       families=table("material_families"), labor_rates=table("labor_rates").drop(columns=["id"]))
+                       families=table("material_families"), labor_rates=table("labor_rates").drop(columns=["id"]),
+                       material_groups=table("material_groups"))
 
     @classmethod
     def from_csv(cls, folder: Path | str | None = None) -> "Catalog":
@@ -93,7 +96,7 @@ class Catalog:
                    supplier_materials=tables["supplier_materials"], vehicles=tables["vehicles"],
                    wall_systems=tables["wall_systems"], aliases=tables["material_aliases"],
                    relations=tables["material_relations"], families=tables["material_families"],
-                   labor_rates=tables["labor_rates"])
+                   labor_rates=tables["labor_rates"], material_groups=tables["material_groups"])
 
     # ------------------------------------------------------------------ họ vật liệu, nhân công
     def wall_families(self) -> dict[str, str]:
@@ -192,7 +195,10 @@ class Catalog:
     def offers(self, material_ids: list[str]) -> pd.DataFrame:
         """Các cặp (vật liệu, nhà cung cấp) trong danh mục, kèm thông tin nhà cung cấp (giá có thể trống)."""
         sm = self.supplier_materials[self.supplier_materials.material_id.isin(material_ids)]
-        return sm.merge(self.suppliers, on="supplier_id", suffixes=("", "_sup"))
+        out = sm.merge(self.suppliers, on="supplier_id", suffixes=("", "_sup"))
+        if "lead_time_days_sup" in out:  # báo giá không ghi thời gian cung ứng: dùng của đại lý
+            out["lead_time_days"] = out.lead_time_days.astype(float).fillna(out.lead_time_days_sup.astype(float))
+        return out
 
     def vehicles_up_to(self, max_ton: float | None) -> pd.DataFrame:
         if max_ton is None:

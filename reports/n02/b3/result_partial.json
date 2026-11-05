@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_partial.py",
+    "-q",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=reports/n02/b3/temp_partial"
+  ],
+  "exit_code": 1,
+  "seconds": 7.941593408584595,
+  "database_env_removed": true,
+  "scope": "pure partial SYNTHETIC; no API/TestClient/real CAD/DB"
+}

@@ -1,0 +1,48 @@
+﻿stt,ma_vat_tu_du_toan,ten_vat_tu,don_vi,khoi_luong,don_gia_goc,don_gia_thuc_te,material_id
+1,A1899,Ván công nghiệp,M2,92.588,39000,,
+2,A1458,Khung xương (nhôm),Kg,92.42,10000,,
+3,A0655,Cột chống thép ống,Kg,208.163,10000,,
+4,A2353,Que hàn VN,kg,36.127,6500,,LK02
+5,A1833,Thép Đk 10 mm,kg,1798.95,7300,,
+6,A0977,Dây thép,kg,211.466,8500,,TH10
+7,A1838,Thép Đk 20 mm,Kg,4977.6,7450,,
+8,A1829,Thép Đk <=10 mm,kg,3928.545,7300,,
+9,A1828,Thép Đk <=18 mm,kg,1407.6,7500,,
+10,A2008,Xi măng PC30,kg,56646.23,802,,XM01
+11,A2357,Cát đổ bê tông,M3,38.279,86000,,CA01
+12,A0016,Đá dăm 1 x 2,M3,69.401,120000,,DA01
+13,A1624,Nước,M3,36.332,5000,,
+14,A1392,Gỗ ván cầu công tác,M3,0.63,2400000,,
+15,A0096,Đinh các loại,kg,0.268,8500,,CP06
+16,A0091,Đinh đĩa,cái,1.962,800,,
+17,A1340,Gạch ống 8x8x19,viên,53935.872,370,,GO01
+18,A0375,"Cát mịn, ML = 1,5-2",M3,86.936,72000,,CA05
+19,A2010,Xi măng trắng,kg,30.894,1610,,
+20,A1365,Gạch lát 250x250mm,M2,17.372,105800,,
+21,A1406,Giáo thép,kg,136.8,10000,,
+22,A2009,Xi măng PC40,kg,1076.342,802,,XM02
+23,A0018,Đá dăm 4 x 6,M3,4.683,105000,,DA03
+24,A1324,Flinkote,kg,45.705,10475,,
+25,A0021,Đá granít tự nhiên,M2,56.783,280000,,
+26,A1366,Gạch lát 800x800mm,M2,157.766,144200,,
+27,A1363,Gạch lát 400x400mm,M2,44.845,67300,,
+28,A1356,Gạch ốp chân tường 250x400mm,M2,88.761,52182,,
+29,A8000,Vách tắm đứng WC,bộ,3,,,
+30,A8001,Bể nước ngầm+bồn nước mái,bộ,2,,,
+31,A8002,Máy bơm nước+khoan giếng,bộ,1,,,
+32,A8003,Máy bơm áp lực,bộ,1,,,
+33,A8004,Vật tư điện nước,m2,315,,,
+34,A8005,Hệ thống nước nóng năng lượng mặt trời,bộ,1,,,
+35,A8006,Lan can cầu thang sắt tay vịn gỗ,m,31.5,,,
+36,A8007,Lan can mặt tiền,m,2.31,,,
+37,A8008,Khung sắt Lavabo,bộ,4,,,
+38,A8009,Bàn cầu+lavabo+phụ kiện,bộ,4,,,
+39,A8010,Kệ kiến+gương soi+giá treo khăn...,bộ,4,,,
+40,A8011,Cửa đi chính,m2,10.496,,,
+41,A8012,Cửa sắt+cửa nhôm,m2,32.281,,,
+42,A8013,Cửa cuốn+moto cửa cuốn,m2,10.57,,,
+43,A8014,Ống đồng+máy lạnh,bộ,4,,,
+44,A8015,Trần thạch cao khung nhôm chìm,m2,367.5,,,
+46,A8017,Vách kiến mặt tiền,m2,6.3,,,
+47,A8018,Xà gồ+mái tôn,m2,88.2,,,
+48,A8019,Mái ngói,m2,10,,,

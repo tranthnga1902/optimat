@@ -1,0 +1,19 @@
+{
+  "mode": "REPLAY_CAPTURED_OPENAI_RESPONSE",
+  "isolated_fix": false,
+  "canonical": true,
+  "source_file": "src/optimat/agent/material_advisor.py",
+  "openai_calls": 0,
+  "context_sha256": "e1dde8db29d9697677d206f09ccd96fbcfdc48c7a1734c35fe2d82131752ee51",
+  "original_source_sha256": "db8f77dabe1b83019a06fbbdc196728d2cef4948bbdd161a115ab62e328157b6",
+  "source_sha256": "463e8f88b2c92958b6217cde60ea419ecdbb345ef2569e912094d2adb300210e",
+  "response_sha256": "64968be309996a2d2cf60cf9cc9886a5ee3a094295156a13520df20999d08876",
+  "accepted": true,
+  "advice_count": 7,
+  "only_suggested_material": "TH10",
+  "zero_option_lines": 6,
+  "commercial_offer_count": 0,
+  "applied": false,
+  "forbidden_variants_rejected": 6,
+  "terminal_utc": "2026-11-03T17:32:11.258519+00:00"
+}

@@ -1,0 +1,205 @@
+--- a/src/app/(user)/do-boc/Review.tsx
++++ b/src/app/(user)/do-boc/Review.tsx
+@@ -44,6 +44,8 @@
+ type SheetState = { kind: "material" } | { kind: "confirm" } | { kind: "confirmed"; body: Confirmed; total: number }
+   | { kind: "recover"; body: Confirmed }
+   | { kind: "msg"; title: string; body?: ReactNode; primary?: boolean };
++type ConfirmationStamp = DrawingVersion & { projectId: number | null; revision: number; planIndex: number; published?: boolean };
++const storedProjectId = () => Number(store.get("optimat-project", "")) || null;
+ 
+ export function confirmationGuide(plans: Data["plans"], states: Record<number, PlanState>, confirmed: Record<number, Confirmed>, at: number) {
+   if (!plans.length) return null;
+@@ -68,7 +70,12 @@
+   const router = useRouter();
+   const [restored, setRestored] = useState(false);
+   const [saveError, setSaveError] = useState("");
+-  const publishPending = useRef(false);
++  const publishPending = useRef<ConfirmationStamp | null>(null);
++  const stampByBody = useRef(new WeakMap<Confirmed, ConfirmationStamp>());
++  const sessionProject = useRef<number | null>(null);
++  const lastStoredReview = useRef<string | null>(null);
++  const revision = useRef(0);
++  const activePlan = useRef(-1);
+   const confirmRequest = useRef<AbortController | null>(null);
+   const [confirmBusy, setConfirmBusy] = useState(false);
+   const scopeInput = useRef<HTMLSelectElement>(null);
+@@ -117,6 +124,18 @@
+   const confirmedList = useStored<unknown[]>("optimat-confirmed", []);
+   const roughStored = useStored<WorkSnapshot | null>("optimat-rough", null);
+   const receipt = useStored<WorkReceipt | null>("optimat-work-review", null);
++  useLayoutEffect(() => { activePlan.current = pi; }, [pi]);
++  // storage không phát sự kiện trong chính tab đã ghi. So với bản cuối do phiên này đọc/ghi,
++  // kể cả khi bản khác trùng tên tệp, tên tầng và drawingId.
++  const ownsReview = useCallback(() => {
++    try {
++      return !!drawing.current && drawing.current.projectUid === store.get("optimat-project-uid", "") &&
++        storedProjectId() === sessionProject.current && localStorage.getItem("optimat-review") === lastStoredReview.current;
++    } catch { return false; }
++  }, []);
++  const stampIsCurrent = useCallback((stamp?: ConfirmationStamp | null) => !!stamp && ownsReview() &&
++    stamp.projectUid === drawing.current?.projectUid && stamp.projectId === sessionProject.current &&
++    stamp.drawingId === drawing.current?.drawingId && stamp.revision === revision.current && stamp.planIndex === activePlan.current, [ownsReview]);
+   useEffect(() => {
+     const q = new URLSearchParams(location.search).get("project");
+     if (q) store.set("optimat-project", q);
+@@ -125,8 +144,12 @@
+   }, []);
+ 
+   useEffect(() => {
+-    const saved = store.get<ReviewSession | null>("optimat-review", null);
++    let saved: (ReviewSession & { projectId?: number | null }) | null;
+     try {
++      lastStoredReview.current = localStorage.getItem("optimat-review");
++      saved = lastStoredReview.current ? JSON.parse(lastStoredReview.current) : null;
++      sessionProject.current = storedProjectId();
++      if (saved?.projectId !== undefined && saved.projectId !== sessionProject.current) { setExternalChange(true); return; }
+       const uid = projectUid();
+       if (saved?.projectUid && saved.projectUid !== uid) { setMsg("Bản vẽ thuộc phiên dự án khác. Hãy mở lại dự án từ lịch sử."); return; }
+       drawing.current = { projectUid: uid, drawingId: saved?.drawingId || crypto.randomUUID(), materialRevision: saved?.materialRevision };
+@@ -156,6 +179,13 @@
+       const restoredPi = saved.pi < 0 && (roughOnly || !saved.data.overview?.cad) ? 0 : saved.pi;
+       setData(saved.data);
+       setStates(Object.fromEntries(saved.data.plans.map((p, i) => [i, saved.states[i] || initState(p)])));
++      const published = store.get<Confirmed[]>("optimat-confirmed", []);
++      for (const [key, body] of Object.entries(saved.confirmed)) {
++        const index = Number(key);
++        if (body.file === saved.data.file && body.plan === saved.data.plans[index]?.plan.name &&
++            saved.states[index]?.scope === "count" && reviewMatchesConfirmed(body.file, { [index]: body }, published.filter(p => p.plan === body.plan)))
++          stampByBody.current.set(body, { ...drawing.current!, projectId: sessionProject.current, revision: revision.current, planIndex: index, published: true });
++      }
+       setPlanP(saved.planP); setConfirmed(saved.confirmed);
+       setStructural(saved.structural); setPi(restoredPi); setMsg(null);
+       setTab(roughOnly ? "rough" : "qty");
+@@ -173,19 +203,22 @@
+   }, []);
+   const persistReview = useCallback((nextConfirmed = confirmed) => {
+     if (!data) return true;
+-    if (externalChange || !drawing.current || drawing.current.projectUid !== store.get("optimat-project-uid", "")) {
++    if (externalChange || !ownsReview() || (publishPending.current && !stampIsCurrent(publishPending.current))) {
+       setSaveError("Phiên dự án đã thay đổi. Tải phiên hiện tại để tiếp tục.");
+       return false;
+     }
+-    const snapshot = { ...drawing.current, data, states, planP, confirmed: nextConfirmed, pi, analysisReceipt,
++    const snapshot = { ...drawing.current, projectId: sessionProject.current, data, states, planP, confirmed: nextConfirmed, pi, analysisReceipt,
+       structural: structural && "file" in structural ? structural : null };
+     const writeSnapshot = (value: string) => {
+-      if (!publishPending.current) { localStorage.setItem("optimat-review", value); return; }
++      if (!publishPending.current) {
++        localStorage.setItem("optimat-review", value); lastStoredReview.current = value; return;
++      }
+       const previous = store.get<Confirmed[]>("optimat-confirmed", []).filter(p => p.file !== data.file);
+       const summaries = Object.values(nextConfirmed).map(({file, plan, height_mm, groups, total_net_area_m2, confirmed_at, takeoff_id}) =>
+         ({file, plan, height_mm, groups, total_net_area_m2, confirmed_at, takeoff_id: takeoff_id || null}));
+       saveTogether({ "optimat-review": value, "optimat-confirmed": JSON.stringify([...previous, ...summaries]) });
+-      publishPending.current = false;
++      publishPending.current.published = true;
++      lastStoredReview.current = value; publishPending.current = null;
+     };
+     try {
+       if (roughOnly) localStorage.setItem(RP_KEY, JSON.stringify(roughVals));
+@@ -206,7 +239,7 @@
+         return false;
+       }
+     }
+-  }, [data, states, planP, confirmed, pi, structural, roughOnly, roughVals, externalChange, analysisReceipt]);
++  }, [data, states, planP, confirmed, pi, structural, roughOnly, roughVals, externalChange, analysisReceipt, ownsReview, stampIsCurrent]);
+   useEffect(() => {
+     if (restored) persistReview();
+   }, [restored, persistReview]);
+@@ -244,7 +277,7 @@
+   const latest = useRef({ data, states, planP, project, rough, structural, roughVals });
+   useLayoutEffect(() => { latest.current = { data, states, planP, project, rough, structural, roughVals }; });
+   const roughTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined), busyRef = useRef(false);
+-  const revision = useRef(0), roughStarted = useRef(false), uploadRevision = useRef(0), structuralRevision = useRef(0);
++  const roughStarted = useRef(false), uploadRevision = useRef(0), structuralRevision = useRef(0);
+   useEffect(() => {
+     const changed = (event: StorageEvent) => {
+       if (event.key && !["optimat-project-uid","optimat-project","optimat-project-info","optimat-project-files-selected", "optimat-review", "optimat-work-review", "optimat-rough", RP_KEY].includes(event.key)) return;
+@@ -301,6 +334,7 @@
+   // ---------------------------------------------------------------- sửa: mỗi lần sửa lưu một bước hoàn tác, bỏ trạng thái đã xác nhận
+   const markDirty = () => {
+     confirmRequest.current?.abort();
++    if (publishPending.current?.planIndex === pi) publishPending.current = null;
+     store.set("optimat-work-review", null);
+     store.set("optimat-materials-ready", false);
+     store.set("optimat-material-draft", null);
+@@ -312,6 +346,12 @@
+       .filter((p) => !(p.file === data.file && p.plan === P.plan.name)));
+     setSheet(null);
+     scheduleRough();
++    // Sửa một tầng giữ nguyên biên nhận đã lưu của các tầng còn lại.
++    if (drawing.current && ownsReview()) for (const [key, body] of Object.entries(confirmed)) {
++      const stamp = stampByBody.current.get(body);
++      if (Number(key) !== pi && stamp?.published)
++        stampByBody.current.set(body, { ...stamp, drawingId: drawing.current.drawingId, revision: revision.current });
++    }
+   };
+   const edit = (fn: (n: PlanState) => void) => {
+     if (!S) return;
+@@ -385,7 +425,7 @@
+     fitSize(D.overview!.size);
+   };
+   const start = (D: Data) => {
+-    confirmRequest.current?.abort(); publishPending.current = false;
++    confirmRequest.current?.abort(); publishPending.current = null;
+     store.set("optimat-material-selection", null);
+     drawing.current = { projectUid: projectUid(), drawingId: crypto.randomUUID() };
+     store.set("optimat-work-review", null);
+@@ -552,13 +592,20 @@
+     else { focusAfterSwitch.current = guide.field; loadPlan(guide.index); }
+   };
+   const publishConfirmation = (body: Confirmed) => {
++    const stamp = stampByBody.current.get(body);
++    if (externalChange || !stamp || !stampIsCurrent(stamp)) { setSheet(null); setExternalChange(true); return; }
+     if (!data || !P || body.plan !== P.plan.name || body.file !== data.file) {
+       setSheet(null); setSaveError("Bản xác nhận không khớp mặt bằng đang mở."); return;
+     }
+     const next = { ...confirmed, [pi]: body };
+-    publishPending.current = true;
+-    setConfirmed(next);
+-    if (!persistReview(next)) { setSheet({ kind: "recover", body }); return; }
++    if (stamp.published) {
++      const summaries = store.get<Confirmed[]>("optimat-confirmed", []).filter(p => p.plan === body.plan);
++      if (!reviewMatchesConfirmed(body.file, { [pi]: body }, summaries)) { setSheet(null); setExternalChange(true); return; }
++    } else {
++      publishPending.current = stamp;
++      setConfirmed(next);
++      if (!persistReview(next)) { setSheet({ kind: "recover", body }); return; }
++    }
+     if (adjustment) {
+       setSheet({ kind: "msg", title: "Đã lưu điều chỉnh", body: <p>Phương án vật liệu của mặt bằng đã được cập nhật cho bước tra giá và tối ưu.</p> });
+     } else if (data.plans.every((_, i) => states[i]?.scope === "reference" || next[i])) {
+@@ -569,13 +616,15 @@
+   };
+   const sendConfirm = async () => {
+     if (confirmRequest.current) return;
++    if (externalChange || !ownsReview() || (publishPending.current && !stampIsCurrent(publishPending.current))) {
++      setSheet(null); setExternalChange(true); return;
++    }
+     if (guide) { guideToPlan(); return; }
+     if (reading || !data || !P || !S || !c) { setSheet(null); setSaveError("Chờ đọc xong và mở một mặt bằng để xác nhận."); return; }
+     if (confirmed[pi]) { publishConfirmation(confirmed[pi]); return; }
+     const version = drawing.current;
+-    const sameProject = () => !!version && drawing.current?.drawingId === version.drawingId &&
+-      store.get("optimat-project-uid", "") === version.projectUid && (Number(store.get("optimat-project", "")) || null) === project;
+-    if (externalChange || !sameProject()) { setSheet(null); setExternalChange(true); return; }
++    if (!version || project !== sessionProject.current || pi !== activePlan.current) { setSheet(null); setExternalChange(true); return; }
++    const stamp: ConfirmationStamp = { ...version, projectId: project, revision: revision.current, planIndex: pi };
+     const controller = new AbortController();
+     confirmRequest.current = controller; setConfirmBusy(true);
+     const atRevision = revision.current;
+@@ -586,11 +635,12 @@
+         body: JSON.stringify(payload(data, P, S, project)), signal: controller.signal });
+       const body = await response.json();
+       if (controller.signal.aborted || revision.current !== atRevision) return;
+-      if (!sameProject()) { setExternalChange(true); return; }
++      if (!stampIsCurrent(stamp)) { setExternalChange(true); return; }
+       if (!response.ok) throw new Error(typeof body.detail === "string" ? body.detail : `Máy chủ từ chối kết quả (HTTP ${response.status}).`);
++      stampByBody.current.set(body, stamp);
+       publishConfirmation(body);
+     } catch (err) {
+-      if ((timedOut || !controller.signal.aborted) && revision.current === atRevision && sameProject())
++      if ((timedOut || !controller.signal.aborted) && stampIsCurrent(stamp))
+         setSheet({ kind: "msg", title: "Chưa nhận được kết quả xác nhận", body: <p>{timedOut ? "Máy chủ chưa phản hồi sau hai phút. Kiểm tra kết quả đã lưu của dự án trước khi gửi lại." : (err as Error).message}</p> });
+     } finally {
+       clearTimeout(timeout);

@@ -1,0 +1,585 @@
+--- src/optimat/rough/models.py [FoundationItem] L91..108 ---
+class FoundationItem(BaseModel):
+    """Một loại móng: n khối dài × rộng × cao, hoặc các lớp (tiers), hoặc thể tích có sẵn (rough/foundations.py)."""
+    name: str                                       # M1, móng băng trục A...
+    count: int = 1
+    kind: Optional[Literal["don", "bang"]] = None    # móng đơn | móng băng (dài = chiều dài băng đã trừ phần giao)
+    gross_length_mm: Optional[float] = None          # chiều dài toàn băng trên chi tiết, chờ đối chiếu giao trước khi tính
+    length_mm: Optional[float] = None
+    width_mm: Optional[float] = None
+    height_mm: Optional[float] = None
+    tiers: list[FootingTier] = Field(default_factory=list)   # có lớp thì thắng dài × rộng × cao
+    volume_m3: Optional[float] = None               # nhập thẳng thể tích một khối (thắng kích thước)
+    lean_thickness_mm: Optional[float] = None       # bê tông lót dưới móng, cùng mặt bằng móng
+    bottom_level_mm: Optional[float] = None         # cao độ mặt dưới khối móng (trên lớp lót) so với ±0.000
+    neck_b_mm: Optional[float] = None               # tiết diện cổ móng (phần chôn dưới đất được trừ khi đắp lại)
+    neck_h_mm: Optional[float] = None
+    positions: list[tuple[float, float]] = Field(default_factory=list)   # tâm từng khối (mm, tọa độ mặt bằng móng)
+    plan: Optional[str] = None                      # mặt bằng móng chứa positions (để cắt giằng qua móng)
+    source: str = ""                                # truy ngược: file, hình chi tiết, mặt cắt đã đọc
+
+--- src/optimat/rough/foundations.py [_footing_rows] L127..150 ---
+def _footing_rows(foundations: list[FoundationItem]):
+    """Một ký hiệu có thể xuất hiện ở nhiều vị trí hoặc trong hai chi tiết mâu thuẫn."""
+    groups: dict[str, list[FoundationItem]] = {}
+    warnings = []
+    for f in foundations:
+        key = f.name.strip().upper()
+        group = groups.setdefault(key, [])
+        if any(f.model_copy(update={"name": prev.name}) == prev for prev in group):
+            warnings.append(f"Móng {f.name} nhập hai lần với cùng dữ liệu và nguồn: chỉ giữ một dòng.")
+        else:
+            group.append(f)
+
+    rows = []
+    for key, group in groups.items():
+        issue = ""
+        if len(group) > 1:
+            located = all(f.plan and f.plan == group[0].plan and len(f.positions) == f.count and f.count > 0 for f in group)
+            if not located or any(math.dist(p, q) < SAME_SPOT_MM for i, f in enumerate(group)
+                                  for other in group[:i] for p in f.positions for q in other.positions):
+                issue = f"Móng {key} có nhiều dòng cùng ký hiệu: cần đối chiếu vị trí từng khối trên cùng mặt bằng."
+                warnings.append(issue)
+        for i, f in enumerate(group, 1):
+            rows.append((f, key if len(group) == 1 else f"{key}:{i}", issue))
+    return rows, warnings
+
+--- src/optimat/rough/foundations.py [foundation_works] L153..275 ---
+def foundation_works(params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
+    rows, warnings = _footing_rows(params.foundations)
+    out = []
+    earth = any(v is not None for v in (params.natural_ground_level_mm, params.excavation_margin_mm, params.excavation_slope))
+    pits: list[tuple[float, float, dict]] = []
+    no_pos = []
+    for f, key, issue in rows:
+        label = f"{f.count} móng {f.name}"
+        src = f" [{f.source}]" if f.source else ""
+        tiers = tiers_of(f)
+        one = f.volume_m3 if f.volume_m3 is not None else (sum(tier_volume_m3(t) for t in tiers) if tiers else None)
+        if f.volume_m3 is not None or one is None:
+            formula = f"{f.count} × {_fmt(one) if one is not None else 'thể tích một khối'} m³"
+        else:
+            formula = f"{f.count} × (" + " + ".join(_tier_text(t) for t in tiers) + ") m"
+        dimensions = [dict(label=f"{f.name} lớp {i+1}", count=f.count, length_m=t.length_mm/1000,
+                           width_m=t.width_mm/1000, height_m=t.height_mm/1000,
+                           top_length_m=(t.top_length_mm if t.top_length_mm is not None else t.length_mm)/1000,
+                           top_width_m=(t.top_width_mm if t.top_width_mm is not None else t.width_mm)/1000,
+                           basis="reference" if f.volume_m3 is not None else "input", source=f.source or "Thông số móng người dùng nhập",
+                           note=(f"Đỉnh lớp vát: {t.top_length_mm if t.top_length_mm is not None else t.length_mm:g} × {t.top_width_mm if t.top_width_mm is not None else t.width_mm:g} mm" if t.top_length_mm is not None or t.top_width_mm is not None else "Lớp hộp") + ("; thể tích nhập trực tiếp được ưu tiên, kích thước chỉ tham khảo" if f.volume_m3 is not None else "")) for i,t in enumerate(tiers or [])]
+        if not dimensions:
+            dimensions = [dict(label=f.name, count=f.count, basis="reference" if f.volume_m3 is not None else "input", length_m=None if f.length_mm is None else f.length_mm/1000,
+                width_m=None if f.width_mm is None else f.width_mm/1000, height_m=None if f.height_mm is None else f.height_mm/1000,
+                source=f.source or "Thông số móng người dùng nhập", note="Nhập thể tích không suy ra dài/rộng/cao" if f.volume_m3 is not None else "Thiếu kích thước móng")]
+        if f.gross_length_mm is not None:
+            dimensions.append(dict(label=f"{f.name} toàn băng", count=f.count, length_m=f.gross_length_mm / 1000,
+                                   basis="reference", source=f.source or "Chi tiết móng băng",
+                                   note="Chiều dài gộp trên bản vẽ, chưa trừ phần giao"))
+        if issue:
+            codes = ["MONG", "COP_PHA"]
+            if f.lean_thickness_mm is not None:
+                codes.append("BE_TONG_LOT")
+            if earth:
+                codes.extend(["DAO_DAT", "DAP_DAT"])
+            for code in codes:
+                out.append(_work(code, None, element=f"{label} ({key})", missing=[issue],
+                                 evidence=[f.source] if f.source else [], formwork_of="MONG" if code == "COP_PHA" else None,
+                                 dimensions=[{**dim, "basis": "reference"} for dim in dimensions]))
+            continue
+        out.append(_work("MONG", f.count * one if one is not None else None, dimensions=dimensions, element=label, source="manual",
+                         missing=[] if one is not None else [
+                             f"móng băng {f.name}: cần tiết diện và chiều dài sau khi xử lý phần giao"
+                             if f.kind == "bang" else f"kích thước móng {f.name} (chưa có chi tiết móng)"],
+                         formula=formula + src))
+        base = tiers[0] if tiers else None
+        if f.lean_thickness_mm is not None:
+            lean_q = f.count * base.length_mm * base.width_mm * f.lean_thickness_mm / 1e9 if base else None
+            lean = _work("BE_TONG_LOT", lean_q,
+                             dimensions=[dict(label=f"lót {f.name}", count=f.count, length_m=base.length_mm/1000 if base else None,
+                                width_m=base.width_mm/1000 if base else None, thickness_m=f.lean_thickness_mm/1000,
+                                source=f.source or "Thông số móng người dùng nhập")], element=f"lót {label}", source="manual", missing=[] if base else ["dài, rộng móng"],
+                             formula=(f"{f.count} × {_fmt(base.length_mm / 1000)} × {_fmt(base.width_mm / 1000)} × "
+                                      if base else f"{f.count} × dài × rộng × ") + f"{_fmt(f.lean_thickness_mm / 1000)} m" + src)
+            row = lean_foundation_row(f, base, row_id=f"lean:{key}", raw_quantity=lean_q)
+            detail = summarize([row], lean.unit, lean.quantity, scope_complete=not lean.missing,
+                               detail_level="unavailable" if row.role == "reference" else "components")
+            out.append(WorkItem.model_validate({**lean.model_dump(), "quantity_detail": detail.model_dump()}))
+        if tiers:
+            form = sum(tier_formwork_m2(t) for t in tiers)
+            out.append(_work("COP_PHA", f.count * form, dimensions=dimensions, element=f"cốp pha {label}", formwork_of="MONG", source="manual",
+                             formula=f"{f.count} × Σ 2 × (dài + rộng) × cao các lớp thẳng đứng = {f.count} × {_fmt(form)} m²"
+                                     + (" (mặt vát không tính)" if any(tier_formwork_m2(t) == 0 for t in tiers) else "") + src))
+        elif f.volume_m3 is None:
+            warnings.append(f"Móng {f.name}: chưa có đủ dài, rộng, cao nên chưa tính cốp pha móng.")
+        else:
+            warnings.append(f"Móng {f.name}: nhập thể tích, chưa tính cốp pha móng (cần kích thước).")
+        if not earth:
+            continue
+        p, miss, warn = pit(f, params)
+        warnings += warn
+        if p is None:
+            out.append(_work("DAO_DAT", None, element=f"hố {label}", missing=miss))
+            out.append(_work("DAP_DAT", None, element=f"hố {label}", missing=miss))
+            continue
+        pit_dimensions = [dict(label=f"hố {f.name}", count=f.count, basis="reference", length_m=p['l']/1000, width_m=p['w']/1000,
+                               height_m=p['d']/1000, slope_ratio=p['m'],
+                               top_level_m=params.natural_ground_level_mm/1000,
+                               bottom_level_m=(params.natural_ground_level_mm-p['d'])/1000, source=f.source or "Thông số móng và hố đào người dùng nhập",
+                               note=f"Dài/rộng đáy hố; cao là sâu đào; taluy {p['m']:g}; không phải kích thước khối đất đắp")]
+        v_pit = pit_volume_m3(p)
+        out.append(_work("DAO_DAT", f.count * v_pit, dimensions=pit_dimensions, element=f"hố {label}", source="manual",
+                         formula=f"{f.count} × H/6 × (A đáy + 4 A giữa + A đỉnh): đáy {_fmt(p['l'] / 1000)}×{_fmt(p['w'] / 1000)} m, "
+                                 f"sâu H {_fmt(p['d'] / 1000)} m, mái m {_fmt(p['m'])}" + src))
+        buried = 0.0 if p["top"] >= params.natural_ground_level_mm else params.natural_ground_level_mm - p["top"]
+        neck_ok = buried == 0 or None not in (f.neck_b_mm, f.neck_h_mm)
+        if one is None or not neck_ok:
+            out.append(_work("DAP_DAT", None, dimensions=pit_dimensions, element=f"hố {label}",
+                             missing=([] if one is not None else [f"thể tích móng {f.name}"]) +
+                                     ([] if neck_ok else [f"tiết diện cổ móng {f.name}"])))
+        else:
+            neck = (f.neck_b_mm * f.neck_h_mm * buried / 1e9) if buried else 0.0
+            lean = base.length_mm * base.width_mm * f.lean_thickness_mm / 1e9
+            fill = v_pit - lean - one - neck
+            if fill < 0:
+                warnings.append(f"Móng {f.name}: khối lượng đắp âm ({_fmt(fill)} m³/khối): hố đào nhỏ hơn khối móng, "
+                                "kiểm tra mở rộng đáy hố, cao độ và kích thước móng.")
+                out.append(_work("DAP_DAT", None, dimensions=pit_dimensions, element=f"hố {label}", missing=["khối lượng đắp âm (xem cảnh báo)"]))
+            else:
+                out.append(_work("DAP_DAT", f.count * fill, dimensions=pit_dimensions, element=f"hố {label}", source="manual",
+                                 formula=f"{f.count} × ({_fmt(v_pit)} hố − {_fmt(lean)} lót − {_fmt(one)} móng − {_fmt(neck)} cổ móng) m³"))
+        if f.positions:
+            if len(f.positions) != f.count:
+                warnings.append(f"Móng {f.name}: {len(f.positions)} vị trí khác {f.count} khối, chưa kiểm tra chồng lấn hố đào.")
+                no_pos.append(f.name)
+            else:
+                pits += [(x, y, p) for x, y in f.positions]
+        else:
+            no_pos.append(f.name)
+    if earth and no_pos:
+        warnings.append(f"Chưa có vị trí móng {', '.join(no_pos)}: chưa kiểm tra hố đào chồng lấn.")
+    if len(pits) > 1:
+        extra = pit_overlap_m3(pits)
+        if extra > 1e-4:
+            warnings.append(f"Hố đào chồng lấn nhau: phần chung {_fmt(extra)} m³ đã trừ một lần (nên xét đào chung hố hoặc đào băng).")
+            out.append(_neg("DAO_DAT", extra, element="trừ phần hố đào chồng lấn", source="auto",
+                            formula=f"−∫(Σ diện tích hố − diện tích hợp) dz = −{_fmt(extra)} m³"))
+            if any(w.code == "DAP_DAT" and w.quantity is not None for w in out):
+                out.append(_neg("DAP_DAT", extra, element="trừ phần hố đào chồng lấn", source="auto",
+                                formula=f"−{_fmt(extra)} m³ (đất đắp trong phần hố chung)"))
+    elif not earth and params.foundations:
+        warnings.append("Chưa tính đào, đắp đất hố móng: nhập cốt đất tự nhiên, mở rộng đáy hố, hệ số mái theo hồ sơ.")
+    return out, warnings
+
+--- src/optimat/rough/foundations.py [footing_rects] L278..290 ---
+def footing_rects(foundations: list[FoundationItem], plan: str) -> list[tuple[str, tuple[float, float, float, float]]]:
+    """Khung mặt bằng (lớp trên cùng, nơi giằng gối vào) của từng khối móng có vị trí trên mặt bằng móng `plan`.
+    shortcut: coi cạnh dài theo trục x như pit_overlap_m3; móng xoay 90° cần thêm hướng vào positions."""
+    out = []
+    rows, _ = _footing_rows(foundations)
+    for f, _, issue in rows:
+        tiers = tiers_of(f)
+        if issue or f.plan != plan or not tiers:
+            continue
+        t = tiers[-1]
+        hl, hw = (t.top_length_mm or t.length_mm) / 2, (t.top_width_mm or t.width_mm) / 2
+        out += [(f.name, (x - hl, y - hw, x + hl, y + hw)) for x, y in f.positions]
+    return out
+
+--- src/optimat/rough/structural.py [element_of] L65..72 ---
+def element_of(text: str) -> tuple[str, str, str] | None:
+    """Ký hiệu cấu kiện -> (vai trò, tên loại, khóa chữ thường bỏ dấu). Chữ phải khớp trọn mẫu."""
+    key = re.sub(r"\s+", "", normalize(text))
+    key = re.sub(r"(?<=[a-z])[-–](?=\d)", "", key)
+    for pat, role, name in load_element_rules():
+        if pat.fullmatch(key):
+            return role, name, key
+    return None
+
+--- src/optimat/rough/structural.py [footing_detail_sizes] L154..189 ---
+def footing_detail_sizes(views: list[View], sections: dict, dims: list[Dim]) -> dict[str, dict]:
+    """Kích thước móng từ chi tiết: {khóa móng: {length_mm, width_mm, height_mm, lean_thickness_mm, nguon}}."""
+    out = {}
+    details = [v for v in views if v.ma == "BV05" and v.bbox]
+    for v in details:
+        k = _title_key(v.title)
+        if not k or k[0] != "FOUNDATION":
+            continue
+        if k[1].startswith("bm"):
+            # Hình cắt ngang móng băng không cho chiều dài chạy dọc băng.
+            continue
+        # khung hình nới xuống tới dưới tiêu đề (đường kích thước tổng hay nằm sát tiêu đề), mỗi bên không quá nửa
+        # khoảng cách tới chi tiết móng gần nhất cùng hàng (khung tự tìm có thể lấn sang hình bên cạnh)
+        x0, y0, x1, y1 = _grown(v.bbox)
+        gaps = [abs(o.x - v.x) for o in details if o is not v and abs(o.y - v.y) < 5000]
+        if gaps:
+            x0, x1 = max(x0, v.x - min(gaps) / 2), min(x1, v.x + min(gaps) / 2)
+        ds = inside(dims, (x0, min(y0, v.y - 1000), x1, y1))
+        horiz = [d.value for d in ds if not d.vertical]
+        vert = [d.value for d in ds if d.vertical]
+        secs = [d for s in sections.get(k, []) for d in s if d.vertical]
+        heights = [d.value for d in secs if FOOTING_H_MM[0] <= d.value <= FOOTING_H_MM[1]]
+        leans = [d.value for d in secs if LEAN_MM[0] <= d.value <= LEAN_MM[1]]
+        size = {"length_mm": max(horiz) if horiz else None, "width_mm": max(vert) if vert else None,
+                     "height_mm": max(heights) if heights else None,
+                     "lean_thickness_mm": max(Counter(leans).items(), key=lambda kv: (kv[1], kv[0]))[0] if leans else None,
+                     "nguon": f"{v.title} tại ({v.x:g}, {v.y:g}), {len(sections.get(k, []))} mặt cắt"}
+        previous = out.get(k[1])
+        if previous and (previous.get("conflict") or any(size[d] != previous[d] for d in size if d != "nguon")):
+            def describe(s):
+                return " × ".join("?" if s[d] is None else f"{s[d]:g}" for d in ("length_mm", "width_mm", "height_mm"))
+            earlier = previous["nguon"] if previous.get("conflict") else f"{previous['nguon']} ({describe(previous)} mm)"
+            size = {d: None for d in size if d != "nguon"} | {
+                "conflict": True, "nguon": f"{earlier} / {size['nguon']} ({describe(size)} mm)"}
+        out[k[1]] = size
+    return out
+
+--- src/optimat/rough/structural.py [read_structural] L462..580 ---
+def read_structural(drawing, scale: float | None = None, dims: list[Dim] | None = None) -> StructuralTakeoff:
+    """scale: hệ số đổi số đo trên mặt bằng kết cấu ra mm thật; None: tự suy từ đường kích thước của từng mặt bằng.
+    dims: đường kích thước (mặc định đọc từ bản vẽ gốc)."""
+    views = find_views(drawing, bbox_for=PLAN_TYPES + ("BV05",))
+    out = StructuralTakeoff(views=views, sheets=sheet_inventory(views))
+    from .structural_column_instances import read_column_instances
+    out.structural_columns = read_column_instances(drawing, views)
+    dims = read_dimensions(drawing) if dims is None else dims
+    details = detail_sections(drawing, views, dims)
+    beam_sizes = beam_detail_sizes(details)
+    if beam_sizes:
+        out.warnings.append("Tiết diện dầm đọc từ mặt cắt dầm (rộng × cao gồm sàn): "
+                            + ", ".join(f"{k.upper()} {b:.0f}×{h:.0f}" for k, (b, h) in sorted(beam_sizes.items()))
+                            + "; kiểm tra trên trang kiểm tra.")
+    sections = {**beam_sizes, **written_sections(drawing)}      # tiết diện ghi chữ thắng
+    spots: dict[str, list] = {}             # móng -> [(mặt bằng, x, y, tỷ lệ)] của từng ký hiệu
+    plan_lines: dict[str, list] = {}
+    for v in views:
+        if v.ma not in PLAN_TYPES or v.bbox is None:
+            continue
+        s = scale
+        if s is None:
+            s = view_scale(inside(dims, _grown(v.bbox)))
+            if v.ma in ("BV04", "BV08") and (picked := _scale_by_beam_width(drawing, v, inside(dims, _grown(v.bbox)), sections)):
+                if s is not None and abs(picked - s) > 0.01:
+                    out.warnings.append(f"{v.title}: khung có hình vẽ nhiều tỷ lệ (trung vị {s:.3g}); dùng tỷ lệ {picked:.3g} "
+                                        "cho bề rộng dầm đo được khớp bề rộng ghi trên mặt cắt dầm, kiểm tra.")
+                s = picked
+            if s is None:
+                s = 1.0
+                if v.ma in ("BV04", "BV08"):
+                    out.warnings.append(f"{v.title}: không có đường kích thước để suy tỷ lệ, đang coi số đo là mm thật.")
+            elif abs(s - 1) > 0.01 and v.ma in ("BV04", "BV08"):
+                out.warnings.append(f"{v.title}: tỷ lệ hình vẽ {s:.3g} (số hiển thị / số đo của đường kích thước), "
+                                    "chiều dài, rộng dầm đã đổi theo tỷ lệ này.")
+        inside_labels = _labels(drawing, v.bbox)
+        cols = Counter(t.text.strip().upper() for t, e in inside_labels if e[0] == "COLUMN")
+        if cols:
+            out.columns[v.title] = dict(sorted(cols.items()))
+        if v.ma == "BV04":
+            for t, e in inside_labels:
+                if e[0] == "FOUNDATION":
+                    spots.setdefault(t.text.strip().upper(), []).append((v.title, t.x, t.y, s))
+            plan_lines[v.title] = _lines(drawing, _grown(v.bbox))
+        if v.ma in ("BV04", "BV08"):
+            beams, warn = measure_beams(drawing, v, sections, s)
+            if beams:
+                out.beams[v.title] = beams
+            out.warnings += warn
+    out.column_sections = {k: v for k, v in sections.items() if (e := element_of(k)) and e[0] == "COLUMN"}
+    out.column_schedule, warn = read_column_schedule(drawing, dims)
+    out.warnings += warn
+    sizes = footing_detail_sizes(views, details, dims)
+    strip_sections = {_title_key(v.title) for v in views if v.ma == "BV05" and "mong bang" in normalize(v.title)}
+    strip_notes: dict[str, set[tuple[float, int | None]]] = {}
+    for t in drawing.texts:
+        note = re.fullmatch(r"(bm[-–]?\d+[a-z]?)\s*:\s*l\s*=\s*(\d+(?:[.,]\d+)?)\s*mm(?:\s*;\s*sl\s*=\s*(\d+))?",
+                            t.text.strip(), re.IGNORECASE)
+        if note and (mark := element_of(note[1])) and ("FOUNDATION", mark[2]) in strip_sections:
+            length = float(note[2].replace(",", "."))
+            if length > 0:
+                strip_notes.setdefault(mark[2], set()).add((length, int(note[3]) if note[3] else None))
+    for n, pts in sorted(spots.items()):
+        mark = element_of(n)[2]
+        size = sizes.get(mark, {})
+        is_strip = mark.startswith("bm")
+        if is_strip:
+            lengths = {length for length, _ in strip_notes.get(mark, set())}
+            if len(lengths) == 1:
+                length = next(iter(lengths))
+                size = {"gross_length_mm": length, "nguon": f"ghi chú {n}: L={length:g} mm và mặt cắt móng băng cùng ký hiệu"}
+            out.warnings.append(f"{n}: cần kiểm phạm vi băng, phần giao và tiết diện móng trước khi tính thể tích."
+                                + (f" Có nhiều chiều dài ghi trên bản vẽ: {sorted(lengths)} mm." if len(lengths) > 1 else ""))
+        plans = {p[0] for p in pts}
+        uniq = []                                  # ký hiệu vẽ trùng chỗ (copy đè) chỉ đếm một lần
+        for p in pts:
+            if not any(q[0] == p[0] and math.hypot(q[1] - p[1], q[2] - p[2]) * p[3] < SAME_SPOT_MM for q in uniq):
+                uniq.append(p)
+        c = len(uniq)
+        if len(pts) > c:
+            out.warnings.append(f"Móng {n}: {len(pts) - c} ký hiệu trùng vị trí, đếm một lần.")
+        centers = []
+        if len(plans) == 1 and size.get("length_mm") and size.get("width_mm"):
+            for title, x, y, sc in uniq:
+                ctr = _footing_center(plan_lines[title], x, y, size["length_mm"] / sc, size["width_mm"] / sc)
+                centers.append(None if ctr is None else (round(ctr[0] * sc, 1), round(ctr[1] * sc, 1)))
+        found_all = bool(centers) and None not in centers
+        if size.get("conflict"):
+            out.warnings.append(f"Móng {n}: các chi tiết cùng ký hiệu có kích thước khác nhau; cần xác định chi tiết cho từng vị trí. {size['nguon']}")
+        f = FoundationItem(name=n, count=c, kind="bang" if is_strip else None, **{k: v for k, v in size.items() if k.endswith("_mm")},
+                           positions=centers if found_all else [], plan=next(iter(plans)) if found_all else None,
+                           source=f"{n} trên {', '.join(sorted(plans))}" + (f"; kích thước: {size['nguon']}" if size else ""))
+        if centers and not found_all:
+            out.warnings.append(f"Móng {n}: không tìm thấy khung móng {size['length_mm']:.0f}×{size['width_mm']:.0f} quanh "
+                                f"{centers.count(None)}/{c} ký hiệu: chưa có vị trí để kiểm tra hố đào chồng lấn, giằng qua móng.")
+        out.foundations.append(f)
+        dims_txt = " × ".join(f"{v:.0f}" if v is not None else "?" for v in (f.length_mm, f.width_mm, f.height_mm))
+        out.warnings.append(f"Móng {n}: {c} khối, {dims_txt} mm"
+                            + (f", lót {f.lean_thickness_mm:.0f} mm" if f.lean_thickness_mm else "")
+                            + (" (móng băng: chờ kiểm tra tiết diện và phần giao)." if is_strip else
+                               " (chờ đối chiếu các chi tiết cùng ký hiệu)." if size.get("conflict") else
+                               f" (đọc từ chi tiết {size['nguon']}; móng coi là khối hộp, móng có bậc hoặc vát cần sửa)."
+                               if size else " (không có chi tiết móng: nhập kích thước trong thông số công trình)."))
+    located_marks = {element_of(n)[2] for n in spots}
+    for mark, notes in sorted(strip_notes.items()):
+        if mark in located_marks:
+            continue
+        if len(notes) != 1:
+            out.warnings.append(f"{mark.upper()}: các ghi chú L/SL khác nhau, cần đối chiếu từng vị trí trên mặt bằng.")
+            continue
+        length, count = next(iter(notes))
+        if not count:
+            out.warnings.append(f"{mark.upper()}: đọc được L={length:g} mm, thiếu số lượng và vị trí trên mặt bằng.")
+            continue
+        name = f"BM-{mark[2:].upper()}"
+        source = f"Chi tiết móng băng {name}, L={length:g} mm, SL={count}; chưa nối vị trí trên mặt bằng"
+        out.foundations.append(FoundationItem(name=name, kind="bang", count=count, gross_length_mm=length, source=source))
+        out.warnings.append(f"{source}. Chưa tính thể tích: thiếu tiết diện và phạm vi giao nhau.")
+    return out
+
+--- src/optimat/drawing/sheets.py [find_views] L106..120 ---
+def find_views(drawing: Drawing, bbox_for: tuple[str, ...] | None = None) -> list[View]:
+    """Hình vẽ có tiêu đề nhận được loại. bbox_for: chỉ tìm khung cho các loại này (tìm khung tốn thời gian); None: mọi loại."""
+    titled = [(t, st) for t in drawing.texts if (st := sheet_type_of(t.text))]
+    if not titled:
+        return []
+    big = title_height_reference([t for t, _ in titled])
+    titled = [(t, st) for t, st in titled if t.height >= TITLE_REL_HEIGHT * big]
+    headings = [t for t, _ in titled]
+    views, seen = [], Counter()
+    for t, st in sorted(titled, key=lambda p: (-p[0].y, p[0].x)):
+        title = re.sub(r"\s+", " ", t.text).strip()
+        seen[title] += 1      # QU-05: tiêu đề là khóa (dầm theo mặt bằng), trùng thì đánh số thêm
+        views.append(View(title if seen[title] == 1 else f"{title} ({seen[title]})", st.ma, st.ten, st.nhom, t.x, t.y,
+                          _region(drawing, t, headings) if bbox_for is None or st.ma in bbox_for else None))
+    return views
+
+--- src/optimat/drawing/sheets.py [title_height_reference] L100..103 ---
+def title_height_reference(titles) -> float:
+    # Tên cấu kiện đơn lẻ (ví dụ chữ “lanh tô” phóng lớn) không đại diện cỡ tiêu đề mặt bằng.
+    headings = [t.height for t in titles if normalize(t.text).startswith(HEADING_WORDS) and t.height > 0]
+    return max(headings, default=0) or max((t.height for t in titles), default=0)
+
+--- src/optimat/drawing/registry.py [build_registry] L269..402 ---
+def build_registry(sources: list[tuple[str, Drawing]], symbol_overrides: dict[str, str] | None = None,
+                   dims: dict[str, list] | None = None) -> Registry:
+    """sources: [(tên file, bản vẽ đã đọc)], kiến trúc và kết cấu chung một hồ sơ. dims: đường kích thước theo file
+    (mặc định đọc từ tài liệu ezdxf). symbol_overrides: {khóa ký hiệu: vai trò} người dùng gán cho ký hiệu chưa có quy tắc."""
+    overrides = {symbol_key(k): v for k, v in (symbol_overrides or {}).items()}
+    comps: dict[str, Component] = {}
+    issues: list[Issue] = []
+    unmatched: list[Unmatched] = []
+    views_out: list[ViewInfo] = []
+    layers: list[LayerMap] = []
+    revisions: dict[str, list[str]] = {}
+    floors: dict[str, Floor] = {}
+    all_views = []
+    typical: dict[str, list[EvidenceRef]] = {}
+    for file, d in sources:
+        handles = _handles(d)
+        fdims = (dims or {}).get(file)
+        fdims = read_dimensions(d) if fdims is None else fdims
+        views = find_views(d, bbox_for=st.PLAN_TYPES + ("BV05",))
+        all_views += views
+        revs = sorted({m.group(1) for t in d.texts if (m := REV_RE.search(normalize(t.text)))})
+        if revs:
+            revisions[file] = revs
+        for name in d.layers:
+            sig = match_layer(normalize(name))
+            role = d.layer_classes.get(name, "UNKNOWN")
+            layers.append(LayerMap(file=file, layer=name, role=getattr(role, "value", role),
+                                   rule=sig.ma if sig else None))
+            if d.layer_classes.get(name) == "UNKNOWN" and name != "0":
+                unmatched.append(Unmatched(kind="layer", text=name))
+        for p in find_plans(d):          # mặt bằng kiến trúc: cao độ tầng
+            for key in floors_of(p.title or p.name):
+                f = floors.setdefault(key, Floor(key=key, names=[]))
+                f.names.append(p.name)
+                f.elevation_m = f.elevation_m if f.elevation_m is not None else p.level_m
+        # tiêu đề nhận được loại -> ViewInfo; chữ cỡ tiêu đề không nhận được loại -> unmatched
+        title_texts = {(round(v.x), round(v.y)) for v in views}
+        big = title_height_reference([t for t in d.texts if sheet_type_of(t.text)])
+        for t in d.texts:
+            n = normalize(t.text).strip()
+            if (round(t.x), round(t.y)) not in title_texts and big and t.height >= TITLE_REL_HEIGHT * big \
+                    and n.startswith(TITLE_WORDS) and not sheet_type_of(t.text):
+                unmatched.append(Unmatched(kind="tieu_de", text=t.text.strip(), evidence=_ev(file, t, "-", handles)))
+        by_pos = {(round(t.x), round(t.y)): t for t in d.texts}
+        for v in views:
+            t = by_pos.get((round(v.x), round(v.y)))
+            ev = _ev(file, t, v.ma, handles) if t else EvidenceRef(file=file, bbox=(v.x, v.y, v.x, v.y), rule=v.ma,
+                                                                   text=v.title)
+            if v.bbox:
+                ev.bbox = tuple(round(c, 1) for c in v.bbox)
+            fl = floors_of(v.title)
+            scale = view_scale(inside(fdims, v.bbox)) if v.bbox else None
+            views_out.append(ViewInfo(file=file, title=v.title, sheet_type=v.ma, sheet_name=v.ten, floors=fl,
+                                      scale=scale, origin=(v.bbox[0], v.bbox[1]) if v.bbox else None, evidence=ev))
+            for key in fl:
+                floors.setdefault(key, Floor(key=key, names=[])).views.append(v.title)
+            if v.ma in DETAIL_TYPES:
+                keyed = False
+                for word in re.split(r"[\s(),:]+", v.title):
+                    e = match_symbol(word, overrides) if word else None
+                    if e and e[0] in REQUIRED:
+                        cid, keyed = f"{e[0]}:{e[2]}", True
+                        comps.setdefault(cid, _new(cid, e[0], e[1], word.upper())).details.append(ev)
+                if not keyed:          # "CHI TIẾT CỘT ĐIỂN HÌNH": chi tiết chung cho mọi cấu kiện cùng loại
+                    typical.setdefault(TYPICAL_ROLE[v.ma], []).append(ev)
+                continue
+            if v.ma not in st.PLAN_TYPES or not v.bbox:
+                continue
+            if len(fl) > 1:
+                issues.append(Issue(kind="da_tang", message=f"{v.title}: một hình vẽ dùng cho {len(fl)} tầng "
+                                    f"({', '.join(fl)}); khối lượng nhân số tầng, cần xác nhận.", evidence=[ev]))
+            if scale is None:
+                issues.append(Issue(kind="ty_le", message=f"{v.title}: không có đường kích thước, chưa suy được tỷ lệ "
+                                    "(đang coi số đo là mm thật).", evidence=[ev]))
+            s = scale or 1.0
+            vert, horiz = _axes(d, v.bbox)
+            axis_labels = {lbl for _, lbl in vert + horiz}
+            lines = st._lines(d, st._grown(v.bbox))
+            x0, y0, x1, y1 = st._grown(v.bbox)
+            for t in d.texts:
+                if not (x0 <= t.x <= x1 and y0 <= t.y <= y1):
+                    continue
+                e = match_symbol(t.text, overrides)
+                if e is None:
+                    key = symbol_key(t.text)
+                    if SYMBOL_LIKE.fullmatch(key) and t.text.strip() not in axis_labels and not floors_of(t.text):
+                        unmatched.append(Unmatched(kind="ky_hieu", text=t.text.strip(),
+                                                   evidence=_ev(file, t, "-", handles)))
+                    continue
+                if e[0] not in REQUIRED:
+                    continue
+                width = None
+                if e[0] == "BEAM":
+                    p = st._nearest_pair(lines, t.x, t.y)
+                    width = round(p[5] * s, 1) if p else None
+                cid = f"{e[0]}:{e[2]}"
+                comps.setdefault(cid, _new(cid, e[0], e[1], t.text.strip().upper())).occurrences.append(Occurrence(
+                    view=v.title, sheet_type=v.ma, floors=fl, x_mm=round((t.x - v.bbox[0]) * s, 1),
+                    y_mm=round((t.y - v.bbox[1]) * s, 1), axis=_axis_name(vert, horiz, t.x, t.y),
+                    drawn_width_mm=width, evidence=_ev(file, t, e[3], handles)))
+        for cid, sv in _written(file, d, overrides, handles):
+            role, key = cid.split(":", 1)
+            comps.setdefault(cid, _new(cid, role, role.lower(), key.upper())).size_sources.append(sv)
+        # mặt cắt, chi tiết móng: dùng lại cách đọc của rough/structural.py
+        details = st.detail_sections(d, views, fdims)
+        for key, (b, h) in st.beam_detail_sizes(details).items():
+            cid = f"BEAM:{key}"
+            c = comps.setdefault(cid, _new(cid, "BEAM", "dầm", key.upper()))
+            ev = c.details[0] if c.details else EvidenceRef(file=file, bbox=(0, 0, 0, 0), rule="MAT_CAT")
+            c.size_sources.append(SizeValue(values={"b_mm": b, "d_mm": h}, source="mat_cat", evidence=ev))
+        for key, size in st.footing_detail_sizes(views, details, fdims).items():
+            cid = f"FOUNDATION:{key}"
+            c = comps.setdefault(cid, _new(cid, "FOUNDATION", "móng", key.upper()))
+            if size.get("conflict"):
+                issues.append(Issue(kind="xung_dot_kich_thuoc", component=cid,
+                                    message=f"Các chi tiết móng cùng ký hiệu khác kích thước: {size['nguon']}"))
+            vals = {k: v for k, v in size.items() if k in REQUIRED["FOUNDATION"] + ("lean_thickness_mm",) and v is not None}
+            if vals:
+                ev = c.details[0] if c.details else EvidenceRef(file=file, bbox=(0, 0, 0, 0), rule="CHI_TIET")
+                c.size_sources.append(SizeValue(values=vals, source="chi_tiet", evidence=ev))
+    for c in comps.values():
+        if not c.details:
+            c.details = list(typical.get(c.role, []))
+    _floor_issues(floors, views_out, issues)
+    if len({r for rs in revisions.values() for r in rs}) > 1:
+        issues.append(Issue(kind="lech_phien_ban", message="Phiên bản ghi trên bản vẽ không thống nhất: "
+                            + "; ".join(f"{f}: {', '.join(r)}" for f, r in revisions.items())))
+    reg = Registry(files=[f for f, _ in sources], sheets=sheet_inventory(all_views), views=views_out,
+                   floors=sorted(floors.values(), key=lambda f: f.key), layers=layers,
+                   components=sorted(comps.values(), key=lambda c: c.id), issues=issues, unmatched=unmatched,
+                   revisions=revisions)
+    for c in reg.components:
+        _resolve(c, reg)
+    return score(reg)
+
+--- data/rules/ky_hieu_cau_kien.csv [K12] L6..6 ---
+K12,bm\d+[a-z]?,FOUNDATION,móng băng,"BM-1…BM-5 trên mặt bằng kết cấu móng VN001; kiểm cùng mặt cắt móng băng"
+
+--- tests/test_rough_structural.py [test_strip_footing_uses_explicit_length_and_leaves_section_pending] L59..72 ---
+def test_strip_footing_uses_explicit_length_and_leaves_section_pending():
+    d = _beam_plan()
+    d.texts.append(_t("lanh tô", 90000, 0, 1914))
+    d.texts.extend([_t("BM-5", 1000, -19000), _t("MẶT CẮT MÓNG BĂNG BM-5", 31000, -32000),
+                    _t("bm-5: l=12590mm; sl=01", 31000, -32100)])
+    def footing():
+        return next(f for f in read_structural(d).foundations if f.name == "BM-5")
+    f = footing()
+    assert (f.kind, f.count, f.gross_length_mm, f.length_mm, f.width_mm, f.height_mm) == ("bang", 1, 12590, None, None, None)
+    d.texts.append(_t("bm-5: l=11000mm; sl=01", 31000, -32200))
+    assert footing().gross_length_mm is None
+    d.texts = [t for t in d.texts if t.text not in ("BM-5", "bm-5: l=11000mm; sl=01")]
+    f = footing()
+    assert not f.positions and f.gross_length_mm == 12590 and f.length_mm is None
+
+--- tests/test_rough_foundations.py [test_conflicting_cad_details_do_not_overwrite_by_mark] L106..116 ---
+def test_conflicting_cad_details_do_not_overwrite_by_mark():
+    from optimat.drawing.dimensions import Dim
+    from optimat.drawing.sheets import View
+    from optimat.rough.structural import footing_detail_sizes
+
+    views = [View("MÓNG M1", "BV05", "", "", x, 0, (x-500, 0, x+500, 2000)) for x in (0, 20000)]
+    dims = [Dim(0, 100, 10480, 10480, False), Dim(20000, 100, 10990, 10990, False)]
+    for order in (views, views[::-1]):
+        size = footing_detail_sizes(order, {}, dims)["m1"]
+        assert size["length_mm"] is None and size["conflict"]
+        assert "10480" in size["nguon"] and "10990" in size["nguon"]
+
+--- tests/test_rough_foundations.py [test_repeated_mark_needs_positions_before_measuring] L85..103 ---
+def test_repeated_mark_needs_positions_before_measuring():
+    # Hai chiều dài lấy từ hai dòng BM-5 của VN001. Các số khác là dữ liệu thử.
+    a = _m1(name="BM-5", count=1, length_mm=10480, source="trang 3")
+    b = _m1(name="BM-5", count=1, length_mm=10990, source="trang 4")
+    params = ProjectParams(foundations=[a, b], **EARTH)
+    result = compute_rough(RoughRequest(plans=[], params=params), Catalog.from_csv(None))
+    pending = [w for w in result.works if "BM-5" in w.element]
+    assert {w.code for w in pending} == {"MONG", "COP_PHA", "BE_TONG_LOT", "DAO_DAT", "DAP_DAT"}
+    assert all(w.quantity is None and w.missing for w in pending)
+    assert {(w.dimensions[0].length_m, w.dimensions[0].source) for w in pending if w.code == "MONG"} == {
+        (10.48, "trang 3"), (10.99, "trang 4")}
+
+    a.plan = b.plan = "MB móng"
+    a.positions, b.positions = [(0, 0)], [(20000, 0)]
+    works, _ = foundation_works(params)
+    assert [w.quantity for w in works if w.code == "MONG"] == [5.03, 5.275]
+    b.positions = [(2, 0)]
+    works, _ = foundation_works(params)
+    assert all(w.quantity is None for w in works)
+
+--- tests/test_rough_foundations.py [test_duplicate_footing_counted_once] L80..82 ---
+def test_duplicate_footing_counted_once():
+    out, warnings = foundation_works(ProjectParams(foundations=[_m1(), _m1()]))
+    assert len([w for w in out if w.code == "MONG"]) == 1 and any("nhập hai lần" in w for w in warnings)
+
+--- tests/test_rough_foundations.py [test_tie_beam_through_footing_not_double_counted] L128..138 ---
+def test_tie_beam_through_footing_not_double_counted():
+    plan = "MẶT BẰNG MÓNG"
+    f = _m1(count=1, positions=[(0, 0)], plan=plan)
+    gm = Beam(id="GM1", x1=-3000, y1=0, x2=3000, y2=0, b_mm=200, d_mm=300, source="structural")
+    res = compute_rough(RoughRequest(plans=[], params=ProjectParams(foundations=[f]), structural_beams={plan: [gm]}),
+                        Catalog.from_csv(None))
+    dam = next(w for w in res.works if w.code == "DAM")
+    assert dam.quantity == pytest.approx((6 - 1.2) * 0.2 * 0.3, abs=1e-3)        # giằng: đủ cao, không trừ sàn
+    form = next(w for w in res.works if w.code == "COP_PHA" and w.formwork_of == "DAM")
+    assert form.quantity == pytest.approx(2 * 0.3 * 4.8, abs=1e-3)                # hai thành, không ván đáy
+    assert not any(w.formwork_of == "SAN" for w in res.works)                      # không có sàn thì không trừ
+

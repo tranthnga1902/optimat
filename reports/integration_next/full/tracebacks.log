@@ -1,0 +1,185 @@
+================================== FAILURES ===================================
+_______________________________ test_review_api _______________________________
+
+sample_dxf = 'C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\sample\\sample_floor.dxf'
+
+    def test_review_api(sample_dxf):
+        client = TestClient(app)
+        with open(sample_dxf, "rb") as f:
+>           view = client.post("/api/takeoff/view", files={"file": ("sample_floor.dxf", f, "application/dxf")})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_review.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\httpx2\_client.py:1203: in post
+    return self.request(
+.venv\Lib\site-packages\starlette\testclient.py:457: in request
+    return super().request(
+.venv\Lib\site-packages\httpx2\_client.py:796: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:979: in send
+    response = self._send_handling_auth(
+.venv\Lib\site-packages\httpx2\_client.py:1007: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv\Lib\site-packages\httpx2\_client.py:1042: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1075: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:354: in handle_request
+    raise exc
+.venv\Lib\site-packages\starlette\testclient.py:351: in handle_request
+    portal.call(self.app, scope, receive, send)
+.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\applications.py:1216: in __call__
+    await super().__call__(scope, receive, send)
+.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:2791: in app
+    await route.handle(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:282: in handle
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\routing.py:769: in app
+    response = actual_response_class(content, **response_args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\responses.py:195: in __init__
+    super().__init__(content, status_code, headers, media_type, background)
+.venv\Lib\site-packages\starlette\responses.py:46: in __init__
+    self.body = self.render(content)
+                ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\responses.py:198: in render
+    return json.dumps(
+D:\laragon\bin\python\python-3.13\Lib\json\__init__.py:238: in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\json\encoder.py:200: in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.encoder.JSONEncoder object at 0x000001FCF2747260>
+o = {'file': 'sample_floor.dxf', 'plans': [{'file': 'sample_floor.dxf', 'height_mm': None, 'length_rule': 'tim', 'size': [... ghi trong tiêu đề, ví dụ "(+3.30)", hoặc ký hiệu cao độ ±0.000, +3.300 trong mặt bằng.', 'muc': 'K', ...}, ...]}, ...}
+_one_shot = True
+
+    def iterencode(self, o, _one_shot=False):
+        """Encode the given object and yield each string
+        representation as available.
+    
+        For example::
+    
+            for chunk in JSONEncoder().iterencode(bigobject):
+                mysocket.write(chunk)
+    
+        """
+        if self.check_circular:
+            markers = {}
+        else:
+            markers = None
+        if self.ensure_ascii:
+            _encoder = encode_basestring_ascii
+        else:
+            _encoder = encode_basestring
+    
+        def floatstr(o, allow_nan=self.allow_nan,
+                _repr=float.__repr__, _inf=INFINITY, _neginf=-INFINITY):
+            # Check for specials.  Note that this type of test is processor
+            # and/or platform-specific, so do tests which don't depend on the
+            # internals.
+    
+            if o != o:
+                text = 'NaN'
+            elif o == _inf:
+                text = 'Infinity'
+            elif o == _neginf:
+                text = '-Infinity'
+            else:
+                return _repr(o)
+    
+            if not allow_nan:
+                raise ValueError(
+                    "Out of range float values are not JSON compliant: " +
+                    repr(o))
+    
+            return text
+    
+    
+        if self.indent is None or isinstance(self.indent, str):
+            indent = self.indent
+        else:
+            indent = ' ' * self.indent
+        if _one_shot and c_make_encoder is not None:
+            _iterencode = c_make_encoder(
+                markers, self.default, _encoder, indent,
+                self.key_separator, self.item_separator, self.sort_keys,
+                self.skipkeys, self.allow_nan)
+        else:
+            _iterencode = _make_iterencode(
+                markers, self.default, _encoder, indent, floatstr,
+                self.key_separator, self.item_separator, self.sort_keys,
+                self.skipkeys, _one_shot)
+>       return _iterencode(o, 0)
+               ^^^^^^^^^^^^^^^^^
+E       ValueError: Out of range float values are not JSON compliant: nan
+
+D:\laragon\bin\python\python-3.13\Lib\json\encoder.py:261: ValueError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_admin_db.py:34: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_admin_db.py:61: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_auth_admin.py:41: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:46: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:57: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:71: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:79: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:87: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:109: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:145: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:180: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:217: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:250: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:281: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:324: chưa đặt OPTIMAT_TEST_DATABASE_URL
+FAILED tests/test_review.py::test_review_api - ValueError: Out of range float...
+============ 1 failed, 756 passed, 15 skipped in 562.59s (0:09:22) ============

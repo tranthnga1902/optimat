@@ -1,0 +1,14 @@
+.git
+.venv
+.env
+.env.*
+**/node_modules
+**/__pycache__
+.pytest_cache
+frontend
+deploy
+reports
+data/drawings
+data/uploads
+data/ingest
+*.log

@@ -1,0 +1,6 @@
+ten,cong_trinh_id,data_kind,split,du_toan,phien_ban,kien_truc,ket_cau,thong_so,nguon,quyen_dung,dap_an_trang_thai,nguoi_kiem,ghi_chu
+a,ct_a,ACTUAL,build,gt/a.csv,chua_ro,kt/a.dxf,,,x,noi_bo,chua_kiem,,
+b,,ACTUAL,build,gt/b.csv,chua_ro,kt/b.dxf,,,x,noi_bo,chua_kiem,,
+c,ct_c,ACTUAL,train,gt/c.csv,chua_ro,kt/c.dxf,,,x,noi_bo,chua_kiem,,
+d,ct_d,REAL,build,gt/d.csv,chua_ro,kt/d.dxf,,,x,noi_bo,chua_kiem,,
+a,ct_khac,ACTUAL,build,gt/a.csv,chua_ro,kt/a.dxf,,,x,noi_bo,chua_kiem,,

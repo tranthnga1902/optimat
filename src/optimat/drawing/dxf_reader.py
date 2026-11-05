@@ -22,6 +22,7 @@ from ezdxf import disassemble
 from ezdxf import path as ezpath
 from ezdxf import units
 
+from .. import config
 from .dwg_convert import DrawingError, convert_dwg_to_dxf
 from .encoding import legacy_kind, to_unicode
 from .layer_classifier import LayerClass, apply_overrides, default_classification
@@ -45,6 +46,7 @@ class Segment:
     layer: str
     kind: str = "line"       # line | hatch (nét của hatch bị phá) | small (cạnh của hình kín nhỏ, thường là cột)
     source: str = ""         # tên block chứa nét, rỗng nếu nằm thẳng trong model
+    contour_id: int | None = None  # nhóm cạnh polyline kín trong một Drawing, riêng cho mỗi INSERT
 
 
 @dataclass
@@ -71,6 +73,10 @@ class HatchItem:
     pattern: str
     layer: str
     polygons: list[list[tuple[float, float]]]   # các đường biên; biên nằm trong biên khác là lỗ rỗng
+    # True: vùng hatch không đọc được trực tiếp (hatch bị phá thành nét rời, trong block hoặc thẳng ra model),
+    # dựng lại bằng bao lồi các nét và đoán tên mẫu (ANSI31: gạch chéo, mặt cắt khối xây chung theo quy ước TCVN -
+    # material_rules.csv quy tắc H01). Độ tin cậy thấp hơn hatch đọc được thẳng từ bản vẽ (material_rules.CONFIDENCE).
+    synthetic: bool = False
 
 
 @dataclass
@@ -201,8 +207,10 @@ class _Collector:
             xs = [c for a, b in pts for c in (a[0], b[0])]
             ys = [c for a, b in pts for c in (a[1], b[1])]
             small = max(max(xs) - min(xs), max(ys) - min(ys)) * self.s <= 600 and len(pts) <= 8
+        contour_id = len(self.segments) if closed and parts and all(p.dxftype() == "LINE" for p in parts) else None
         for a, b in pts:
             self.seg(a, b, e.dxf.layer, "small" if small else "line", source)
+            self.segments[-1].contour_id = contour_id
         if getattr(e, "has_width", False):            # pline có bề rộng hiện thành dải tô đặc: thêm vùng tô đúng hình
             mesh = disassemble.make_primitive(e, FLATTEN_MM / self.s).mesh
             if mesh is not None:
@@ -313,6 +321,9 @@ class _Collector:
                 self.seg((x1, y1), (x2, y2), e.dxf.layer, "hatch", name)
             pts = [(x * self.s, y * self.s) for x1, y1, x2, y2 in lines for x, y in ((x1, y1), (x2, y2))]
             self.hatches.append(HatchItem("*EXPLODED*", e.dxf.layer, [_convex_hull(pts)]))
+            # bao lồi trên vẫn dùng để đối chiếu hình (geometry_mismatch); thêm một HatchItem "ANSI31" (synthetic=True)
+            # để bộ quy tắc vật liệu (material_rules.csv, H01) nhận ra đây là mặt cắt khối xây như hatch đọc được thẳng
+            self.hatches.append(HatchItem(_GUESSED_PATTERN, e.dxf.layer, [_convex_hull(pts)], synthetic=True))
             rest = [c for c in children if c.dxftype() != "LINE"]
             self.walk(rest, name, depth + 1)
             return
@@ -344,10 +355,15 @@ def _clean_codes(raw: str) -> str:
     return raw
 
 
-def mark_loose_hatch(segments: list[Segment]) -> int:
+_GUESSED_PATTERN = "ANSI31"   # mẫu hatch phổ biến nhất khi phải đoán lại (gạch chéo, mặt cắt khối xây chung)
+
+
+def mark_loose_hatch(segments: list[Segment], hatches: list[HatchItem] | None = None) -> int:
     """Hatch bị phá thẳng ra model (không nằm trong block): họ nét cùng layer, cùng phương, cách đều nhau.
 
     Bậc cầu thang và ngói mái cũng có dạng này; đánh dấu chúng là hatch để không bị ghép nhầm thành tường.
+    hatches: khi truyền vào, mỗi nhóm nét nhận ra được dựng lại thành một HatchItem "ANSI31" (synthetic=True,
+    bao lồi các nét) để bộ quy tắc vật liệu (material_rules.csv, H01) nhận gán được, như hatch đọc trực tiếp.
     Trả về số nét đã đánh dấu.
     """
     groups: dict[tuple[str, int], list[int]] = {}
@@ -384,10 +400,15 @@ def mark_loose_hatch(segments: list[Segment]) -> int:
             members = [i for o in run for i in by_off[o]]
             lengths = sorted(math.hypot(segments[i].x2 - segments[i].x1, segments[i].y2 - segments[i].y1) for i in members)
             median = lengths[len(lengths) // 2]
+            kept = []
             for i in members:      # bỏ qua nét dài bất thường trùng hàng (thường là tường)
                 if math.hypot(segments[i].x2 - segments[i].x1, segments[i].y2 - segments[i].y1) <= 3 * median:
                     segments[i].kind = "hatch"
                     marked += 1
+                    kept.append(i)
+            if hatches is not None and kept:
+                pts = [(x, y) for i in kept for x, y in ((segments[i].x1, segments[i].y1), (segments[i].x2, segments[i].y2))]
+                hatches.append(HatchItem(_GUESSED_PATTERN, layer, [_convex_hull(pts)], synthetic=True))
     return marked
 
 
@@ -435,7 +456,7 @@ def geometry_mismatch(drawing: Drawing, tol_mm: float = 2 * FLATTEN_MM) -> dict[
         for ang in (c.start, c.end):
             ours.append((c.layer, c.cx + c.r * math.cos(math.radians(ang)), c.cy + c.r * math.sin(math.radians(ang))))
     for h in drawing.hatches:
-        if h.pattern != "*EXPLODED*":                 # khung bao lồi tự dựng, không phải điểm của bản vẽ
+        if h.pattern != "*EXPLODED*" and not h.synthetic:   # khung bao lồi tự dựng, không phải điểm của bản vẽ
             ours += [(h.layer, x, y) for poly in h.polygons for x, y in poly]
     bad: dict[str, float] = {}
     every = BoundingBox2d()
@@ -468,6 +489,30 @@ def declared_insunits(doc, path: str) -> int:
     return int(doc.header.get("$INSUNITS", 0) or 0) if declared else 0
 
 
+# hệ số đổi ra mm của các đơn vị bản vẽ thường gặp: mm, cm, inch, foot, m
+UNIT_FACTORS = {1.0: "mm", 10.0: "cm", 25.4: "inch", 304.8: "foot", 1000.0: "m"}
+
+
+def _check_units(doc, scale: float, warnings: list[str]) -> float:
+    """Đối chiếu đơn vị khai báo với đường kích thước (đặc tả 30/10/2026 mục 2A, QU-02). Số ghi trên đường kích thước
+    là mm thật nên hình vẽ 1:1 cho tỷ số số ghi / số đo thô đúng bằng hệ số đổi đơn vị; hình phóng to cho tỷ số khác
+    (0,5, 0,2...) và không khớp đơn vị nào. Đơn vị có nhiều kích thước khớp nhất (ít nhất NG13) khác khai báo thì dùng
+    đơn vị đó và cảnh báo; không đơn vị nào đủ (cả bản vẽ toàn hình phóng to) thì giữ khai báo."""
+    from . import dimensions
+    ratios = dimensions.unit_ratios(doc)
+    if len(ratios) < config.threshold("NG11"):
+        return scale
+    tol = config.threshold("NG12")
+    share = {f: sum(abs(r / f - 1) <= tol for r in ratios) / len(ratios) for f in UNIT_FACTORS}
+    implied = max(share, key=share.get)
+    if share[implied] < config.threshold("NG13") or abs(implied / scale - 1) <= tol:
+        return scale
+    warnings.append(f"Đơn vị khai báo ($INSUNITS) cho hệ số {scale:g} mm, nhưng {share[implied]:.0%} trong {len(ratios)} "
+                    f"đường kích thước ghi đúng số đo theo {UNIT_FACTORS[implied]}: đang dùng {UNIT_FACTORS[implied]}. "
+                    "Nếu sai, sửa $INSUNITS trong file rồi tải lại.")
+    return implied
+
+
 def read_dxf(path: str, layer_overrides: dict[str, str] | None = None) -> Drawing:
     try:
         doc = ezdxf.readfile(path)
@@ -484,10 +529,11 @@ def read_dxf(path: str, layer_overrides: dict[str, str] | None = None) -> Drawin
         warnings.append(f"Mã đơn vị $INSUNITS = {insunits} không xác định, đang coi là mm.")
     if insunits == 0:
         warnings.append("Bản vẽ không khai báo đơn vị ($INSUNITS = 0), đang coi là mm.")
+    scale = _check_units(doc, scale, warnings)
 
     col = _Collector(doc, scale)
     col.walk(msp)
-    mark_loose_hatch(col.segments)
+    mark_loose_hatch(col.segments, col.hatches)
     warnings += col.warnings
     if col.skipped:
         warnings.append("Đối tượng chưa đọc được (không dùng để nhận dạng): "
@@ -529,8 +575,10 @@ def crop(drawing: Drawing, bbox: tuple[float, float, float, float]) -> Drawing:
 
 
 def read_drawing(path: str, layer_overrides: dict[str, str] | None = None) -> Drawing:
-    """Đọc .dxf trực tiếp; .dwg được chuyển sang DXF bằng ODA File Converter trước."""
+    """Đọc .dxf trực tiếp; chuyển .dwg sang DXF bằng LibreDWG hoặc ODA."""
     suffix = Path(path).suffix.lower()
+    if suffix in {".dwf", ".dwfx"}:
+        raise DrawingError("DWF chưa được đọc trực tiếp. Hãy chuyển bản vẽ sang DXF rồi tải lên; đổi đuôi file không chuyển định dạng.")
     if suffix == ".dxf":
         return read_dxf(path, layer_overrides)
     if suffix == ".dwg":

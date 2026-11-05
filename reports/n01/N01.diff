@@ -1,0 +1,90 @@
+--- before/src/optimat/rough/rebar.py
++++ after/src/optimat/rough/rebar.py
+@@ -81,11 +81,18 @@
+ 
+ 
+ def _num(text: str) -> Optional[float]:
+-    """Số trong ô: "3.200" (dấu chấm ngăn nghìn) = 3200, "1,58" = 1.58, "Ø16" = 16."""
++    """Giữ quy ước một dấu; "1.200,5" / "1,200.5" = 1200.5 khi nhóm nghìn hợp lệ."""
+     m = re.search(r"\d[\d.,]*", text or "")
+     if not m:
+         return None
+-    s = m.group(0).rstrip(".,")
++    s = m.group(0)
++    if "." in s and "," in s:
++        if re.fullmatch(r"\d{1,3}(\.\d{3})+,\d+", s):
++            return float(s.replace(".", "").replace(",", "."))
++        if re.fullmatch(r"\d{1,3}(,\d{3})+\.\d+", s):
++            return float(s.replace(",", ""))
++        return None
++    s = s.rstrip(".,")
+     if re.fullmatch(r"\d{1,3}(\.\d{3})+", s):
+         s = s.replace(".", "")
+     try:
+--- before/tests/test_rough_rebar.py
++++ after/tests/test_rough_rebar.py
+@@ -44,9 +44,61 @@
+     assert element_code("GT2") == "GIANG_TUONG" and element_code("SN1") == "SE_NO" and element_code("X9") is None
+ 
+ 
+-@pytest.mark.xfail(strict=True, reason="Ô số có dấu phân cách nghìn và thập phân đang bị đọc thành None")
+-def test_number_mixed_vietnamese_separators():
+-    assert _num("1.200,5") == 1200.5
++@pytest.mark.parametrize("text,expected", [("1.200,5", 1200.5), ("1,200.5", 1200.5),
++                                          ("1.234.567,89", 1234567.89), ("1,234,567.89", 1234567.89)])
++def test_number_mixed_vietnamese_separators(text, expected):
++    assert _num(text) == expected
++
++
++@pytest.mark.parametrize("text", ["12.00,5", "1,20.5", "1.200,", "1,200.", "1.200,5.0", "1,200.5,0"])
++def test_number_mixed_invalid_groups_stay_blank(text):
++    assert _num(text) is None
++
++
++@pytest.mark.parametrize("text,expected", [("1200", 1200), ("", None), ("Ø16", 16), ("1,58", 1.58),
++                                          ("5.000", 5000), ("3.200", 3200), ("1.200", 1200),
++                                          ("1,200", 1.2), ("3.2", 3.2)])
++def test_number_single_separator_contract(text, expected):
++    assert _num(text) == expected
++
++
++@pytest.mark.parametrize("length,unit,quantity,recorded,expected_mm,expected_kg", [
++    ("1.200,5", "mm", "1.000,0", "1.896,79", 1200.5, 1896.79),
++    ("1,200.5", "mm", "1,000.0", "1,896.79", 1200.5, 1896.79),
++    ("0.001,5", "m", "1.000,0", "2.370,00", 1500, 2370),
++    ("0,001.5", "m", "1,000.0", "2,370.00", 1500, 2370),
++    ("1,200.5", "m", "1.000,0", "1.896,79", None, 1896.79),
++])
++def test_schedule_mixed_separators_preserves_units_and_evidence(length, unit, quantity, recorded, expected_mm, expected_kg):
++    texts = _table(0, 1000)
++    for t in texts:
++        if t.text == HEADER[4]:
++            t.text = f"CHIỀU DÀI 1 THANH ({unit})"
++        elif t.y == 300 and t.x in (4000, 5000, 6000):
++            t.text = {4000: length, 5000: quantity, 6000: recorded}[t.x]
++    rows, _ = read_rebar_schedules(_drawing(texts))
++    row = rows[0]
++    assert row.total_bars == 1000 and row.schedule_kg == expected_kg
++    assert all(value in row.evidence for value in (length, quantity, recorded))
++    assert row.cut_length_mm == expected_mm
++    if expected_mm is not None:
++        assert row.kg == pytest.approx(expected_kg) and not row.missing and not row.notes
++    else:
++        assert row.cut_length_mm is None and row.kg is None
++        assert any("1.2005e+06 mm" in m and "sai đơn vị" in m for m in row.missing)
++
++
++@pytest.mark.parametrize("length", ["12.00,5", "1,20.5"])
++def test_schedule_invalid_mixed_length_keeps_row_and_missing(length):
++    texts = _table(0, 1000)
++    for t in texts:
++        if t.y == 300 and t.x == 4000:
++            t.text = length
++    rows, _ = read_rebar_schedules(_drawing(texts))
++    assert len(rows) == 5 and rows[0].dia_mm == 16
++    assert rows[0].cut_length_mm is None and rows[0].kg is None
++    assert any("chiều dài cắt" in m for m in rows[0].missing)
++    assert length in rows[0].evidence
+ 
+ 
+ @pytest.mark.xfail(strict=True, reason="Bảng lặp không có số hiệu đang được cộng hai lần")

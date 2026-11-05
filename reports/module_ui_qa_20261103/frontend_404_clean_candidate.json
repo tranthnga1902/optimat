@@ -1,0 +1,52 @@
+{
+  "status": "clean_candidate_verified_not_deployed",
+  "candidateDirectory": "frontend/.next-404-stage",
+  "verified": {
+    "id": "H7eQgDZ8u5vo-N2SW_pLT",
+    "route": "/du-an-cua-toi",
+    "serverPage": "app/(user)/du-an-cua-toi/page.js",
+    "prerender": "server/app/du-an-cua-toi.html",
+    "htmlBytes": 15391,
+    "staticAssets": 13,
+    "cssAssets": 2,
+    "jsAssets": 11,
+    "manifestSha256": {
+      "app-path-routes-manifest.json": "7c0929fbc3fc6e05951d06cccc7e847db003828934347c49bb0a6276ac67ec5a",
+      "server/app-paths-manifest.json": "d6f7d8bb77ecbba52f5464dff394cd6ef7b7e4efc1f61a4026fab28e77c46bcc"
+    },
+    "pageHtmlSha256": "7a3bfaf119a35fae81067a66e8df89fade8f01f43120556e74f128237f09da4c"
+  },
+  "typescript": "passed",
+  "staticPages": 24,
+  "buildExit": 0,
+  "tracedBuild": {
+    "exit": 0,
+    "buildId": "6_R-qW5ffUvWNGiS6HBjv",
+    "pid": 32368,
+    "parentPid": 28428,
+    "port": 58266,
+    "connected": true,
+    "sentBytes": 43023,
+    "receivedBytes": 7027
+  },
+  "activeBuildId": "31Tsz2vLf5JymYeu5kmDw",
+  "sourceAndActiveManifestHashes": {
+    "src/components/ProjectNavigator.tsx": "F36C521825EBAF2BFC827BC2EA0CFC75C1A54E23C4C79D07254FB5C91F3772E0",
+    "src/components/ProjectNavigator.module.css": "756241A87D58324A0E3A15C8931D8FC591CBE064CD8D3282E8B3A7521BFFBF04",
+    "next-env.d.ts": "0F70629890B72A0A82E91972CC032C04B658B26C265373CB711CF576BFBF8FCC",
+    "src/app/(user)/du-an-cua-toi/page.tsx": "DB3B1DF845A1DB6A1525A7F0C51D462EB4AC5322B07F8DD1720F258A3CAADA6F",
+    "tsconfig.json": "5C51DF4C59F4510D8C7DADF07A5C32132228826A3B331DA5E286207B4DF7EF9C",
+    "src/app/(user)/du-an-cua-toi/ProjectWorkspace.tsx": "40082243EB325D203826CD61CBBDA2ED10EC938E5A0AD99FAD37438C45DDCD63",
+    ".next/BUILD_ID": "83268AB1AEEED87B08FB6D8219E3546A48733CE229C506AF255E80933043B1D3",
+    ".next/routes-manifest.json": "C25253B9F4051D05CC6E503C98B3DB85DB3225DC8DC0CEF40CC0CB50BC7C1F23",
+    ".next/server/app-paths-manifest.json": "57A83F3C103027E5C472C14955DFDD72BFB97AC6C4DD70A61AA2956FF1D7505F",
+    "src/components/Shell.tsx": "12A55CE8901098A065D07BB6E9F278780FDE90D2A1C9BF266347EA61BB3B567D",
+    "next.config.ts": "4BEF52B6013D9E9E157A91B1E08CED7C6634984B9B995FFAAF668716EBBBE59F"
+  },
+  "logs": {
+    "failedPreload": "frontend_404_build_trace.log",
+    "traced": "frontend_404_build_trace2.log",
+    "clean": "frontend_404_build_clean.log",
+    "worker": "../../tmp/frontend_404_trace_events.ndjson"
+  }
+}

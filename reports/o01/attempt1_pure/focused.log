@@ -1,0 +1,61 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 274 items / 4 deselected / 270 selected
+
+tests\test_rough_beam_sources.py ..............F.........                [  8%]
+tests\test_rough_takeoff.py ..........                                   [ 12%]
+tests\test_rough_structural.py ...........................               [ 22%]
+tests\test_work_dimensions.py ....................................       [ 35%]
+tests\test_rough_secondary.py .......................................... [ 51%]
+............................                                             [ 61%]
+tests\test_rough_status.py ........F........                             [ 68%]
+tests\test_rough_partial.py .........................................    [ 83%]
+tests\test_rough_materials.py ..................................         [ 95%]
+tests\test_rough_price_source.py ...........                             [100%]
+
+================================== FAILURES ===================================
+________________ test_no_kc_depth_transfer_or_false_alignment _________________
+
+cat = Catalog(materials=   material_id             group  ...    raw_class data_kind
+0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...
+
+[5 rows x 4 columns], price_records=None)
+
+    def test_no_kc_depth_transfer_or_false_alignment(cat):
+        wall = ReviewWall(id="W1", cls="220", role="envelope", x1=0, y1=0, x2=10000, y2=0, mat="GN01")
+        res = compute_rough(request(plans=[plan(2, walls=[wall]), plan(3, walls=[wall], beams=[])],
+                             structural_beams={"KC TẦNG 2": [beam()]}), cat)
+        masonry = [w for w in res.works if w.code == "XAY"]
+>       assert len(masonry) == 2 and all(w.status == "D" for w in masonry)
+E       AssertionError: assert (2 == 2 and False)
+E        +  where 2 = len([WorkItem(code='XAY', name='Xây tường', unit='m³', quantity=6.6, plan='TẦNG 2', element='tường 220 bao che', variant=N...], missing=[], status='C', inputs=['chiều dài, dày tường: A (hình học mặt bằng)', 'chiều cao tầng: C'], stage='tuong')])
+E        +  and   False = all(<generator object test_no_kc_depth_transfer_or_false_alignment.<locals>.<genexpr> at 0x00000216CF28F6B0>)
+
+tests\test_rough_beam_sources.py:137: AssertionError
+_________________________ test_status_without_params __________________________
+
+    def test_status_without_params():
+        """Không có thông số: xây = hình học (A) + chiều cao tầng nhập tay (C) -> C; dòng không có số -> D kèm lý do thiếu."""
+        res = compute_rough(RoughRequest(plans=[plan("Trệt", True)]), Catalog.from_csv(None))
+        xay = next(w for w in res.works if w.code == "XAY")
+        assert xay.status == "C" and "chiều cao tầng: C" in xay.inputs
+        assert all(w.status == "D" for w in res.works if w.quantity is None)
+        dam = next(w for w in res.works if w.code == "DAM")
+>       assert dam.status == "D" and dam.inputs and dam.inputs[0].startswith("thiếu:")
+E       AssertionError: assert ('D' == 'D'
+E         
+E           D and ['phạm vi/nguồn dầm: B', 'thiếu: rộng dầm', 'thiếu: cao dầm', 'thiếu: chiều dày sàn'] and False)
+E        +  where ['phạm vi/nguồn dầm: B', 'thiếu: rộng dầm', 'thiếu: cao dầm', 'thiếu: chiều dày sàn'] = WorkItem(code='DAM', name='Bê tông dầm', unit='m³', quantity=None, plan='Trệt', element='6 dầm', variant=None, masonry...tatus='D', inputs=['phạm vi/nguồn dầm: B', 'thiếu: rộng dầm', 'thiếu: cao dầm', 'thiếu: chiều dày sàn'], stage='khung').inputs
+E        +  and   False = <built-in method startswith of str object at 0x00000216CEB9D680>('thiếu:')
+E        +    where <built-in method startswith of str object at 0x00000216CEB9D680> = 'phạm vi/nguồn dầm: B'.startswith
+
+tests\test_rough_status.py:90: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rough_beam_sources.py::test_no_kc_depth_transfer_or_false_alignment
+FAILED tests/test_rough_status.py::test_status_without_params - AssertionErro...
+================ 2 failed, 268 passed, 4 deselected in 30.21s =================
+
+EXIT=1

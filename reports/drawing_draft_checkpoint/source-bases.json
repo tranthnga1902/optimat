@@ -1,0 +1,29 @@
+{
+  "status": "contract_for_review_no_product_changes",
+  "frozen_nonmasonry_manifest": "b42e4fcfdd688a6b4d85f733ab2487acb453a89307c71d9db4e34d0d85dc5ae6",
+  "cad_manifest": "f4badd409ad9600a334925c0949a14cf1e0c93ad9a32fa7a9618211eb59dd433",
+  "backend_xy_manifest": "bdf94c69fa7a3d78868baa425d6c884a7f374a62100d4598c5c3d616c395a7ba",
+  "contract_sha256": "77a0b04cb7e53e87b5a58803130f328900321fa92a33a49a8e99957d8c526061",
+  "targets": {
+    "3002": {
+      "opening_candidate": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3002-candidate",
+      "source_sha256": {
+        "src/app/(user)/do-boc/model.ts": "0b629c34eb9808cc7b74d6de05fa78cd539e223357cd43b9d2fc574eb45532ec",
+        "src/app/(user)/do-boc/Review.tsx": "c079ab6a84c94999c53de054dfcc1ddaa7d0e81326b2435dfd92770c16eb637a",
+        "src/lib/projects.ts": "205612cb75636fcfa41b373a3a54bafcdaf2f6d28ba3ab96e3e8037346f7ba7e",
+        "src/lib/review-session.ts": "2d3730e30edc119b89175a6de3cb649de4243afe989beae65c8c48a3b8aa2631",
+        "src/app/(user)/du-an-cua-toi/ProjectWorkspace.tsx": "df36c84e8e09c651ea9e5a7aea094e8af6e1481d8f9070799f63402e48fe88f6"
+      }
+    },
+    "3001": {
+      "opening_candidate": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3001-candidate",
+      "source_sha256": {
+        "src/app/(user)/do-boc/model.ts": "cbda27d09340493a1e1dc7e163c557553b2d0af0d46e49afa33ed70012d027dc",
+        "src/app/(user)/do-boc/Review.tsx": "ef6411ae331ee9725f686488a00d2426c1d4688cde81bfb605175f0c93fb266b",
+        "src/lib/projects.ts": "205612cb75636fcfa41b373a3a54bafcdaf2f6d28ba3ab96e3e8037346f7ba7e",
+        "src/lib/review-session.ts": "1db96fc93d21492f52aa0d721d645da8b7976e7a79aceb7634a3432620b6bb6c",
+        "src/app/(user)/du-an-cua-toi/ProjectWorkspace.tsx": "40082243eb325d203826cd61cbbda2ed10ec938e5a0ad99fad37438c45ddcd63"
+      }
+    }
+  }
+}

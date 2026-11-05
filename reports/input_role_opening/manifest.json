@@ -1,0 +1,32 @@
+{
+  "3001": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3001-candidate",
+    "build_id": "UthdKbmMyzssbWeIX9H04",
+    "files": {
+      "src/app/(user)/du-an-cua-toi/ProjectDossier.tsx": {
+        "base_sha256": "923dce5e81e2849a56166ab7d0315065da4c2d6e159f0a36022c8297ac681033",
+        "new_sha256": "a19f570ede4afbb2f5a122564af6434d7dc813c5cb49c9c977a91569f2ec012d"
+      },
+      "src/components/ProjectFilesPanel.tsx": {
+        "base_sha256": "34febe30c483781223a171937d30e9f6f95f67ea0458cdcd04ad05155070380c",
+        "new_sha256": "e41515db4188c4b08fe604d7f0d0c9dfb50e00a434f93bdbb15a2235f13d24c0"
+      }
+    },
+    "patch_sha256": "4e71d922ada50a05e1065b7d008242d8d51ef76f7601748d2bcf6b6b156cb6f1"
+  },
+  "3002": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3002-candidate",
+    "build_id": "5STud4qMZi47UJU3U-_3-",
+    "files": {
+      "src/app/(user)/du-an-cua-toi/ProjectDossier.tsx": {
+        "base_sha256": "59fd6745f08ab703d1c98d6131ed5ea75d07abbb3c4d95ae96d0b565758344b2",
+        "new_sha256": "10629d1d7e0fce3890642cf950a28fe32dbe8b19866b1007e51d81cac05652ec"
+      },
+      "src/components/ProjectFilesPanel.tsx": {
+        "base_sha256": "fa87469b8de4c5202dbb585defd63f021c68c900bf3b030fc07df06704bf82a8",
+        "new_sha256": "902109bccec12bd18cccf2c09014c5a9f7fadbe9e39dbae6ff913567a5d1c555"
+      }
+    },
+    "patch_sha256": "7287d0d518010edfbca0bda4c3ef7ba31fba83819ae51bdfe6d22775ccc0015c"
+  }
+}

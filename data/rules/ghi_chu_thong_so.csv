@@ -1,0 +1,9 @@
+ma,mau,truong,ghi_chu
+TS01,trat.*(day|d\s*=)\s*(tb\s*)?\d,plaster_thickness_mm,"""lớp vữa trát trần #75 dày 15"", ""LỚP VỮA TRÁT TRẦN 75# DÀY 15"" (build: nha_huong, nha_sang)"
+TS02,trat.*(#\s*\d|\d+\s*#|mac\s*\d|\bm\s*\d),plaster_mortar_grade,"""lớp vữa trát trần #75 dày 15"" (build)"
+TS03,vua.*(tao phang|tao doc|lot|lat|can).*(day|d\s*=)\s*(tb\s*)?\d|(lot|lat|tao phang|tao doc|can) vua.*(day|d\s*=)\s*(tb\s*)?\d,screed_thickness_mm,"""lớp vữa tạo phẳng nền 50# dày 40"", ""lót vữa xm mác 75 dày 20"", ""vữa lát xm #75 dày tb 15"" (build)"
+TS04,vua.*(tao phang|tao doc|lot|lat|can).*(#\s*\d|\d+\s*#|mac\s*\d|\bm\s*\d)|(lot|lat|tao phang|tao doc|can) vua.*(#\s*\d|\d+\s*#|mac\s*\d|\bm\s*\d),screed_mortar_grade,"""lớp vữa tạo phẳng nền 50# dày 40"" (build)"
+TS05,\bsan\b.*(btct|be tong).*(day|d\s*=|h\s*=)\s*\d|(btct|be tong).*\bsan\b.*(day|d\s*=|h\s*=)\s*\d|^san\s*(btct\s*)?(day|d\s*=|h\s*=)\s*\d,slab_thickness_mm,"""SÀN BTCT DÀY 100"", ""sàn dày 120"" (build: nha_sang, nha_huong kết cấu)"
+TS06,(be tong lot|\blot\b.*be tong).*(\bm\s*\d|mac\s*\d),lean_concrete_grade,"""bê tông lót b7.5 (m100)"", ""lớp lót móng … dùng bê tông mác 100"" (build)"
+TS07,^(?!.*\blot\b)(?=.*(be tong|btct)).*(\(\s*m\s*\d{3}|\bm\s*\d{3}\b|mac\s*\d{3}),concrete_grade,"""bê tông b20 (m250) có rB = 11.5 mpA"" (build); dòng có chữ lót thuộc TS06"
+TS08,vua xay.*(#\s*\d|\d+\s*#|mac\s*\d|\bm\s*\d)|xay.*vua.*(#\s*\d|\d+\s*#|mac\s*\d|\bm\s*\d),masonry_mortar_grade,"""xây bằng gạch đặc mác 75 với vữa xi măng mác 50"" (build: nha_huong kết cấu); mác đọc sau chữ vữa"

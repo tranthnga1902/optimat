@@ -1,0 +1,41 @@
+{
+  "hash_stable": true,
+  "results": [
+    {
+      "port": "3002",
+      "script": "check-openings.cjs",
+      "exit": 0,
+      "output": "PASS: hai request giữ 4 ID/parent/keep/nullable/known. 24 ca sai bị chặn trước JSON, loc 422 đúng hình và lỗ kể cả sau lọc, không lặp lý do.\nPASS: nhóm ảnh hưởng chờ, nhóm độc lập còn 4,56 m², tổng null, giữ lỗ chưa gắn tường.\n"
+    },
+    {
+      "port": "3002",
+      "script": "check-partial-confirm.cjs",
+      "exit": 0,
+      "output": "PASS: xác nhận tuần tự, quota/retry, HTTP lỗi, không POST/ghi lại; chặn 6 ca đổi ngữ cảnh cùng tab; sửa tầng khác, mở lại và hoàn tất.\n"
+    },
+    {
+      "port": "3002",
+      "script": "check-consumers.cjs",
+      "exit": 0,
+      "output": "PASS: giá và tối ưu hiện nhóm đủ 12,34 m² riêng, chặn gửi nhóm như toàn công trình; đường tra giá mở lại sau khi đủ dữ liệu.\n"
+    },
+    {
+      "port": "3001",
+      "script": "check-openings.cjs",
+      "exit": 0,
+      "output": "PASS: hai request giữ 4 ID/parent/keep/nullable/known. 24 ca sai bị chặn trước JSON, loc 422 đúng hình và lỗ kể cả sau lọc, không lặp lý do.\nPASS: nhóm ảnh hưởng chờ, nhóm độc lập còn 4,56 m², tổng null, giữ lỗ chưa gắn tường.\n"
+    },
+    {
+      "port": "3001",
+      "script": "check-partial-confirm.cjs",
+      "exit": 0,
+      "output": "PASS: xác nhận tuần tự, quota/retry, HTTP lỗi, không POST/ghi lại; chặn 6 ca đổi ngữ cảnh cùng tab; sửa tầng khác, mở lại và hoàn tất.\n"
+    },
+    {
+      "port": "3001",
+      "script": "check-consumers.cjs",
+      "exit": 0,
+      "output": "PASS: giá và tối ưu hiện nhóm đủ 12,34 m² riêng, chặn gửi nhóm như toàn công trình; đường tra giá mở lại sau khi đủ dữ liệu.\n"
+    }
+  ]
+}

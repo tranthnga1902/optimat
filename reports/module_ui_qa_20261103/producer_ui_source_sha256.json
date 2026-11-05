@@ -1,0 +1,16 @@
+{
+  "frontend/src/lib/projects.ts": "7470e304c6b0a13bfcf5707bf5dc673351bd8eed64b5460378985aad11e48d1f",
+  "frontend/src/lib/review-session.ts": "02f853ae0af81f96222b6d09bd052081fd4d79b59d3417e2eab21e77ba125253",
+  "frontend/src/lib/work-review.ts": "284827aab1d025e5f0f89c1d72bcc68fb6063ba1830989c56d99fb4c5e896d48",
+  "frontend/src/app/(user)/do-boc/model.ts": "9b1ef1080057711184827f8ab367cfa9e1239fc69e80e3f88e84234bbdc386e8",
+  "frontend/src/app/(user)/do-boc/Review.tsx": "28ff6b2714070c11cbe6f09fd07fcedb6b427132d7bcfe52c661c342d2e3e5ec",
+  "frontend/src/app/(user)/do-boc/Rough.tsx": "ec657ea39b919151d7ba6390439660050f3e114e6a9f1a7344598956b0d77f64",
+  "frontend/src/app/(user)/do-boc/WorkReview.tsx": "1e0024f80f97b7f4689f9e0999eccd753c143e3d6c0f603f5596e58b63de2cae",
+  "frontend/src/app/(user)/do-boc/Board.tsx": "c62162793976757e18be3748b8805d5669b3eeba31933561b41fd0f8a3604499",
+  "frontend/src/app/(user)/do-boc/ReadPreview.tsx": "ea288b0af74429860fe325a494c470637a7c847f68f20eab0eb1532f91541878",
+  "frontend/src/app/(user)/do-boc/read-progress.ts": "1ad58c40d868b576f7d4556567bf5718d168a2e3238ea973233f891354844d07",
+  "frontend/src/app/(user)/do-boc/review.module.css": "90adc4e68865f50c640ab230629aa00514bd10848b2023ebde0b47385e29913b",
+  "frontend/src/app/(user)/do-boc/viewport.ts": "4b2af6944cf58c172a6503adc6df5e95847dba656a7c6a948b7aa02f91bdc49b",
+  "frontend/src/app/(user)/do-boc/paper-scale.ts": "9328663b208712a2ad4b0e28390861ad56d1904e91bbc2bf5cce5ecaf276696c",
+  "frontend/src/app/(user)/dieu-chinh/materials.tsx": "6e96fe70f2a2c1a4c7ccbdd0a50f04b245074329bda04eb9020866dcfc545a8b"
+}

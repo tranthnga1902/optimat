@@ -1,0 +1,20 @@
+{
+  "pid": 4240,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\backend_20261104\\full_run\\pytest_temp",
+    "--deselect=tests/test_drawing_io.py::test_real_drawing_read_in_world_coords",
+    "--deselect=tests/test_rough_build_drawings.py::test_nha_dan_columns_and_rough",
+    "--deselect=tests/test_rough_build_drawings.py::test_nha_pho_columns",
+    "--deselect=tests/test_registry.py::test_ket_cau_build_drawing",
+    "--deselect=tests/test_rough_structural.py::test_ket_cau_build_drawing"
+  ],
+  "started_utc": "2026-11-04T02:28:14.445016+00:00"
+}

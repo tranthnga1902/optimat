@@ -1,0 +1,34 @@
+# G8-P02 — diện tích/nền, code-ready chờ review
+
+## Phạm vi đúng3file
+
+areas.py chỉarea_works/importbuilder; quantity_details.py thêmarea_quantity_row/area_detail, giữASTmọihàmđãcó(lean/finalizer/summarize); tests/test_rough_area_details.py mới. Khôngmodels/takeoff/walls/secondary/N03/O01/price/norm/catalog/boq. Snapshot/AREA.patch/SOURCE_READY_HASH.json/FINAL_HASH.json giữbằngchứng.
+
+## Đã nối
+
+- SAN:contribution BTgộpvàtrừôtrốngcùngm³;CPdương:Sàn gộp/trừôtrốngcùngm². VoidNone:giữgrossknown vàcutunknown,totalNone;khôngđổiquantity/statuslegacy.ParentCkhôngchứngminhledgerđủ.
+- CAN_NENgiữđơnvịm²;thiếudàyvẫngiữphầnbiếtdiệntíchvàdependencythiếucũ.
+- Lớpnền:NEN_DEM_CAT/LOTnền từnglớpđúngthickness/source,khôngnhâncount/lặplần2;missingcấutạonềnvẫnunknown.Khácvớilótmóngđãnhậnởmảnhtrước.
+- WC:táchdiệntíchđáy vàchuvi×caocổ;upturnNonegiữđáyknownnhưngkhôngdùng0thaycaochưabiết.Ban côngchỉđúngnhánhengineđangemit;0/Nonekhôngtựthêmworkmới.
+- Luôn giữactualqfloattrước_workởreferencekhicócomponentrows.WCfixture2.1+.8cóqfloat2.9000000000000004;ledgerDecimal2.9;referencekhôngsumthêm,khôngresidual/tolerancehoặcđổiengine.SANexample10.3/.1/t100actualq1.02,khôngdùngvănbảnsaisốđãđínhchính.
+- Voidvượtgrossgiữlegacyclamp0nhưngledgerpartial/lýdothiếu,khônggiảnetđủ.Valueâmgiữreference/unavailable,hạnchếmetadata,khôngđổi_workclamp.
+
+## Source/checkpoint/runtime
+
+Rootgiữfreezeđể02reloadAPI;trongfreeze03chỉstaging+AST,canonicalareas/helperkhớpCHECKPOINT_API_RELOAD.json,canonicaltestchưatồn tại.NguồnđượcmởlạichỉsauruntimeReceiptđúngcheckout/rootnhảfreeze.PID31112vẫnlàbaselineLEANphụcvụdemo;03khôngrestart/reloadvàkhôngclaimP02đãchạyapp.
+
+AST_LEGACY_PARITY_STAGED.json + AST_PARITY.json đối chiếu chínhcanonicalvớibảnstaged:loạimetadataadditionsthìtoànbộmath/control/_workargsareaWorkskhớpbaseline.WCchỉcaptureexistingupturnsubexprbằngwalrusgiữnguyênevalorder.AlloldquantityhelpersASTunchanged.
+
+## Focusedđãterminal
+
+**Attempt1:132passed,EXIT0**,pytest12,97giây,collector15,01giây;session70124/PID38924terminal. **241filehashbefore/afterkhôngđổi**;exact3manifestkhớpcurrent/before/after.
+
+5purefilesđúngslot01:area_details,areas,partial,rough_takeoff,quantity_details.KhôngHTTPtrongselection;khôngDB/CADthật/full/outside.Puretestssource/manual/bao lồi/thiếugeometry,None0/voidoversize,slabthicknessNone0,WCfloatreference,lớpnền,negativeCPoutside vàJSONroundtrip.Fulllegacypayload/warnings/status/totals/materials/giáso sánhcó/khôngdetailgiữnguyên.
+
+## Giới hạn
+
+CPâm_slab_form_deductionchưaquantity_detail,đượctestNone;rằngCPdươngcódetailkhôngchứngminhtổngCPSANđãđủG8.Producerskhácngoàilót/P02vẫnNone.MetadatacompletekhôngchứngminhCADaccuracy/ngườikiểmđãduyệt.G8rawgrouptotal/coveragevẫncontractonly,chưaAPI/UI/Excelaccepted.
+
+Source3fileHOLDchờ14read-onlyreviewexacthash/log,01nhậncuối.Khônglấy132testnàyđểnghiệmthuHTTP/full/O01livehoặcruntimeUI. Bằngchứngởattempt1/{focused.log,result.json,process.json,focused_hash_before.json,focused_hash_after.json}.
+
+14đãchốtđộclậpP02:exact3SOURCE_READY=FINAL=checkout=attempt1before/after;đọclog132passed12,97s/EXIT0/241deps0drift;khôngblockermớitronghunk.14đãđọcAST_PARITYcanonicalbổsung,khôngcoistagedcanonicalFalseclaimlàcanonical.01duyệtcuối;giữmọigiớihạnCPâm/API/UI/Excel/full.

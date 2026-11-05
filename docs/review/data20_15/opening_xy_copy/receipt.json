@@ -1,0 +1,11 @@
+{
+  "exit_code": 0,
+  "default_apply_check": 1,
+  "patch_result_sha256": "250cfa6f61d5b53063ce6ac08677a02f213aaca03983612b4bfa8bbad794290f",
+  "patch_exact": false,
+  "review_after": "d00762ab4a5d448998e074f1706033de108ec6a2a3ecf3363dc85a0f73ab4358",
+  "review_stable": true,
+  "test_stable": true,
+  "incomplete_test_sha256": "4f85177ce0601160b9c1455c76e4e8b7e0694c269dc0bd0a15183b9392f208cf",
+  "base_stable": true
+}

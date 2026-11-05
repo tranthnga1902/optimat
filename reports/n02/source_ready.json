@@ -1,0 +1,13 @@
+{
+  "status": "SOURCE-READY_UNTESTED",
+  "snapshot_scope": [
+    "src/optimat/rough/rebar.py",
+    "tests/test_rough_rebar.py"
+  ],
+  "parser_N01_text_unchanged": true,
+  "tests_run": false,
+  "import_probes_run": false,
+  "database_used": false,
+  "xfail_N02_still_present_pending_test_release": true,
+  "other_source_files_not_written_by_this_task": true
+}

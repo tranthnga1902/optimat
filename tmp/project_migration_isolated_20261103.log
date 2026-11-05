@@ -1,0 +1,5 @@
+F                                                                        [100%]
+=========================== short test summary info ===========================
+FAILED tests/test_project_documents_migration.py::test_project_documents_migration_isolated
+1 failed in 1.07s
+EXIT_CODE=1

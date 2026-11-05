@@ -59,11 +59,15 @@ def test_review_api(sample_dxf):
 
 def test_confirm_returns_bill_priced_by_catalog_code(sample_dxf):
     """Xác nhận xong có bảng vật liệu: mã nhận diện (GN01) là mã tra giá; vật liệu do người dùng chọn cũng vậy."""
+    from optimat.catalog.repository import Catalog
+    catalog = Catalog.load()
+    # Fixture xác nhận đơn vị giá mẫu; production không được suy sale_unit khi nguồn thiếu.
+    catalog.supplier_materials["sale_unit"] = catalog.supplier_materials.material_id.map(catalog.materials.set_index("material_id").unit)
     data = _plan(sample_dxf)
     for w in data["walls"]:
         if w["cls"] == "110":
             w["mat"] = "GK03"                                  # người dùng đổi tường ngăn sang block 100
-    r = compute_review(ReviewPlan(**data))
+    r = compute_review(ReviewPlan(**data), catalog)
     g = {x.wall_type: x for x in r.groups}
     assert (g["220"].design_material_id, g["220"].design_wall_system_id) == ("GN01", "W-GN01-220")
     assert (g["110"].design_material_id, g["110"].design_wall_system_id) == ("GK03", "W-GK03-100")
@@ -71,7 +75,7 @@ def test_confirm_returns_bill_priced_by_catalog_code(sample_dxf):
     assert main["110"].best_price == 4900 and main["110"].est_cost is not None
     assert r.bill_total is None and any("VU02" in m for m in r.bill_missing)     # vữa chưa có giá: không cộng bừa
     data["walls"][0]["mat"] = "MAT_CLAY_220"
-    assert any("không có trong danh mục" in w for w in compute_review(ReviewPlan(**data)).warnings)
+    assert any("không có trong danh mục" in w for w in compute_review(ReviewPlan(**data), catalog).warnings)
 
 
 def test_payload_materials_are_catalog_codes(sample_dxf):

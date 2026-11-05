@@ -1,0 +1,54 @@
+{
+  "3002": [
+    {
+      "name": "original-apply",
+      "exit": 0,
+      "expected": 0,
+      "log": "original-apply.log"
+    },
+    {
+      "name": "p0-apply",
+      "exit": 0,
+      "expected": 0,
+      "log": "p0-apply.log"
+    },
+    {
+      "name": "before",
+      "exit": 1,
+      "expected": 1,
+      "log": "before.log"
+    },
+    {
+      "name": "after",
+      "exit": 0,
+      "expected": 0,
+      "log": "after.log"
+    }
+  ],
+  "3001": [
+    {
+      "name": "original-apply",
+      "exit": 0,
+      "expected": 0,
+      "log": "original-apply.log"
+    },
+    {
+      "name": "p0-apply",
+      "exit": 0,
+      "expected": 0,
+      "log": "p0-apply.log"
+    },
+    {
+      "name": "before",
+      "exit": 1,
+      "expected": 1,
+      "log": "before.log"
+    },
+    {
+      "name": "after",
+      "exit": 0,
+      "expected": 0,
+      "log": "after.log"
+    }
+  ]
+}

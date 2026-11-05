@@ -1,0 +1,54 @@
+{
+  "case": "VN002",
+  "real_input": true,
+  "mode": "LIVE_STAGING",
+  "data_kind": "ACTUAL",
+  "input_origin": "existing_cad_takeoff",
+  "human_approval": false,
+  "persisted_project": false,
+  "comparison": "data/ground_truth/du_toan/normalized_20261103/nha_sang_hai_duong_4x15.comparison.json",
+  "comparison_sha256": "c987ec4af17550e7ea6d252dee427530f58be90d6f6d0373344154ac20915dc6",
+  "drawings": [
+    {
+      "file": "nha_sang_hai_duong_4x15_kien_truc.dxf",
+      "sha256": "719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6"
+    },
+    {
+      "file": "nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    }
+  ],
+  "checked_work_count": 0,
+  "work_count": 52,
+  "material_count": 7,
+  "deduction_rows": [
+    {
+      "rowIndex": 38,
+      "code": "COP_PHA",
+      "quantity": -0.194,
+      "unit": "m²"
+    },
+    {
+      "rowIndex": 46,
+      "code": "COP_PHA",
+      "quantity": -0.29,
+      "unit": "m²"
+    },
+    {
+      "rowIndex": 51,
+      "code": "COP_PHA",
+      "quantity": -0.194,
+      "unit": "m²"
+    }
+  ],
+  "material_ids": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    "TH10",
+    null
+  ],
+  "scope_builder_sha256": "a58a8484a9af4e3de86a6a2a2c823144d21500d76c5e8f18f46d9549adb457a1"
+}

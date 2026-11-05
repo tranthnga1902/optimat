@@ -1,0 +1,178 @@
+--- before/scripts/c01_duong_co_so.py
++++ after/scripts/c01_duong_co_so.py
+@@ -49,7 +49,11 @@
+         return (_key(code, row["cau_kien"]), "") if pt == "PT40" and row["cau_kien"] else (None, "thép không theo hàm lượng cấu kiện")
+     if pt not in PT_WORK:
+         return None, f"{pt or 'chưa có PTxx'}: hệ thống chưa có công tác cùng phạm vi"
+-    return (_key(code, PT_WORK[pt]), "") if code == "COP_PHA" else (_key(PT_WORK[pt], ""), "")
++    if code == "COP_PHA":
++        return _key(code, PT_WORK[pt]), ""
++    if code != PT_WORK[pt]:
++        return None, f"cặp {pt}/{code} không tương thích"
++    return code, ""
+ 
+ 
+ def system_totals(sys_works) -> dict[str, dict]:
+@@ -65,7 +69,7 @@
+         g["missing"] += [m for m in w.missing if m not in g["missing"]]
+     for g in out.values():
+         known = [x for x in g["q"] if x is not None]
+-        g.update(known=round(sum(known), 3) if known else None, complete=len(known) == g["n"], worst=worst_status(*g["status"]))
++        g.update(known=round(sum(known), 3) if known else None, complete=len(known) == g["n"] and not g["missing"] and "D" not in g["status"], worst=worst_status(*g["status"]))
+     return out
+ 
+ 
+@@ -146,15 +150,23 @@
+                            "không chứng minh độ chính xác" if dep in param_keys else "") if x)})
+     grp = pd.DataFrame(groups)
+     summary, by_status = summarize(grp.assign(lech_pct=grp.lech_pct.where(grp.so_duoc)))
+-    return {"Doi_chieu_cong_tac": lines, "So_sanh_nhom": grp, "Theo_trang_thai": by_status.assign(tong_nhom=summary.cong_tac.iloc[0]),
+-            "Vat_tu_nhom": material_table(mats, sys_materials)}
+-
+-
+-def material_table(mats: list[dict], sys_materials) -> pd.DataFrame:
++    inventory = []
++    for h in hm:
++        linked = [r for r in works if r.get("hang_muc_id") == h["id"] or r.get("ma_pt") == h["ma_pt"]]
++        inventory.append({**h, "dong_dap_an": "; ".join(r["id"] for r in linked),
++                          "tinh_trang_doi_chieu": "chua_xac_dinh_ton_tai" if h["ton_tai"] == "chua_ro" else
++                          "khong_ton_tai_theo_so" if h["ton_tai"] == "khong" else
++                          "chua_co_dong_dap_an" if not linked else "co_dong_dap_an_chua_xac_nhan"})
++    return {"So_hang_muc": pd.DataFrame(inventory), "Doi_chieu_cong_tac": lines, "So_sanh_nhom": grp, "Theo_trang_thai": by_status.assign(tong_nhom=summary.cong_tac.iloc[0]),
++            "Vat_tu_nhom": material_table(mats, sys_materials, works)}
++
++
++def material_table(mats: list[dict], sys_materials, works=()) -> pd.DataFrame:
+     """Vật tư D02 cạnh vật tư hệ thống cùng mã. Chỉ so dòng mua dùng được làm đối chứng, cùng đại lượng sau đổi đơn vị
+     chính xác, với lượng có hao hụt của hệ thống; lắp đặt, nhóm Ø chưa rõ, tổng lẫn hoàn thiện: giữ dòng, ghi lý do."""
+     by_id = {m.material_id: m for m in sys_materials if m.material_id}
+     out = []
++    refs = {r["id"]: r for r in works}
+     for r in mats:
+         m = by_id.get(r["material_id"]) if r["material_id"] else None
+         unit = (m.unit or "").replace("m3", "m³").replace("m2", "m²") if m else ""
+@@ -167,9 +179,19 @@
+                f"khác đại lượng ({unit} ↔ {r['don_vi']})" if factor is None else
+                "hệ thống chưa có lượng có hao hụt" if sys_q is None else
+                "hệ thống chỉ tính một phần (" + ("; ".join(m.missing[:3]) or "có công tác chưa có khối lượng") + ")" if not m.complete else "")
++        ids = [x.strip() for x in r.get("cong_tac_id", "").split(";") if x.strip()]
++        linked = [refs[x] for x in ids if x in refs]
++        ref_codes = {x["ma_cong_tac"] for x in linked}
++        sys_codes = {u.work for u in m.uses} if m else set()
++        if not why:
++            if (not ids or len(linked) != len(ids) or any(x["pham_vi"] != "IN" for x in linked)
++                    or not sys_codes or ref_codes != sys_codes):
++                why = "chưa chứng minh cùng phạm vi công tác nguồn và uses hệ thống"
++            else:
++                why = "chưa có căn cứ đối chiếu lượng mua theo cùng chi tiết cấu kiện và hao hụt"
+         ref = _num_or_none(r["luong"])
+         so = not why and ref is not None
+-        val = round(sys_q * factor, 3) if so else None
++        val = round(sys_q * factor, 3) if sys_q is not None and factor is not None else None
+         out.append({"id": r["id"], "material_id": r["material_id"], "quy_cach": r["quy_cach"], "don_vi": r["don_vi"],
+                     "co_so_luong": r["co_so_luong"], "dung_lam_dap_an": r["dung_lam_dap_an"], "doi_chung": ref,
+                     "he_thong_co_hao_hut": val, "he_thong_don_vi_goc": unit, "so_duoc": so, "ly_do_khong_so": why,
+@@ -251,7 +273,7 @@
+     with pd.ExcelWriter(a.out) as xw:      # luôn ghi đè: không giữ số của lần trước
+         head.to_excel(xw, sheet_name="Trang_thai", index=False)
+         pd.DataFrame(state).to_excel(xw, sheet_name="Trang_thai", index=False, startrow=3)
+-        for name in ("Bao_phu", "Doi_chieu_cong_tac", "So_sanh_nhom", "Theo_trang_thai", "Vat_tu_nhom", "He_thong_vat_tu"):
++        for name in ("Bao_phu", "So_hang_muc", "Doi_chieu_cong_tac", "So_sanh_nhom", "Theo_trang_thai", "Vat_tu_nhom", "He_thong_vat_tu"):
+             if name in sheets:
+                 pd.concat(sheets[name], ignore_index=True).to_excel(xw, sheet_name=name, index=False)
+         pd.DataFrame(notes, columns=["bo", "nguon", "id", "noi_dung"]).to_excel(xw, sheet_name="Can_kiem", index=False)
+--- before/tests/test_c01_duong_co_so.py
++++ after/tests/test_c01_duong_co_so.py
+@@ -118,7 +118,7 @@
+                 MaterialLine(material_id="XM02", name="xm", unit="kg", quantity=900, quantity_with_waste=900, complete=True),
+                 MaterialLine(material_id="DA01", name="đá", unit="m³", quantity=5, quantity_with_waste=5, complete=True)]
+     t = c01.material_table(mats, sys_mats).set_index("id")
+-    assert t.loc["V2"].so_duoc and t.loc["V2"].he_thong_co_hao_hut == 1020.0 and t.loc["V2"].chenh == 0.0   # tấn → kg chính xác
++    assert not t.loc["V2"].so_duoc and t.loc["V2"].he_thong_co_hao_hut == 1020.0 and pd.isna(t.loc["V2"].chenh)   # tấn → kg chính xác
+     assert not t.loc["V1"].so_duoc and t.loc["V1"].ly_do_khong_so.startswith("không dùng làm đáp án")
+     assert not t.loc["V3"].so_duoc and "lắp đặt" in t.loc["V3"].ly_do_khong_so and "> 10" in t.loc["V3"].quy_cach
+     assert not t.loc["V4"].so_duoc and "khác đại lượng" in t.loc["V4"].ly_do_khong_so
+@@ -150,3 +150,45 @@
+     assert "So_sanh_nhom" not in sheets and sheets["Trang_thai"].iloc[0].ket_qua == "không có hồ sơ chạy được"
+     why = dict(zip(sheets["Bo_qua"].bo, sheets["Bo_qua"].ly_do))
+     assert why == {"t": "không phải split build (phát triển không chạy bộ test)", "b": "chưa có bộ đáp án D02"}
++
++
++@pytest.mark.parametrize("status,missing", [("D", []), ("C", ["cao tầng"]), ("D", ["cao tầng"])])
++def test_numeric_but_incomplete_work_keeps_known_quantity_without_comparison(status, missing):
++    rep = _report([_w("F1", "10", ma_pt="PT32", ma_cong_tac="XAY")],
++                  [_sys("XAY", 10, status, missing=missing)])
++    g = _grp(rep, "XAY")
++    assert g.he_thong == 10 and not g.he_thong_du and not g.so_duoc
++    assert pd.isna(g.chenh) and pd.isna(g.lech_pct)
++    assert _line(rep, "F1").trang_thai_de_xuat == "mot_phan"
++
++
++def test_pt_and_work_code_must_agree():
++    key, why = c01.leaf_key(_w("F1", "2", ma_pt="PT05", ma_cong_tac="NEN_DEM_CAT"))
++    assert key is None and "không tương thích" in why
++    assert c01.leaf_key(_w("F2", "2", ma_pt="PT05", ma_cong_tac="BE_TONG_LOT"))[0] == "BE_TONG_LOT"
++
++
++def test_inventory_keeps_present_and_unknown_items_without_reference_work():
++    hm = [dict(id="H15", ma_pt="PT15", ton_tai="co", nguon_ton_tai="drawing A"),
++          dict(id="H18", ma_pt="PT18", ton_tai="chua_ro", nguon_ton_tai="pending")]
++    rep = c01.build_report([_w("F1", "10", ma_pt="PT32", ma_cong_tac="XAY")], hm, [],
++                           [_sys("XAY", 10)], [], CASE)
++    table = rep["So_hang_muc"].set_index("id")
++    assert table.loc["H15"].tinh_trang_doi_chieu == "chua_co_dong_dap_an"
++    assert table.loc["H18"].tinh_trang_doi_chieu == "chua_xac_dinh_ton_tai"
++    assert table.loc["H15"].nguon_ton_tai == "drawing A"
++
++
++def test_material_total_with_additional_work_scope_is_not_compared():
++    from optimat.rough.models import MaterialUse
++    mat = _mat("V1", "XM01", "cement", "kg", "40")
++    mat["cong_tac_id"] = "F1"
++    system = MaterialLine(material_id="XM01", name="cement", unit="kg", quantity=100,
++                          quantity_with_waste=100, uses=[MaterialUse(work="XAY", quantity=40),
++                                                        MaterialUse(work="TRAT", quantity=60)])
++    row = c01.material_table([mat], [system], [_w("F1", "4", ma_pt="PT32", ma_cong_tac="XAY")]).iloc[0]
++    assert not row.so_duoc and row.he_thong_co_hao_hut == 100
++    assert pd.isna(row.chenh) and pd.isna(row.lech_pct) and "phạm vi" in row.ly_do_khong_so
++    system.uses = [MaterialUse(work="XAY", quantity=100)]
++    row = c01.material_table([mat], [system], [_w("F1", "4", ma_pt="PT32", ma_cong_tac="XAY")]).iloc[0]
++    assert not row.so_duoc and "chi tiết cấu kiện" in row.ly_do_khong_so
+--- /dev/null
++++ after/docs/C01_DUONG_CO_SO_BUILD.md
+@@ -0,0 +1,35 @@
++# C01 — Đường cơ sở phần thô trên build
++
++Báo cáo phát triển, **không phải độ chính xác nghiệm thu**. D02 chưa được người kiểm xác nhận; mẫu số chỉ dự kiến. Không chạy bộ test/banve1, không sửa đáp án hoặc quy tắc để khớp kết quả.
++
++## Chạy lại với CSV cô lập
++
++Chạy PowerShell tại thư mục repo `optimat-ai`:
++
++```powershell
++$env:OPTIMAT_NO_DOTENV='1'
++$env:PYTHONIOENCODING='utf-8'
++Remove-Item Env:DATABASE_URL,Env:OPTIMAT_TEST_DATABASE_URL,Env:OPTIMAT_CATALOG_OVERLAY -ErrorAction SilentlyContinue
++.venv/Scripts/python.exe scripts/c01_duong_co_so.py --out reports/c01_review_fix/c01_duong_co_so_build.xlsx
++```
++
++Cờ đầu ngăn đọc `.env`; bỏ DATABASE_URL và overlay để dùng đúng CSV thật trong repo. Không nhập DB. Lệnh ghi đè **chỉ đường dẫn --out**; lượt sửa này không ghi đè workbook ban đầu của dev.
++
++Luồng: manifest → cổng phat_trien/build → validator D02 → rough_for_case/compute_rough → ánh xạ đối chứng → bảng Excel. Hash trong workbook ghi các file mà bộ sinh hiện theo dõi; không phải chứng nhận trạng thái toàn repo hoặc snapshot DB.
++
++## Quy tắc đọc báo cáo
++
++- Doi_chieu_cong_tac giữ dòng gốc, OUT/chờ phân loại/chưa ánh xạ. Con `phan` đóng góp một lần; không cộng cha với con. Tổng hệ thống chỉ so một lần tại So_sanh_nhom, không phân bổ về từng dòng nguồn.
++- PT_WORK chỉ chấp nhận cặp PT/mã tương thích. COP_PHA ghép theo cấu kiện; COT_THEP giữ cơ sở cấu kiện theo quy tắc hiện có. Cặp khác không tự đổi mã.
++- Lượng khác None vẫn có thể chưa đủ. Công tác có missing hoặc D làm nhóm chưa đầy đủ; giữ tổng phần biết, để chênh và % trống. Nhãn có kết quả vẫn là đề xuất chưa xác nhận, không chứng nhận H1.
++- So_hang_muc giữ từng dòng sổ D02, nguồn tồn tại, phạm vi và liên kết đáp án theo id hạng mục hoặc PT. Không có đáp án không đồng nghĩa không tồn tại. Hạng mục chưa rõ giữ nguyên chưa rõ.
++- Vat_tu_nhom giữ lượng nguồn và lượng hệ thống quy đổi chính xác được, kể cả chưa so được. Không dùng hai số cạnh nhau như hai lượng cùng phạm vi. Mua/lắp đặt, dòng loại trừ, khác đại lượng hoặc lượng chưa đủ đều chặn phép so.
++- Mã vật tư và tập mã công tác giống nhau **chưa chứng minh cùng cấu kiện, quy cách và hao hụt**. Hợp đồng hiện tại không cung cấp liên kết đủ chặt giữa từng dòng nguồn và uses; vì vậy lượt này chặn phép tính chênh vật tư, ghi lý do. Không tự phân bổ, không suy tỷ lệ. Cần dữ liệu truy vết và cơ sở lượng đã kiểm trước khi mở phép so.
++- Theo_trang_thai kế thừa nhóm A/B và C/D của evaluator; không dùng nhóm C/D như KPI A/B. Đáp án 0 để % trống. Lượt này chưa đổi hợp đồng thống kê dùng chung.
++- He_thong_vat_tu giữ uses/nhóm/loại và mức đủ của engine. Tổng kg không ghép trực tiếp với m³/viên.
++
++## Kiểm và bàn giao
++
++Snapshot trước sửa, hash, diff của lượt, log test và log chạy build nằm trong `reports/c01_review_fix/`. Xem `BAN_GIAO.md` tại đó để biết kết quả thực tế và ba nhóm đối chiếu tay. Không sửa engine/evaluator/D02/định mức trong lượt này. Chưa chạy toàn suite hoặc DB; chờ điều phối review độc lập trước cấp lượt tiếp.
++
++Các hở thuật toán/đầu vào ghi nhận trong M01 thuộc N01/N02/N03/A01/Q01/Q02; C01 chỉ phản ánh giới hạn, chưa triển khai các sprint đó. Chưa tự nghiệm thu C01 hoặc nâng trạng thái đáp án D02.

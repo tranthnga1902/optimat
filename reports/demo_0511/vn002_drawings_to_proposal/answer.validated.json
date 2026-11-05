@@ -1,0 +1,1631 @@
+{
+  "requestId": "d4b4be157b874da997773315de0dd53a",
+  "contextHash": "7da7031588d892bced47d226d71d02ff8f18e6251c3396f59d10124d89f9bc0c",
+  "binding": {
+    "projectUid": "local-audit",
+    "drawingId": "cad-source-pair",
+    "reviewId": "unreviewed",
+    "materialRevision": null
+  },
+  "provenance": "client_snapshot",
+  "facts": {
+    "materials": [
+      {
+        "lineId": "m0",
+        "raw_class": "gach",
+        "name": "Gạch xây (chưa chọn phương án tường)",
+        "demand_quantity": null,
+        "demand_with_waste": null,
+        "demand_unit": "",
+        "purchase_quantity": null,
+        "sources": [],
+        "complete": false,
+        "options": [],
+        "accessories": [],
+        "missing": [
+          "phương án tường (vật liệu xây)",
+          "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "Chưa có mã vật tư/quy cách duy nhất trong danh mục",
+          "Không có phương án phù hợp trong phạm vi tra cứu và loại trừ nhận diện được",
+          "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+          "Chưa có cam kết thời gian giao có nguồn"
+        ]
+      },
+      {
+        "lineId": "m1",
+        "raw_class": "vua_be_tong",
+        "name": "Nhu cầu vữa xây hoặc vật liệu liên kết",
+        "demand_quantity": null,
+        "demand_with_waste": null,
+        "demand_unit": "",
+        "purchase_quantity": null,
+        "sources": [],
+        "complete": false,
+        "options": [],
+        "accessories": [],
+        "missing": [
+          "phương án tường (vật liệu xây)",
+          "cần xác minh phương án tường, loại liên kết và định mức",
+          "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "Chưa có mã vật tư/quy cách duy nhất trong danh mục",
+          "Không có phương án phù hợp trong phạm vi tra cứu và loại trừ nhận diện được",
+          "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+          "Chưa có cam kết thời gian giao có nguồn"
+        ]
+      },
+      {
+        "lineId": "m2",
+        "raw_class": "vua_be_tong",
+        "name": "Vữa trát",
+        "demand_quantity": null,
+        "demand_with_waste": null,
+        "demand_unit": "m³",
+        "purchase_quantity": null,
+        "sources": [],
+        "complete": false,
+        "options": [],
+        "accessories": [],
+        "missing": [
+          "chiều dày trát",
+          "định mức TRAT cho chiều dày (chưa nhập) mm trên nền chưa rõ (chưa có phương án tường hoặc họ vật liệu)",
+          "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "Chưa có mã vật tư/quy cách duy nhất trong danh mục",
+          "Không có phương án phù hợp trong phạm vi tra cứu và loại trừ nhận diện được",
+          "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+          "Chưa có cam kết thời gian giao có nguồn"
+        ]
+      },
+      {
+        "lineId": "m3",
+        "raw_class": "vua_be_tong",
+        "name": "Bê tông (chưa chọn mác)",
+        "demand_quantity": null,
+        "demand_with_waste": null,
+        "demand_unit": "m³",
+        "purchase_quantity": null,
+        "sources": [],
+        "complete": false,
+        "options": [],
+        "accessories": [],
+        "missing": [
+          "cao lanh tô",
+          "chiều dài gối lanh tô",
+          "mác bê tông",
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn",
+          "dày bản thang",
+          "hao hụt thi công (%)",
+          "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "Chưa có mã vật tư/quy cách duy nhất trong danh mục",
+          "Không có phương án phù hợp trong phạm vi tra cứu và loại trừ nhận diện được",
+          "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+          "Chưa có cam kết thời gian giao có nguồn"
+        ]
+      },
+      {
+        "lineId": "m4",
+        "raw_class": "vua_be_tong",
+        "name": "Vữa cán nền",
+        "demand_quantity": null,
+        "demand_with_waste": null,
+        "demand_unit": "m³",
+        "purchase_quantity": null,
+        "sources": [],
+        "complete": false,
+        "options": [],
+        "accessories": [],
+        "missing": [
+          "chiều dày cán nền",
+          "định mức CAN_NEN cho chiều dày (chưa nhập) mm",
+          "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "Chưa có mã vật tư/quy cách duy nhất trong danh mục",
+          "Không có phương án phù hợp trong phạm vi tra cứu và loại trừ nhận diện được",
+          "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+          "Chưa có cam kết thời gian giao có nguồn"
+        ]
+      },
+      {
+        "lineId": "m5",
+        "raw_class": "thep",
+        "name": "Cốt thép (chưa chia nhóm đường kính)",
+        "demand_quantity": null,
+        "demand_with_waste": null,
+        "demand_unit": "tấn",
+        "purchase_quantity": null,
+        "sources": [],
+        "complete": false,
+        "options": [],
+        "accessories": [],
+        "missing": [
+          "hàm lượng thép cột (kg/m³)",
+          "bảng thống kê thép cột",
+          "bảng thống kê thép để chia nhóm đường kính",
+          "hàm lượng thép sàn (kg/m³)",
+          "bảng thống kê thép sàn",
+          "khối lượng bê tông sàn",
+          "chiều dày sàn",
+          "hàm lượng thép cầu thang (kg/m³)",
+          "bảng thống kê thép cầu thang",
+          "khối lượng bê tông cầu thang",
+          "dày bản thang",
+          "hàm lượng thép dầm (kg/m³)",
+          "bảng thống kê thép dầm",
+          "khối lượng bê tông dầm",
+          "rộng dầm",
+          "cao dầm",
+          "hàm lượng thép lanh tô (kg/m³)",
+          "bảng thống kê thép lanh tô",
+          "khối lượng bê tông lanh tô",
+          "cao lanh tô",
+          "chiều dài gối lanh tô",
+          "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "Chưa có mã vật tư/quy cách duy nhất trong danh mục",
+          "Không có phương án phù hợp trong phạm vi tra cứu và loại trừ nhận diện được",
+          "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+          "Chưa có cam kết thời gian giao có nguồn"
+        ]
+      },
+      {
+        "lineId": "m6",
+        "raw_class": "thep",
+        "name": "Dây thép buộc 1 ly",
+        "demand_quantity": null,
+        "demand_with_waste": null,
+        "demand_unit": "kg",
+        "purchase_quantity": null,
+        "sources": [],
+        "complete": false,
+        "options": [
+          {
+            "material_id": "TH10",
+            "name": "Dây thép buộc 1 ly",
+            "unit": "kg",
+            "data_kind": "ACTUAL",
+            "catalog_source": "materials",
+            "specification": {
+              "standards_text": null,
+              "tech_notes": null,
+              "lambda_source": null,
+              "weight_source": "Tự tính: quy đổi đơn vị hoặc tính từ kích thước và khối lượng thể tích đã có nguồn [C]"
+            },
+            "offer": null,
+            "price_issues": [],
+            "supply_days": null,
+            "u_value": null,
+            "needsDesignReview": false,
+            "needsGeometryReview": false,
+            "state": "current_lookup",
+            "resolution_source": "material_id",
+            "canApply": false
+          }
+        ],
+        "accessories": [],
+        "missing": [
+          "hàm lượng thép cột (kg/m³)",
+          "bảng thống kê thép cột",
+          "hàm lượng thép sàn (kg/m³)",
+          "bảng thống kê thép sàn",
+          "khối lượng bê tông sàn",
+          "chiều dày sàn",
+          "hàm lượng thép cầu thang (kg/m³)",
+          "bảng thống kê thép cầu thang",
+          "khối lượng bê tông cầu thang",
+          "dày bản thang",
+          "hàm lượng thép dầm (kg/m³)",
+          "bảng thống kê thép dầm",
+          "khối lượng bê tông dầm",
+          "rộng dầm",
+          "cao dầm",
+          "hàm lượng thép lanh tô (kg/m³)",
+          "bảng thống kê thép lanh tô",
+          "khối lượng bê tông lanh tô",
+          "cao lanh tô",
+          "chiều dài gối lanh tô",
+          "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "Có phương án chưa có giá đủ nguồn/đơn vị/điều kiện",
+          "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+          "Chưa có cam kết thời gian giao có nguồn"
+        ]
+      },
+      {
+        "lineId": "m7",
+        "raw_class": "khac",
+        "name": "Vật liệu cốp pha",
+        "demand_quantity": null,
+        "demand_with_waste": null,
+        "demand_unit": "",
+        "purchase_quantity": null,
+        "sources": [],
+        "complete": false,
+        "options": [],
+        "accessories": [],
+        "missing": [
+          "loại ván khuôn (gỗ | ván ép)",
+          "dày bản thang",
+          "khối lượng cốp pha đáy sàn: D (nguồn công tác chưa đầy đủ)",
+          "khối lượng trừ đáy sàn trên mặt dầm, đỉnh cột: D (nguồn công tác chưa đầy đủ)",
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn",
+          "cao lanh tô",
+          "chiều dài gối lanh tô",
+          "Chỉ tính phần có số lượng gắn với công tác đã kiểm. Chưa đủ căn cứ cho tổng nhu cầu, hao hụt và lượng mua.",
+          "Chưa có mã vật tư/quy cách duy nhất trong danh mục",
+          "Không có phương án phù hợp trong phạm vi tra cứu và loại trừ nhận diện được",
+          "Lượng mua chưa xác định: cần tồn kho, vật tư đã đặt, quy cách và kế hoạch cấp",
+          "Chưa có cam kết thời gian giao có nguồn"
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "rowIndex": 0,
+        "code": "XAY",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "tường 110 bao che",
+        "quantity": 2.578,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "phương án tường (vật liệu xây)"
+        ],
+        "materialIds": [
+          "m0",
+          "m1"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 1,
+        "code": "XAY",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "tường 110 bao che",
+        "quantity": 0.735,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "phương án tường (vật liệu xây)"
+        ],
+        "materialIds": [
+          "m0",
+          "m1"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 2,
+        "code": "XAY",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "tường 220 bao che",
+        "quantity": 1.781,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "phương án tường (vật liệu xây)"
+        ],
+        "materialIds": [
+          "m0",
+          "m1"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 3,
+        "code": "TRAT",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "tường 110 bao che, mặt trong",
+        "quantity": 23.438,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày trát"
+        ],
+        "materialIds": [
+          "m2"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 4,
+        "code": "TRAT",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "tường 110 bao che, mặt ngoài",
+        "quantity": 23.438,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày trát"
+        ],
+        "materialIds": [
+          "m2"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 5,
+        "code": "TRAT",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "tường 110 bao che, mặt trong",
+        "quantity": 6.678,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày trát"
+        ],
+        "materialIds": [
+          "m2"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 6,
+        "code": "TRAT",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "tường 110 bao che, mặt ngoài",
+        "quantity": 6.678,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày trát"
+        ],
+        "materialIds": [
+          "m2"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 7,
+        "code": "TRAT",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "tường 220 bao che, mặt trong",
+        "quantity": 8.096,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày trát"
+        ],
+        "materialIds": [
+          "m2"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 8,
+        "code": "TRAT",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "tường 220 bao che, mặt ngoài",
+        "quantity": 8.096,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày trát"
+        ],
+        "materialIds": [
+          "m2"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 9,
+        "code": "LANH_TO",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "1 lanh tô",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "cao lanh tô",
+          "chiều dài gối lanh tô"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 10,
+        "code": "COT",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "4 cột 220×220",
+        "quantity": 0.958,
+        "unit": "m³",
+        "status": "B",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 11,
+        "code": "COT",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "6 cột 220×220",
+        "quantity": 0.77,
+        "unit": "m³",
+        "status": "B",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 12,
+        "code": "COT",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "4 cột 220×220",
+        "quantity": 0.958,
+        "unit": "m³",
+        "status": "B",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 13,
+        "code": "DAM",
+        "plan": "MặT BằNG tường xây t2",
+        "element": "1 dầm",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 14,
+        "code": "DAM",
+        "plan": "MặT BằNG TầNG 2 (2)",
+        "element": "9 dầm",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 15,
+        "code": "DAM",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "2 dầm",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 16,
+        "code": "DAM",
+        "plan": "MặT BằNG cửa t2",
+        "element": "9 dầm",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 17,
+        "code": "SAN",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "sàn",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 18,
+        "code": "SAN",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "sàn",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 19,
+        "code": "CAU_THANG",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "thang T1",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 20,
+        "code": "CAU_THANG",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "thang T1",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 21,
+        "code": "CAU_THANG",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "thang T2",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 22,
+        "code": "CAU_THANG",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "thang T3",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 23,
+        "code": "CAU_THANG",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "thang T1",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 24,
+        "code": "CAU_THANG",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "thang T2",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 25,
+        "code": "CAU_THANG",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "thang T3",
+        "quantity": null,
+        "unit": "m³",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m3"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 26,
+        "code": "CAN_NEN",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "nền các phòng",
+        "quantity": 3.79,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày cán nền"
+        ],
+        "materialIds": [
+          "m4"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 27,
+        "code": "CAN_NEN",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "nền các phòng",
+        "quantity": 17.56,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "chiều dày cán nền"
+        ],
+        "materialIds": [
+          "m4"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 28,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "thép cột",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép cột (kg/m³)",
+          "bảng thống kê thép cột"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 29,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "thép sàn",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép sàn (kg/m³)",
+          "bảng thống kê thép sàn",
+          "khối lượng bê tông sàn",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 30,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "thép cầu thang",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép cầu thang (kg/m³)",
+          "bảng thống kê thép cầu thang",
+          "khối lượng bê tông cầu thang",
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 31,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG tường xây t2",
+        "element": "thép dầm",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép dầm (kg/m³)",
+          "bảng thống kê thép dầm",
+          "khối lượng bê tông dầm",
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 32,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG TầNG 2 (2)",
+        "element": "thép dầm",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép dầm (kg/m³)",
+          "bảng thống kê thép dầm",
+          "khối lượng bê tông dầm",
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 33,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "thép lanh tô",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép lanh tô (kg/m³)",
+          "bảng thống kê thép lanh tô",
+          "khối lượng bê tông lanh tô",
+          "cao lanh tô",
+          "chiều dài gối lanh tô"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 34,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "thép cột",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép cột (kg/m³)",
+          "bảng thống kê thép cột"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 35,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "thép dầm",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép dầm (kg/m³)",
+          "bảng thống kê thép dầm",
+          "khối lượng bê tông dầm",
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 36,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "thép sàn",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép sàn (kg/m³)",
+          "bảng thống kê thép sàn",
+          "khối lượng bê tông sàn",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 37,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "thép cầu thang",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép cầu thang (kg/m³)",
+          "bảng thống kê thép cầu thang",
+          "khối lượng bê tông cầu thang",
+          "dày bản thang",
+          "dày bản thang",
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 38,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "thép cột",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép cột (kg/m³)",
+          "bảng thống kê thép cột"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 39,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "thép cầu thang",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép cầu thang (kg/m³)",
+          "bảng thống kê thép cầu thang",
+          "khối lượng bê tông cầu thang",
+          "dày bản thang",
+          "dày bản thang",
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 40,
+        "code": "COT_THEP",
+        "plan": "MặT BằNG cửa t2",
+        "element": "thép dầm",
+        "quantity": null,
+        "unit": "tấn",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "hàm lượng thép dầm (kg/m³)",
+          "bảng thống kê thép dầm",
+          "khối lượng bê tông dầm",
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m5",
+          "m6"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 41,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "cốp pha 4 cột 220×220",
+        "quantity": 17.424,
+        "unit": "m²",
+        "status": "B",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 42,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "cốp pha thang T1",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 43,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "cốp pha đáy sàn",
+        "quantity": 4.1,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 44,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG tường xây t1",
+        "element": "trừ đáy sàn trên mặt dầm, đỉnh cột",
+        "quantity": -0.194,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "deduction"
+      },
+      {
+        "rowIndex": 45,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG tường xây t2",
+        "element": "cốp pha 1 dầm",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 46,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 2 (2)",
+        "element": "cốp pha 9 dầm",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 47,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "cốp pha 2 dầm",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 48,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "cốp pha 1 lanh tô",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "cao lanh tô",
+          "chiều dài gối lanh tô"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 49,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "cốp pha 6 cột 220×220",
+        "quantity": 13.992,
+        "unit": "m²",
+        "status": "B",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 50,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "cốp pha thang T1",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 51,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "cốp pha thang T2",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 52,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "cốp pha thang T3",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 53,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "cốp pha đáy sàn",
+        "quantity": 18.1,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 54,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 3",
+        "element": "trừ đáy sàn trên mặt dầm, đỉnh cột",
+        "quantity": -0.29,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "deduction"
+      },
+      {
+        "rowIndex": 55,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "cốp pha 4 cột 220×220",
+        "quantity": 17.424,
+        "unit": "m²",
+        "status": "B",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 56,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "cốp pha thang T1",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 57,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "cốp pha thang T2",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 58,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "cốp pha thang T3",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "dày bản thang"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      },
+      {
+        "rowIndex": 59,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG TầNG 4",
+        "element": "trừ đáy sàn trên mặt dầm, đỉnh cột",
+        "quantity": -0.194,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "deduction"
+      },
+      {
+        "rowIndex": 60,
+        "code": "COP_PHA",
+        "plan": "MặT BằNG cửa t2",
+        "element": "cốp pha 9 dầm",
+        "quantity": null,
+        "unit": "m²",
+        "status": "D",
+        "checked": false,
+        "basis": null,
+        "missing": [
+          "rộng dầm",
+          "cao dầm",
+          "chiều dày sàn"
+        ],
+        "materialIds": [
+          "m7"
+        ],
+        "coverage": "missing",
+        "reason": "Công tác chưa kiểm hoặc còn thiếu căn cứ; không coi khối lượng một phần là đầy đủ",
+        "quantity_role": "installation"
+      }
+    ],
+    "intermediates": [],
+    "intermediate_note": "Lượng trung gian để đối chiếu, không cộng lại vào vật tư mua hoặc tổng nhu cầu",
+    "warnings": [
+      "Nguồn client_snapshot: lượng, liên kết, phạm vi và trạng thái kiểm do trình duyệt cung cấp; chưa xác minh độc lập.",
+      "Giá là từng đơn vị vật tư theo nguồn; chưa có tổng chi phí, không kết luận rẻ nhất hoặc đạt ngân sách.",
+      "Đề xuất không phải phê duyệt, sẵn sàng mua hay đầu vào tối ưu; không tự sửa thiết kế.",
+      "Chưa có U phương án tường từ công cụ tất định trong context này; không dùng U cho các nhóm khác.",
+      "Chưa có công tác nào được xác nhận. Các mã tra được chỉ dùng để kiểm quy cách."
+    ],
+    "parsed_constraints": {
+      "budget": null,
+      "deadline_days": null,
+      "max_vehicle_ton": null,
+      "excluded_materials": [],
+      "source": "regex"
+    },
+    "scope": "Toàn bộ phần thô của dự án"
+  },
+  "ai": {
+    "summary": "Chưa đủ căn cứ để chốt vật liệu toàn phần thô theo thiết kế, so sánh ngân sách hoặc lập lịch cung ứng. Ưu tiên xác nhận phương án tường, các kích thước và mác theo hồ sơ thiết kế trước; sau đó bổ sung mã vật tư, quy cách, khối lượng mua, báo giá đủ đơn vị và điều kiện, tồn kho hoặc vật tư đã đặt, kế hoạch cấp cùng cam kết giao hàng. Không thay quy cách để hạ giá khi chưa kiểm lại thiết kế. Riêng dây thép buộc có một ứng viên duy nhất là TH10 nhưng chưa có giá đủ nguồn.",
+    "advice": [
+      {
+        "lineId": "m0",
+        "proposed_material_ids": [],
+        "reason": "Chưa có phương án tường nên chưa xác định được vật liệu xây; không có ứng viên phù hợp trong phạm vi tra cứu. Chưa thể chọn một vật liệu duy nhất theo thiết kế hoặc kết luận về ngân sách.",
+        "checks": [
+          "Bổ sung phương án tường, mã vật tư và quy cách duy nhất, khối lượng theo công tác đã kiểm, hao hụt, lượng mua sau khi đối chiếu tồn kho và vật tư đã đặt, điều kiện báo giá và nguồn giao hàng."
+        ]
+      },
+      {
+        "lineId": "m1",
+        "proposed_material_ids": [],
+        "reason": "Nhu cầu vữa xây hoặc vật liệu liên kết phụ thuộc vào phương án tường, loại liên kết và định mức; hiện chưa có ứng viên phù hợp để chọn.",
+        "checks": [
+          "Bổ sung phương án tường, loại liên kết, định mức, mã vật tư và quy cách, khối lượng, hao hụt, lượng mua, báo giá đủ đơn vị và điều kiện, tồn kho hoặc vật tư đã đặt, cùng cam kết giao hàng có nguồn."
+        ]
+      },
+      {
+        "lineId": "m2",
+        "proposed_material_ids": [],
+        "reason": "Chưa có chiều dày trát, định mức theo chiều dày và nền trát; phương án tường hoặc họ vật liệu cũng chưa rõ nên chưa thể chọn vữa trát.",
+        "checks": [
+          "Bổ sung chiều dày trát, định mức theo nền và chiều dày, phương án tường hoặc họ vật liệu, mã vật tư và quy cách, khối lượng, hao hụt, lượng mua, báo giá đủ đơn vị và điều kiện, tồn kho và kế hoạch cấp."
+        ]
+      },
+      {
+        "lineId": "m3",
+        "proposed_material_ids": [],
+        "reason": "Chưa có mác bê tông và các kích thước cấu kiện liên quan, gồm dầm, sàn, bản thang và lanh tô; vì vậy chưa thể xác định quy cách hoặc chọn vật liệu bê tông theo thiết kế.",
+        "checks": [
+          "Bổ sung mác bê tông, cao lanh tô, chiều dài gối lanh tô, rộng và cao dầm, chiều dày sàn, dày bản thang, hao hụt thi công, mã vật tư và quy cách, khối lượng, lượng mua, báo giá đủ đơn vị và điều kiện, tồn kho và cam kết giao hàng."
+        ]
+      },
+      {
+        "lineId": "m4",
+        "proposed_material_ids": [],
+        "reason": "Chưa có chiều dày cán nền và định mức tương ứng nên chưa thể xác định nhu cầu hoặc chọn vật liệu vữa cán nền.",
+        "checks": [
+          "Bổ sung chiều dày cán nền, định mức cán nền, mã vật tư và quy cách, khối lượng, hao hụt, lượng mua, báo giá đủ đơn vị và điều kiện, tồn kho hoặc vật tư đã đặt, kế hoạch cấp và cam kết giao hàng."
+        ]
+      },
+      {
+        "lineId": "m5",
+        "proposed_material_ids": [],
+        "reason": "Chưa có bảng thống kê thép hoặc hàm lượng thép theo từng cấu kiện, đồng thời chưa đủ kích thước và khối lượng bê tông để chia nhóm đường kính; chưa có ứng viên phù hợp để chọn.",
+        "checks": [
+          "Bổ sung bảng thống kê thép cột, sàn, cầu thang, dầm và lanh tô; hàm lượng thép tương ứng; khối lượng bê tông; kích thước cấu kiện; mã vật tư và quy cách theo nhóm đường kính; hao hụt, lượng mua, báo giá đủ đơn vị và điều kiện, tồn kho và cam kết giao hàng."
+        ]
+      },
+      {
+        "lineId": "m6",
+        "proposed_material_ids": [
+          "TH10"
+        ],
+        "reason": "Chỉ có một lựa chọn trong danh mục là TH10, nên không có cơ sở so sánh phương án khác. Giữ lựa chọn này để không làm thay đổi thiết kế, nhưng chưa thể kết luận đạt ngân sách hoặc tiến độ vì chưa có giá đủ nguồn, đơn vị và điều kiện.",
+        "checks": [
+          "Bổ sung báo giá của TH10 với đơn vị, điều kiện áp dụng và nguồn báo giá; xác nhận khối lượng theo hồ sơ thép, lượng mua sau khi kiểm tra tồn kho hoặc vật tư đã đặt, kế hoạch cấp và cam kết giao hàng."
+        ]
+      },
+      {
+        "lineId": "m7",
+        "proposed_material_ids": [],
+        "reason": "Chưa xác định loại ván khuôn, các kích thước cấu kiện và khối lượng cốp pha; chưa có ứng viên phù hợp trong phạm vi tra cứu nên chưa thể chọn vật liệu.",
+        "checks": [
+          "Bổ sung loại ván khuôn, dày bản thang, rộng và cao dầm, chiều dày sàn, cao lanh tô, chiều dài gối lanh tô, các khối lượng cốp pha và phần khấu trừ; sau đó bổ sung mã vật tư và quy cách, lượng mua, báo giá đủ đơn vị và điều kiện, tồn kho, kế hoạch cấp và cam kết giao hàng."
+        ]
+      }
+    ]
+  },
+  "applied": false
+}

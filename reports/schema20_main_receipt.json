@@ -1,0 +1,43 @@
+{
+  "status": "committed_verified",
+  "database": "optimat",
+  "physical_tables": 20,
+  "physical_rows": {
+    "analysis_runs": 26,
+    "audit_logs": 11,
+    "building_elements": 14,
+    "cost_parameters": 5,
+    "document_revisions": 130,
+    "element_measurements": 28,
+    "evidence_sources": 14,
+    "material_relations": 15,
+    "material_scenarios": 1,
+    "materials": 98,
+    "optimization_runs": 0,
+    "price_records": 63,
+    "projects": 24,
+    "rule_sets": 779,
+    "supplier_materials": 13,
+    "suppliers": 2867,
+    "takeoff_items": 476,
+    "users": 3,
+    "wall_systems": 22,
+    "work_norms": 31
+  },
+  "sealed_analyses": 26,
+  "project_23_present": true,
+  "legacy_column_row_comparison": "28 structures verified in migration transaction",
+  "application_role_readback": "optimat passed seven legacy/reporting views",
+  "backup_validated": true,
+  "source_hashes": {
+    "src/optimat/db/compat20.py": "c4f08e102d39153e06dc45340a0f025bce9945b1a2da60e2300d6f74fa562f40",
+    "src/optimat/db/schema20.py": "3d17b1cb993de69eb804fad3739708202efa3cf5647f1f476e3ef8b848422ba7",
+    "src/optimat/db/analysis20.py": "ebcec9897e95dc3482b4d46499f1fc27f26bc1c69037411d6cc0ec55474c1bf9",
+    "src/optimat/db/migrate20.py": "187aa7781e3676aecff076125f979ed7032e5471fac2b8ef797194e1f9d9241e"
+  },
+  "tests": [
+    "schema20_focused_latest:52 passed",
+    "schema20_compute_latest:66 passed",
+    "schema20_final_integrity:16 passed"
+  ]
+}

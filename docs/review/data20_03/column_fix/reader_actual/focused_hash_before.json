@@ -1,0 +1,12 @@
+{
+  "src/optimat/rough/structural_column_instances.py": "9e80708811cf81f280ce7138c0d9f1bff6003491d7dc2fcab33053292630d661",
+  "src/optimat/rough/structural.py": "cd6238ad76a55f4900acfc46447c1292b784b0f04db837ff8b6d66e46a9df1b3",
+  "src/optimat/rough/takeoff.py": "1641a1dec3bf2f79cb2224a0b9fa97e7abbdcee40092b9c4a5c67ee80331ea3a",
+  "src/optimat/drawing/dxf_reader.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0",
+  "src/optimat/rough/columns.py": "84457d7dbeab3ea9a369d5ca401baa9069fd5e60502a278dc2fb52dddfb39a14",
+  "tests/test_structural_column_instances.py": "99756e30ec138d15f30b6958f4b6762795e8199dca51e1f9dcfd856f1bcd4f32",
+  "tests/test_rough_columns.py": "d9e07dfcd4179fc8192e0527fcfbeae403478776f05cf8a0052b43e2814961d0",
+  "tests/test_rough_structural.py": "ad199e465fff5073649a1950362013286d899b91c0cae5f9d24153e2be728e54",
+  "tests/test_work_dimensions.py": "db65fe6ce2bc23f48748c247af694f63982e574eed73a387de4b1cdb2e80ea0d",
+  "tests/test_rough_quantity_details.py": "012eefaffc397763ddbfa97137552428f34157557491b1c334e82e603ee3810d"
+}

@@ -1,0 +1,10 @@
+{
+  "before": "a05915b14795a4a48f4d9f9532945f88bcc43c8a084dacf877d1ef7dcb7d6085",
+  "authorized_candidate": "f0eb2c2d865645167648a1820be2eb3571779730d9d40bbcc55ec255f4660ac5",
+  "after": "76f09b3d09a2b33a3e5d568c49ece3f5e9d46c083a52cb6790088dec8aa4c6b0",
+  "functions": [
+    "read_table",
+    "element_code"
+  ],
+  "other_ast_unchanged": true
+}

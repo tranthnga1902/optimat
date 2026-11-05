@@ -1,0 +1,90 @@
+--- a/frontend/src/app/(user)/do-boc/ColumnTrace.tsx
++++ b/frontend/src/app/(user)/do-boc/ColumnTrace.tsx
+@@ -23,6 +23,27 @@
+ 
+ export const gridLabel = (c: StructuralColumnInstance) => [c.grid_x || "?", c.grid_y || "?"].join("/");
+ 
++function columnMaterialEvidence(column: StructuralColumnInstance, rebar: unknown[] = []) {
++  const evidence = column.evidence || [];
++  // Chỉ trích nguyên lời thuộc đoạn đang mở. Tên tệp, tiêu đề định vị và ghi chú các cột bên cạnh không phải chỉ định vật liệu.
++  const notes = [...new Set(evidence.filter(s => !s.startsWith("Tệp KC ") && !/ tại \([^)]*\); layer /u.test(s)))];
++  const concrete = notes.filter(s => /bê\s*tông|concrete|\b(?:B|M)\s*\d+\b/iu.test(s));
++  const steel = notes.filter(s => /thép|reinforcement|stirrups?|[ØΦ∅]\s*\d|%%c\s*\d|\bCB[-\s]?\d+/iu.test(s));
++  const hashes = new Set(evidence.filter(s => column.file && s.startsWith(`Tệp KC ${column.file}; `))
++    .flatMap(s => s.match(/; sha256=([a-f0-9]{64})$/i)?.[1]?.toLowerCase() || []));
++  const tag = (s: string) => s.normalize("NFKC").trim().toUpperCase().replace(/^CỘT\s+/, "").replace(/[-‐‑–\s]+/g, "");
++  const schedule = rebar.flatMap(value => {
++    if (!value || typeof value !== "object") return [];
++    const row = value as Record<string, unknown>;
++    if (hashes.size !== 1 || typeof row.revision_sha256 !== "string" || !hashes.has(row.revision_sha256.toLowerCase()) ||
++        row.element_code !== "COT" || typeof row.element !== "string" || !tag(column.code) || tag(row.element) !== tag(column.code) ||
++        typeof row.table !== "string" || !row.table.trim() || typeof row.row !== "number" ||
++        typeof row.dia_mm !== "number" || !Number.isFinite(row.dia_mm) || row.dia_mm <= 0) return [];
++    return [`${row.table} · dòng ${row.row} · ${row.element}${typeof row.mark === "string" && row.mark ? " · thanh " + row.mark : ""} · Ø${row.dia_mm} mm`];
++  });
++  return { concrete, steel, schedule };
++}
++
+ export function ColumnTrace({ snapshot, selected, columns }: { snapshot: WorkSnapshot; selected: number; columns: (StructuralColumnInstance | null)[] }) {
+   const works = snapshot.result.works;
+   const work = works[selected];
+@@ -30,6 +51,7 @@
+     ? <p>Chưa có liên kết từ dòng cột này đến một vị trí trục và đoạn cao độ riêng trong hồ sơ kết cấu.</p> : null;
+   const col = columns[selected];
+   if (!col) return <p>Chưa nối được dòng này với một đoạn cột duy nhất trong hồ sơ nguồn.</p>;
++  const specs = columnMaterialEvidence(col, snapshot.request.rebar);
+   const scale = titleScale(col.sheet || "", (col.evidence || []).map(t => ({ t })));
+   const architectural = col.mapping_evidence && col.matched_column_id
+     ? snapshot.request.plans.find(p => p.name === col.matched_plan && p.columns.some(c => c.id === col.matched_column_id)) : undefined;
+@@ -77,11 +99,21 @@
+     <details><summary>Căn cứ nhận diện và đo</summary>
+       {col.evidence?.length ? <ul>{col.evidence.map((item,i) => <li key={i}>{item}</li>)}</ul> : <p>Chưa có bằng chứng nhận diện.</p>}
+     </details>
+-    <h4>Khối lượng và vật tư của đoạn cột</h4>
++    <h4>Phương án vật liệu cho đoạn cột · {col.code} · {gridLabel(col)}</h4>
+     <p>Bê tông theo quy ước của bản tính: {concrete?.row.quantity_detail?.total_raw != null
+       ? concrete.row.quantity_detail.total_raw.replace(".", ",") + " m³" : missing}. Cần kiểm phân bổ phần giao với dầm và sàn trước khi chốt.</p>
+-    <p>Cốp pha: {measure(formwork?.row.quantity, "m²")}{formwork?.row.missing.length ? " · " + formwork.row.missing.join("; ") : ""}.</p>
+-    <p>Cốt thép: chưa có khối lượng thép gắn riêng với đoạn cột này.</p>
++    {specs.concrete.length ? <><p>Ghi chú bê tông được gắn với đoạn cột:</p><ul>{specs.concrete.map(s => <li key={s}>{s}</li>)}</ul></>
++      : <p>Chưa có ghi chú cấp bê tông gắn với đoạn cột trong kết quả đọc.</p>}
++    <p><b>Bê tông thương phẩm.</b> Đối chiếu cấp bê tông trong ghi chú thiết kế với quy cách nhà cung cấp; cần báo giá giao theo đợt đổ và lượng tối thiểu.</p>
++    <p><b>Bê tông trộn tại chỗ.</b> Cần cấp phối đã duyệt cho đúng cấp bê tông trước khi tính xi măng, cát, đá và nước. Đây là phương án thay thế cho thương phẩm.</p>
++    <p><b>Cốt thép.</b> {specs.steel.length ? "Ghi chú thép được gắn với đoạn cột:" : "Chưa có ghi chú đường kính, mác hoặc bước đai gắn với riêng đoạn này."}</p>
++    {!!specs.steel.length && <ul>{specs.steel.map(s => <li key={s}>{s}</li>)}</ul>}
++    {!!specs.schedule.length && <details><summary>Bảng thép cùng loại cột, cùng bản KC ({specs.schedule.length} dòng)</summary>
++      <ul>{specs.schedule.map((s,i) => <li key={i}>{s}</li>)}</ul><p>Các dòng này chưa được phân bổ theo trục và đoạn cao độ.</p></details>}
++    <p>Khối lượng thép riêng của đoạn (kg): chưa xác định. Bước đai ghi trên mặt cắt áp dụng tại vị trí cắt.
++      {" "}Cần đối chiếu từng vùng bước đai trên hình dọc, số thanh, chiều dài cắt uốn và neo nối của đoạn để tính kg.</p>
++    <p><b>Cốp pha.</b> Diện tích: {measure(formwork?.row.quantity, "m²")}{formwork?.row.missing.length ? " · " + formwork.row.missing.join("; ") : ""}.
++      {" "}Để tính số tấm cần có quy cách tấm, cách ghép và số lần luân chuyển.</p>
+     {materialLines.length ? <ul>{materialLines.map(({m,amount,reasons},i) => <li key={i}>
+       <strong>{m.name}</strong> · {m.material_id || "Chưa có mã vật tư tương ứng trong danh mục"} · Lượng quy đổi: {measure(amount,m.unit)}
+       {m.material_id && m.best_price != null && m.price_source ? ` · Đơn giá theo nguồn ${m.best_price.toLocaleString("vi-VN")} đ/${m.unit} (${m.price_source})` : " · Chưa có đơn giá có nguồn"}.
+--- a/frontend/scripts/check-column-trace.cjs
++++ b/frontend/scripts/check-column-trace.cjs
+@@ -60,6 +60,24 @@
+ assert.doesNotMatch(draw(),/Chỉ thiếu ở cột bên cạnh|99 m³/);
+ assert.equal(indexColumnWorks({...snapshot,request:{...request,structural_columns:[first,{...first}]}})[0],null);
+ assert.deepEqual(indexColumnWorks({result:snapshot.result}),[null,null,null]);
++const hash = "b".repeat(64);
++first.evidence = ["Bê tông B30 theo ghi chú cấu kiện · tờ S-15, handle E7",
++  "Đai Ø8 a180 theo mặt cắt X-X · tờ S-18, handle F8",
++  "Hình dọc: vùng đai Ø8 a90 · tờ S-18, handle F9",
++  `Tệp KC k.dxf; file_id=4; revision_id=9; sha256=${hash}`];
++second.evidence = ["Cột khác dùng B45, Ø32"];
++request.rebar = [
++  {table:"Bảng cùng mã",row:1,element:"CỘT C8",element_code:"COT",mark:"A",dia_mm:16,revision_sha256:hash,weight_kg:999},
++  {table:"Sai phiên bản",row:1,element:"C8",element_code:"COT",dia_mm:22,revision_sha256:"f".repeat(64)},
++  {table:"Sai mã loại",row:1,element:"C80",element_code:"COT",dia_mm:22,revision_sha256:hash},
++];
++const sourced = draw();
++for(const text of ["B30","tờ S-15, handle E7","Đai Ø8","tờ S-18, handle F8","Bảng cùng mã","Ø16 mm","chưa được phân bổ theo trục","Bê tông thương phẩm","trộn tại chỗ"]) assert.ok(sourced.includes(text), text);
++assert.doesNotMatch(sourced,/B45|Ø32|Sai phiên bản|Sai mã loại|999/);
++for (const text of ["Ø8 a180 theo mặt cắt", "vùng đai Ø8 a90", "Bước đai ghi trên mặt cắt áp dụng tại vị trí cắt", "(kg): chưa xác định"]) assert.ok(sourced.includes(text), text);
++first.evidence = [];
++const noEvidence = draw();
++assert.doesNotMatch(noEvidence,/B30|Ø8|Ø16|Bảng cùng mã/);
+ console.log("PASS: giữ nguồn KT/KC, phân biệt hai cột cùng mã, giữ lượng thiếu và đúng độ chính xác từ bộ tính.");
+ 
+ // Đối chiếu fixture từ compute_rough của VN002 khi được truyền đường dẫn; tìm theo trục và tầng, không cố định số thứ tự dòng.

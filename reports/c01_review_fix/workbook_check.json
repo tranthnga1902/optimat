@@ -1,0 +1,40 @@
+{
+  "sheets": {
+    "Trang_thai": 4,
+    "Bao_phu": 1,
+    "So_hang_muc": 47,
+    "Doi_chieu_cong_tac": 64,
+    "So_sanh_nhom": 25,
+    "Theo_trang_thai": 3,
+    "Vat_tu_nhom": 24,
+    "He_thong_vat_tu": 22,
+    "Can_kiem": 174,
+    "Bo_qua": 1,
+    "Hash": 59
+  },
+  "coverage": [
+    {
+      "bo": "46_nha_tan_binh",
+      "dong_goc": 64,
+      "dong_con": 65,
+      "mau_so_du_kien": 34,
+      "da_kiem": 0,
+      "pham_vi_IN": 31,
+      "pham_vi_OUT": 28,
+      "pham_vi_hon_hop": 3,
+      "pham_vi_chua_phan_loai": 2,
+      "trang_thai_ngoai_pham_vi": 28,
+      "trang_thai_co_ket_qua_chua_xac_nhan": 17,
+      "trang_thai_khong_cung_pham_vi_he_thong": 6,
+      "trang_thai_mot_phan": 4,
+      "trang_thai_thieu_dau_vao": 3,
+      "trang_thai_chua_anh_xa": 2,
+      "trang_thai_he_thong_khong_co_dong": 2,
+      "trang_thai_cho_phan_loai": 2,
+      "hang_muc_chua_ro": 18,
+      "nhom_so_duoc": 17,
+      "nhom_tong": 25
+    }
+  ],
+  "materials_comparable": 0
+}

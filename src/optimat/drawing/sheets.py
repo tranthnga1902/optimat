@@ -20,7 +20,7 @@ import pandas as pd
 from .. import config
 from .dxf_reader import Drawing
 from .encoding import normalize
-from .plans import _clusters
+from .plans import HEADING_WORDS, _clusters
 
 SHEET_TYPES_FILE = config.DATA_DIR / "rules" / "loai_ban_ve.csv"
 TITLE_REL_HEIGHT = 0.4
@@ -97,12 +97,18 @@ def _region(drawing: Drawing, t, headings):
     return (min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes))
 
 
+def title_height_reference(titles) -> float:
+    # Tên cấu kiện đơn lẻ (ví dụ chữ “lanh tô” phóng lớn) không đại diện cỡ tiêu đề mặt bằng.
+    headings = [t.height for t in titles if normalize(t.text).startswith(HEADING_WORDS) and t.height > 0]
+    return max(headings, default=0) or max((t.height for t in titles), default=0)
+
+
 def find_views(drawing: Drawing, bbox_for: tuple[str, ...] | None = None) -> list[View]:
     """Hình vẽ có tiêu đề nhận được loại. bbox_for: chỉ tìm khung cho các loại này (tìm khung tốn thời gian); None: mọi loại."""
     titled = [(t, st) for t in drawing.texts if (st := sheet_type_of(t.text))]
     if not titled:
         return []
-    big = max(t.height for t, _ in titled) or 0
+    big = title_height_reference([t for t, _ in titled])
     titled = [(t, st) for t, st in titled if t.height >= TITLE_REL_HEIGHT * big]
     headings = [t for t, _ in titled]
     views, seen = [], Counter()

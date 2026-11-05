@@ -1,0 +1,49 @@
+{
+  "status": "source_frozen_for_operator",
+  "live_incident": {
+    "port": 3002,
+    "operator_observed": "scope not selected, modal busy, no corresponding POST in inspected access log"
+  },
+  "manifest_sha256": "32538c7a61d492e15b5a5b738027b685673211e9ae9ecf249bf369409357e2f3",
+  "harness": "frontend/scripts/check-confirm-navigation.cjs",
+  "harness_sha256": "12c5d7e122dc7faea370b4d8dd5f088648de26c787946bd752c6ba32db66a270",
+  "checks": {
+    "3001": {
+      "base_build": "H6w7Rhgb_8Aew79ERRLSc",
+      "base_repro": "modal remained open, zero confirm POST, zero navigation",
+      "after": [
+        "missing scope: guides to correct unclassified plan and keeps its scope unset, no POST",
+        "missing height: requires user input",
+        "two counted floors plus one reference: intermediate Next selects first outstanding floor",
+        "duplicate submit: one POST",
+        "quota after HTTP success: local snapshot and summary roll back, retry publishes without another POST",
+        "project change: aborted response discarded",
+        "HTTP failure: dialog exits busy state",
+        "last required floor: persisted and routed to /phan-tho"
+      ],
+      "harness_exit": 0,
+      "typecheck_no_emit_exit": 0,
+      "eslint_exit": 0,
+      "git_apply_check_exit": 0
+    },
+    "3002": {
+      "base_build": "XAER9r8guzcs7heKavA8s",
+      "base_repro": "modal remained open, zero confirm POST, zero navigation",
+      "after": [
+        "missing scope: guides to correct unclassified plan and keeps its scope unset, no POST",
+        "missing height: requires user input",
+        "two counted floors plus one reference: intermediate Next selects first outstanding floor",
+        "duplicate submit: one POST",
+        "quota after HTTP success: local snapshot and summary roll back, retry publishes without another POST",
+        "project change: aborted response discarded",
+        "HTTP failure: dialog exits busy state",
+        "last required floor: persisted and routed to /phan-tho"
+      ],
+      "harness_exit": 0,
+      "typecheck_no_emit_exit": 0,
+      "eslint_exit": 0,
+      "git_apply_check_exit": 0
+    }
+  },
+  "deploy_or_browser_actions_by_this_task": false
+}

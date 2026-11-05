@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 21.75,
+  "finished_utc": "2026-11-04T02:37:24.516905+00:00",
+  "hash_diff": {
+    "changed_during_test": [],
+    "changed_from_before_edit": [
+      "tests/test_admin_db.py"
+    ]
+  },
+  "summary_lines": [
+    "============================= 1 passed in 18.60s =============================="
+  ]
+}

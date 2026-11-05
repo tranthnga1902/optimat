@@ -1,0 +1,620 @@
+--- before/src/optimat/rough/models.py
++++ after/src/optimat/rough/models.py
+@@ -7,7 +7,7 @@
+ 
+ from typing import Literal, Optional
+ 
+-from pydantic import BaseModel, Field
++from pydantic import BaseModel, ConfigDict, Field, model_validator
+ 
+ # Mã công tác -> (tên, đơn vị). Thứ tự này là thứ tự hiển thị.
+ WORKS = {
+@@ -174,21 +174,59 @@
+ 
+ 
+ class WorkDimensions(BaseModel):
+-    """Kích thước đầu vào để kiểm; đơn vị m, m². Không suy ngược từ khối lượng/công thức.
+-
+-    Một công tác có thể gồm nhiều cấu kiện/lớp; mỗi phần giữ kích thước và nguồn riêng.
+-    None là chưa biết/không áp dụng; note phân biệt hai trường hợp trên giao diện.
++    """Kích thước có nguồn: m, m², count cho một lần và repetitions là số lần lặp.
++
++    input là đầu vào; reference không được nhân thành lượng net;
++    union/deduction là tổng hợp/khoản trừ, không phải cấu kiện mới.
++    None được phân biệt thiếu/không áp dụng bằng hai danh sách trường.
+     """
++    model_config = ConfigDict(allow_inf_nan=False)
++
+     label: str
++    basis: Literal["input", "reference", "union", "deduction"] = "input"
+     count: Optional[float] = None
++    repetitions: int = Field(default=1, ge=1)
+     length_m: Optional[float] = None
++    gross_length_m: Optional[float] = None
++    deducted_length_m: Optional[float] = None
+     width_m: Optional[float] = None
+     height_m: Optional[float] = None
++    floor_height_m: Optional[float] = None
++    bottom_level_m: Optional[float] = None
++    top_level_m: Optional[float] = None
++    slope_ratio: Optional[float] = None
++    faces: Optional[float] = None
++    concrete_height_m: Optional[float] = None
+     thickness_m: Optional[float] = None
++    top_length_m: Optional[float] = None
++    top_width_m: Optional[float] = None
++    slope_length_m: Optional[float] = None
++    diameter_m: Optional[float] = None
+     area_m2: Optional[float] = None
+     opening_area_m2: Optional[float] = None
++    net_area_m2: Optional[float] = None
+     source: str
++    field_sources: dict[str, str] = Field(default_factory=dict)
++    missing_fields: list[str] = Field(default_factory=list)
++    not_applicable_fields: list[str] = Field(default_factory=list)
+     note: str = ""
++
++    @model_validator(mode="after")
++    def _field_meanings(self):
++        numeric = ("count", "length_m", "gross_length_m", "deducted_length_m", "width_m", "height_m",
++                   "floor_height_m", "bottom_level_m", "top_level_m", "slope_ratio", "faces",
++                   "concrete_height_m", "thickness_m", "top_length_m", "top_width_m", "slope_length_m",
++                   "diameter_m", "area_m2", "opening_area_m2", "net_area_m2")
++        provided = self.model_fields_set
++        # Trường được producer truyền None là thiếu; trường không dùng là không áp dụng.
++        # JSON round-trip giữ nguyên hai danh sách, không phân loại lại mọi null thành thiếu.
++        if not ({"missing_fields", "not_applicable_fields"} & provided):
++            self.missing_fields = [k for k in numeric if k in provided and getattr(self, k) is None]
++            self.not_applicable_fields = [k for k in numeric if k not in provided and getattr(self, k) is None]
++        if not self.source.strip() and "source" not in self.missing_fields:
++            self.missing_fields.append("source")
++        self.field_sources = {**{k: self.source for k in numeric if k not in self.not_applicable_fields}, **self.field_sources}
++        return self
+ 
+ 
+ class WorkItem(BaseModel):
+--- before/src/optimat/rough/walls.py
++++ after/src/optimat/rough/walls.py
+@@ -105,12 +105,17 @@
+         if any(o.w <= 0 or (o.h is not None and o.h <= 0) for o in ops):
+             issues.append("cần kiểm tra kích thước lỗ mở")
+         dimensions = [dict(label=w.id, count=1, length_m=math.hypot(w.x2-w.x1, w.y2-w.y1)/1000,
+-                           width_m=t, height_m=h_wall/1000, source=f"{plan}: tường {w.id}; {t_note}",
+-                           note="Cao xây = cao tầng − cao dầm; " + ("chưa trừ dầm" if beam is None else "đã trừ cao dầm")) for w in members]
++                           width_m=t, height_m=h_wall/1000, floor_height_m=height_mm/1000, source=f"{plan}: tường {w.id}; {t_note}",
++                           field_sources={"width_m": t_note, "height_m": "PlanInput.height_mm − ProjectParams.beam_depth_mm" if beam is not None else "PlanInput.height_mm (chưa trừ dầm)",
++                                          "floor_height_m": "PlanInput.height_mm"},
++                           note="Cao xây khác cao tầng; raw từng đoạn trước trừ cửa/cột/giằng, không phải net. " + ("Chưa trừ dầm" if beam is None else "Đã trừ cao dầm")) for w in members]
+         lintel_dimensions.extend(dict(label=f"lanh tô {o.id}", count=1,
+             length_m=(o.w + 2*params.lintel_bearing_mm)/1000 if params.lintel_bearing_mm is not None else None,
+             width_m=t, height_m=params.lintel_height_mm/1000 if params.lintel_height_mm is not None else None,
+-            source=f"{plan}: lỗ mở {o.id}, rộng {o.w:g} mm; gối/cao lanh tô từ thông số công trình") for o in ops)
++            source=f"{plan}: lỗ mở {o.id}, rộng {o.w:g} mm; gối/cao lanh tô từ thông số công trình",
++            note="Hình học lanh tô trước xử lý chạm dầm L1; không thay khối lượng cuối",
++            field_sources={"length_m": "ReviewOpening.w + 2 × ProjectParams.lintel_bearing_mm", "width_m": t_note,
++                           "height_m": "ProjectParams.lintel_height_mm"}) for o in ops)
+         works.append(_work("XAY", volume, dimensions=dimensions, plan=plan, element=label, wall_system_id=system, formula=formula, missing=missing,
+                            masonry_geometry=MasonryGeometry(wall_type=cls, role=role, length_m=length,
+                                gross_area_m2=gross, opening_area_m2=open_area, thickness_m=t,
+@@ -122,7 +127,9 @@
+             warnings.append(f"{plan}, {label}: chưa nhập {', '.join(lintel_missing)}, khối xây chưa trừ lanh tô.")
+         faces = [("mặt trong", 1), ("mặt ngoài", 1)] if role == "envelope" else [("hai mặt", 2)]
+         for face, n in faces:
+-            works.append(_work("TRAT", n * net_area, dimensions=dimensions, plan=plan, element=f"{label}, {face}", wall_system_id=system,
++            works.append(_work("TRAT", n * net_area, dimensions=[{**d, "faces": n, "thickness_m": params.plaster_thickness_mm/1000 if params.plaster_thickness_mm is not None else None,
++                               "field_sources": {**d["field_sources"], "faces": "Vai trò tường/số mặt trát", "thickness_m": "ProjectParams.plaster_thickness_mm"},
++                               "note": d["note"] + f"; trát {n} mặt; dày lớp khác bề dày khối xây"} for d in dimensions], plan=plan, element=f"{label}, {face}", wall_system_id=system,
+                                variant=None if params.plaster_thickness_mm is None else f"{params.plaster_thickness_mm:g}",
+                                formula=f"{n} × ({_fmt(length)} m × {_fmt(h_wall / 1000)} m − {_fmt(open_area)} m² cửa)",
+                                missing=[] if params.plaster_thickness_mm is not None else ["chiều dày trát"]))
+--- before/src/optimat/rough/columns.py
++++ after/src/optimat/rough/columns.py
+@@ -249,9 +249,12 @@
+         n = len(group)
+         hole = sum(_beam_end_area(c, beams, params) for c in group)
+         label = f"{n} cột {b:.0f}×{h:.0f}"
+-        dimensions = [dict(label=c.id, count=1, length_m=h/1000, width_m=b/1000, height_m=hc,
++        dimensions = [dict(label=c.id, count=1, length_m=h/1000, width_m=b/1000, height_m=hc, floor_height_m=height_mm/1000,
++                           thickness_m=slab/1000 if slab is not None else None,
+                            source=f"{plan}: {c.id} ({c.source}); chiều cao tầng và dày sàn",
+-                           note="Cao tính bê tông = cao tầng − dày sàn" + ("; chưa có dày sàn, đang lấy cao tầng" if slab is None else "")) for c in group]
++                           field_sources={"length_m": f"Column.{c.id}.h_mm ({c.source})", "width_m": f"Column.{c.id}.b_mm ({c.source})",
++                                          "height_m": "PlanInput.height_mm − dày sàn" if slab is not None else "PlanInput.height_mm (chưa có dày sàn)"},
++                           note="Cao tính bê tông = cao tầng − dày sàn" + ("; chưa có dày sàn, đang lấy cao tầng" if slab is None else "") + "; CP còn trừ đầu dầm riêng") for c in group]
+         works.append(_work("COT", n * b * h / 1e6 * hc, dimensions=dimensions, plan=plan, element=label,
+                            formula=f"{n} × {_fmt(b / 1000)} m × {_fmt(h / 1000)} m × {_fmt(hc)} m"))
+         works.append(_work("COP_PHA", n * 2 * (b + h) / 1000 * hc - hole, dimensions=dimensions, plan=plan, element=f"cốp pha {label}", formwork_of="COT",
+@@ -268,6 +271,7 @@
+         hc = (s.z_to_mm - s.z_from_mm) / 1000
+         label = f"{s.count} cột {s.code} {s.b_mm:.0f}×{s.h_mm:.0f}, {s.z_from_mm / 1000:+.3f} → {s.z_to_mm / 1000:+.3f}"
+         dimensions = [dict(label=s.code, count=s.count, length_m=s.h_mm/1000, width_m=s.b_mm/1000, height_m=hc,
++                           bottom_level_m=s.z_from_mm/1000, top_level_m=s.z_to_mm/1000,
+                            source=f"Bảng thống kê cột {s.code}: {s.z_from_mm:g} → {s.z_to_mm:g} mm",
+                            note="Chiều cao đoạn cột theo hai cao độ; chưa trừ đầu dầm khỏi cốp pha")]
+         works.append(_work("COT", s.count * s.b_mm * s.h_mm / 1e6 * hc, dimensions=dimensions, plan="bảng thống kê cột", element=label,
+--- before/src/optimat/rough/beams.py
++++ after/src/optimat/rough/beams.py
+@@ -184,10 +184,17 @@
+         sec = f"{_fmt(width / 1000) if width else 'rộng'} m × {_fmt(web) if web is not None else '(cao − dày sàn)'} m"
+         note = f" (đã trừ {_fmt(cut)} m trong cột, dầm chính, móng)" if cut > 0 else ""
+         dimensions = [dict(label=b.id, count=1, length_m=b.length_mm/1000,
+-                           width_m=width/1000 if width is not None else None, height_m=depth/1000 if depth is not None else None,
+-                           source=f"{plan}: {b.id} ({b.source}); tiết diện bản vẽ hoặc thông số công trình",
+-                           note=f"Dài sau trừ giao {b.cut_mm/1000:g} m; cao toàn tiết diện; " +
+-                                ("giằng không trừ sàn" if tie else f"cao tính bê tông dưới sàn: {web:g} m" if web is not None else "chưa có cao dưới sàn")) for b in members]
++                           gross_length_m=math.hypot(b.x2-b.x1, b.y2-b.y1)/1000, deducted_length_m=b.cut_mm/1000,
++                           width_m=width/1000 if width is not None else None,
++                           height_m=depth/1000 if depth is not None else None, concrete_height_m=web,
++                           source=f"{plan}: {b.id} ({b.source})",
++                           field_sources={"length_m": f"Trục {b.id} và khoản trừ giao beam_joints",
++                               "width_m": f"Beam.{b.id}.b_mm ({b.source})" if b.b_mm else "ProjectParams.beam_width_mm",
++                               "height_m": f"Beam.{b.id}.d_mm ({b.source})" if b.d_mm else "ProjectParams.beam_depth_mm",
++                               "concrete_height_m": "Cao toàn tiết diện" if tie else "Cao toàn tiết diện − ProjectParams.slab_thickness_mm"},
++                           note=f"Dài net; đã trừ giao {b.cut_mm/1000:g} m. Cao là toàn tiết diện; " +
++                                ("giằng không trừ sàn" if tie else "cao tính bê tông là phần dưới sàn") +
++                                "; CP còn khoản trừ đầu dầm phụ riêng, không nhân kích thước để thay lượng CP") for b in members]
+         works.append(_work("DAM", length * width / 1000 * web if ok else None, dimensions=dimensions, plan=plan, element=label,
+                            formula=f"{_fmt(length)} m × {sec}{note}", missing=missing))
+         framed = [(bw, bd) for b in members for bw, bd in b.framed]
+--- before/src/optimat/rough/foundations.py
++++ after/src/optimat/rough/foundations.py
+@@ -116,6 +116,9 @@
+ 
+ def _neg(code: str, q: float, **kw) -> WorkItem:
+     """Dòng trừ (số âm): _work không nhận số âm."""
++    kw.setdefault("dimensions", [dict(label=kw.get("element", "khoản trừ"), basis="deduction",
++        source="Hình học khoản trừ, xem evidence của công tác",
++        note="Khoản trừ không có dài/rộng/cao độc lập; không phải cấu kiện mới")])
+     w = _work(code, 0.0, **kw)
+     return w.model_copy(update={"quantity": round(-q, 3)})
+ 
+@@ -141,10 +144,13 @@
+         else:
+             formula = f"{f.count} × (" + " + ".join(_tier_text(t) for t in tiers) + ") m"
+         dimensions = [dict(label=f"{f.name} lớp {i+1}", count=f.count, length_m=t.length_mm/1000,
+-                           width_m=t.width_mm/1000, height_m=t.height_mm/1000, source=f.source or "Thông số móng người dùng nhập",
+-                           note=(f"Đỉnh lớp vát: {t.top_length_mm if t.top_length_mm is not None else t.length_mm:g} × {t.top_width_mm if t.top_width_mm is not None else t.width_mm:g} mm" if t.top_length_mm is not None or t.top_width_mm is not None else "Lớp hộp")) for i,t in enumerate(tiers or [])]
++                           width_m=t.width_mm/1000, height_m=t.height_mm/1000,
++                           top_length_m=(t.top_length_mm if t.top_length_mm is not None else t.length_mm)/1000,
++                           top_width_m=(t.top_width_mm if t.top_width_mm is not None else t.width_mm)/1000,
++                           basis="reference" if f.volume_m3 is not None else "input", source=f.source or "Thông số móng người dùng nhập",
++                           note=(f"Đỉnh lớp vát: {t.top_length_mm if t.top_length_mm is not None else t.length_mm:g} × {t.top_width_mm if t.top_width_mm is not None else t.width_mm:g} mm" if t.top_length_mm is not None or t.top_width_mm is not None else "Lớp hộp") + ("; thể tích nhập trực tiếp được ưu tiên, kích thước chỉ tham khảo" if f.volume_m3 is not None else "")) for i,t in enumerate(tiers or [])]
+         if not dimensions:
+-            dimensions = [dict(label=f.name, count=f.count, length_m=None if f.length_mm is None else f.length_mm/1000,
++            dimensions = [dict(label=f.name, count=f.count, basis="reference" if f.volume_m3 is not None else "input", length_m=None if f.length_mm is None else f.length_mm/1000,
+                 width_m=None if f.width_mm is None else f.width_mm/1000, height_m=None if f.height_mm is None else f.height_mm/1000,
+                 source=f.source or "Thông số móng người dùng nhập", note="Nhập thể tích không suy ra dài/rộng/cao" if f.volume_m3 is not None else "Thiếu kích thước móng")]
+         out.append(_work("MONG", f.count * one if one is not None else None, dimensions=dimensions, element=label, source="manual",
+@@ -175,8 +181,10 @@
+             out.append(_work("DAO_DAT", None, element=f"hố {label}", missing=miss))
+             out.append(_work("DAP_DAT", None, element=f"hố {label}", missing=miss))
+             continue
+-        pit_dimensions = [dict(label=f"hố {f.name}", count=f.count, length_m=p['l']/1000, width_m=p['w']/1000,
+-                               height_m=p['d']/1000, source=f.source or "Thông số móng và hố đào người dùng nhập",
++        pit_dimensions = [dict(label=f"hố {f.name}", count=f.count, basis="reference", length_m=p['l']/1000, width_m=p['w']/1000,
++                               height_m=p['d']/1000, slope_ratio=p['m'],
++                               top_level_m=params.natural_ground_level_mm/1000,
++                               bottom_level_m=(params.natural_ground_level_mm-p['d'])/1000, source=f.source or "Thông số móng và hố đào người dùng nhập",
+                                note=f"Dài/rộng đáy hố; cao là sâu đào; taluy {p['m']:g}; không phải kích thước khối đất đắp")]
+         v_pit = pit_volume_m3(p)
+         out.append(_work("DAO_DAT", f.count * v_pit, dimensions=pit_dimensions, element=f"hố {label}", source="manual",
+@@ -185,7 +193,7 @@
+         buried = 0.0 if p["top"] >= params.natural_ground_level_mm else params.natural_ground_level_mm - p["top"]
+         neck_ok = buried == 0 or None not in (f.neck_b_mm, f.neck_h_mm)
+         if one is None or not neck_ok:
+-            out.append(_work("DAP_DAT", None, element=f"hố {label}",
++            out.append(_work("DAP_DAT", None, dimensions=pit_dimensions, element=f"hố {label}",
+                              missing=([] if one is not None else [f"thể tích móng {f.name}"]) +
+                                      ([] if neck_ok else [f"tiết diện cổ móng {f.name}"])))
+         else:
+@@ -195,7 +203,7 @@
+             if fill < 0:
+                 warnings.append(f"Móng {f.name}: khối lượng đắp âm ({_fmt(fill)} m³/khối): hố đào nhỏ hơn khối móng, "
+                                 "kiểm tra mở rộng đáy hố, cao độ và kích thước móng.")
+-                out.append(_work("DAP_DAT", None, element=f"hố {label}", missing=["khối lượng đắp âm (xem cảnh báo)"]))
++                out.append(_work("DAP_DAT", None, dimensions=pit_dimensions, element=f"hố {label}", missing=["khối lượng đắp âm (xem cảnh báo)"]))
+             else:
+                 out.append(_work("DAP_DAT", f.count * fill, dimensions=pit_dimensions, element=f"hố {label}", source="manual",
+                                  formula=f"{f.count} × ({_fmt(v_pit)} hố − {_fmt(lean)} lót − {_fmt(one)} móng − {_fmt(neck)} cổ móng) m³"))
+--- before/src/optimat/rough/areas.py
++++ after/src/optimat/rough/areas.py
+@@ -216,6 +216,7 @@
+         t = params.slab_thickness_mm
+         area = None if outline is None else max(0.0, outline - (void or 0.0))
+         works.append(_work("SAN", area * t / 1000 if t and area is not None else None, plan=name, dimensions=[dict(label="sàn", count=1, area_m2=outline, opening_area_m2=void,
++                               net_area_m2=area if void is not None else None,
+                                thickness_m=t/1000 if t is not None else None, source=f"{name}: diện tích {src_outline}; dày sàn từ thông số",
+                                note="Diện tích gộp trước trừ ô trống; chưa có diện tích ô trống" if void is None else "Diện tích gộp trước trừ ô trống")], element="sàn",
+                            source=src_outline,
+@@ -223,7 +224,7 @@
+                                    f"{_fmt(void or 0)} m² ô trống) × " + (f"{_fmt(t / 1000)} m" if t else "dày sàn"),
+                            missing=no_outline + ([] if t else ["chiều dày sàn"])))
+         # cốp pha đáy sàn = diện tích sàn; chưa trừ phần đáy dầm (đặc tả 3.6 còn để ngỏ)
+-        works.append(_work("COP_PHA", area, plan=name, dimensions=[dict(label="đáy sàn", area_m2=outline, opening_area_m2=void, source=f"{name}: diện tích {src_outline}",
++        works.append(_work("COP_PHA", area, plan=name, dimensions=[dict(label="đáy sàn", area_m2=outline, opening_area_m2=void, net_area_m2=area if void is not None else None, source=f"{name}: diện tích {src_outline}",
+                                 note="Diện tích trước trừ ô trống và giao dầm/cột")], element="cốp pha đáy sàn", source=src_outline, formwork_of="SAN",
+                            formula=f"{_fmt(area) if area is not None else '?'} m² sàn (chưa trừ đáy dầm)", missing=no_outline))
+     u = _fmt(usable) if usable is not None else "?"
+@@ -237,8 +238,8 @@
+         if not params.ground_layers:
+             for code in ("NEN_DEM_CAT", "BE_TONG_LOT"):
+                 works.append(_work(code, None, plan=name, element="nền tầng trệt", missing=["cấu tạo nền (lớp và chiều dày)"]))
+-        for layer in params.ground_layers:
+-            works.append(_work(layer.kind, usable * layer.thickness_mm / 1000 if usable is not None else None, plan=name, dimensions=[dict(label="nền tầng trệt", area_m2=usable, thickness_m=layer.thickness_mm/1000,
++        for layer_index, layer in enumerate(params.ground_layers, start=1):
++            works.append(_work(layer.kind, usable * layer.thickness_mm / 1000 if usable is not None else None, plan=name, dimensions=[dict(label=f"nền tầng trệt lớp {layer_index}: {layer.kind}", count=1, area_m2=usable, thickness_m=layer.thickness_mm/1000,
+                                source=f"{name}: diện tích {src_usable}; cấu tạo nền từ thông số")],
+                                element="nền tầng trệt", source=src_usable, missing=no_usable,
+                                formula=f"{u} m² × {_fmt(layer.thickness_mm / 1000)} m"))
+--- before/src/optimat/rough/stairs.py
++++ after/src/optimat/rough/stairs.py
+@@ -146,13 +146,23 @@
+         label = f"thang {s.id}"
+         dimensions = [dict(label=f"{s.id}: hình học thang", count=1,
+                            length_m=s.steps*s.tread_mm/1000 if s.steps is not None and s.tread_mm is not None else None,
++                           slope_length_m=math.hypot(s.steps*s.tread_mm/1000, height_mm/1000) if None not in (s.steps, s.tread_mm, height_mm) else None,
+                            width_m=s.flight_width_mm/1000 if s.flight_width_mm is not None else None,
+                            height_m=height_mm/1000 if height_mm is not None else None,
+                            thickness_m=t/1000 if t is not None else None,
+                            source=f"{plan}: thang {s.id} ({s.source}); cao tầng và dày bản từ thông số",
+                            note=f"Dài là tổng chạy ngang; {s.steps if s.steps is not None else '?'} bậc; chiếu nghỉ {s.landing_area_m2:g} m²")]
++        dimensions.extend([
++            dict(label=f"{s.id}: bậc thang", count=s.steps,
++                 length_m=s.tread_mm/1000 if s.tread_mm is not None else None,
++                 width_m=s.flight_width_mm/1000 if s.flight_width_mm is not None else None,
++                 height_m=height_mm/1000/s.steps if s.steps is not None and s.steps > 0 and height_mm is not None else None,
++                 source=f"{plan}: số bậc, mặt bậc và cao tầng", note="Dài là mặt bậc; cao là cao bậc, không phải cao tầng"),
++            dict(label=f"{s.id}: chiếu nghỉ", count=1, area_m2=s.landing_area_m2,
++                 thickness_m=t/1000 if t is not None else None,
++                 source=f"{plan}: diện tích chiếu nghỉ và dày bản; 0 là không có chiếu nghỉ")])
+         if s.beam_length_mm:
+-            dimensions.append(dict(label=f"{s.id}: dầm thang", length_m=s.beam_length_mm/1000,
++            dimensions.append(dict(label=f"{s.id}: dầm thang", count=1, length_m=s.beam_length_mm/1000,
+                 width_m=s.beam_width_mm/1000 if s.beam_width_mm is not None else None,
+                 height_m=s.beam_depth_mm/1000 if s.beam_depth_mm is not None else None, source="Thông số dầm thang"))
+         src = "auto" if s.source == "auto" else "manual"   # trạng thái: auto -> B (suy luận), manual -> C
+--- before/src/optimat/rough/secondary.py
++++ after/src/optimat/rough/secondary.py
+@@ -162,6 +162,23 @@
+     return evidence
+ 
+ 
++def _tie_dimensions(group: _TieGroup, length: float) -> list[dict]:
++    raw = [dict(label=m.id, count=1, basis="reference", length_m=m.length_mm/1000,
++                width_m=m.b_mm/1000 if m.b_mm is not None else None,
++                height_m=m.d_mm/1000 if m.d_mm is not None else None,
++                bottom_level_m=m.z_bottom_mm/1000 if m.z_bottom_mm is not None else None,
++                source=f"{m.id} ({m.source}); {m.z_evidence or 'chưa ghi chứng cứ cao độ'}",
++                note="Dài trục bản ghi gốc trước hợp; không cộng raw thành khối lượng sau hợp") for m in group.members]
++    first = group.members[0]
++    raw.append(dict(label="Đoạn hợp giằng (không phải cấu kiện thêm)", basis="union",
++                    length_m=length if not group.missing else None,
++                    width_m=first.b_mm/1000 if first.b_mm is not None else None,
++                    height_m=first.d_mm/1000 if first.d_mm is not None else None,
++                    source="normalize_ties từ " + ", ".join(m.id for m in group.members),
++                    note="Không cộng thêm vào các bản ghi raw; CP đáy còn cần căn cứ đỡ riêng"))
++    return raw
++
++
+ def linear_works(plan: str, members: list[LinearMember], *,
+                  tie_groups: list[_TieGroup] | None = None) -> tuple[list[WorkItem], list[str]]:
+     works, warnings = [], []
+@@ -182,9 +199,7 @@
+              f"2 × cao {d} mm × dài hợp {_fmt(length)} m (đáy nằm trên tường)", {"formwork_of": "GIANG_TUONG"}),
+         ):
+             item_missing = list(dict.fromkeys([*missing, *(group.formwork_missing if code == "COP_PHA" else ())]))
+-            works.append(_work(code, None if item_missing else quantity, plan=plan, dimensions=[dict(label=m.id, count=1, length_m=m.length_mm/1000,
+-                               width_m=m.b_mm/1000 if m.b_mm is not None else None, height_m=m.d_mm/1000 if m.d_mm is not None else None,
+-                               source=f"{plan}: {m.id} ({m.source})", note="Dài trục từng giằng trước hợp đoạn chồng; khối lượng dùng đoạn hợp") for m in group.members], element=label, source=first.source,
++            works.append(_work(code, None if item_missing else quantity, plan=plan, dimensions=_tie_dimensions(group, length), element=label, source=first.source,
+                                formula=formula, missing=item_missing, evidence=evidence,
+                                status="D" if item_missing else "C", inputs=inputs, **extra))
+         warnings += [f"{plan}, {label}: {reason}." for reason in (*missing, *group.formwork_missing)]
+--- before/src/optimat/rough/steel.py
++++ after/src/optimat/rough/steel.py
+@@ -32,6 +32,7 @@
+         out.append(_work("COT_THEP", sum(known) / 1000 if known else None, element=f"thép {STEEL_ELEMENTS[code]} {el}",
+                          dimensions=[dict(label=f"{r.mark or r.row}: Ø{r.dia_mm:g}" if r.dia_mm is not None else f"dòng {r.row}", count=r.total_bars,
+                             length_m=r.cut_length_mm/1000 if r.cut_length_mm is not None else None,
++                            diameter_m=r.dia_mm/1000 if r.dia_mm is not None else None,
+                             source=r.evidence, note="Dài cắt một thanh theo bảng; rộng/cao không áp dụng") for r in items],
+                          steel_element=code, basis="bang_thong_ke", evidence=evidence, missing=miss,
+                          formula=f"Σ {len(items)} dòng bảng thép: " + " + ".join(r.formula for r in items[:6])
+--- before/src/optimat/rough/takeoff.py
++++ after/src/optimat/rough/takeoff.py
+@@ -263,6 +263,19 @@
+                    lambda: ([], []) if req.column_schedule else column_works(p.name, p.columns, p.height_mm, params, beams),
+                    lambda: stair_works(p.name, p.stairs, p.height_mm, params)):
+             w, warn = fn()
++            if wall_params is not params:
++                # Chỉ metadata: ghi đúng nguồn dầm caller thực sự dùng, không đổi chọn nguồn O01.
++                depth_inputs = [(p.name, b) for b in beams if b.keep and b.d_mm == wall_params.beam_depth_mm] if beams else [
++                    (view, b) for view, bs in req.structural_beams.items() for b in bs
++                    if b.keep and b.d_mm == wall_params.beam_depth_mm]
++                depth_source = "; ".join(f"{view}: {b.id} ({b.source}), d={b.d_mm:g} mm" for view, b in depth_inputs)
++                if not beams:
++                    depth_source += "; nguồn KC chưa được O01 xác nhận liên kết tầng/căn chỉnh"
++                for item in w:
++                    if item.code in ("XAY", "TRAT"):
++                        for dimension in item.dimensions:
++                            dimension.field_sources["height_m"] = "PlanInput.height_mm − cao dầm lấy từ " + depth_source
++                            dimension.source += "; cao dầm: " + depth_source
+             works += w
+             warnings += warn
+         # S08-04: không cộng trùng lanh tô – dầm, giằng – tường
+@@ -302,8 +315,8 @@
+         if n > 1:       # một mặt bằng dầm dùng cho nhiều tầng: nhân khối lượng
+             w = [x.model_copy(update={"quantity": None if x.quantity is None else round(x.quantity * n, 3),
+                                       "formula": f"{n} tầng × ({x.formula})",
+-                                      "dimensions": [d.model_copy(update={"count": (d.count or 1)*n,
+-                                          "note": d.note + f"; lặp {n} tầng"}) for d in x.dimensions]}) for x in w]
++                                      "dimensions": [d.model_copy(update={"repetitions": d.repetitions*n,
++                                          "note": d.note + f"; kích thước/số lượng cho một lần, lặp {n} tầng"}) for d in x.dimensions]}) for x in w]
+         works += w
+         warnings += warn
+     works += schedule_column_works(req.column_schedule)
+--- before/tests/test_work_dimensions.py
++++ after/tests/test_work_dimensions.py
+@@ -0,0 +1,262 @@
++"""Kích thước SYNTHETIC có nguồn, không dùng metadata làm khối lượng net hoặc độ chính xác thực."""
++import json
++import math
++
++import pytest
++from pydantic import ValidationError
++
++from optimat.catalog.repository import Catalog
++from optimat.drawing.review import ReviewWall
++from optimat.rough.areas import PlanGeometry, PlanParams, area_works
++from optimat.rough.beams import Beam, beam_works
++from optimat.rough.columns import column_works, Column, schedule_column_works
++from optimat.rough.foundations import foundation_works, _neg
++from optimat.rough.models import FoundationItem, FootingTier, ProjectParams, WorkDimensions, WorkItem
++from optimat.rough.rebar import RebarRow
++from optimat.rough.secondary import LinearMember, roof_works
++from optimat.rough.stairs import Stair, stair_works
++from optimat.rough.steel import schedule_works, steel_works
++from optimat.rough.structural import ColumnSpan
++from optimat.rough.takeoff import PlanInput, RoughRequest, compute_rough
++
++
++@pytest.fixture(scope="module")
++def catalog():
++    return Catalog.from_csv(None)
++
++
++def one(works, code):
++    return next(w for w in works if w.code == code)
++
++
++def test_old_payload_and_null_zero_meanings_roundtrip():
++    old = WorkItem(code="DAM", name="dầm", unit="m³")
++    assert old.dimensions == []
++    d = WorkDimensions(label="SYNTHETIC", count=0, area_m2=0, opening_area_m2=None, source="nhập tay")
++    assert d.count == 0 and d.area_m2 == 0
++    assert d.missing_fields == ["opening_area_m2"]
++    assert "length_m" in d.not_applicable_fields and "area_m2" not in d.not_applicable_fields
++    assert WorkDimensions.model_validate_json(d.model_dump_json()).model_dump() == d.model_dump()
++    assert d.repetitions == 1
++
++
++@pytest.mark.parametrize("field", ["count", "length_m", "top_length_m", "slope_length_m", "diameter_m", "area_m2"])
++@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
++def test_metadata_rejects_nonfinite_instead_of_zero(field, value):
++    with pytest.raises(ValidationError):
++        WorkDimensions(label="SYNTHETIC", source="đầu vào chưa hợp lệ", **{field: value})
++
++
++def test_beam_net_cut_full_height_and_mixed_sources_are_distinct():
++    b = Beam(id="D1", x1=0, y1=0, x2=4000, y2=0, b_mm=None, d_mm=400, cut_mm=200, source="structural")
++    works, _ = beam_works("T2", [b], ProjectParams(beam_width_mm=200, slab_thickness_mm=100))
++    w = one(works, "DAM"); d = w.dimensions[0]
++    assert w.quantity == pytest.approx(0.228)
++    assert one(works, "COP_PHA").quantity == pytest.approx(3.04)
++    assert (d.gross_length_m, d.deducted_length_m, d.length_m) == (4, 0.2, 3.8)
++    assert (d.height_m, d.concrete_height_m) == pytest.approx((0.4, 0.3))
++    assert "đã trừ giao 0.2" in d.note and "Dài sau trừ giao 0.2" not in d.note
++    assert d.field_sources["width_m"] == "ProjectParams.beam_width_mm"
++    assert "Beam.D1.d_mm" in d.field_sources["height_m"]
++
++
++def test_beam_group_retains_each_length_and_missing_section():
++    beams = [Beam(id="D1", x1=0, y1=0, x2=n, y2=0, b_mm=200, d_mm=400, source="manual")
++             for n in (3000, 4000)]
++    w = one(beam_works("T2", beams, ProjectParams(slab_thickness_mm=100))[0], "DAM")
++    assert [d.length_m for d in w.dimensions] == [3, 4]
++    assert w.quantity == pytest.approx(0.42)
++    missing = one(beam_works("T2", [beams[0].model_copy(update={"d_mm": None})], ProjectParams())[0], "DAM")
++    assert missing.quantity is None and missing.missing
++    assert missing.dimensions[0].height_m is None and "height_m" in missing.dimensions[0].missing_fields
++
++
++def test_columns_section_and_signed_elevations_have_correct_units():
++    columns = [Column(id="C1", x=0, y=0, b_mm=200, h_mm=300),
++               Column(id="C2", x=2000, y=0, b_mm=220, h_mm=220)]
++    works, _ = column_works("T2", columns, 3300, ProjectParams(slab_thickness_mm=100))
++    assert sorted((d.width_m, d.length_m) for w in works if w.code == "COT" for d in w.dimensions) == [(0.2, 0.3), (0.22, 0.22)]
++    assert all(d.height_m == 3.2 and d.floor_height_m == 3.3 for w in works for d in w.dimensions)
++    spans = [ColumnSpan(code="C1", count=2, z_from_mm=-500, z_to_mm=2500, b_mm=200, h_mm=300)]
++    w = one(schedule_column_works(spans), "COT"); d = w.dimensions[0]
++    assert w.quantity == pytest.approx(0.36)
++    assert (d.count, d.bottom_level_m, d.top_level_m, d.height_m) == (2, -0.5, 2.5, 3)
++
++
++def test_footing_layers_taper_and_direct_volume_override():
++    f = FoundationItem(name="M1", count=2, source="SYNTHETIC chi tiết M1", tiers=[
++        FootingTier(length_mm=2000, width_mm=2000, height_mm=200),
++        FootingTier(length_mm=2000, width_mm=2000, height_mm=600, top_length_mm=1000, top_width_mm=1000)])
++    w = one(foundation_works(ProjectParams(foundations=[f]))[0], "MONG")
++    assert w.quantity == pytest.approx(4.4) and len(w.dimensions) == 2
++    assert w.dimensions[1].top_length_m == w.dimensions[1].top_width_m == 1
++    assert w.dimensions[0].height_m == 0.2 and w.dimensions[1].height_m == 0.6
++    w = one(foundation_works(ProjectParams(foundations=[f.model_copy(update={"volume_m3": 3.5})]))[0], "MONG")
++    assert w.quantity == 7 and all(d.basis == "reference" for d in w.dimensions)
++    assert all("nhập trực tiếp" in d.note for d in w.dimensions)
++    w = one(foundation_works(ProjectParams(foundations=[FoundationItem(name="MV", volume_m3=2)]))[0], "MONG")
++    assert w.quantity == 2 and w.dimensions[0].length_m is None
++    assert w.dimensions[0].width_m is None and w.dimensions[0].height_m is None
++
++
++def test_pit_and_fill_dimensions_are_references_not_fill_box():
++    f = FoundationItem(name="M1", length_mm=1000, width_mm=1000, height_mm=500,
++                       bottom_level_mm=-1000, lean_thickness_mm=100, neck_b_mm=200, neck_h_mm=200)
++    params = ProjectParams(foundations=[f], natural_ground_level_mm=0, excavation_margin_mm=100, excavation_slope=0)
++    works, _ = foundation_works(params)
++    pit, fill = one(works, "DAO_DAT"), one(works, "DAP_DAT")
++    assert pit.quantity == pytest.approx(1.584) and fill.quantity == pytest.approx(0.964)
++    d = fill.dimensions[0]
++    assert (d.length_m, d.width_m, d.height_m, d.slope_ratio) == (1.2, 1.2, 1.1, 0)
++    assert d.basis == "reference" and "không phải kích thước khối đất đắp" in d.note
++    assert d.bottom_level_m == -1.1 and d.top_level_m == 0
++    deduction = _neg("DAO_DAT", 0.3, element="trừ giao", source="auto")
++    assert deduction.quantity == -0.3 and deduction.dimensions[0].basis == "deduction"
++    assert deduction.dimensions[0].length_m is None
++
++
++@pytest.mark.parametrize("void", [None, 0, 2])
++def test_slab_is_area_without_invented_rectangle_and_void_zero_is_known(void):
++    plan = PlanParams(name="T2", outline_area_m2=30, usable_area_m2=20, void_area_m2=void)
++    works, _ = area_works(PlanGeometry(closed=True), ProjectParams(slab_thickness_mm=100), plan)
++    w = one(works, "SAN"); d = w.dimensions[0]
++    assert d.area_m2 == 30 and d.opening_area_m2 == void
++    assert d.length_m is None and "length_m" in d.not_applicable_fields
++    if void is None:
++        assert d.net_area_m2 is None and "opening_area_m2" in d.missing_fields
++    else:
++        assert d.net_area_m2 == 30 - void and "opening_area_m2" not in d.missing_fields
++        assert w.quantity == pytest.approx((30 - void) * 0.1)
++
++
++def test_ground_layers_and_roof_have_real_thickness_area():
++    params = ProjectParams(ground_layers=[{"kind": "BE_TONG_LOT", "thickness_mm": 100},
++                                         {"kind": "BE_TONG_LOT", "thickness_mm": 200}])
++    works, _ = area_works(PlanGeometry(closed=True), params, PlanParams(name="Trệt", is_ground=True, usable_area_m2=20))
++    layers = [w for w in works if w.code == "BE_TONG_LOT"]
++    assert [w.quantity for w in layers] == [2, 4]
++    assert len({w.dimensions[0].label for w in layers}) == 2
++    roofs, _ = roof_works(ProjectParams(roofs=[{"kind": "be_tong", "area_m2": 25, "thickness_mm": 120}]))
++    d = one(roofs, "MAI").dimensions[0]
++    assert (d.area_m2, d.thickness_m) == (25, 0.12) and d.length_m is None
++
++
++def test_stair_horizontal_slope_steps_landing_and_beam_are_separate():
++    s = Stair(id="T1", steps=20, flight_width_mm=1000, tread_mm=250, landing_area_m2=1.5,
++              beam_length_mm=2400, beam_width_mm=220, beam_depth_mm=300)
++    works, _ = stair_works("T2", [s], 3000, ProjectParams(stair_slab_thickness_mm=120))
++    w = one(works, "CAU_THANG"); dims = {d.label: d for d in w.dimensions}
++    assert dims["T1: hình học thang"].length_m == 5
++    assert dims["T1: hình học thang"].slope_length_m == pytest.approx(math.sqrt(34))
++    assert (dims["T1: bậc thang"].count, dims["T1: bậc thang"].height_m) == (20, 0.15)
++    assert dims["T1: chiếu nghỉ"].area_m2 == 1.5
++    assert dims["T1: dầm thang"].length_m == 2.4
++    expected = math.sqrt(34) * 0.12 + 20 * 0.25 * 0.15 / 2 + 1.5 * 0.12 + 2.4 * 0.22 * 0.3
++    assert w.quantity == pytest.approx(round(expected, 3))
++    missing = one(stair_works("T2", [s.model_copy(update={"tread_mm": None})], 3000, ProjectParams())[0], "CAU_THANG")
++    assert missing.quantity is None and missing.dimensions[0].length_m is None
++
++
++def test_steel_table_keeps_diameter_cut_count_but_ratio_and_manual_have_no_fake_geometry():
++    rows = [RebarRow(table="B1", row=1, element="C1", element_code="COT", dia_mm=10, cut_length_mm=1200,
++                     total_bars=4, kg=2.96, evidence="SYNTHETIC bảng B1 dòng1")]
++    w = schedule_works(rows)[0]; d = w.dimensions[0]
++    assert (d.count, d.length_m, d.diameter_m) == (4, 1.2, 0.01)
++    assert w.quantity == pytest.approx(0.003)
++    concrete = WorkItem(code="COT", name="cột", unit="m³", quantity=2)
++    ratio = steel_works([concrete], ProjectParams(steel_kg_per_m3={"COT": 100}))[0][0]
++    manual = steel_works([concrete], ProjectParams(steel_schedule_t={"COT": 1}))[0][0]
++    assert ratio.dimensions == manual.dimensions == []
++
++
++def test_structural_repetition_changes_only_repetitions_not_length_or_count(catalog):
++    b = Beam(id="D1", x1=0, y1=0, x2=4000, y2=0, b_mm=200, d_mm=400, source="structural")
++    req = RoughRequest(plans=[], params=ProjectParams(slab_thickness_mm=100), structural_beams={"KC T2-3-4": [b]},
++                       structural_floors={"KC T2-3-4": 3})
++    w = one(compute_rough(req, catalog).works, "DAM"); d = w.dimensions[0]
++    assert w.quantity == pytest.approx(0.72)
++    assert (d.length_m, d.count, d.repetitions) == (4, 1, 3)
++    assert "lặp 3 tầng" in d.note
++
++
++def request_for_http(opening=False):
++    wall = ReviewWall(id="W1", cls="220", role="envelope", x1=0, y1=0, x2=10000, y2=0, mat="GN01")
++    ties = [LinearMember(id=f"G{i}", kind="GIANG_TUONG", x1=0, y1=0, x2=4000, y2=0,
++                         b_mm=220, d_mm=150, z_bottom_mm=1000) for i in (1, 2)]
++    return RoughRequest(params=ProjectParams(beam_depth_mm=300, slab_thickness_mm=100),
++        plans=[PlanInput(name="T2", height_mm=3300, walls=[wall], beams=[], members=ties,
++            outline_area_m2=30, usable_area_m2=20, void_area_m2=0,
++            openings=[{"id": "O1", "wall": "W1", "w": 1000, "h": 2000}] if opening else [])])
++
++
++@pytest.mark.parametrize("opening", [False, True])
++def test_n03_raw_dimensions_do_not_replace_final_net_or_missing(catalog, opening):
++    res = compute_rough(request_for_http(opening), catalog)
++    tie = one(res.works, "GIANG_TUONG")
++    assert tie.quantity == pytest.approx(0.132)
++    assert [d.basis for d in tie.dimensions] == ["reference", "reference", "union"]
++    assert tie.dimensions[-1].length_m == 4
++    assert sum(d.length_m for d in tie.dimensions if d.basis == "reference") == 8
++    xay = one(res.works, "XAY")
++    if opening:
++        assert xay.quantity is None and xay.status == "D" and xay.missing
++    else:
++        assert xay.quantity == pytest.approx(6.468)
++    assert xay.dimensions[0].length_m == 10 and "raw" in xay.dimensions[0].note
++
++
++@pytest.fixture
++def client(catalog, monkeypatch):
++    from fastapi.testclient import TestClient
++    from optimat.api.main import app
++    from optimat.rough import takeoff
++    monkeypatch.setattr(takeoff, "default_catalog", lambda: catalog)
++    with TestClient(app) as c:
++        yield c
++
++
++@pytest.mark.parametrize("opening", [False, True])
++def test_http_rough_json_preserves_dimensions_and_n03_partial(client, opening):
++    r = client.post("/api/takeoff/rough", json=request_for_http(opening).model_dump(mode="json"))
++    assert r.status_code == 200, r.text
++    result = r.json(); json.dumps(result, allow_nan=False)
++    tie = next(w for w in result["works"] if w["code"] == "GIANG_TUONG")
++    assert tie["quantity"] == pytest.approx(0.132) and len(tie["dimensions"]) == 3
++    xay = next(w for w in result["works"] if w["code"] == "XAY")
++    assert (xay["quantity"] is None) == opening
++    if opening:
++        assert xay["status"] == "D" and xay["missing"]
++
++
++def test_http_nonfinite_computed_metadata_is_clear_422_not_json_nan(client):
++    payload = request_for_http().model_dump(mode="json")
++    payload["params"]["slab_thickness_mm"] = float("nan")
++    r = client.post("/api/takeoff/rough", content=json.dumps(payload), headers={"Content-Type": "application/json"})
++    assert r.status_code == 422
++    json.dumps(r.json(), allow_nan=False)
++    assert "finite" in str(r.json()).lower() or "hữu hạn" in str(r.json()).lower()
++
++
++@pytest.mark.parametrize("source", ["manual", "structural"])
++def test_wall_height_metadata_keeps_beam_source_injected_by_caller(catalog, source):
++    req = request_for_http()
++    req.params.beam_depth_mm = None
++    req.plans[0].members = []
++    req.plans[0].beams = [Beam(id="D7", x1=0, y1=0, x2=4000, y2=0,
++                              b_mm=200, d_mm=400, source=source)]
++    w = one(compute_rough(req, catalog).works, "XAY"); d = w.dimensions[0]
++    assert d.height_m == pytest.approx(2.9) and w.quantity == pytest.approx(6.38)
++    assert "D7" in d.field_sources["height_m"] and source in d.field_sources["height_m"]
++    assert "d=400" in d.source and "ProjectParams.beam_depth_mm" not in d.field_sources["height_m"]
++
++
++def test_wall_height_explicit_zero_parameter_is_not_replaced_by_beam_source(catalog):
++    req = request_for_http()
++    req.params.beam_depth_mm = 0
++    req.plans[0].members = []
++    req.plans[0].beams = [Beam(id="D7", x1=0, y1=0, x2=4000, y2=0,
++                              b_mm=200, d_mm=400, source="structural")]
++    d = one(compute_rough(req, catalog).works, "XAY").dimensions[0]
++    assert d.height_m == pytest.approx(3.3)
++    assert "ProjectParams.beam_depth_mm" in d.field_sources["height_m"]
++    assert "D7" not in d.field_sources["height_m"]

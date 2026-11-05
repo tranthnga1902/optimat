@@ -1,0 +1,83 @@
+[
+  {
+    "port": 8001,
+    "path": "/api/health",
+    "status": 200,
+    "catalogSource": "postgresql",
+    "wallSystemCount": null,
+    "familyCount": null,
+    "vehicleCount": null
+  },
+  {
+    "port": 8001,
+    "path": "/api/catalog/wall-materials",
+    "status": 200,
+    "catalogSource": null,
+    "wallSystemCount": 22,
+    "familyCount": null,
+    "vehicleCount": null
+  },
+  {
+    "port": 8001,
+    "path": "/api/catalog/reference",
+    "status": 200,
+    "catalogSource": null,
+    "wallSystemCount": null,
+    "familyCount": 10,
+    "vehicleCount": 4
+  },
+  {
+    "port": 8002,
+    "path": "/api/health",
+    "status": 200,
+    "catalogSource": "postgresql",
+    "wallSystemCount": null,
+    "familyCount": null,
+    "vehicleCount": null
+  },
+  {
+    "port": 8002,
+    "path": "/api/catalog/wall-materials",
+    "status": 200,
+    "catalogSource": null,
+    "wallSystemCount": 22,
+    "familyCount": null,
+    "vehicleCount": null
+  },
+  {
+    "port": 8002,
+    "path": "/api/catalog/reference",
+    "status": 200,
+    "catalogSource": null,
+    "wallSystemCount": null,
+    "familyCount": 10,
+    "vehicleCount": 4
+  },
+  {
+    "port": 8765,
+    "path": "/api/health",
+    "status": 200,
+    "catalogSource": "postgresql",
+    "wallSystemCount": null,
+    "familyCount": null,
+    "vehicleCount": null
+  },
+  {
+    "port": 8765,
+    "path": "/api/catalog/wall-materials",
+    "status": 200,
+    "catalogSource": null,
+    "wallSystemCount": 22,
+    "familyCount": null,
+    "vehicleCount": null
+  },
+  {
+    "port": 8765,
+    "path": "/api/catalog/reference",
+    "status": 200,
+    "catalogSource": null,
+    "wallSystemCount": null,
+    "familyCount": 10,
+    "vehicleCount": 4
+  }
+]

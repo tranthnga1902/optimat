@@ -11,12 +11,14 @@ from optimat.data_check import run_checks
 from optimat.rough.models import ProjectParams
 
 
-def test_pipeline_without_llm_adds_rough_when_params_given(sample_dxf):
+def test_pipeline_without_llm_always_adds_rough(sample_dxf):
     state = run_pipeline(sample_dxf, floor_height_mm=3300, use_llm=False,
                          rough_params=ProjectParams(concrete_supply="ready_mix", concrete_grade="M250"))
     assert state["rough"].totals and "Phần thô" in state["facts"] and "Xây tường" in state["facts"]
     plain = run_pipeline(sample_dxf, floor_height_mm=3300, use_llm=False)
-    assert plain.get("rough") is None and "Phần thô" not in plain["facts"]   # không có thông số: không bóc, không đoán
+    assert plain["rough"].totals and "Phần thô" in plain["facts"]
+    # không có thông số vẫn bóc, nhưng không đoán: phần cần thông số để trống
+    assert any(not m.complete for m in plain["rough"].materials)
 
 
 def test_agent_tool_rough(sample_dxf):
@@ -47,3 +49,19 @@ def test_data_check_reports_blank_norms():
     rough = [f for f in rep["findings"] if f["area"] == "dinh_muc_phan_tho"]
     assert rep["counts"]["error"] == 0 and any("còn trống" in f["message"] for f in rough)
     assert rep["summary"]["dinh_muc_phan_tho"]["dong"] > 0
+
+
+def test_rough_materials_get_prices_same_unit_only():
+    """Vật liệu phần thô có giá thấp nhất cùng đơn vị; khác đơn vị không quy đổi; thiếu số thì không ra thành tiền."""
+    from optimat.catalog.repository import Catalog
+    from optimat.rough.models import MaterialLine
+    from optimat.rough.takeoff import attach_prices
+    lines = [MaterialLine(material_id="GN01", name="gạch", unit="viên", quantity=1000),
+             MaterialLine(material_id="GN01", name="gạch", unit="m³", quantity=2),
+             MaterialLine(material_id="GN01", name="gạch", unit="viên", quantity=10, complete=False)]
+    cat = Catalog.load()
+    cat.supplier_materials.loc[cat.supplier_materials.material_id == "GN01", "sale_unit"] = "viên"
+    attach_prices(lines, cat)
+    assert lines[0].best_price == 1350 and lines[0].est_cost == 1350000 and "SAMPLE" in lines[0].price_source
+    assert lines[1].best_price is None
+    assert lines[2].best_price == 1350 and lines[2].est_cost is None

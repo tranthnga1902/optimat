@@ -1,0 +1,33 @@
+{
+  "exit_code": 1,
+  "elapsed_seconds": 565.62,
+  "finished_utc": "2026-11-03T15:18:11.091334+00:00",
+  "collected": 772,
+  "summary_lines": [
+    "============ 1 failed, 756 passed, 15 skipped in 562.59s (0:09:22) ============"
+  ],
+  "counts": {
+    "passed": 756,
+    "skipped": 15,
+    "xfailed": 0,
+    "xpassed": 0,
+    "failed": 1,
+    "errors": 0
+  },
+  "hash_before_count": 222,
+  "hash_after_count": 222,
+  "hash_diff": {
+    "changed": [
+      "scripts/c01_duong_co_so.py",
+      "scripts/report_labels.py",
+      "src/optimat/rough/beams.py",
+      "src/optimat/rough/columns.py",
+      "src/optimat/rough/models.py",
+      "src/optimat/rough/walls.py",
+      "tests/test_evaluate_rough.py",
+      "tests/test_ground_truth_manifest.py"
+    ],
+    "added": [],
+    "removed": []
+  }
+}

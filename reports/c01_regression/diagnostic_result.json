@@ -1,0 +1,15 @@
+{
+  "status": "INCOMPLETE",
+  "session_exit_code": 1,
+  "pytest_exit_code": null,
+  "collected": 1,
+  "passed": null,
+  "skipped": null,
+  "xfailed": null,
+  "failed": null,
+  "stack_dump_obtained": true,
+  "observed_wait": "TestClient/AnyIO creating asyncio event loop; socket._fallback_socketpair -> socket.accept",
+  "root_cause": "Not established",
+  "stopped": "soft interrupt session 35803 after stack dump; diagnostic launcher and child confirmed absent",
+  "finished_utc": "2026-11-03T09:41:01.283172+00:00"
+}

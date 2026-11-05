@@ -1,0 +1,61 @@
+--- a/frontend/src/components/MaterialAdvisor.tsx
++++ b/frontend/src/components/MaterialAdvisor.tsx
+@@ -13,14 +13,16 @@
+   materials: MaterialFact[]; proposedMaterialIds: string[];
+   intermediates?: { name: string; quantity: number | null; unit: string; complete: boolean }[] };
+ type Offer = { price: number | null; unit: string | null; price_date: string | null; source_detail: string | null;
+-  supplier_name: string | null; price_level: string | null; vat_included: string | null; transport_included: string | null };
++  supplier_name: string | null; price_level: string | null; vat_included: string | null; transport_included: string | null;
++  is_reference?: boolean };
++type Accessory = { material_id: string; source: string | null; note: string | null; state: "needs_conditions_and_quantity" };
+ type Option = { material_id: string; name: string; unit: string; data_kind: string | null; offer: Offer | null;
+   needsDesignReview: boolean; needsGeometryReview: boolean; state: string; canApply: false; specification: Record<string, string | null> };
+ type Result = { requestId: string; contextHash: string; binding: Binding; provenance: "client_snapshot"; applied: false;
+   facts: { scope: string; warnings: string[]; coverage: (WorkFact & { coverage: string; reason: string })[];
+     intermediates: { name: string; quantity: number | null; unit: string; complete: boolean }[]; intermediate_note: string;
+     materials: { lineId: string; raw_class: string; name: string; demand_quantity: number | null; demand_with_waste: number | null;
+-      demand_unit: string; purchase_quantity: null; complete: boolean; sources: string[]; options: Option[]; missing: string[] }[] };
++      demand_unit: string; purchase_quantity: null; complete: boolean; sources: string[]; options: Option[]; missing: string[]; accessories?: Accessory[] }[] };
+   ai: { summary: string; advice: { lineId: string; proposed_material_ids: string[]; reason: string; checks: string[] }[] } };
+ 
+ async function send<T>(url: string, body: unknown, signal: AbortSignal): Promise<T> {
+@@ -108,17 +110,29 @@
+         <p>Lượng mua: chưa xác định. {line.complete ? "" : "Dòng còn thiếu, số hiện có chỉ là phần đã tính."}</p>
+         <p>Nguồn bảng: {line.sources.join("; ") || "Chưa có"}</p>
+         <ul>{line.missing.map((s, i) => <li key={i}>{s}</li>)}</ul>
++        {!!line.accessories?.length && <details>
++          <summary>Phụ kiện cần xác nhận điều kiện áp dụng và số lượng ({line.accessories.length})</summary>
++          <ul>{line.accessories.map((item, i) => <li key={`${item.material_id}-${i}`}>
++            <strong>{item.material_id}</strong> · {item.note || "Chưa có ghi chú áp dụng"}
++            <div>{item.source ? `Nguồn · ${item.source}` : "Chưa có thông tin nguồn"}</div>
++          </li>)}</ul>
++        </details>}
+         {line.options.length === 0 && <p>Chưa có phương án để so sánh.</p>}
+-        {line.options.map(option => <div key={option.material_id}>
+-          <p><strong>{option.material_id} · {option.name}</strong> · {option.data_kind} · {option.needsDesignReview ? "Đề xuất cần kiểm thiết kế/cấu tạo" : "Vật tư hiện có trong bảng"}</p>
+-          <p>{option.offer ? `Đơn giá nguồn: ${fmt(option.offer.price)} / ${option.offer.unit || "chưa rõ đơn vị"} · ${option.offer.price_level || ""} · ${option.offer.price_date || ""}` : "Chưa có giá hợp lệ; chưa thể kết luận rẻ nhất."}</p>
+-          {option.offer && <p>Nguồn: {option.offer.source_detail || "Chưa có mô tả chứng từ"} · VAT: {option.offer.vat_included || "chưa rõ"} · Giao hàng: {option.offer.transport_included || "chưa rõ"}.</p>}
+-          {onPropose && <button className="btn" onClick={() => setSelection(`${line.lineId}|${option.material_id}`)}>Chọn để kiểm tiếp</button>}
+-          {onPropose && selection === `${line.lineId}|${option.material_id}` && <div><p>Lựa chọn này chưa được phê duyệt hoặc áp dụng. Cần kiểm lại cấu tạo và tính lại phần bị ảnh hưởng trước khi mua.</p>
+-            <button className="btn" onClick={() => { onPropose({ binding: result.binding, contextHash: result.contextHash,
+-              lineId: line.lineId, materialId: option.material_id, needsDesignReview: option.needsDesignReview,
+-              needsGeometryReview: option.needsGeometryReview }); setSelection(""); }}>Xác nhận chuyển sang bước kiểm lựa chọn</button></div>}
+-        </div>)}
++        {line.options.map(option => {
++          const offer = option.offer;
++          const referenceLabel = offer?.price_level === "BULLETIN" ? "Giá công bố tham khảo" : offer?.is_reference ? "Giá tham khảo" : null;
++          return <div key={option.material_id}>
++            <p><strong>{option.material_id} · {option.name}</strong> · {option.data_kind} · {option.needsDesignReview ? "Đề xuất cần kiểm thiết kế/cấu tạo" : "Vật tư hiện có trong bảng"}</p>
++            <p>{offer ? <><strong>{referenceLabel || "Đơn giá theo nguồn"}</strong> · {fmt(offer.price)} / {offer.unit || "chưa rõ đơn vị"} · {offer.price_level || "chưa rõ loại giá"} · {offer.price_date || "chưa rõ ngày"}</> : "Chưa có giá hợp lệ; chưa thể kết luận rẻ nhất."}</p>
++            {referenceLabel && <p>Cần đối chiếu báo giá của nhà cung cấp để xác nhận giá mua và điều kiện giao hàng.</p>}
++            {offer && <p>Nguồn: {offer.source_detail || "Chưa có mô tả chứng từ"} · VAT: {offer.vat_included || "chưa rõ"} · Giao hàng: {offer.transport_included || "chưa rõ"}.</p>}
++            {onPropose && <button className="btn" onClick={() => setSelection(`${line.lineId}|${option.material_id}`)}>Chọn để kiểm tiếp</button>}
++            {onPropose && selection === `${line.lineId}|${option.material_id}` && <div><p>Lựa chọn này chưa được phê duyệt hoặc áp dụng. Cần kiểm lại cấu tạo và tính lại phần bị ảnh hưởng trước khi mua.</p>
++              <button className="btn" onClick={() => { onPropose({ binding: result.binding, contextHash: result.contextHash,
++                lineId: line.lineId, materialId: option.material_id, needsDesignReview: option.needsDesignReview,
++                needsGeometryReview: option.needsGeometryReview }); setSelection(""); }}>Xác nhận chuyển sang bước kiểm lựa chọn</button></div>}
++          </div>;
++        })}
+       </article>)}
+       <h3>Hướng dẫn và gợi ý của AI</h3><p>{result.ai.summary}</p>
+       {result.ai.advice.map(a => <div key={a.lineId}><p>{result.facts.materials.find(m => m.lineId === a.lineId)?.name}: {a.reason}</p>

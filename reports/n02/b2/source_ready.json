@@ -1,0 +1,11 @@
+{
+  "status": "SOURCE-READY_BEFORE_TESTS",
+  "scope": [
+    "src/optimat/api/main.py",
+    "src/optimat/rough/takeoff.py",
+    "tests/test_rebar_scope_api.py"
+  ],
+  "tests_run_at_snapshot": false,
+  "API_worker_tests": "pending J04 outside sandbox release",
+  "b3_partial": "not implemented"
+}

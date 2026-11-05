@@ -1,0 +1,12 @@
+--- a/tests/test_rough_rebar.py
++++ b/tests/test_rough_rebar.py
+@@ -523,7 +523,8 @@
+     rows, _ = read_rebar_schedules(_drawing(_table(0, 1000)))
+     req = RoughRequest(plans=[], rebar=rows)
+     wb = load_workbook(BytesIO(boq_bytes(compute_rough(req), req)))
+-    assert wb.sheetnames == ["Tổng hợp", "Theo tầng", "Theo cấu kiện", "Cốt thép", "Vật liệu", "Theo nhóm", "Theo loại", "Cảnh báo", "Phạm vi hỗ trợ"]
++    assert wb.sheetnames == ["Tổng hợp", "Theo tầng", "Theo cấu kiện", "Cốt thép", "Vật liệu", "Theo nhóm", "Theo loại", "Cảnh báo", "Phạm vi hỗ trợ"] + [
++        "Tiên lượng chi tiết", "Truy vết chi tiết", "Đối soát chi tiết"]
+     assert "Trạng thái (A đọc / B suy / C tạm tính / D thiếu)" in [c.value for c in wb["Theo tầng"][1]]
+     assert [c.value for c in wb["Theo tầng"][1]][-2:] == ["evidence", "missing_reason"]
+     assert "formula" in [c.value for c in wb["Theo tầng"][1]]

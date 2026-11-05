@@ -1,0 +1,14 @@
+{
+  "changed": [
+    "scripts/c01_duong_co_so.py",
+    "scripts/report_labels.py",
+    "src/optimat/rough/beams.py",
+    "src/optimat/rough/columns.py",
+    "src/optimat/rough/models.py",
+    "src/optimat/rough/walls.py",
+    "tests/test_evaluate_rough.py",
+    "tests/test_ground_truth_manifest.py"
+  ],
+  "added": [],
+  "removed": []
+}

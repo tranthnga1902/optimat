@@ -1,0 +1,19 @@
+{
+  "utc": "2026-11-03T10:10:00.328662+00:00",
+  "apply": false,
+  "sql_sha256": "87fec90ac24e34049c00fb4f68f09ec93019e763da6eb0e1b319ba020f5a8d3e",
+  "inserted": {
+    "suppliers": [],
+    "price_records": []
+  },
+  "database": "optimat",
+  "before": {
+    "suppliers": 2866,
+    "price_records": 59
+  },
+  "after": {
+    "suppliers": 2866,
+    "price_records": 59
+  },
+  "committed": false
+}

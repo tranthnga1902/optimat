@@ -1,0 +1,75 @@
+{
+  "manifest_sha256": "fa9d7f71b4aa2337bb3f2ac1e2aea6caea71d41731a2502db7019b6ff28b6e4c",
+  "panel_harness_sha256": "151e2fb45c380cd01dd69d09b501d88abb0ce13134c196ad5cbcf4170750bfae",
+  "upload_harness_sha256": "04e0b917c425468cf330672d1da770101622179489ba4a0fd18bbb8fc10d5abc",
+  "ports": [
+    {
+      "port": "3001",
+      "ignore_space_change_apply_check_exit": 0,
+      "patch_reproduction": [
+        {
+          "path": "src/app/(user)/du-an-cua-toi/ProjectDossier.tsx",
+          "patch_result_sha256": "414b0c2052b6c2476a29d5225c14615466bb6dc1991fcc98f12f6e358800a999",
+          "patch_exact": false,
+          "normalized_equal": true
+        },
+        {
+          "path": "src/components/ProjectFilesPanel.tsx",
+          "patch_result_sha256": "e41515db4188c4b08fe604d7f0d0c9dfb50e00a434f93bdbb15a2235f13d24c0",
+          "patch_exact": true,
+          "normalized_equal": true
+        }
+      ],
+      "panel_exit": 0,
+      "upload_exit": 0,
+      "files": [
+        {
+          "path": "src/app/(user)/du-an-cua-toi/ProjectDossier.tsx",
+          "target_sha256": "a19f570ede4afbb2f5a122564af6434d7dc813c5cb49c9c977a91569f2ec012d",
+          "target_stable": true,
+          "base_stable": true
+        },
+        {
+          "path": "src/components/ProjectFilesPanel.tsx",
+          "target_sha256": "e41515db4188c4b08fe604d7f0d0c9dfb50e00a434f93bdbb15a2235f13d24c0",
+          "target_stable": true,
+          "base_stable": true
+        }
+      ]
+    },
+    {
+      "port": "3002",
+      "ignore_space_change_apply_check_exit": 0,
+      "patch_reproduction": [
+        {
+          "path": "src/app/(user)/du-an-cua-toi/ProjectDossier.tsx",
+          "patch_result_sha256": "e49a0d8a6501eb101d06e0638c65a1f48d1693d59497f8b2b11cc8e81910540a",
+          "patch_exact": false,
+          "normalized_equal": true
+        },
+        {
+          "path": "src/components/ProjectFilesPanel.tsx",
+          "patch_result_sha256": "b6a095291a0e2bcf769a7af484fcb330e3133cda54726489e7d8fefe16b2980b",
+          "patch_exact": false,
+          "normalized_equal": true
+        }
+      ],
+      "panel_exit": 0,
+      "upload_exit": 0,
+      "files": [
+        {
+          "path": "src/app/(user)/du-an-cua-toi/ProjectDossier.tsx",
+          "target_sha256": "10629d1d7e0fce3890642cf950a28fe32dbe8b19866b1007e51d81cac05652ec",
+          "target_stable": true,
+          "base_stable": true
+        },
+        {
+          "path": "src/components/ProjectFilesPanel.tsx",
+          "target_sha256": "902109bccec12bd18cccf2c09014c5a9f7fadbe9e39dbae6ff913567a5d1c555",
+          "target_stable": true,
+          "base_stable": true
+        }
+      ]
+    }
+  ]
+}

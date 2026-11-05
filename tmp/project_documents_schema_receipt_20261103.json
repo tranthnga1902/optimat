@@ -1,0 +1,794 @@
+{
+  "status": "committed_verified",
+  "database": "optimat",
+  "migration_sha256": "6d322334a36dc8a09d72be1352469661123f85f46d238fd34fb9f49d73467575",
+  "base_before": {
+    "projects": {
+      "oid": 142603,
+      "columns": [
+        [
+          "project_id",
+          "integer",
+          "int4",
+          "NO",
+          "nextval('projects_project_id_seq'::regclass)"
+        ],
+        [
+          "user_id",
+          "integer",
+          "int4",
+          "NO",
+          null
+        ],
+        [
+          "name",
+          "character varying",
+          "varchar",
+          "NO",
+          null
+        ],
+        [
+          "address",
+          "character varying",
+          "varchar",
+          "NO",
+          "''::character varying"
+        ],
+        [
+          "site_lat",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "site_lon",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "floor_height_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "budget",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "deadline_days",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "max_vehicle_ton",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "excluded_materials",
+          "jsonb",
+          "jsonb",
+          "NO",
+          "'[]'::jsonb"
+        ],
+        [
+          "created_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO",
+          "now()"
+        ],
+        [
+          "updated_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO",
+          "now()"
+        ],
+        [
+          "door_width_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "door_height_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "window_width_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "window_height_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ]
+      ],
+      "constraints": [
+        [
+          "projects_pkey",
+          "p",
+          "PRIMARY KEY (project_id)"
+        ],
+        [
+          "projects_user_id_fkey",
+          "f",
+          "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+        ]
+      ],
+      "indexes": [
+        [
+          "ix_projects_user_id",
+          "CREATE INDEX ix_projects_user_id ON public.projects USING btree (user_id)"
+        ],
+        [
+          "projects_pkey",
+          "CREATE UNIQUE INDEX projects_pkey ON public.projects USING btree (project_id)"
+        ]
+      ],
+      "count": 22,
+      "sha256_rows": "a8fcc1e24d476dd54cb5105cfee311d1d0d6a7c665d0aaad291f4c2ea29741a4"
+    },
+    "project_files": {
+      "oid": 142596,
+      "columns": [
+        [
+          "file_id",
+          "integer",
+          "int4",
+          "NO",
+          "nextval('project_files_file_id_seq'::regclass)"
+        ],
+        [
+          "project_id",
+          "integer",
+          "int4",
+          "NO",
+          null
+        ],
+        [
+          "filename",
+          "character varying",
+          "varchar",
+          "NO",
+          null
+        ],
+        [
+          "file_type",
+          "character varying",
+          "varchar",
+          "NO",
+          null
+        ],
+        [
+          "stored_path",
+          "character varying",
+          "varchar",
+          "NO",
+          null
+        ],
+        [
+          "uploaded_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO",
+          "now()"
+        ]
+      ],
+      "constraints": [
+        [
+          "project_files_pkey",
+          "p",
+          "PRIMARY KEY (file_id)"
+        ],
+        [
+          "project_files_project_id_fkey",
+          "f",
+          "FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE"
+        ]
+      ],
+      "indexes": [
+        [
+          "ix_project_files_project_id",
+          "CREATE INDEX ix_project_files_project_id ON public.project_files USING btree (project_id)"
+        ],
+        [
+          "project_files_pkey",
+          "CREATE UNIQUE INDEX project_files_pkey ON public.project_files USING btree (file_id)"
+        ]
+      ],
+      "count": 126,
+      "sha256_rows": "17e8565c25b7db1c13a0608988de68db07fd8879d47ea2ed1cd9aa85a61257e7"
+    },
+    "takeoff_results": {
+      "oid": 142656,
+      "columns": [
+        [
+          "takeoff_id",
+          "integer",
+          "int4",
+          "NO",
+          "nextval('takeoff_results_takeoff_id_seq'::regclass)"
+        ],
+        [
+          "project_id",
+          "integer",
+          "int4",
+          "NO",
+          null
+        ],
+        [
+          "file_id",
+          "integer",
+          "int4",
+          "YES",
+          null
+        ],
+        [
+          "result",
+          "jsonb",
+          "jsonb",
+          "NO",
+          null
+        ],
+        [
+          "layer_overrides",
+          "jsonb",
+          "jsonb",
+          "NO",
+          "'{}'::jsonb"
+        ],
+        [
+          "confirmed_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "YES",
+          null
+        ],
+        [
+          "created_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO",
+          "now()"
+        ]
+      ],
+      "constraints": [
+        [
+          "takeoff_results_file_id_fkey",
+          "f",
+          "FOREIGN KEY (file_id) REFERENCES project_files(file_id) ON DELETE SET NULL"
+        ],
+        [
+          "takeoff_results_pkey",
+          "p",
+          "PRIMARY KEY (takeoff_id)"
+        ],
+        [
+          "takeoff_results_project_id_fkey",
+          "f",
+          "FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE"
+        ]
+      ],
+      "indexes": [
+        [
+          "ix_takeoff_results_project_id",
+          "CREATE INDEX ix_takeoff_results_project_id ON public.takeoff_results USING btree (project_id)"
+        ],
+        [
+          "takeoff_results_pkey",
+          "CREATE UNIQUE INDEX takeoff_results_pkey ON public.takeoff_results USING btree (takeoff_id)"
+        ]
+      ],
+      "count": 24,
+      "sha256_rows": "d71e6230ef661c9feaa8da4a8ec7bebfe6ae5862064b1ce372605dca8276ac2f"
+    }
+  },
+  "base_after": {
+    "projects": {
+      "oid": 142603,
+      "columns": [
+        [
+          "project_id",
+          "integer",
+          "int4",
+          "NO",
+          "nextval('projects_project_id_seq'::regclass)"
+        ],
+        [
+          "user_id",
+          "integer",
+          "int4",
+          "NO",
+          null
+        ],
+        [
+          "name",
+          "character varying",
+          "varchar",
+          "NO",
+          null
+        ],
+        [
+          "address",
+          "character varying",
+          "varchar",
+          "NO",
+          "''::character varying"
+        ],
+        [
+          "site_lat",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "site_lon",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "floor_height_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "budget",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "deadline_days",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "max_vehicle_ton",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "excluded_materials",
+          "jsonb",
+          "jsonb",
+          "NO",
+          "'[]'::jsonb"
+        ],
+        [
+          "created_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO",
+          "now()"
+        ],
+        [
+          "updated_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO",
+          "now()"
+        ],
+        [
+          "door_width_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "door_height_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "window_width_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ],
+        [
+          "window_height_mm",
+          "double precision",
+          "float8",
+          "YES",
+          null
+        ]
+      ],
+      "constraints": [
+        [
+          "projects_pkey",
+          "p",
+          "PRIMARY KEY (project_id)"
+        ],
+        [
+          "projects_user_id_fkey",
+          "f",
+          "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+        ]
+      ],
+      "indexes": [
+        [
+          "ix_projects_user_id",
+          "CREATE INDEX ix_projects_user_id ON public.projects USING btree (user_id)"
+        ],
+        [
+          "projects_pkey",
+          "CREATE UNIQUE INDEX projects_pkey ON public.projects USING btree (project_id)"
+        ]
+      ],
+      "count": 22,
+      "sha256_rows": "a8fcc1e24d476dd54cb5105cfee311d1d0d6a7c665d0aaad291f4c2ea29741a4"
+    },
+    "project_files": {
+      "oid": 142596,
+      "columns": [
+        [
+          "file_id",
+          "integer",
+          "int4",
+          "NO",
+          "nextval('project_files_file_id_seq'::regclass)"
+        ],
+        [
+          "project_id",
+          "integer",
+          "int4",
+          "NO",
+          null
+        ],
+        [
+          "filename",
+          "character varying",
+          "varchar",
+          "NO",
+          null
+        ],
+        [
+          "file_type",
+          "character varying",
+          "varchar",
+          "NO",
+          null
+        ],
+        [
+          "stored_path",
+          "character varying",
+          "varchar",
+          "NO",
+          null
+        ],
+        [
+          "uploaded_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO",
+          "now()"
+        ]
+      ],
+      "constraints": [
+        [
+          "project_files_pkey",
+          "p",
+          "PRIMARY KEY (file_id)"
+        ],
+        [
+          "project_files_project_id_fkey",
+          "f",
+          "FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE"
+        ]
+      ],
+      "indexes": [
+        [
+          "ix_project_files_project_id",
+          "CREATE INDEX ix_project_files_project_id ON public.project_files USING btree (project_id)"
+        ],
+        [
+          "project_files_pkey",
+          "CREATE UNIQUE INDEX project_files_pkey ON public.project_files USING btree (file_id)"
+        ]
+      ],
+      "count": 126,
+      "sha256_rows": "17e8565c25b7db1c13a0608988de68db07fd8879d47ea2ed1cd9aa85a61257e7"
+    },
+    "takeoff_results": {
+      "oid": 142656,
+      "columns": [
+        [
+          "takeoff_id",
+          "integer",
+          "int4",
+          "NO",
+          "nextval('takeoff_results_takeoff_id_seq'::regclass)"
+        ],
+        [
+          "project_id",
+          "integer",
+          "int4",
+          "NO",
+          null
+        ],
+        [
+          "file_id",
+          "integer",
+          "int4",
+          "YES",
+          null
+        ],
+        [
+          "result",
+          "jsonb",
+          "jsonb",
+          "NO",
+          null
+        ],
+        [
+          "layer_overrides",
+          "jsonb",
+          "jsonb",
+          "NO",
+          "'{}'::jsonb"
+        ],
+        [
+          "confirmed_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "YES",
+          null
+        ],
+        [
+          "created_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO",
+          "now()"
+        ]
+      ],
+      "constraints": [
+        [
+          "takeoff_results_file_id_fkey",
+          "f",
+          "FOREIGN KEY (file_id) REFERENCES project_files(file_id) ON DELETE SET NULL"
+        ],
+        [
+          "takeoff_results_pkey",
+          "p",
+          "PRIMARY KEY (takeoff_id)"
+        ],
+        [
+          "takeoff_results_project_id_fkey",
+          "f",
+          "FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE"
+        ]
+      ],
+      "indexes": [
+        [
+          "ix_takeoff_results_project_id",
+          "CREATE INDEX ix_takeoff_results_project_id ON public.takeoff_results USING btree (project_id)"
+        ],
+        [
+          "takeoff_results_pkey",
+          "CREATE UNIQUE INDEX takeoff_results_pkey ON public.takeoff_results USING btree (takeoff_id)"
+        ]
+      ],
+      "count": 24,
+      "sha256_rows": "d71e6230ef661c9feaa8da4a8ec7bebfe6ae5862064b1ce372605dca8276ac2f"
+    }
+  },
+  "created": {
+    "project_document_revisions": {
+      "oid": 167922,
+      "columns": [
+        [
+          "revision_id",
+          "bigint",
+          "int8",
+          "NO"
+        ],
+        [
+          "file_id",
+          "integer",
+          "int4",
+          "NO"
+        ],
+        [
+          "version",
+          "integer",
+          "int4",
+          "NO"
+        ],
+        [
+          "sha256",
+          "character varying",
+          "varchar",
+          "NO"
+        ],
+        [
+          "stored_path",
+          "text",
+          "text",
+          "NO"
+        ],
+        [
+          "size_bytes",
+          "bigint",
+          "int8",
+          "NO"
+        ],
+        [
+          "format",
+          "character varying",
+          "varchar",
+          "NO"
+        ],
+        [
+          "role",
+          "character varying",
+          "varchar",
+          "NO"
+        ],
+        [
+          "created_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO"
+        ]
+      ],
+      "constraints": [
+        [
+          "ck_document_role",
+          "c",
+          "CHECK (((role)::text = ANY ((ARRAY['KT'::character varying, 'KC'::character varying, 'THAM_KHAO'::character varying])::text[])))"
+        ],
+        [
+          "ck_document_version_size",
+          "c",
+          "CHECK (((version > 0) AND (size_bytes > 0)))"
+        ],
+        [
+          "project_document_revisions_file_id_fkey",
+          "f",
+          "FOREIGN KEY (file_id) REFERENCES project_files(file_id) ON DELETE CASCADE"
+        ],
+        [
+          "project_document_revisions_pkey",
+          "p",
+          "PRIMARY KEY (revision_id)"
+        ],
+        [
+          "uq_document_file_version",
+          "u",
+          "UNIQUE (file_id, version)"
+        ]
+      ],
+      "indexes": [
+        [
+          "ix_project_document_revisions_file_id",
+          "CREATE INDEX ix_project_document_revisions_file_id ON public.project_document_revisions USING btree (file_id)"
+        ],
+        [
+          "project_document_revisions_pkey",
+          "CREATE UNIQUE INDEX project_document_revisions_pkey ON public.project_document_revisions USING btree (revision_id)"
+        ],
+        [
+          "uq_document_file_version",
+          "CREATE UNIQUE INDEX uq_document_file_version ON public.project_document_revisions USING btree (file_id, version)"
+        ]
+      ]
+    },
+    "project_profile_revisions": {
+      "oid": 167942,
+      "columns": [
+        [
+          "revision_id",
+          "bigint",
+          "int8",
+          "NO"
+        ],
+        [
+          "project_id",
+          "integer",
+          "int4",
+          "NO"
+        ],
+        [
+          "version",
+          "integer",
+          "int4",
+          "NO"
+        ],
+        [
+          "payload",
+          "jsonb",
+          "jsonb",
+          "NO"
+        ],
+        [
+          "created_at",
+          "timestamp with time zone",
+          "timestamptz",
+          "NO"
+        ]
+      ],
+      "constraints": [
+        [
+          "ck_project_profile_version",
+          "c",
+          "CHECK ((version > 0))"
+        ],
+        [
+          "project_profile_revisions_pkey",
+          "p",
+          "PRIMARY KEY (revision_id)"
+        ],
+        [
+          "project_profile_revisions_project_id_fkey",
+          "f",
+          "FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE"
+        ],
+        [
+          "uq_project_profile_version",
+          "u",
+          "UNIQUE (project_id, version)"
+        ]
+      ],
+      "indexes": [
+        [
+          "ix_project_profile_revisions_project_id",
+          "CREATE INDEX ix_project_profile_revisions_project_id ON public.project_profile_revisions USING btree (project_id)"
+        ],
+        [
+          "project_profile_revisions_pkey",
+          "CREATE UNIQUE INDEX project_profile_revisions_pkey ON public.project_profile_revisions USING btree (revision_id)"
+        ],
+        [
+          "uq_project_profile_version",
+          "CREATE UNIQUE INDEX uq_project_profile_version ON public.project_profile_revisions USING btree (project_id, version)"
+        ]
+      ]
+    }
+  },
+  "postcommit": {
+    "verified": true,
+    "new_counts": {
+      "project_document_revisions": 0,
+      "project_profile_revisions": 0
+    },
+    "base_matches": true
+  }
+}

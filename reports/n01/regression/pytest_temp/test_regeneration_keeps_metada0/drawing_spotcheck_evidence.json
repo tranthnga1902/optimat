@@ -1,0 +1,47 @@
+[
+  {
+    "file": "data\\drawings\\build\\nha_huong_hai_duong_7x12_ket_cau.dxf",
+    "evidence": [
+      {
+        "handle": "10028DD",
+        "layer": "LS-TEXT",
+        "text": "bm-1: l=7290mm; sl=02",
+        "x": -1747985.519270373,
+        "y": -1059503.684208512
+      },
+      {
+        "handle": "1002DDD",
+        "layer": "LS-TEXT",
+        "text": "bm-2: l=7290mm; sl=02",
+        "x": -1736369.083549885,
+        "y": -1059503.684208512
+      }
+    ]
+  },
+  {
+    "file": "data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+    "evidence": [
+      {
+        "handle": "1142CA1",
+        "layer": "LS-TEXT",
+        "text": "  tổng số lượng cọc ép là 34 cọc. mỗi cọc tạm tính dài 10.0m gồm",
+        "x": -1787703.06542887,
+        "y": -1084477.361041965
+      },
+      {
+        "handle": "1169191",
+        "layer": "LS-TEXT",
+        "text": "   tổng số lượng cọc dự tính: 34 cọc",
+        "x": -1830678.635487934,
+        "y": -1068876.648316985
+      },
+      {
+        "handle": "1169199",
+        "layer": "LS-TEXT",
+        "text": " chiều dài cọc dự tính 10.0m và có thể dài hơn tùy vào địa chất",
+        "x": -1830498.635487934,
+        "y": -1069791.70606126
+      }
+    ]
+  }
+]

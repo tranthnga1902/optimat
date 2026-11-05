@@ -1,0 +1,99 @@
+BỘ CHUẨN PHÁT TRIỂN ĐẦU TIÊN — NHÀ HƯƠNG, HẢI DƯƠNG, 2 TẦNG 7×12 M
+Ngày rà: 03/11/2026. Người chọn và tổng hợp: Codex theo yêu cầu người dùng.
+Trạng thái: chọn hồ sơ để hoàn thiện đáp án; CHƯA phải đáp án đã kiểm hoặc nghiệm thu độ chính xác.
+
+CẬP NHẬT QUYẾT ĐỊNH NGƯỜI DÙNG TRONG CHAT NGÀY 03/11/2026:
+- Ưu tiên bóc đủ khối lượng và vật tư phần thô; giá để sau.
+- Người dùng sẽ bổ sung cả bộ kiến trúc, kết cấu và dự toán. CHƯA KHÓA PHIÊN BẢN; tiếp tục rà bộ hiện tại ở trạng thái tạm.
+- Cơ sở đáp án: “Theo bản vẽ; dự toán để đối chiếu (đề xuất)”. Bản vẽ tự mâu thuẫn hoặc thiếu vẫn chờ chốt; quyết định này không duyệt bất kỳ số khối lượng nào.
+- Đầu ra vật tư: người dùng chọn “Tách lượng lắp đặt và lượng mua (đề xuất)”; ghi nguồn hệ số, chưa đủ căn cứ thì lượng mua để trạng thái chưa đủ dữ liệu. Chưa duyệt hệ số cụ thể.
+- Các câu “đóng băng phiên bản” và “chờ trả lời mục tiêu” phía dưới là nội dung lập ban đầu, được cập nhật bởi các quyết định này.
+- Sổ điểm đối chiếu cụ thể: HUONG_SO_DIEM_DOI_CHIEU_TAM.txt cùng thư mục.
+
+1. CĂN CỨ CHỌN
+Hương và Sang là hai bộ đầy đủ nhất về định dạng nguồn: DWG/DXF kiến trúc–kết cấu, PDF kiến trúc–kết cấu và dự toán có diễn giải. Không có căn cứ khẳng định Hương có nhiều tài liệu hơn Sang. Chọn Hương trong hai bộ này vì quy mô 2 tầng thuận lợi rà trọn luồng đầu tiên, đã có bằng chứng móng/lanh tô/bể và đủ 215 dòng tiên lượng được trích có vị trí nguồn.
+Tân Bình có Excel gốc, đáp án D02 nháp và bảng vật tư nhưng phiên bản chưa rõ, thiếu căn cứ cửa và thép chủ yếu theo hàm lượng; dùng bổ trợ.
+Sang giữ làm bộ phát triển bổ sung, nhất là cọc/đài và nhà nhiều tầng. Dĩ An giữ split test, không dùng để chỉnh theo đáp án.
+Một nhà Hương không đại diện mọi hạng mục IN của M01. Chưa có hạng mục trên nhà này không đồng nghĩa ngoài phạm vi hệ thống.
+
+2. NGUỒN ĐÃ CÓ — KHÔNG YÊU CẦU GỬI LẠI
+Thư mục gốc: data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/
+- PHẦN THIẾT KẾ KIẾN TRÚC.pdf
+- PHẦN THIẾT KẾ KẾT CẤU.pdf
+- HỒ SƠ DỰ TOÁN NHÀ PHỐ 2 TẦNG 7X12M.pdf (41 trang theo báo cáo nhập).
+- PDF điện/nước: có, ngoài phạm vi bóc hiện tại.
+DWG gốc có tại ../data_nha_o/ready/VN001_nha_pho_2_tang_7x12/ tính từ gốc optimat-ai; không suy thiếu DWG từ việc thư mục raw trong dự án chỉ liệt kê PDF.
+DXF vận hành: data/drawings/build/nha_huong_hai_duong_7x12_kien_truc.dxf và ..._ket_cau.dxf.
+Danh mục nguồn và SHA256: data/ground_truth/du_toan/incoming_20261103.json.
+Tiên lượng trích: normalized_20261103/nha_huong_hai_duong_7x12.estimate.json, 215 công tác nguồn, gồm cả phần ngoài phạm vi.
+Rà soát sẵn có: BAN_GIAO.md, PHIEU_CHOT_CHU_DO_AN.md, KIEM_TONG_BANG_THEP.md, BOC_TUNG_THANH_THEP_BE.md trong thư mục báo cáo này.
+
+3. DANH SÁCH BỔ SUNG / CHỐT CỤ THỂ
+Phân loại: A = tài liệu nguồn nên bổ sung nếu có; B = quyết định cần người dùng chốt sau khi xem bằng chứng; C = Codex tự lập/đối chiếu từ nguồn hiện có, không đẩy thành yêu cầu mua/tìm tài liệu.
+
+HS01 [A/B, ưu tiên 1] Phiên bản hồ sơ dùng làm chuẩn.
+Cần: danh mục phát hành hoặc xác nhận bộ kiến trúc, kết cấu và dự toán cùng phiên bản; bản sửa cuối nếu có. DWG kết cấu hiện mang tên “18-12 ... (SUA THEP DAM)”, chưa đủ chứng minh PDF/dự toán đồng bộ.
+Nếu không có bản khác: trình chốt đóng băng bộ hiện có làm phiên bản đối chứng nội bộ, giữ từng hash và danh sách mâu thuẫn. Không gọi đây là hồ sơ thi công cuối.
+
+HS02 [A/C, ưu tiên 1] Excel dự toán/tiên lượng nhà Hương gốc.
+Kiểm kê VN001 hiện có PDF, chưa thấy .xls/.xlsx gốc trong danh mục nguồn hoặc ready.
+Cần nếu có: workbook giữ công thức, sheet tiên lượng, tổng hợp vật tư, phân tích vật tư/đơn giá và thuyết minh hệ số.
+Nếu không có: Codex dựng bảng đối chứng từ PDF, giữ số gốc và tách số tính lại; không coi Excel gốc là điều kiện bắt buộc dừng việc.
+
+HS03 [C/B, ưu tiên 1] Đáp án đo độc lập theo tầng/cấu kiện cho phần thô.
+Cần lập: sổ hạng mục M01, vị trí bản vẽ, kích thước, công thức, phần trừ giao/lỗ mở và khối lượng tính lại cho từng dòng IN. Phân loại cả dòng gộp và ngoài phạm vi.
+Hiện có tiên lượng nguồn và nhãn thống kê, chưa có bộ đáp án hình học đầy đủ được chốt. Không lấy số đầu ra của hệ thống làm đáp án cho chính hệ thống.
+Người dùng cùng Codex chốt từng nhóm; chỉ ghi quyết định thực tế, không tự ký hoặc nâng da_kiem/human_approval.
+
+HS04 [B/A, ưu tiên 1] Móng băng BM-2 và phần giao móng.
+Nguồn: PDF kết cấu trang 8 KC-01-02, trang 10 KC-01-04; công tác W002/W004/W006.
+Cần chốt riêng: dài tổng 7,29 m so dài không giao 4,89 m; rộng đáy 1,00 m trên chi tiết so 0,80 m trong tiên lượng; phân bổ phần vát/giao theo cao độ; lỗi tên BM-4/BM-5.
+Nếu có: bản sửa chi tiết móng hoặc bảng bóc móng của người lập. Nếu không: tính lại từ chi tiết, trình công thức và ảnh trước chốt. Không duyệt toàn bộ móng chỉ bằng phép trừ chiều dài.
+
+HS05 [A/B/C, ưu tiên 1] Căn cứ đào/lót và các hệ số nguồn.
+Cần: cốt tự nhiên, cốt đáy móng, giới hạn hố đào, mở rộng/taluy; giải thích 1,1/1,3 trong từng dòng (kích thước, hao hụt hay quy ước dự toán).
+Codex tra từng thông số đã có trên mặt cắt trước; chỉ hỏi bổ sung phần chưa tìm được. Không mặc định mọi hệ số là hao hụt hoặc dùng để ép số khớp.
+
+HS06 [A/B/C, ưu tiên 1] Thép bể phốt nhà Hương.
+Nguồn: PDF kết cấu trang 13 KC-01-07, trang 14 KC-01-08; báo cáo BOC_TUNG_THANH_THEP_BE.md.
+Cần làm rõ: miền rải hai lớp Ø10 a150; lớp bảo vệ, thanh mép và cách rải qua dầm; số chân chó a600×600; đai đầu/cuối; chiều dài triển khai thanh cong Ø8 ghi 628 mm và quy tắc uốn; đơn trọng và làm tròn.
+Mâu thuẫn đã ghi nhận: tổng KLCT khác tổng cuối bảng; không chọn một tổng làm chuẩn chỉ vì CAD/PDF cùng ghi số đó. Nếu có bản sửa bảng thép/bản tính gốc thì bổ sung; nếu không, lập phương án đếm theo chi tiết và trình duyệt từng nhóm. Tổng bể chưa chốt.
+
+HS07 [B, ưu tiên 2] Lanh tô Ø16/Ø12.
+Nguồn: PDF kết cấu trang 30–31 KC-06-03/KC-06-04, W017. Bản vẽ ghi Ø16, 92,9 kg; tiên lượng ghi Phi12.
+Cần quyết định dùng nhãn thiết kế Ø16, giữ nguyên nguồn Phi12 để truy vết. Quyết định này không tự duyệt tổng lanh tô hoặc hệ số 1,1.
+
+HS08 [C/A, ưu tiên 2] Bảng cửa/lỗ mở và cao độ tường.
+Chưa kết luận nhà Hương thiếu bảng cửa; không áp kết luận thiếu cửa của Tân Bình sang Hương.
+Codex cần rà kiến trúc: mã cửa → rộng/cao/số lượng/vị trí; cao tường, lan can, lỗ sàn, WC/ban công/mái. Chỉ yêu cầu bảng kích thước/chi tiết bổ sung nếu bản vẽ hiện có không xác định được. Không điền kích thước mặc định.
+
+HS09 [C/A/B, ưu tiên 2] Thuyết minh cấu tạo và vật liệu phần thô.
+Codex lập danh mục thông số có nguồn: mác/cách cung cấp bê tông theo cấu kiện, lót, loại gạch và chiều dày tường, mác/dày vữa, bậc thang xây hay bê tông, cấu tạo nền/mái, phạm vi chống thấm, cốp pha.
+Phần chưa có: xin chỉ dẫn kỹ thuật, bảng cấu tạo hoặc xác nhận giả thiết đối chứng của chủ đồ án. Giả thiết phải được ghi riêng, không gắn thành dữ liệu thiết kế gốc.
+
+HS10 [A/C/B, ưu tiên 2] Định mức và bảng quy đổi vật tư có nguồn.
+Cần: mã/phiên bản định mức, hệ số vật tư theo công tác, quy cách và đơn vị; hao hụt đã/chưa gồm; phân biệt lượng thiết kế/lắp đặt và lượng mua. Có Excel phân tích vật tư thì ưu tiên dùng đối chiếu.
+Codex rà phần có trong PDF trước. Hệ số suy ngược từ tổng dự toán chỉ là ứng viên, chưa là định mức được chốt.
+
+HS11 [B/C, ưu tiên 2] Mẫu đầu ra và điều kiện đạt.
+Cần người dùng chọn cách nhóm theo tầng/cấu kiện/công tác; bảng công thức và nguồn; bảng vật tư; cách sửa đầu vào và báo thiếu; mức sai số chấp nhận theo nhóm.
+Codex tự dựng mẫu từ bộ chuẩn để duyệt, không yêu cầu người dùng viết đặc tả từ đầu.
+
+HS12 [A/B, chỉ bắt buộc khi nghiệm thu giá] Báo giá vật tư.
+Cần khu vực, ngày hiệu lực, quy cách, đơn vị mua, VAT, giao hàng, vận chuyển, điều kiện số lượng. Giá lịch sử trong dự toán không phải giá mua hiện tại.
+Chờ người dùng trả lời phạm vi ưu tiên: khối lượng/vật tư trước hay có giá ngay. Không tự tìm giá thay cho xác nhận khu vực/thời điểm mong muốn.
+
+HS13 [B/A, trước chia sẻ/huấn luyện] Quyền sử dụng hồ sơ.
+Manifest hiện quyen_dung=chua_ro. Cần xác nhận mục đích sử dụng và quyền tương ứng; nếu có văn bản của nguồn/chủ sở hữu thì lưu kèm. Không yêu cầu người dùng tự chứng nhận quyền của bên thứ ba khi không biết.
+
+4. THỨ TỰ CÙNG CHỐT
+Vòng 1: mục tiêu nghiệm thu; khả năng bổ sung Excel/bản sửa; đóng băng phiên bản hiện có.
+Vòng 2: móng (HS04–05), trình ảnh/công thức trước quyết định.
+Vòng 3: bể và thép (HS06–07).
+Vòng 4: tường/cửa/thang/sàn/mái/chống thấm và cấu tạo (HS08–09).
+Vòng 5: vật tư/hao hụt, mẫu xuất, sai số (HS10–11); giá nếu có (HS12).
+Mỗi lượt hỏi nhóm nhỏ; giữ câu trả lời nguyên ý, ghi phạm vi và bằng chứng. Chưa trả lời là chờ, không phải đồng ý.
+
+5. GIỚI HẠN LƯỢT RÀ
+Đã kiểm kê tên file thực tế và đọc manifest, tài liệu D01/D02, báo cáo rà móng/thép và gate hiện có. Việc rà từng tờ kiến trúc/kết cấu và từng dòng IN còn tiếp tục; các mục “chưa xác định” không được trình bày thành “chắc chắn thiếu”.
+Không thay cases/split, đáp án, trạng thái duyệt hoặc DB trong lượt lập danh sách.

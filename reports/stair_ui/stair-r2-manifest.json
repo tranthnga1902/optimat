@@ -1,0 +1,22 @@
+{
+  "base": "c2-p0-3001-release-r2",
+  "files": {
+    "src/app/(user)/do-boc/model.ts": {
+      "base_sha256": "daf8c16497d9a1732031d66b703fbdce1ac39e889f33e319ab553214fdae6163",
+      "overlay_sha256": "2f3840df5356589e0f6dbe532883ce575d50f0d2ba03ed0a96ae8a7990e2e598"
+    },
+    "src/app/(user)/do-boc/Review.tsx": {
+      "base_sha256": "75a9ee37fa302176050c4c1ad1d688a69ce817ffb52e33038ec48d8f4d29e595",
+      "overlay_sha256": "1a7eb58a766ddfe7d07e3e6e361aba9897243e69b58456616f110d780968db90"
+    },
+    "src/app/(user)/do-boc/StairTrace.tsx": {
+      "base_sha256": null,
+      "overlay_sha256": "efc8e6062a91cfbcf20080c3b74e286aa0775a69863673d69db449fc8d13b89e"
+    },
+    "src/app/(user)/do-boc/WorkReview.tsx": {
+      "base_sha256": "d3df81952b2f4cca6b28defe77f1da6de4f8a4347a04acf2e235c11dbf730c0f",
+      "overlay_sha256": "f916b805ad3098e068fa5485f1eef47f537104be8d68625ba11c029b91afcc39"
+    }
+  },
+  "patch_sha256": "f4e9b5df285c549a3e09f021565dee8d4d808be6ebf8c2a8187b2e49f6870886"
+}

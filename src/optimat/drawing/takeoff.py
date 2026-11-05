@@ -14,7 +14,8 @@ from .concepts import match_block
 from .dxf_reader import BlockRef, Drawing, crop, read_drawing
 from .layer_classifier import LayerClass
 from .material_rules import apply_material_rules, block_rule
-from .plans import find_plans, floor_heights, has_only_other_plans, has_only_views, level_chain
+from .encoding import normalize
+from .plans import HEADING_WORDS, find_plans, floor_heights, floor_order, has_only_other_plans, has_only_views, level_chain
 from .walls import (LENGTH_RULES, _project, bridge_openings, choose_wall_layers, dedupe_walls, detect_walls, extend_corners,
                     hatch_strip_walls, net_lengths)
 
@@ -25,9 +26,22 @@ def _is_opening(block: BlockRef, drawing: Drawing) -> bool:
     return match_block(block.name) is not None
 
 
-def _opening_size_mm(block: BlockRef, openings: OpeningDefaults | None) -> Optional[tuple[float, float]]:
+LEAF_REACH_MM = 1500.0      # cung cánh cửa thuộc block khi tâm cung cách điểm chèn không quá chừng này
+
+
+def leaf_width_mm(block: BlockRef, arcs) -> Optional[float]:
+    """KD08: rộng cửa đi đọc từ hình của chính block = tổng bán kính cung cánh cửa (cánh đơn 1 cung, cánh đôi 2 cung,
+    góc mở 60–120°). Đọc trực tiếp trên bản vẽ; không có cung thì None (không đoán)."""
+    leaves = sorted((a for a in arcs if a.source == block.name and 60 <= a.sweep <= 120
+                     and math.hypot(a.cx - block.x, a.cy - block.y) <= LEAF_REACH_MM),
+                    key=lambda a: math.hypot(a.cx - block.x, a.cy - block.y))[:2]
+    return round(sum(a.r for a in leaves)) if leaves else None
+
+
+def _opening_size_mm(block: BlockRef, openings: OpeningDefaults | None, arcs=()) -> Optional[tuple[float, float]]:
     """Thứ tự: thuộc tính WIDTH/HEIGHT của block, quy tắc block trong file quy tắc, kích thước cửa của dự án theo loại
-    block (QU-14, không khớp thì như cửa đi). Không có số thì None: chưa trừ lỗ mở (Quy ước B7)."""
+    block (QU-14, không khớp thì như cửa đi). Rộng cửa đi còn thiếu thì đo cung cánh cửa trong block (KD08).
+    Không có số thì None: chưa trừ lỗ mở (Quy ước B7)."""
     try:
         return float(block.attribs["WIDTH"]), float(block.attribs["HEIGHT"])
     except (KeyError, ValueError):
@@ -38,6 +52,8 @@ def _opening_size_mm(block: BlockRef, openings: OpeningDefaults | None) -> Optio
     signal = match_block(block.name)
     kind = signal.vai_tro if signal else "door"
     w, h = getattr(openings, f"{kind}_width_mm", None), getattr(openings, f"{kind}_height_mm", None)
+    if not w and kind == "door":
+        w = leaf_width_mm(block, arcs)
     return (w, h) if w and h else None
 
 
@@ -161,11 +177,11 @@ def compute_takeoff(drawing: Drawing, floor_height_mm: float | None = None,
         warnings.append("Cửa nhận từ khe tường (cung cánh cửa, nét kính): rộng lấy theo khe, cao theo thông số cửa của dự án.")
     merged: list[str] = []
     for block in [b for b in opening_blocks if b not in used_blocks]:
-        size = _opening_size_mm(block, openings)
+        size = _opening_size_mm(block, openings, drawing.arcs)
         if size is None:
             no_size.append(block.name)
-            continue
-        width, h = size
+        # thiếu kích thước: vẫn giữ trong danh sách, gắn tường gần nhất để trang kiểm tra nhập rộng × cao; chưa trừ
+        width, h = size or (None, None)
         item = OpeningItem(name=block.name, x=block.x, y=block.y, width_mm=width, height_mm=h,
                            kind="block", evidence=f"block {block.name}")
         nearest = min(walls, key=lambda w: _dist_point_segment(block.x, block.y, w)) if walls else None
@@ -178,21 +194,22 @@ def compute_takeoff(drawing: Drawing, floor_height_mm: float | None = None,
         # shortcut: coi điểm chèn block là tâm cửa; block chèn ở mép cửa có thể lệch nửa bề rộng, đọc bảng thống kê cửa (QU-15) thì bỏ
         p = _project(nearest, block.x, block.y)[0]
         same = next((o for o in opening_items if o.wall_id == nearest.wall_id
-                     and min(p + width / 2, _project(nearest, o.x, o.y)[0] + o.width_mm / 2)
-                     - max(p - width / 2, _project(nearest, o.x, o.y)[0] - o.width_mm / 2) > 50), None)
+                     and min(p + (width or 0) / 2, _project(nearest, o.x, o.y)[0] + (o.width_mm or 0) / 2)
+                     - max(p - (width or 0) / 2, _project(nearest, o.x, o.y)[0] - (o.width_mm or 0) / 2) > 50), None)
         if same is not None:
             same.evidence += f" + block {block.name}"
             merged.append(block.name)
             continue
         opening_items.append(item)
-        nearest.opening_area_m2 += width * min(h, height or h) / 1e6
+        if size is not None:
+            nearest.opening_area_m2 += width * min(h, height or h) / 1e6
         item.wall_id = nearest.wall_id
     if merged:
         warnings.append(f"{len(merged)} block cửa trùng chỗ với lỗ mở đã trừ trên cùng tường, chỉ trừ một lần: "
                         + ", ".join(merged) + ".")
     if no_size:
         warnings.append(f"{len(no_size)} lỗ mở chưa có kích thước (block không ghi, dự án chưa nhập kích thước cửa), "
-                        "chưa được trừ; cửa nhận từ khe tường vẫn có trong danh sách để nhập chiều cao: " + ", ".join(no_size) + ".")
+                        "chưa được trừ; vẫn có trong danh sách lỗ mở để nhập kích thước: " + ", ".join(no_size) + ".")
 
     nets = net_lengths([(w.wall_id, w.x1, w.y1, w.x2, w.y2, w.thickness_mm or float(w.thickness_class)) for w in walls])
     for w in walls:
@@ -289,3 +306,49 @@ def takeoff_plans_from_file(path: str, floor_height_mm: float | None = None,
                             layer_overrides: dict[str, str] | None = None,
                             openings: OpeningDefaults | None = None, length_rule: str = "tim") -> list[PlanTakeoff]:
     return takeoff_plans(read_drawing(path, layer_overrides), floor_height_mm, openings=openings, length_rule=length_rule)
+
+
+def _floor_key(name: str):
+    """Mặt bằng cùng một tầng: theo thứ tự tầng nếu đọc được, không thì theo tiêu đề bỏ hậu tố " (2)"."""
+    order = floor_order(name)
+    return order if order is not None else normalize(name.rsplit(" (", 1)[0])
+
+
+def merge_plans(plans: list[PlanTakeoff], floor_height_mm: float | None = None, length_rule: str = "tim") -> TakeoffResult:
+    """Gộp các mặt bằng thành một kết quả cả nhà: nhóm tường giữ riêng từng tầng, cảnh báo ghi tên mặt bằng.
+    Một tầng vẽ nhiều hình (mặt bằng kích thước, kí hiệu cửa, vật dụng, bản chép) chỉ tính một lần: giữ hình nhiều tường nhất."""
+    warnings: list[str] = []
+    kept: dict = {}
+    for p in plans:
+        key, area = _floor_key(p.name), sum(g.net_area_m2 for g in p.result.groups)
+        if key in kept:
+            old = kept[key]
+            keep, drop = (p, old) if area > sum(g.net_area_m2 for g in old.result.groups) else (old, p)
+            kept[key] = keep
+            warnings.append(f"\"{drop.name}\" cùng tầng với \"{keep.name}\": chỉ tính \"{keep.name}\" (nhiều tường hơn).")
+        else:
+            kept[key] = p
+    plans = list(kept.values())
+    if not plans:
+        return TakeoffResult(floor_height_mm=floor_height_mm, length_rule=length_rule, walls=[], groups=[], openings_count=0,
+                             warnings=["Không tìm thấy mặt bằng kiến trúc trong file (chỉ có mặt cắt, mặt đứng, kết cấu...)."])
+    rs = [p.result for p in plans]
+    return TakeoffResult(floor_height_mm=floor_height_mm, length_rule=length_rule,
+                         walls=[w for r in rs for w in r.walls], groups=[g for r in rs for g in r.groups],
+                         openings_count=sum(r.openings_count for r in rs), openings=[o for r in rs for o in r.openings],
+                         warnings=warnings + [f"{p.name}: {w}" for p in plans for w in p.result.warnings])
+
+
+def takeoff_building_from_file(path: str, floor_height_mm: float | None = None,
+                               layer_overrides: dict[str, str] | None = None) -> TakeoffResult:
+    """Đo bóc cả nhà theo từng mặt bằng tầng; đo cả file như một mặt bằng sẽ cộng cả mặt đứng, mặt cắt, chi tiết."""
+    drawing = read_drawing(path, layer_overrides)
+    plans = takeoff_plans(drawing, floor_height_mm)
+    views = sum(1 for t in drawing.texts if any(w in normalize(t.text) for w in HEADING_WORDS))
+    if len(plans) == 1 and plans[0].name == "Toàn bộ bản vẽ" and views >= 2:
+        # file nhiều hình (điện, nước, mặt cắt...) mà không tách được mặt bằng kiến trúc: đo cả file sẽ ra số sai
+        r = merge_plans([], floor_height_mm)
+        r.warnings = [f"File có {views} tiêu đề hình (mặt bằng điện nước, mặt cắt...) nhưng không tách được mặt bằng kiến "
+                      "trúc nào; không đo cả bản vẽ để tránh cộng nhầm. Kiểm tra tiêu đề \"MẶT BẰNG TẦNG ...\" trên bản vẽ."]
+        return r
+    return merge_plans(plans, floor_height_mm)

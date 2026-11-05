@@ -1,0 +1,38 @@
+================================== FAILURES ===================================
+_______________________ test_overview_and_rows_from_csv _______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020E516BF100>
+
+    def test_overview_and_rows_from_csv(monkeypatch):
+        monkeypatch.delenv("DATABASE_URL", raising=False)
+        d = client.get("/api/admin/db").json()
+        tables = {t["name"]: t for c in d["clusters"] for t in c["tables"]}
+>       assert d["source"] == "csv" and not d["connected"] and len(tables) == 26
+E       AssertionError: assert ('csv' == 'csv'
+E         
+E           csv and not False and 28 == 26)
+E        +  where 28 = len({'material_groups': {'name': 'material_groups', 'rows': 5, 'editable': False, 'doc': 'Năm nhóm vật liệu tổng thể của đ...: False, 'doc': 'Phương án xây tường: một vật liệu ở một chiều dày tường, kèm định mức theo 1 m3 khối xây.', ...}, ...})
+
+tests\test_admin_db.py:21: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_admin_db.py:34: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_admin_db.py:61: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_admin_project_file.py:84: Không thể tạo symlink trong môi trường kiểm thử
+SKIPPED [1] tests\test_auth_admin.py:41: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:46: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:57: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:71: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:79: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:87: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:109: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:145: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:180: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:217: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:250: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:281: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:324: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_project_document_roles_db.py:19: Chưa bật kiểm thử route trên database thử nghiệm riêng.
+SKIPPED [1] tests\test_project_documents_migration.py:13: Chưa bật kiểm thử migration trên database thử nghiệm riêng.
+SKIPPED [1] tests\test_project_files_db.py:86: Chưa bật kiểm thử route trên database thử nghiệm riêng.
+FAILED tests/test_admin_db.py::test_overview_and_rows_from_csv - AssertionErr...
+==== 1 failed, 1095 passed, 19 skipped, 15 deselected in 182.56s (0:03:02) ====

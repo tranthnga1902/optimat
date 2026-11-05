@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* Bảng màu OptiMat (giữ từ app.html cũ). Dùng trong Tailwind: bg-card, text-ink, text-muted, border-rule, bg-accent… */
+:root {
+  --bg: #F4F6F5; --card: #FFFFFF; --ink: #16211D; --muted: #4C5A55; --rule: #D5DDD9; --rule2: #E6EBE8; --field: #B9C5C0;
+  --accent: #0F6B5C; --accent-ink: #FFFFFF; --accent-soft: #D7EDE6; --accent-deep: #0A4A40;
+  --nav-user: #10261F; --nav-admin: #16211D; --nav-on-user: #1F4A3E; --nav-on-admin: #33423C; --nav-muted: #C9D8D2;
+  --mint: #7FD6BF; --amber: #F3B562;
+  --warn-bg: #FCEBD0; --warn-ink: #7A4206; --bad-bg: #F9DCD8; --bad-ink: #8A1F14; --info-bg: #E3E8F5; --info-ink: #22366B;
+  --grid: #D4D4D4; --xh: #EFF1F0; --xh-on: #D3E7DD; --xsel: #217346;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101614; --card: #18201D; --ink: #E3EBE7; --muted: #9DB0A9; --rule: #2C3833; --rule2: #24302B; --field: #3C4A44;
+    --accent: #3FB39B; --accent-ink: #0C1714; --accent-soft: #1D3B33; --accent-deep: #7FD6BF;
+    --warn-bg: #3A2A12; --warn-ink: #F3C77E; --bad-bg: #3D1C18; --bad-ink: #F4A398; --info-bg: #1E2638; --info-ink: #AFC0EA;
+    --grid: #3A4540; --xh: #202825; --xh-on: #1D3B33; --xsel: #3FB39B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101614; --card: #18201D; --ink: #E3EBE7; --muted: #9DB0A9; --rule: #2C3833; --rule2: #24302B; --field: #3C4A44;
+  --accent: #3FB39B; --accent-ink: #0C1714; --accent-soft: #1D3B33; --accent-deep: #7FD6BF;
+  --warn-bg: #3A2A12; --warn-ink: #F3C77E; --bad-bg: #3D1C18; --bad-ink: #F4A398; --info-bg: #1E2638; --info-ink: #AFC0EA;
+  --grid: #3A4540; --xh: #202825; --xh-on: #1D3B33; --xsel: #3FB39B;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg); --color-card: var(--card); --color-ink: var(--ink); --color-muted: var(--muted);
+  --color-rule: var(--rule); --color-rule2: var(--rule2); --color-field: var(--field);
+  --color-accent: var(--accent); --color-accent-ink: var(--accent-ink); --color-accent-soft: var(--accent-soft); --color-accent-deep: var(--accent-deep);
+  --color-nav-user: var(--nav-user); --color-nav-admin: var(--nav-admin); --color-nav-on-user: var(--nav-on-user); --color-nav-on-admin: var(--nav-on-admin);
+  --color-nav-muted: var(--nav-muted); --color-mint: var(--mint); --color-amber: var(--amber);
+  --color-warn-bg: var(--warn-bg); --color-warn-ink: var(--warn-ink); --color-bad-bg: var(--bad-bg); --color-bad-ink: var(--bad-ink);
+  --color-info-bg: var(--info-bg); --color-info-ink: var(--info-ink);
+  --color-grid: var(--grid); --color-xh: var(--xh); --color-xh-on: var(--xh-on); --color-xsel: var(--xsel);
+  --font-sans: var(--font-be-vietnam), "Segoe UI", system-ui, sans-serif;
+}
+
+@layer base {
+  html, body { min-height: 100%; }
+  body { background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.5; }
+  a { color: var(--accent); }
+  code { font-family: ui-monospace, monospace; font-size: .92em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* bảng thường: ô dữ liệu mặc định 13px Be Vietnam Pro, đệm 6px 8px */
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; color: var(--muted); font-size: 12.5px; font-weight: 600; padding: 8px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  td { padding: 6px 8px; font-size: 13px; border-bottom: 1px solid var(--rule2); vertical-align: top; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tfoot td { font-weight: 700; border-bottom: 0; }
+}
+
+/* cột # tự đánh số cho mọi bảng .tw có dòng tiêu đề; bảng .nonum đã có số sẵn. Bảng kiểu Excel (<Sheet>) tự đánh số. */
+.tw { overflow-x: auto; }
+.tw table:has(thead):not(.nonum) { counter-reset: rn; }
+.tw table:has(thead):not(.nonum) tr::before { display: table-cell; width: 1%; padding: 6px 8px; text-align: right; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; border-bottom: 1px solid var(--rule2); }
+.tw table:has(thead):not(.nonum) thead tr::before { content: "#"; font-weight: 600; padding: 8px; border-bottom-color: var(--rule); }
+.tw table:has(thead):not(.nonum) tbody tr::before { counter-increment: rn; content: counter(rn); }
+.tw table:has(thead):not(.nonum) tbody tr:has(> td[colspan]:only-child)::before { counter-increment: none; content: ""; }
+.tw table:has(thead):not(.nonum) tfoot tr::before { content: ""; border-bottom: 0; }
+
+/* bảng quản trị dữ liệu (components/Sheet.tsx): tiêu đề nền nhạt, chỉ kẻ ngang, ô 13px đệm 6px 8px */
+.xl { overflow: auto; max-height: calc(100vh - 140px); }
+.xl table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; }
+.xl th, .xl td { border: 0; border-bottom: 1px solid var(--rule2); padding: 6px 8px; font-size: 13px; color: var(--ink);
+  white-space: nowrap; max-width: 360px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+.xl thead th { position: sticky; top: 0; z-index: 2; padding: 0; background: var(--xh); box-shadow: inset 0 -1px var(--rule); }
+.xl th button { width: 100%; min-height: 38px; padding: 0 8px; border: 0; background: none; font-size: 13.5px; font-weight: 500; text-align: left; cursor: pointer; white-space: nowrap; color: var(--ink); }
+.xl th.n button { text-align: right; }
+.xl tbody tr:hover td { background: var(--xh); }
+.xl .rn { color: var(--muted); text-align: right; width: 1%; }
+.xl table:focus { outline: none; }
+.xl td.on { outline: 2px solid var(--accent); outline-offset: -2px; }
+.xl .pill { padding: 0 6px; font-size: 12px; line-height: 17px; }
+.xl td .btn { min-height: 24px; padding: 0 8px; font-size: 12px; border-radius: 3px; }
+
+/* thành phần dùng chung (components/ui.tsx) */
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.pill.ok { background: var(--accent-soft); color: var(--accent-deep); } .pill.warn { background: var(--warn-bg); color: var(--warn-ink); }
+.pill.bad { background: var(--bad-bg); color: var(--bad-ink); } .pill.info { background: var(--info-bg); color: var(--info-ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 8px; border: 1px solid var(--ink);
+  background: var(--card); color: var(--ink); font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: .5; cursor: default; }
+.field { height: 44px; border: 1px solid var(--field); border-radius: 8px; padding: 0 12px; background: var(--card); color: var(--ink); font-weight: 400; }

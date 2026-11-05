@@ -43,7 +43,7 @@ export function Models() {
             <tr><td>Nguồn danh mục</td><td>{h.catalog_source}</td></tr>
             <tr><td>NSGA-II</td><td>quần thể {m.nsga.pop_size}, {m.nsga.generations} thế hệ</td></tr>
             <tr><td>Mô hình ngôn ngữ</td><td>{m.llm_provider} · {m.llm_model} {m.llm_available ? <Pill level="ok">sẵn sàng</Pill> : <Pill level="warn">chưa có khóa, chạy luồng cố định</Pill>}</td></tr>
-            <tr><td>Chuyển DWG (ODA)</td><td>{h.dwg_converter_available ? <Pill level="ok">có</Pill> : <Pill level="warn">chưa cài</Pill>}</td></tr>
+            <tr><td>Chuyển DWG (LibreDWG / ODA)</td><td>{h.dwg_converter_available ? <Pill level="ok">có</Pill> : <Pill level="warn">chưa cài</Pill>}</td></tr>
           </tbody>
         </table>
         <p className="m-0 text-[12.5px] text-muted">Sửa cấu hình trong <code>src/optimat/config.py</code> và biến môi trường.</p>

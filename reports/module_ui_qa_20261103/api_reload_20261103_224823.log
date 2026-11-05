@@ -1,0 +1,272 @@
+INFO:     127.0.0.1:63885 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63888 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62179 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62179 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /api/admin/projects/3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55993 - "GET /api/admin/projects/3/files/28 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56591 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56591 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56591 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51863 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51863 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62115 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62115 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55917 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55917 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55917 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54006 - "POST /api/takeoff/confirm HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54006 - "POST /api/takeoff/rough HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63455 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57605 - "POST /api/takeoff/confirm HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57605 - "POST /api/takeoff/rough HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62865 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62865 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62865 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58196 - "GET /api/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58198 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56802 - "POST /api/takeoff/confirm HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56802 - "POST /api/takeoff/rough HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52536 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52536 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56785 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56785 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60880 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60880 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60880 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54894 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54894 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54894 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63333 - "POST /api/assistant/material-session HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51861 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51861 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51861 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51861 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51861 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54618 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54618 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51331 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51331 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57863 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58707 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58707 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58707 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58707 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58708 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58708 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58708 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58708 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58708 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58708 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58708 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58707 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58707 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58707 - "GET /api/data/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59462 - "GET /api/data/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/admin/users?q=&role=&active=&sort=user_id&order=asc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/admin/users?q=&role=&active=&sort=user_id&order=asc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/concepts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56953 - "GET /api/concepts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60294 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60294 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60294 - "GET /api/admin/db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60294 - "GET /api/admin/db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60294 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60294 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60294 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60294 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60889 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/data/suppliers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/data/offers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/data/offers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60888 - "GET /api/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/admin/db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/admin/db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63759 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59791 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59791 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49353 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49353 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49353 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49355 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49355 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49355 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49355 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49355 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49355 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49355 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49355 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49353 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49353 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49353 - "GET /api/data/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/data/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/admin/users?q=&role=&active=&sort=user_id&order=asc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/admin/users?q=&role=&active=&sort=user_id&order=asc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/concepts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/concepts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61389 - "GET /api/concepts/images/cua_di-door?v=1792393996 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59206 - "GET /api/concepts/samples HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/admin/db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/admin/db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/catalog/wall-materials HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/data/offers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/data/offers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61869 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64899 - "GET /api/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61869 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61869 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61869 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61869 - "GET /api/admin/db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61869 - "GET /api/admin/db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54244 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54244 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54244 - "GET /api/admin/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54244 - "GET /api/admin/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51312 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51312 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59910 - "GET /api/admin/projects/3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59910 - "GET /api/admin/projects/3/files/28 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50469 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50469 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50469 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50469 - "GET /api/admin/projects?q=&sort=updated_at&order=desc&page=1&size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54009 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64184 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50345 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51868 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51868 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51868 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51869 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59270 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59270 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59270 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58250 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58250 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58250 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58251 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60266 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60268 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62465 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62465 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62465 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62466 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54410 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54410 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54410 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57536 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57537 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57537 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57536 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57536 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57537 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55867 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55867 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55867 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51548 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51549 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51549 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54895 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54895 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54895 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54895 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59051 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56706 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56706 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56706 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51656 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57820 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57820 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57820 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49187 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49187 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49187 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49193 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59438 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59438 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59438 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59439 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55755 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55755 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55755 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55755 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55755 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50595 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50596 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50596 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50596 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50596 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50596 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50596 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53165 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53165 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53165 - "GET /api/catalog/reference HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56748 - "GET /api/projects HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56749 - "GET /api/projects HTTP/1.1" 404 Not Found

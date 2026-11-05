@@ -1,0 +1,11 @@
+{
+  "checked": "2026-11-04T10:30:17.2054178+07:00",
+  "receiptSha256": "C73541AF3580A590457A80B0075290163B3260AE92F0BFAEA49A626D6D5219AC",
+  "matched": {
+    "source": 91,
+    "config": 6,
+    "dependencyManifests": 13,
+    ".next": 67,
+    ".next-404-stage": 70
+  }
+}

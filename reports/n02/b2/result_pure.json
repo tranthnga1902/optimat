@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rebar_scope_api.py",
+    "-k",
+    "scope_model or scope_parts",
+    "-q",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=reports/n02/b2/temp_pure"
+  ],
+  "exit_code": 0,
+  "seconds": 13.08023738861084,
+  "database_env_removed": true,
+  "scope": "model and structural_parts only; save input uses FakeSession with no connection; API/worker/TestClient not run"
+}

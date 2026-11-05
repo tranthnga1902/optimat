@@ -1,0 +1,401 @@
+--- a/src/optimat/drawing/viewer.py
++++ b/src/optimat/drawing/viewer.py
+@@ -1,6 +1,7 @@
+ """Dữ liệu cho trang Kiểm tra bóc tách (/do-boc của frontend): bản vẽ, kết quả đo bóc từng mặt bằng, vật liệu chọn được.
+ Chỉ gom kết quả đo bóc thật (cùng mã với API), không tính lại gì."""
+ from __future__ import annotations
++import math
+ 
+ from ..catalog.repository import Catalog, default_catalog
+ from ..schemas import PlanTakeoff, TakeoffResult
+@@ -14,6 +15,30 @@
+ 
+ def _r(v: float) -> float:
+     return round(v, 1)
++
++
++def _display_fields(box):
++    return {"display_bbox": list(box), "display_size": [box[2]-box[0],box[3]-box[1]]}
++
++
++def _primitive_display_bbox(drawing, origin):
++    """Phạm vi minh họa dự phòng; không thay bbox/crop dùng nhận diện."""
++    points=[(s.x1,s.y1) for s in drawing.segments]+[(s.x2,s.y2) for s in drawing.segments]
++    span=max([1.0,*[abs(v) for s in drawing.segments for v in (s.x2-s.x1,s.y2-s.y1)]])
++    for t in drawing.texts:
++        h=max(t.height,span/350)
++        points.extend([(t.x,t.y),(t.x+len(t.text[:120])*h,t.y+h)])
++    for a in drawing.arcs:
++        points.extend([(a.cx-a.r,a.cy-a.r),(a.cx+a.r,a.cy+a.r)])
++    points.extend(p for h in drawing.hatches for poly in h.polygons for p in poly)
++    points=[p for p in points if all(math.isfinite(v) for v in p)] or [(0.,0.),(1.,1.)]
++    ox,oy=origin
++    return (min(p[0] for p in points)-ox,oy-max(p[1] for p in points),
++            max(p[0] for p in points)-ox,oy-min(p[1] for p in points))
++
++
++def _union_display_bbox(a,b):
++    return (min(a[0],b[0]),min(a[1],b[1]),max(a[2],b[2]),max(a[3],b[3]))
+ 
+ 
+ def viewer_data(drawing: Drawing, result: TakeoffResult, file_name: str, plan: dict | None = None) -> dict:
+@@ -47,6 +72,7 @@
+         "height_mm": result.floor_height_mm,
+         "length_rule": result.length_rule,
+         "size": [_r(max(xs) - x0), _r(y1 - min(ys))],
++        **_display_fields(_primitive_display_bbox(drawing,(_r(x0),_r(y1)))),
+         "layers": [{"name": n, "role": result.layer_classes.get(n, "UNKNOWN")} for n in layer_names],
+         "segs": [[tx(s.x1), ty(s.y1), tx(s.x2), ty(s.y2), index[s.layer], 1 if s.kind == "hatch" else 0]
+                  for s in drawing.segments],
+@@ -66,7 +92,7 @@
+         "hatches": hatches,
+         "texts": [{"t": t.text.strip()[:120], "x": tx(t.x), "y": ty(t.y), "enc": t.encoding}
+                   for t in drawing.texts if t.text.strip()],
+-        "arcs": [[tx(a.cx), ty(a.cy), _r(a.r), round(a.start, 1), round(a.end, 1)] for a in drawing.arcs if a.r >= 300],
++        "arcs": [[tx(a.cx), ty(a.cy), _r(a.r), round(a.start, 1), round(a.end, 1)] for a in drawing.arcs if a.r > 0],
+         "hatchsegs": len([s for s in drawing.segments if s.kind == "hatch"]),
+         "plan": plan or {"name": file_name},
+         "origin": [_r(x0), _r(y1)], "bbox_mm": [_r(x0), _r(min(ys)), _r(max(xs)), _r(y1)],
+@@ -96,6 +122,10 @@
+         info = {"name": p.name, "level_m": p.level_m, "height_mm": p.height_mm, "height_source": p.height_source,
+                 "is_ground": i == ground}
+         data = viewer_data(sub, p.result, file_name, info)
++        if p.name != "Toàn bộ bản vẽ":
++            x0,y0,x1,y1=p.bbox
++            ox,oy=data["origin"]
++            data.update(_display_fields((x0-1500-ox,oy-y1-1500,x1+1500-ox,oy-y0+1500)))
+         data["stairs"] = [s.model_dump() for s in stairs[i]]
+         data["warnings"] = data["warnings"] + [n for n in notes if n.startswith(p.name + ":")]
+         out.append(data)
+@@ -135,7 +165,17 @@
+         return
+     for i, p in enumerate(payload["plans"]):
+         box = tuple(plans[i].bbox) if plans and plans[i].name != "Toàn bộ bản vẽ" else None
+-        p["cad"] = renderer.view(box or tuple(p["bbox_mm"]), tuple(p["origin"])).svg
++        try:
++            rendered = renderer.view(box,tuple(p["origin"]))
++        except Exception as exc:  # lỗi dựng nền riêng view; giữ nguyên dữ liệu nhận diện
++            p.pop("cad", None)
++            p["cad_missing"] = True
++            p.setdefault("warnings", []).append(f"Thiếu nền CAD của view này: {exc}")
++            continue
++        p["cad"] = rendered.svg
++        if rendered.display_bbox is not None:
++            display = rendered.display_bbox if box is not None else _union_display_bbox(p["display_bbox"],rendered.display_bbox)
++            p.update(_display_fields(display))
+     xs = [c for s in drawing.segments for c in (s.x1, s.x2)] or [0.0, 1.0]
+     ys = [c for s in drawing.segments for c in (s.y1, s.y2)] or [0.0, 1.0]
+     ox, oy = min(xs), max(ys)
+@@ -144,8 +184,20 @@
+         bx = plans[i].bbox if plans else p["bbox_mm"]
+         boxes.append({"name": p["plan"]["name"], "x": _r(bx[0] - ox), "y": _r(oy - bx[3]),
+                       "w": _r(bx[2] - bx[0]), "h": _r(bx[3] - bx[1])})
+-    payload["overview"] = {"cad": renderer.view(None, (ox, oy)).svg, "size": [_r(max(xs) - ox), _r(oy - min(ys))],
++    overview_origin = (_r(ox),_r(oy))
++    display = _primitive_display_bbox(drawing,overview_origin)
++    payload["overview"] = {"origin": [_r(ox), _r(oy)], "size": [_r(max(xs) - ox), _r(oy - min(ys))],
++                           **_display_fields(display),
+                            "plans": boxes}
++    try:
++        overview = renderer.view(None,overview_origin)
++    except Exception as exc:
++        payload["overview"]["cad_missing"] = True
++        payload["overview"]["warnings"] = [f"Thiếu nền CAD tổng thể: {exc}"]
++    else:
++        payload["overview"]["cad"] = overview.svg
++        if overview.display_bbox is not None:
++            payload["overview"].update(_display_fields(_union_display_bbox(display,overview.display_bbox)))
+ 
+ 
+ def view_payload(drawing: Drawing, result, file_name: str, cad: bool = True) -> dict:
+@@ -156,6 +208,27 @@
+         payload = plans_data(drawing, result, file_name)
+     else:
+         payload = {"file": file_name, "plans": [viewer_data(drawing, result, file_name)]}
++    if plans is not None and not any(p.result.walls or p.result.openings for p in plans):
++        from .sheets import sheet_type_of
++        from .encoding import normalize
++        signals = rough_parts(drawing)
++        roles = {"FOUNDATION", "BEAM", "COLUMN", "SLAB", "STAIR", "LINTEL", "REBAR"}
++        has_structural_title = False
++        for text in drawing.texts:
++            sheet = sheet_type_of(text.text)
++            if sheet is None or sheet.nhom != "ket_cau":
++                continue
++            has_structural_title = True
++            title_roles = set(sheet.bo_phan) & roles
++            if "thep" in normalize(text.text):
++                title_roles.add("REBAR")
++            for role in sorted(title_roles):
++                evidence = f"tiêu đề {text.text.strip()}"
++                sources = signals.setdefault(role, [])
++                if evidence not in sources:
++                    sources.append(evidence)
++        if plans == [] or has_structural_title:
++            payload["drawing_work_signals"] = signals
+     if cad:
+         add_cad_layers(drawing, payload, plans)
+     if plans is not None:
+--- a/src/optimat/drawing/render.py
++++ b/src/optimat/drawing/render.py
+@@ -9,6 +9,7 @@
+ from __future__ import annotations
+ 
+ import copy
++import math
+ import re
+ import xml.etree.ElementTree as ET
+ from dataclasses import dataclass
+@@ -25,6 +26,7 @@
+ class RenderedView:
+     svg: str              # nội dung <g> đã đặt về tọa độ của trang kiểm tra (mm, gốc góc trên trái, y hướng xuống)
+     background: str       # màu nền dùng khi vẽ
++    display_bbox: tuple[float,float,float,float] | None = None  # viewer mm, y xuống; không phải bbox nhận diện
+ 
+ 
+ def _style_font(doc, name: str) -> str:
+@@ -82,6 +84,13 @@
+                                    color_policy=config.ColorPolicy.COLOR,
+                                    lineweight_policy=config.LineweightPolicy.ABSOLUTE)
+         Frontend(RenderContext(doc), self.backend, config=cfg).draw_layout(doc.modelspace(), finalize=True)
++        bounds = self.backend.player().bbox()
++        self.bounds_mm = None
++        if bounds.has_data:
++            values = (bounds.extmin.x*self.scale,bounds.extmin.y*self.scale,
++                      bounds.extmax.x*self.scale,bounds.extmax.y*self.scale)
++            if all(math.isfinite(v) for v in values):
++                self.bounds_mm = values
+ 
+     def view(self, bbox_mm: tuple[float, float, float, float] | None, origin_mm: tuple[float, float],
+              margin_mm: float = 1500.0) -> RenderedView:
+@@ -93,9 +102,11 @@
+         s = self.scale
+         backend = copy.deepcopy(self.backend)          # get_string biến đổi bản ghi tại chỗ: dùng bản sao
+         box = None
++        visible_mm = self.bounds_mm
+         if bbox_mm is not None:
+             x0, y0, x1, y1 = bbox_mm
+             box = BoundingBox2d([Vec2((x0 - margin_mm) / s, (y0 - margin_mm) / s), Vec2((x1 + margin_mm) / s, (y1 + margin_mm) / s)])
++            visible_mm = (x0-margin_mm,y0-margin_mm,x1+margin_mm,y1+margin_mm)
+         page = layout.Page(0, 0, layout.Units.mm, margins=layout.Margins.all(0))
+         settings = layout.Settings(output_coordinate_space=1_000_000, crop_at_margins=box is not None)
+         root = backend.get_xml_root_element(page, settings=settings, render_box=box)
+@@ -116,7 +127,8 @@
+         g = (f'<g class="cad" transform="matrix({A:.9g},0,0,{D:.9g},{E:.6f},{F:.6f})">'
+              '<style>.cad path,.cad polyline,.cad polygon,.cad line,.cad circle,.cad ellipse{vector-effect:non-scaling-stroke}</style>'
+              f"{inner}</g>")
+-        return RenderedView(g, "#000000")
++        display = None if visible_mm is None else (visible_mm[0]-ox,oy-visible_mm[3],visible_mm[2]-ox,oy-visible_mm[1])
++        return RenderedView(g, "#000000", display)
+ 
+ 
+ def render_drawing(drawing, bbox_mm=None, origin_mm=(0.0, 0.0)) -> RenderedView | None:
+--- /dev/null
++++ b/tests/test_viewer_display_bounds.py
+@@ -0,0 +1,127 @@
++"""Display bounds không thay phạm vi nhận diện hoặc gốc overlay."""
++import copy
++import math
++import re
++
++import ezdxf
++import pytest
++
++from optimat.drawing.dxf_reader import Drawing,TextItem,read_dxf
++from optimat.drawing.render import DrawingRenderer
++from optimat.drawing.viewer import view_payload
++from optimat.schemas import TakeoffResult,PlanTakeoff
++
++
++def result():
++    return TakeoffResult(walls=[],groups=[],openings_count=0)
++
++
++def source(tmp_path,kind="arc",unit=4):
++    doc=ezdxf.new();doc.header["$INSUNITS"]=unit
++    k=1 if unit==4 else .001
++    m=doc.modelspace();m.add_line((0,0),(1000*k,1000*k))
++    if kind=="arc":m.add_arc((6000*k,0),600*k,0,90)
++    elif kind=="text":m.add_text("REF",dxfattribs={"insert":(5000*k,5000*k),"height":200*k})
++    elif kind=="circle":m.add_circle((6000*k,0),400*k)
++    elif kind=="small_arc":m.add_arc((500*k,500*k),100*k,0,90)
++    elif kind=="insert":
++        b=doc.blocks.new("NOTE",base_point=(-120000*k,0))
++        b.add_arc((-120000*k,0),600*k,0,90)
++        b.add_text("REF",dxfattribs={"insert":(-120000*k,0),"height":200*k})
++        m.add_blockref("NOTE",(6000*k,0))
++    path=tmp_path/f"{kind}_{unit}.dxf";doc.saveas(path)
++    return read_dxf(path)
++
++
++def contains(box,x,y):
++    return box[0]<=x<=box[2] and box[1]<=y<=box[3]
++
++
++def starts(svg):
++    a,_,_,d,e,f=map(float,re.search(r"matrix\(([^)]*)\)",svg).group(1).split(","))
++    return [(a*float(x)+e,d*float(y)+f) for x,y in re.findall(r'<path d="M (-?[\d.]+) (-?[\d.]+)',svg)]
++
++
++@pytest.mark.parametrize("kind",["arc","text","insert"])
++def test_whole_view_keeps_remote_native_geometry_without_changing_analysis_bbox(tmp_path,kind):
++    drawing=source(tmp_path,kind)
++    measurement=result();before=measurement.model_dump();segments=copy.deepcopy(drawing.segments)
++    data=view_payload(drawing,measurement,"SYNTHETIC")
++    p=data["plans"][0]
++    assert p["bbox_mm"]==[0,0,1000,1000] and p["size"]==[1000,1000] and p["origin"]==[0,1000]
++    assert p["cad"].count("<path")==data["overview"]["cad"].count("<path")>=2
++    x,y=(5000,-4000) if kind=="text" else (6000,1000)
++    assert contains(p["display_bbox"],x,y) and contains(data["overview"]["display_bbox"],x,y)
++    assert data["overview"]["origin"]==[0,1000]
++    assert measurement.model_dump()==before and drawing.segments==segments
++
++
++def test_small_arc_is_display_data_not_filtered_by_door_threshold(tmp_path):
++    d=source(tmp_path,"small_arc")
++    p=view_payload(d,result(),"R100",cad=False)["plans"][0]
++    assert len(d.arcs)==len(p["arcs"])==1
++    assert p["arcs"][0][:3]==[500,500,100]
++
++
++def test_explicit_plan_is_bounded_but_whole_overview_contains_neighbor(tmp_path):
++    d=source(tmp_path,"arc")
++    plan=PlanTakeoff(name="Mặt bằng A",height_source="chưa có",bbox=[0,0,1000,1000],result=result())
++    before=plan.model_dump()
++    data=view_payload(d,[plan],"SYNTHETIC")
++    p=data["plans"][0]
++    assert p["cad"].count("<path")==1
++    assert p["display_bbox"]==[-1500,-1500,2500,2500]
++    assert data["overview"]["cad"].count("<path")==2
++    assert contains(data["overview"]["display_bbox"],6600,1000)
++    assert plan.model_dump()==before
++    fallback=view_payload(d,[plan],"SYNTHETIC",cad=False)["plans"][0]
++    assert fallback["display_bbox"]==p["display_bbox"]
++
++
++def test_named_whole_plan_does_not_crop_to_recognition_box(tmp_path):
++    d=source(tmp_path,"arc")
++    plan=PlanTakeoff(name="Toàn bộ bản vẽ",height_source="chưa có",bbox=[0,0,1000,1000],result=result())
++    p=view_payload(d,[plan],"SYNTHETIC")["plans"][0]
++    assert p["cad"].count("<path")==2 and contains(p["display_bbox"],6600,1000)
++
++
++@pytest.mark.parametrize("unit",[4,6])
++def test_native_arc_coordinates_and_bounds_stay_in_viewer_mm(tmp_path,unit):
++    d=source(tmp_path,"arc",unit)
++    p=view_payload(d,result(),"SYNTHETIC")["plans"][0]
++    assert p["origin"]==[0,1000] and contains(p["display_bbox"],6600,1000)
++    assert any(math.dist(v,(6600,1000))<.05 for v in starts(p["cad"]))
++    assert p["display_size"]==pytest.approx([p["display_bbox"][2]-p["display_bbox"][0],p["display_bbox"][3]-p["display_bbox"][1]])
++
++
++def test_circle_native_bounds_cover_curve_beyond_segment_approximation(tmp_path):
++    d=source(tmp_path,"circle")
++    p=view_payload(d,result(),"SYNTHETIC")["plans"][0]
++    assert contains(p["display_bbox"],6000,1400)
++
++
++def test_crop_render_does_not_mutate_full_recorded_extent(tmp_path):
++    d=source(tmp_path,"arc");renderer=DrawingRenderer(d.doc,d.unit_scale)
++    before=renderer.bounds_mm
++    renderer.view((0,0,1000,1000),(0,1000))
++    whole=renderer.view(None,(0,1000))
++    assert renderer.bounds_mm==before and whole.svg.count("<path")==2
++    assert contains(whole.display_bbox,6600,1000)
++
++
++def test_text_only_without_native_doc_has_finite_fallback_bounds():
++    d=Drawing(segments=[],texts=[TextItem("REF",5000,5000,"TEXT","unicode",200)],blocks=[],hatches=[],layers=[],layer_classes={},unit_scale=1,warnings=[])
++    p=view_payload(d,result(),"SYNTHETIC",cad=False)["plans"][0]
++    assert p["bbox_mm"]==[0,0,1,1] and p["origin"]==[0,1]
++    assert all(math.isfinite(v) for v in p["display_bbox"])
++    assert contains(p["display_bbox"],5000,-4999)
++
++
++def test_insert_origin_is_not_a_visible_point_for_fit_bounds(tmp_path):
++    doc=ezdxf.new();doc.header["$INSUNITS"]=4
++    doc.modelspace().add_line((0,0),(1000,1000))
++    b=doc.blocks.new("REMOTE_ORIGIN",base_point=(1000000,0));b.add_line((0,0),(1000,0))
++    doc.modelspace().add_blockref("REMOTE_ORIGIN",(1000000,0))
++    path=tmp_path/"remote_origin.dxf";doc.saveas(path);d=read_dxf(path)
++    p=view_payload(d,result(),"SYNTHETIC")["plans"][0]
++    assert p["display_bbox"][2]<10000
+--- /dev/null
++++ b/tests/test_viewer_work_signals.py
+@@ -0,0 +1,76 @@
++from optimat.drawing.dxf_reader import Drawing, TextItem
++from optimat.drawing.viewer import view_payload
++from optimat.schemas import TakeoffResult
++from types import SimpleNamespace
++
++
++def drawing(titles):
++    return Drawing(segments=[], texts=[TextItem(t, 0, 0, "0", "unicode") for t in titles],
++                   blocks=[], hatches=[], layers=[], layer_classes={}, unit_scale=1, warnings=[])
++
++
++def test_structural_only_signals_merge_titles_without_quantities(monkeypatch):
++    import optimat.drawing.viewer as viewer
++    monkeypatch.setattr(viewer, "rough_parts", lambda _: {"BEAM": ["layer KC_DAM"]})
++    monkeypatch.setattr(viewer, "add_cad_layers", lambda *_: (_ for _ in ()).throw(AssertionError("no render")))
++    titles = ["MẶT BẰNG MÓNG", "CHI TIẾT CỘT", "CHI TIẾT SÀN", "CHI TIẾT CẦU THANG",
++              "CHI TIẾT LANH TÔ", "BẢNG THỐNG KÊ THÉP DẦM", "CHI TIẾT CỘT", "MẶT ĐỨNG"]
++    payload = view_payload(drawing(titles), [], "SYNTHETIC", cad=False)
++    signals = payload["drawing_work_signals"]
++    assert payload["plans"] == []
++    assert set(signals) == {"FOUNDATION", "BEAM", "COLUMN", "SLAB", "STAIR", "LINTEL", "REBAR"}
++    assert signals["BEAM"][0] == "layer KC_DAM"
++    assert signals["COLUMN"].count("tiêu đề CHI TIẾT CỘT") == 1
++    assert all(isinstance(source, str) for sources in signals.values() for source in sources)
++    assert not any("MẶT ĐỨNG" in source for sources in signals.values() for source in sources)
++
++
++def test_no_signals_is_empty_and_legacy_result_has_no_optional_field():
++    d = drawing([])
++    assert view_payload(d, [], "SYNTHETIC", cad=False)["drawing_work_signals"] == {}
++    result = TakeoffResult(walls=[], groups=[], openings_count=0)
++    assert "drawing_work_signals" not in view_payload(d, result, "SYNTHETIC", cad=False)
++
++
++def test_empty_detected_plans_keep_structural_signals_at_document_scope(monkeypatch):
++    import optimat.drawing.viewer as viewer
++    monkeypatch.setattr(viewer, "plans_data", lambda *_: {"plans": [{"name": "T1"}] * 4})
++    monkeypatch.setattr(viewer, "convention_summary", lambda *_: {})
++    plans = [SimpleNamespace(result=SimpleNamespace(walls=[], openings=[])) for _ in range(4)]
++    payload = view_payload(drawing(["CHI TIẾT CỘT"]), plans, "SYNTHETIC", cad=False)
++    assert payload["drawing_work_signals"] == {"COLUMN": ["tiêu đề CHI TIẾT CỘT"]}
++    assert all("drawing_work_signals" not in p for p in payload["plans"])
++    assert "drawing_work_signals" not in view_payload(drawing(["MẶT ĐỨNG"]), plans, "SYNTHETIC", cad=False)
++    plans[0].result.walls = [object()]
++    assert "drawing_work_signals" not in view_payload(drawing(["CHI TIẾT CỘT"]), plans, "SYNTHETIC", cad=False)
++    plans[0].result.walls = []
++    plans[0].result.openings = [object()]
++    assert "drawing_work_signals" not in view_payload(drawing(["CHI TIẾT CỘT"]), plans, "SYNTHETIC", cad=False)
++
++
++def test_one_failed_render_keeps_recognition_and_other_views(monkeypatch):
++    import optimat.drawing.viewer as viewer
++    class Renderer:
++        def __init__(self, *_):
++            self.calls = 0
++
++        def view(self, *_):
++            self.calls += 1
++            if self.calls in (1, 3):
++                raise ValueError("synthetic render failure")
++            return SimpleNamespace(svg="<g/>", display_bbox=None)
++
++    monkeypatch.setattr(viewer, "DrawingRenderer", Renderer)
++    d = drawing([])
++    d.doc = object()
++    def plan(name):
++        return {"origin": [0, 1], "display_bbox": [0, 0, 1, 1], "bbox_mm": [0, 0, 1, 1],
++                "plan": {"name": name}, "walls": [{"id": name}], "warnings": []}
++    payload = {"plans": [plan("T1"), plan("T2")], "source_hash": "untouched"}
++    viewer.add_cad_layers(d, payload, None)
++    first, second = payload["plans"]
++    assert first["cad_missing"] and first["warnings"] and "cad" not in first
++    assert first["walls"] == [{"id": "T1"}]
++    assert second["cad"] == "<g/>" and not second["warnings"]
++    assert payload["overview"]["cad_missing"] and payload["overview"]["warnings"]
++    assert payload["source_hash"] == "untouched"

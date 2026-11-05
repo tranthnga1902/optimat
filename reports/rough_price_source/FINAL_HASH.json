@@ -1,0 +1,10 @@
+[
+  {
+    "file": "src/optimat/rough/takeoff.py",
+    "sha256": "2882a4e922d30d6a932022b06f04bf8bda5faa4e6e093ed0a443725a64eef90f"
+  },
+  {
+    "file": "tests/test_rough_price_source.py",
+    "sha256": "9c516e11055e860a0da3d508dafb2176a8838ecbb86b4daf9ee34d4c09daba19"
+  }
+]

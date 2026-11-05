@@ -1,0 +1,27 @@
+{
+  "route": "/qa-input-roles",
+  "production_manifest_sha256": "fa9d7f71b4aa2337bb3f2ac1e2aea6caea71d41731a2502db7019b6ff28b6e4c",
+  "network_and_storage": "mock only",
+  "ports": {
+    "3001": {
+      "files": {
+        "src/app/qa-input-roles/DossierFixture.tsx": "709c685f332fd014f9c4c1f22cda33612e7b74223efb5be6d8124830f4772b75",
+        "src/app/qa-input-roles/fixture-api.ts": "384ff8b3f03451ba97a68fe51c95e49bc46fdccf47b9628a652d6135926f5ad6",
+        "src/app/qa-input-roles/page.tsx": "add0bc48232ac20cfa73d3d307473db29c1b8a91219eec480bef2a084190984c"
+      },
+      "production_dossier_sha256": "a19f570ede4afbb2f5a122564af6434d7dc813c5cb49c9c977a91569f2ec012d",
+      "tests": "fixture.log",
+      "type_lint": "../3001/fixture-types.json"
+    },
+    "3002": {
+      "files": {
+        "src/app/qa-input-roles/DossierFixture.tsx": "7115de8126d0c2c678addacba18259fef7376046bf9c1ac6e04c922c8629dee2",
+        "src/app/qa-input-roles/fixture-api.ts": "384ff8b3f03451ba97a68fe51c95e49bc46fdccf47b9628a652d6135926f5ad6",
+        "src/app/qa-input-roles/page.tsx": "add0bc48232ac20cfa73d3d307473db29c1b8a91219eec480bef2a084190984c"
+      },
+      "production_dossier_sha256": "10629d1d7e0fce3890642cf950a28fe32dbe8b19866b1007e51d81cac05652ec",
+      "tests": "fixture.log",
+      "type_lint": "../3002/fixture-types.json"
+    }
+  }
+}

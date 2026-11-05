@@ -1,0 +1,307 @@
+{
+  "fixture_kind": "REFERENCE_ONLY_M1",
+  "source": "DU TOAN M1.xls",
+  "sha256": "9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+  "evidence_file": "docs/review/G8_M1_AF11110_EVIDENCE.json",
+  "norm_code": "AF.11110",
+  "norm_code_source": "Phân tích VT!B58:E58",
+  "work_name": "Bê tông lót móng SX bằng máy trộn, đổ bằng thủ công, M100, đá 4x6, PCB30",
+  "unit": "m³",
+  "rows": [
+    {
+      "row_id": "M1:AF.11110:TL38",
+      "label": "DC-1",
+      "group": "Đài móng",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.3225",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "2.0",
+        "length_m": "0.75",
+        "width_m": "2.15",
+        "height_m": "0.1",
+        "label": "DC-1",
+        "source": "DU TOAN M1.xls/Tien luong!B38:I38",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B38:I38",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H38: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    },
+    {
+      "row_id": "M1:AF.11110:TL39",
+      "label": "DC-2",
+      "group": "Đài móng",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.675",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "4.0",
+        "length_m": "0.75",
+        "width_m": "2.25",
+        "height_m": "0.1",
+        "label": "DC-2",
+        "source": "DU TOAN M1.xls/Tien luong!B39:I39",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B39:I39",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H39: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    },
+    {
+      "row_id": "M1:AF.11110:TL40",
+      "label": "DC-3",
+      "group": "Đài móng",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.225",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "2.0",
+        "length_m": "0.75",
+        "width_m": "1.5",
+        "height_m": "0.1",
+        "label": "DC-3",
+        "source": "DU TOAN M1.xls/Tien luong!B40:I40",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B40:I40",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H40: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    },
+    {
+      "row_id": "M1:AF.11110:TL42",
+      "label": "GM-1",
+      "group": "Giằng móng",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.993",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "2.0",
+        "length_m": "9.930000000000001",
+        "width_m": "0.5",
+        "height_m": "0.1",
+        "label": "GM-1",
+        "source": "DU TOAN M1.xls/Tien luong!B42:I42",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B42:I42",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H42: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    },
+    {
+      "row_id": "M1:AF.11110:TL43",
+      "label": "GM-2",
+      "group": "Giằng móng",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.1835",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "1.0",
+        "length_m": "3.6699999999999995",
+        "width_m": "0.5",
+        "height_m": "0.1",
+        "label": "GM-2",
+        "source": "DU TOAN M1.xls/Tien luong!B43:I43",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B43:I43",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H43: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    },
+    {
+      "row_id": "M1:AF.11110:TL44",
+      "label": "GM-3",
+      "group": "Giằng móng",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.367",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "2.0",
+        "length_m": "3.6699999999999995",
+        "width_m": "0.5",
+        "height_m": "0.1",
+        "label": "GM-3",
+        "source": "DU TOAN M1.xls/Tien luong!B44:I44",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B44:I44",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H44: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    },
+    {
+      "row_id": "M1:AF.11110:TL45",
+      "label": "GM-4",
+      "group": "Giằng móng",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.1835",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "1.0",
+        "length_m": "3.6699999999999995",
+        "width_m": "0.5",
+        "height_m": "0.1",
+        "label": "GM-4",
+        "source": "DU TOAN M1.xls/Tien luong!B45:I45",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B45:I45",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H45: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    },
+    {
+      "row_id": "M1:AF.11110:TL47",
+      "label": "DT-01",
+      "group": "Dầm tường",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.214",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "1.0",
+        "length_m": "5.35",
+        "width_m": "0.4",
+        "height_m": "0.1",
+        "label": "DT-01",
+        "source": "DU TOAN M1.xls/Tien luong!B47:I47",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B47:I47",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H47: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    },
+    {
+      "row_id": "M1:AF.11110:TL48",
+      "label": "DT-02",
+      "group": "Dầm tường",
+      "role": "contribution",
+      "sign": 1,
+      "unit": "m³",
+      "raw_quantity": "0.088",
+      "method": "source_quantity",
+      "dimensions": {
+        "count": "2.0",
+        "length_m": "1.1",
+        "width_m": "0.4",
+        "height_m": "0.1",
+        "label": "DT-02",
+        "source": "DU TOAN M1.xls/Tien luong!B48:I48",
+        "repetitions": 1
+      },
+      "factors": [],
+      "expression": "Lượng dòng lấy từ ô I; D×E×F×G là đối chiếu hình học, chưa audit công thức XLS",
+      "sources": [
+        "DU TOAN M1.xls/Tien luong!B48:I48",
+        "sha256:9312133c01b959194447ed90b8fdb0b889b98fb7bb5cc4a078a6da2ffe0f1ced",
+        "Tien luong!H48: ô trống, không ghi hệ số phụ đã duyệt"
+      ],
+      "missing": []
+    }
+  ],
+  "total_raw": "3.2515",
+  "source_total_cell": "Tien luong!J36",
+  "stored_total": "3.2515",
+  "materials": [
+    {
+      "source_row": 60,
+      "source_material_code": "A24.0797A",
+      "name": "Xi măng PCB30",
+      "unit": "kg",
+      "rate_per_m3": "197.825",
+      "quantity_from_raw": "643.2279875",
+      "stored_quantity": "643.228",
+      "stored_number_format": "#,##0.###0;\\-#,##0.###0",
+      "source": "Phân tích VT!B60:F60"
+    },
+    {
+      "source_row": 61,
+      "source_material_code": "A24.0180",
+      "name": "Cát vàng",
+      "unit": "m3",
+      "rate_per_m3": "0.572975",
+      "quantity_from_raw": "1.8630282125",
+      "stored_quantity": "1.863",
+      "stored_number_format": "#,##0.###0;\\-#,##0.###0",
+      "source": "Phân tích VT!B61:F61"
+    },
+    {
+      "source_row": 62,
+      "source_material_code": "A24.0010",
+      "name": "Đá 4x6",
+      "unit": "m3",
+      "rate_per_m3": "0.92865",
+      "quantity_from_raw": "3.019505475",
+      "stored_quantity": "3.0195",
+      "stored_number_format": "#,##0.###0;\\-#,##0.###0",
+      "source": "Phân tích VT!B62:F62"
+    },
+    {
+      "source_row": 63,
+      "source_material_code": "A24.0524",
+      "name": "Nước",
+      "unit": "lít",
+      "rate_per_m3": "166.05",
+      "quantity_from_raw": "539.911575",
+      "stored_quantity": "539.9116",
+      "stored_number_format": "#,##0.###0;\\-#,##0.###0",
+      "source": "Phân tích VT!B63:F63"
+    }
+  ],
+  "precision_note": "Giữ số ô gốc (kể cả floating artifact); I là lượng nguồn; không công bố đã kiểm công thức XLS.",
+  "production_catalog_changed": false,
+  "independent_ground_truth_confirmed": false
+}

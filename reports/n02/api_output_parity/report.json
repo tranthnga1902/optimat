@@ -1,0 +1,242 @@
+{
+  "fixture_kind": "SYNTHETIC",
+  "cases": [
+    {
+      "case": "pending_two_tables",
+      "status": "PASS",
+      "http": {
+        "json": 200,
+        "excel": 200,
+        "optimizer": 200
+      },
+      "steel_total": {
+        "code": "COT_THEP",
+        "name": "Cốt thép",
+        "unit": "tấn",
+        "quantity": 0.063,
+        "complete": false,
+        "items": 1,
+        "status": "D"
+      },
+      "steel_missing": [
+        "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận",
+        "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+      ],
+      "wire": {
+        "quantity": 0.753,
+        "complete": false,
+        "status": "D",
+        "missing": [
+          "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+        ],
+        "best_price": 100.0,
+        "price_source": "QUOTE, SYNTHETIC, SYNTHETIC",
+        "est_cost": null
+      },
+      "excel_total": {
+        "Mã": "COT_THEP",
+        "Công tác": "Cốt thép",
+        "Đơn vị": "tấn",
+        "Khối lượng": 0.063,
+        "Đủ số": "thiếu",
+        "Trạng thái": "D (thiếu dữ liệu)",
+        "Số dòng": 1
+      },
+      "excel_wire": {
+        "Mã": "TH10",
+        "Vật liệu": "Dây thép buộc 1 ly",
+        "Nhóm": "be_tong_cot_thep",
+        "Loại": "Thép cốt, dây buộc",
+        "Đơn vị": "kg",
+        "Khối lượng": 0.753,
+        "Khoảng (min–max)": "0.495 – 1.012",
+        "Khối lượng kg": 0.8,
+        "Đủ số": "thiếu",
+        "Trạng thái": "D (thiếu dữ liệu)",
+        "Mức xác nhận hệ số": "tinh",
+        "missing_reason": "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận",
+        "Từ công tác": "COT_THEP 0,063 tấn × 7,85–16,07 kg / tấn"
+      },
+      "group_label": "chưa đủ dữ liệu khối lượng",
+      "optimizer_wire_in": "missing"
+    },
+    {
+      "case": "pending_manual_00632",
+      "status": "PASS",
+      "http": {
+        "json": 200,
+        "excel": 200,
+        "optimizer": 200
+      },
+      "steel_total": {
+        "code": "COT_THEP",
+        "name": "Cốt thép",
+        "unit": "tấn",
+        "quantity": 0.063,
+        "complete": false,
+        "items": 1,
+        "status": "D"
+      },
+      "steel_missing": [
+        "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận",
+        "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+      ],
+      "wire": {
+        "quantity": 0.753,
+        "complete": false,
+        "status": "D",
+        "missing": [
+          "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+        ],
+        "best_price": 100.0,
+        "price_source": "QUOTE, SYNTHETIC, SYNTHETIC",
+        "est_cost": null
+      },
+      "excel_total": {
+        "Mã": "COT_THEP",
+        "Công tác": "Cốt thép",
+        "Đơn vị": "tấn",
+        "Khối lượng": 0.063,
+        "Đủ số": "thiếu",
+        "Trạng thái": "D (thiếu dữ liệu)",
+        "Số dòng": 1
+      },
+      "excel_wire": {
+        "Mã": "TH10",
+        "Vật liệu": "Dây thép buộc 1 ly",
+        "Nhóm": "be_tong_cot_thep",
+        "Loại": "Thép cốt, dây buộc",
+        "Đơn vị": "kg",
+        "Khối lượng": 0.753,
+        "Khoảng (min–max)": "0.495 – 1.012",
+        "Khối lượng kg": 0.8,
+        "Đủ số": "thiếu",
+        "Trạng thái": "D (thiếu dữ liệu)",
+        "Mức xác nhận hệ số": "tinh",
+        "missing_reason": "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận",
+        "Từ công tác": "COT_THEP 0,063 tấn × 7,85–16,07 kg / tấn"
+      },
+      "group_label": "chưa đủ dữ liệu khối lượng",
+      "optimizer_wire_in": "missing"
+    },
+    {
+      "case": "resolved_same_scope",
+      "status": "PASS",
+      "http": {
+        "json": 200,
+        "excel": 200,
+        "optimizer": 200
+      },
+      "steel_total": {
+        "code": "COT_THEP",
+        "name": "Cốt thép",
+        "unit": "tấn",
+        "quantity": 0.032,
+        "complete": true,
+        "items": 1,
+        "status": "A"
+      },
+      "steel_missing": [],
+      "wire": {
+        "quantity": 0.383,
+        "complete": true,
+        "status": "C",
+        "missing": [],
+        "best_price": 100.0,
+        "price_source": "QUOTE, SYNTHETIC, SYNTHETIC",
+        "est_cost": 38.0
+      },
+      "excel_total": {
+        "Mã": "COT_THEP",
+        "Công tác": "Cốt thép",
+        "Đơn vị": "tấn",
+        "Khối lượng": 0.032,
+        "Đủ số": "có",
+        "Trạng thái": "A (đọc trực tiếp)",
+        "Số dòng": 1
+      },
+      "excel_wire": {
+        "Mã": "TH10",
+        "Vật liệu": "Dây thép buộc 1 ly",
+        "Nhóm": "be_tong_cot_thep",
+        "Loại": "Thép cốt, dây buộc",
+        "Đơn vị": "kg",
+        "Khối lượng": 0.383,
+        "Khoảng (min–max)": "0.251 – 0.514",
+        "Khối lượng kg": 0.4,
+        "Đủ số": "có",
+        "Trạng thái": "C (tạm tính (giả định người dùng))",
+        "Mức xác nhận hệ số": "tinh",
+        "missing_reason": null,
+        "Từ công tác": "COT_THEP 0,032 tấn × 7,85–16,07 kg / tấn"
+      },
+      "group_label": "có",
+      "optimizer_wire_in": "materials"
+    },
+    {
+      "case": "resolved_two_floors",
+      "status": "PASS",
+      "http": {
+        "json": 200,
+        "excel": 200,
+        "optimizer": 200
+      },
+      "steel_total": {
+        "code": "COT_THEP",
+        "name": "Cốt thép",
+        "unit": "tấn",
+        "quantity": 0.063,
+        "complete": true,
+        "items": 1,
+        "status": "A"
+      },
+      "steel_missing": [],
+      "wire": {
+        "quantity": 0.753,
+        "complete": true,
+        "status": "C",
+        "missing": [],
+        "best_price": 100.0,
+        "price_source": "QUOTE, SYNTHETIC, SYNTHETIC",
+        "est_cost": 75.0
+      },
+      "excel_total": {
+        "Mã": "COT_THEP",
+        "Công tác": "Cốt thép",
+        "Đơn vị": "tấn",
+        "Khối lượng": 0.063,
+        "Đủ số": "có",
+        "Trạng thái": "A (đọc trực tiếp)",
+        "Số dòng": 1
+      },
+      "excel_wire": {
+        "Mã": "TH10",
+        "Vật liệu": "Dây thép buộc 1 ly",
+        "Nhóm": "be_tong_cot_thep",
+        "Loại": "Thép cốt, dây buộc",
+        "Đơn vị": "kg",
+        "Khối lượng": 0.753,
+        "Khoảng (min–max)": "0.495 – 1.012",
+        "Khối lượng kg": 0.8,
+        "Đủ số": "có",
+        "Trạng thái": "C (tạm tính (giả định người dùng))",
+        "Mức xác nhận hệ số": "tinh",
+        "missing_reason": null,
+        "Từ công tác": "COT_THEP 0,063 tấn × 7,85–16,07 kg / tấn"
+      },
+      "group_label": "có",
+      "optimizer_wire_in": "materials"
+    }
+  ],
+  "failures": [],
+  "hash_before_count": 212,
+  "hash_after_count": 212,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "elapsed_seconds": 10.11,
+  "passed": 4,
+  "exit_code": 0
+}

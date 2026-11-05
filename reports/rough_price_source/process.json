@@ -1,0 +1,24 @@
+{
+  "pid": 33764,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_price_source.py",
+    "tests/test_catalog_pricing.py",
+    "tests/test_rough_partial.py",
+    "tests/test_rough_agent.py::test_rough_materials_get_prices_same_unit_only",
+    "tests/test_rough_materials.py::test_incomplete_purchase_quantity_has_no_estimated_cost",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\rough_price_source\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T15:44:47.891043+00:00",
+  "no_db": true,
+  "no_dotenv": true,
+  "fixture_catalog": "Giá trong RAM/CSV, price_offers monkeypatch trong các ca nguồn",
+  "test_overlay": "tests/conftest.py có thể dùng data/sample/catalog cho các hồi quy cũ"
+}

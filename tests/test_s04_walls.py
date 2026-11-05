@@ -153,10 +153,14 @@ def test_gap_door_without_height_listed_not_subtracted(tmp_path):
     works, warns = wall_works("T1", 3000, walls, ops, params, Catalog.load(), systems)
     lintel = next(w for w in works if w.code == "LANH_TO")
     _close(lintel.quantity, (0.9 + 0.4) * 0.22 * 0.2)
-    assert any("chưa có chiều cao" in w for w in warns)
-    ops[0].h = 2200    # người dùng nhập cao trên trang kiểm tra
+    assert next(w for w in works if w.code == "XAY").quantity is None          # B7: chưa có cao cửa -> khối xây chưa đủ căn cứ
+    assert any("thiếu cao" in m for w in works if w.code == "XAY" for m in w.missing)
+    ops[0].h = 2200    # người dùng nhập cao trên trang kiểm tra -> trừ lỗ
     xay = lambda ws: next(w for w in ws if w.code == "XAY").quantity
-    _close(xay(works) - xay(wall_works("T1", 3000, walls, ops, params, Catalog.load(), systems)[0]), 0.9 * 2.2 * 0.22)
+    with_hole = xay(wall_works("T1", 3000, walls, ops, params, Catalog.load(), systems)[0])
+    no_hole = xay(wall_works("T1", 3000, walls, [o.model_copy(update={"keep": False}) for o in ops], params,
+                             Catalog.load(), systems)[0])
+    _close(no_hole - with_hole, 0.9 * 2.2 * 0.22 + (0.9 + 0.4) * 0.22 * 0.2)   # lỗ + lanh tô của lỗ đó
 
 
 def test_no_height_no_area(tmp_path):

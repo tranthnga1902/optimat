@@ -1,0 +1,35 @@
+{
+  "hash_stable": true,
+  "results": [
+    {
+      "port": "3002",
+      "script": "check-openings.cjs",
+      "exit": 0
+    },
+    {
+      "port": "3002",
+      "script": "check-partial-confirm.cjs",
+      "exit": 0
+    },
+    {
+      "port": "3002",
+      "script": "check-consumers.cjs",
+      "exit": 0
+    },
+    {
+      "port": "3001",
+      "script": "check-openings.cjs",
+      "exit": 0
+    },
+    {
+      "port": "3001",
+      "script": "check-partial-confirm.cjs",
+      "exit": 0
+    },
+    {
+      "port": "3001",
+      "script": "check-consumers.cjs",
+      "exit": 0
+    }
+  ]
+}

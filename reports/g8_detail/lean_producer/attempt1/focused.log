@@ -1,0 +1,43 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 145 items / 3 deselected / 142 selected
+
+tests\test_rough_quantity_details.py ...............................F... [ 24%]
+........................                                                 [ 41%]
+tests\test_rough_beam_sources.py ...........................             [ 60%]
+tests\test_rough_takeoff.py ..........                                   [ 67%]
+tests\test_rough_foundations.py ..........                               [ 74%]
+tests\test_work_dimensions.py ....................................       [100%]
+
+================================== FAILURES ===================================
+_________________ test_lean_hook_receives_pre_round_quantity __________________
+
+    def test_lean_hook_receives_pre_round_quantity():
+        f = SimpleNamespace(name="DC-1", count=2, lean_thickness_mm=100)
+        base = SimpleNamespace(length_mm=750, width_mm=2150)
+        q = f.count * base.length_mm * base.width_mm * f.lean_thickness_mm / 1e9
+>       r = lean_foundation_row(f, base, row_id="lean-1", raw_quantity=q)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_rough_quantity_details.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+f = namespace(name='DC-1', count=2, lean_thickness_mm=100)
+base = namespace(length_mm=750, width_mm=2150), row_id = 'lean-1'
+raw_quantity = 0.3225
+
+    def lean_foundation_row(f: FoundationItem, base: FootingTier | None, *, row_id: str, raw_quantity) -> QuantityDetailRow:
+        """Nhận chính q trước _work round3, không phục hồi từ lượng đã làm tròn."""
+>       source = f"{f.source or 'Thông số móng người dùng nhập'}; FoundationItem {f.name}: count; lớp đáy; lean_thickness_mm"
+                    ^^^^^^^^
+E       AttributeError: 'types.SimpleNamespace' object has no attribute 'source'
+
+src\optimat\rough\quantity_details.py:27: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_rough_quantity_details.py::test_lean_hook_receives_pre_round_quantity
+================ 1 failed, 141 passed, 3 deselected in 12.54s =================
+
+EXIT=1

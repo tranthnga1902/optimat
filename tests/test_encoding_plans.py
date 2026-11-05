@@ -115,3 +115,16 @@ def test_views_only_file_has_no_plan():
     assert has_only_views(_drawing(texts=[_t("MẶT CẮT A-A"), _t("CHI TIẾT CẦU THANG")]))
     assert not has_only_views(_drawing(texts=[_t("MẶT BẰNG TẦNG 1"), _t("MẶT CẮT A-A")]))
     assert not has_only_views(_drawing(texts=[_t("Tường 220")]))
+
+
+def test_twin_titles_of_one_plan_are_merged():
+    """Bộ 46: mỗi hình ghi "MẶT BẰNG LẦU 2" và "MẶT BẰNG LẦU 2 TL 1:50" cách 19 m cùng hàng. Không gộp thì khung tìm
+    chia đôi khoảng cách và cắt mặt bằng nhà ống 25 m làm hai mảnh. Hai tiêu đề khác tầng, hoặc cùng có tỷ lệ, không gộp."""
+    from optimat.drawing.plans import _merge_twin_titles
+    t = lambda s, x, y=0: TextItem(s, x, y, "0", "unicode", 150)  # noqa: E731
+    merged, absorbed = _merge_twin_titles([t("MẶT BẰNG LẦU 2  TL 1:50", 0), t("MẶT BẰNG LẦU 2", 19000, 2000),
+                                           t("MẶT BẰNG LẦU 3  TL 1:50", 37000), t("MẶT BẰNG LẦU 3", 56000, 2000)])
+    assert [(m.text, m.x) for m in merged] == [("MẶT BẰNG LẦU 2  TL 1:50", 9500), ("MẶT BẰNG LẦU 3  TL 1:50", 46500)]
+    assert len(absorbed) == 4
+    kept, _ = _merge_twin_titles([t("MẶT BẰNG TẦNG 1 TL 1:100", 0), t("MẶT BẰNG TẦNG 1 TL 1:100", 15000)])
+    assert len(kept) == 2

@@ -1,0 +1,9 @@
+{
+  "active": "review15_v2",
+  "reader": "review15_v2/reader.json",
+  "target": "review15_v2/target_trace.json",
+  "cad_receipt": "review15_v2/receipt.json",
+  "test_receipt": "review15_v2/test_receipt.json",
+  "source_sha256": "6bb3c47a1a2275c05e264e91afc40968fa01670371c8a237df65ca5aed61d6e9",
+  "status": "SOURCE_FREEZE_CHỜ_QA15_REVIEW; gross actual retained; net NULL"
+}

@@ -1,0 +1,79 @@
+{
+  "mode": "OFFLINE_FACTS",
+  "start_utc": "2026-11-03T16:11:20.616799+00:00",
+  "source_sha256": "db8f77dabe1b83019a06fbbdc196728d2cef4948bbdd161a115ab62e328157b6",
+  "context_sha256": "e1dde8db29d9697677d206f09ccd96fbcfdc48c7a1734c35fe2d82131752ee51",
+  "work_count": 52,
+  "materials": [
+    {
+      "line": "m0",
+      "name": "Gạch xây (chưa chọn phương án tường)",
+      "class": "gach",
+      "complete": false,
+      "purchase_quantity": null,
+      "options": []
+    },
+    {
+      "line": "m1",
+      "name": "Vữa trát",
+      "class": "vua_be_tong",
+      "complete": false,
+      "purchase_quantity": null,
+      "options": []
+    },
+    {
+      "line": "m2",
+      "name": "Bê tông (chưa chọn mác)",
+      "class": "vua_be_tong",
+      "complete": false,
+      "purchase_quantity": null,
+      "options": []
+    },
+    {
+      "line": "m3",
+      "name": "Vữa cán nền",
+      "class": "vua_be_tong",
+      "complete": false,
+      "purchase_quantity": null,
+      "options": []
+    },
+    {
+      "line": "m4",
+      "name": "Cốt thép (chưa chia nhóm đường kính)",
+      "class": "thep",
+      "complete": false,
+      "purchase_quantity": null,
+      "options": []
+    },
+    {
+      "line": "m5",
+      "name": "Dây thép buộc 1 ly",
+      "class": "thep",
+      "complete": false,
+      "purchase_quantity": null,
+      "options": [
+        {
+          "id": "TH10",
+          "name": "Dây thép buộc 1 ly",
+          "data_kind": "ACTUAL",
+          "observed_price": false,
+          "reference": false,
+          "price_level": null,
+          "state": "current_lookup",
+          "can_apply": false
+        }
+      ]
+    },
+    {
+      "line": "m6",
+      "name": "Vật liệu cốp pha",
+      "class": "khac",
+      "complete": false,
+      "purchase_quantity": null,
+      "options": []
+    }
+  ],
+  "human_approval": false,
+  "CAD_sent": false,
+  "http_attempts": 0
+}

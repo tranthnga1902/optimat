@@ -1,0 +1,23 @@
+{
+  "pid": 44536,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_quantity_details.py",
+    "tests/test_work_dimensions.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--deselect=tests/test_work_dimensions.py::test_http_rough_json_preserves_dimensions_and_n03_partial",
+    "--deselect=tests/test_work_dimensions.py::test_http_nonfinite_computed_metadata_is_clear_422_not_json_nan",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\g8_detail\\canonical_dto\\attempt2\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T16:29:13.591436+00:00",
+  "no_db": true,
+  "no_dotenv": true,
+  "metadata_catalog": "Catalog.from_csv(None)",
+  "test_overlay": "tests/conftest.py có thể dùng data/sample/catalog cho các hồi quy cũ"
+}

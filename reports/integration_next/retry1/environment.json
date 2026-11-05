@@ -1,0 +1,36 @@
+{
+  "started_utc": "2026-11-03T15:50:26.338935+00:00",
+  "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+  "python_executable": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "outside_sandbox": true,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\integration_next\\retry1\\pytest_temp"
+  ],
+  "flags": {
+    "DATABASE_URL_present": false,
+    "OPTIMAT_TEST_DATABASE_URL_present": false,
+    "OPTIMAT_NO_DOTENV": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPTIMAT_CATALOG_OVERLAY": "data/sample/catalog",
+    "pytest_cacheprovider_enabled": false,
+    "runxfail": false
+  },
+  "outside_hash_scope": [
+    "frontend",
+    "SQL",
+    "docs",
+    "other reports",
+    "AI staging in tmp not applied"
+  ],
+  "scope_note": "single normal backend retry1 after FINAL/freeze; no AI/UI/DB acceptance, no API worker intervention"
+}

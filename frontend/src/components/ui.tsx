@@ -14,6 +14,33 @@ export function Logo({ color, size = 28 }: { color: string; size?: number }) {
   );
 }
 
+// Biểu tượng nét 24×24 tự vẽ (không thêm thư viện): tên -> đường vẽ.
+const ICONS = {
+  folder: "M3 6a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z",
+  file: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z M14 3v5h5 M9 13h6 M9 17h6",
+  check: "M4 4h16v16H4Z M8 12l3 3 5-6",
+  layers: "M12 3 2 8l10 5 10-5Z M2 13l10 5 10-5",
+  tag: "M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9Z M8 8h.01",
+  sliders: "M4 6h10 M18 6h2 M4 12h4 M12 12h8 M4 18h12 M20 18h0 M16 4v4 M10 10v4 M18 16v4",
+  upload: "M12 16V4 M7 9l5-5 5 5 M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3",
+  branch: "M6 3v12 M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z M18 9a9 9 0 0 1-9 9",
+  pin: "M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12Z M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
+  building: "M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16 M16 9h3a1 1 0 0 1 1 1v11 M2 21h20 M8 7h4 M8 11h4 M8 15h4",
+  stack: "M4 20h16 M4 15h16 M4 10h16 M6 5h12",
+  db: "M12 8c4.4 0 8-1.3 8-3s-3.6-3-8-3-8 1.3-8 3 3.6 3 8 3Z M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5 M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3",
+  text: "M4 6h16 M4 10h16 M4 14h10 M4 18h7",
+  edit: "M4 20h4L19 9l-4-4L4 16Z M13.5 6.5l4 4",
+  plus: "M12 5v14 M5 12h14",
+  search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z M20 20l-4-4",
+  chevron: "M9 6l6 6-6 6",
+} as const;
+export type IconName = keyof typeof ICONS;
+export const Icon = ({ name, size = 18, className = "" }: { name: IconName; size?: number; className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`shrink-0 ${className}`}>
+    <path d={ICONS[name]} />
+  </svg>
+);
+
 /** Đầu trang: tiêu đề, mô tả, nút bên phải. */
 export function Head({ title, children, actions }: { title: string; children?: ReactNode; actions?: ReactNode }) {
   return (
@@ -67,7 +94,7 @@ export const Loading = ({ children = "Đang tải…" }: { children?: ReactNode 
 
 /** Thanh bước của luồng người dùng. done: các bước đã xong. */
 export function Steps({ cur, done }: { cur: string; done: Record<string, boolean> }) {
-  const list: [string, string][] = [["/do-boc", "1. Bản vẽ và đo bóc"], ["/vat-lieu", "2. Vật liệu và giá"], ["/phan-tho", "Phần thô"], ["/toi-uu", "3. Tối ưu"]];
+  const list: [string, string][] = [["/du-an-cua-toi", "1. Dự án"], ["/do-boc", "2. Bóc tách bản vẽ"], ["/phan-tho", "3. Kiểm tra công tác và khối lượng"], ["/dieu-chinh", "4. Chọn vật liệu"], ["/vat-lieu", "5. Vật liệu và giá"], ["/toi-uu", "6. Tối ưu"]];
   return (
     <ol className="m-0 flex list-none flex-wrap gap-2 p-0">
       {list.map(([href, t]) => {

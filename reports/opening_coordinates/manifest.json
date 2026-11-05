@@ -1,0 +1,16 @@
+{
+  "3002": {
+    "base_manifest": "b42e4fcfdd688a6b4d85f733ab2487acb453a89307c71d9db4e34d0d85dc5ae6",
+    "base_sha256": "0b629c34eb9808cc7b74d6de05fa78cd539e223357cd43b9d2fc574eb45532ec",
+    "new_sha256": "a0191d788d8072da2e08c83836a603a4caa198bc76731d17fd70b951ae4d41f7",
+    "file": "src/app/(user)/do-boc/model.ts",
+    "patch_sha256": "f4483f0d4fa60f13a2d9b359558ccaa301a6f505a634eb50ae70c32a30dd4f76"
+  },
+  "3001": {
+    "base_manifest": "b42e4fcfdd688a6b4d85f733ab2487acb453a89307c71d9db4e34d0d85dc5ae6",
+    "base_sha256": "cbda27d09340493a1e1dc7e163c557553b2d0af0d46e49afa33ed70012d027dc",
+    "new_sha256": "88a7c52aec64480d19b2ac0a62914c0ac9ba9ee047c0f3c3d28a20d1712c3946",
+    "file": "src/app/(user)/do-boc/model.ts",
+    "patch_sha256": "4662600f50c196a69df913ede21922491cf6c5c0bc752364a7c7472474d489ce"
+  }
+}

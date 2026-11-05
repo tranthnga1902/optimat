@@ -1,0 +1,18 @@
+[
+  {
+    "probe": "socketpair",
+    "exit_code": null,
+    "timeout": true,
+    "timeout_seconds": 10,
+    "note": "subprocess.run killed and waited for this probe process only",
+    "elapsed_seconds": 10.02
+  },
+  {
+    "probe": "asyncio_loop",
+    "exit_code": null,
+    "timeout": true,
+    "timeout_seconds": 10,
+    "note": "subprocess.run killed and waited for this probe process only",
+    "elapsed_seconds": 10.04
+  }
+]

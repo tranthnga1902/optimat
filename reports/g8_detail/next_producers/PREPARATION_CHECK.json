@@ -1,0 +1,12 @@
+{
+  "work_codes": 19,
+  "proposed_slices": 6,
+  "read_source_hashes_unchanged": 11,
+  "accepted_lean_hashes_unchanged": 4,
+  "tests_run": false,
+  "canonical_edits": false,
+  "producer_slices": 6,
+  "cross_cutting_summary_slices": 1,
+  "total_planned_slices": 7,
+  "ba_rounding_policy_recorded": true
+}

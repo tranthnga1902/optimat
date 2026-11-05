@@ -1,0 +1,293 @@
+alias,material_id,source
+xi măng PCB30,XM01,tu khoa de xuat
+xi măng bao,XM01,tu khoa de xuat
+xi măng xây trát,XM01,tu khoa de xuat
+xi măng PCB40,XM02,tu khoa de xuat
+xi măng bao,XM02,tu khoa de xuat
+xi măng đa dụng,XM02,tu khoa de xuat
+xi măng PC40,XM03,tu khoa de xuat
+xi măng rời,XM03,tu khoa de xuat
+xi măng xá,XM03,tu khoa de xuat
+cát vàng,CA01,tu khoa de xuat
+cát bê tông,CA01,tu khoa de xuat
+cát hạt to,CA01,tu khoa de xuat
+cát đổ bê tông,CA01,tu khoa de xuat
+cát xây,CA02,tu khoa de xuat
+cát trát,CA02,tu khoa de xuat
+cát vàng hạt mịn,CA02,tu khoa de xuat
+cát xây tô,CA02,tu khoa de xuat
+cát đen,CA03,tu khoa de xuat
+cát san lấp,CA03,tu khoa de xuat
+cát nền,CA03,tu khoa de xuat
+cát nghiền,CA04,tu khoa de xuat
+cát nhân tạo,CA04,tu khoa de xuat
+cát xay,CA04,tu khoa de xuat
+đá 1x2,DA01,tu khoa de xuat
+đá 1×2,DA01,tu khoa de xuat
+đá dăm 1x2,DA01,tu khoa de xuat
+đá bê tông,DA01,tu khoa de xuat
+đá 2x4,DA02,tu khoa de xuat
+đá dăm 2x4,DA02,tu khoa de xuat
+đá 4x6,DA03,tu khoa de xuat
+đá dăm 4x6,DA03,tu khoa de xuat
+đá mạt,DA04,tu khoa de xuat
+đá mi,DA04,tu khoa de xuat
+mạt đá,DA04,tu khoa de xuat
+đá hộc,DA05,tu khoa de xuat
+đá chẻ,DA05,tu khoa de xuat
+bê tông tươi M150,BT01,tu khoa de xuat
+bê tông thương phẩm mác 150,BT01,tu khoa de xuat
+bê tông lót,BT01,tu khoa de xuat
+bê tông tươi M200,BT02,tu khoa de xuat
+bê tông thương phẩm mác 200,BT02,tu khoa de xuat
+B15,BT02,tu khoa de xuat
+bê tông tươi M250,BT03,tu khoa de xuat
+bê tông thương phẩm mác 250,BT03,tu khoa de xuat
+B20,BT03,tu khoa de xuat
+bê tông tươi M300,BT04,tu khoa de xuat
+bê tông thương phẩm mác 300,BT04,tu khoa de xuat
+B22.5,BT04,tu khoa de xuat
+bê tông chống thấm,BT05,tu khoa de xuat
+bê tông M250 phụ gia chống thấm,BT05,tu khoa de xuat
+vữa xây mác 50,VU01,tu khoa de xuat
+vữa xi măng M50,VU01,tu khoa de xuat
+vữa xây mác 75,VU02,tu khoa de xuat
+vữa trát mác 75,VU02,tu khoa de xuat
+vữa xi măng M75,VU02,tu khoa de xuat
+vữa khô,VU03,tu khoa de xuat
+vữa trộn sẵn,VU03,tu khoa de xuat
+vữa đóng bao,VU03,tu khoa de xuat
+vữa xây AAC,VU04,tu khoa de xuat
+vữa mạch mỏng,VU04,tu khoa de xuat
+keo xây gạch nhẹ,VU04,tu khoa de xuat
+vữa xây gạch bê tông khí,VU04,tu khoa de xuat
+thép cuộn,TH01,tu khoa de xuat
+thép phi 6,TH01,tu khoa de xuat
+thép phi 8,TH01,tu khoa de xuat
+CB240-T,TH01,tu khoa de xuat
+thép trơn,TH01,tu khoa de xuat
+thép vằn CB300,TH02,tu khoa de xuat
+thép gân D10,TH02,tu khoa de xuat
+thép gân D12,TH02,tu khoa de xuat
+thép cây,TH02,tu khoa de xuat
+thép vằn CB400,TH03,tu khoa de xuat
+thép gân D14,TH03,tu khoa de xuat
+D16,TH03,tu khoa de xuat
+D18,TH03,tu khoa de xuat
+D20,TH03,tu khoa de xuat
+D22,TH03,tu khoa de xuat
+D25,TH03,tu khoa de xuat
+thép vằn CB400 D10,TH07,tu khoa de xuat
+CB400 D12,TH07,tu khoa de xuat
+thép vằn CB300 D14,TH08,tu khoa de xuat
+D16,TH08,tu khoa de xuat
+D18,TH08,tu khoa de xuat
+D20,TH08,tu khoa de xuat
+thép hộp mạ kẽm,TH04,tu khoa de xuat
+sắt hộp,TH04,tu khoa de xuat
+hộp vuông,TH04,tu khoa de xuat
+hộp chữ nhật,TH04,tu khoa de xuat
+xà gồ C,TH05,tu khoa de xuat
+xà gồ mạ kẽm,TH05,tu khoa de xuat
+xà gồ thép,TH05,tu khoa de xuat
+khung kèo thép nhẹ,TH06,tu khoa de xuat
+vì kèo,TH06,tu khoa de xuat
+li tô,TH06,tu khoa de xuat
+cầu phong thép,TH06,tu khoa de xuat
+cọc bê tông 200x200,CO01,tu khoa de xuat
+cọc vuông 200,CO01,tu khoa de xuat
+cọc bê tông 250x250,CO02,tu khoa de xuat
+cọc vuông 250,CO02,tu khoa de xuat
+cọc ly tâm D300,CO03,tu khoa de xuat
+cọc PHC D300,CO03,tu khoa de xuat
+cọc ống,CO03,tu khoa de xuat
+ván phủ phim,CP01,tu khoa de xuat
+ván khuôn phủ phim,CP01,tu khoa de xuat
+ván cốp pha,CP01,tu khoa de xuat
+cốp pha thép,CP02,tu khoa de xuat
+ván khuôn thép,CP02,tu khoa de xuat
+thuê cốp pha,CP02,tu khoa de xuat
+gạch đặc,GN01,tu khoa de xuat
+gạch chỉ đặc,GN01,tu khoa de xuat
+gạch đỏ đặc,GN01,tu khoa de xuat
+gạch tuynel đặc,GN01,tu khoa de xuat
+gạch A1,GN01,tu khoa de xuat
+gạch 2 lỗ,GN02,tu khoa de xuat
+gạch chỉ 2 lỗ,GN02,tu khoa de xuat
+gạch thông tâm,GN02,tu khoa de xuat
+gạch tuynel 2 lỗ,GN02,tu khoa de xuat
+gạch 6 lỗ,GN03,tu khoa de xuat
+gạch rỗng 6 lỗ,GN03,tu khoa de xuat
+gạch tuynel 6 lỗ,GN03,tu khoa de xuat
+gạch 4 lỗ chống nóng,GN04,tu khoa de xuat
+gạch chống nóng,GN04,tu khoa de xuat
+gạch lá nem,GN05,tu khoa de xuat
+gạch lá nem tách,GN05,tu khoa de xuat
+gạch lát chống nóng,GN05,tu khoa de xuat
+gạch bê tông đặc,GK01,tu khoa de xuat
+gạch xi măng cốt liệu,GK01,tu khoa de xuat
+gạch không nung đặc,GK01,tu khoa de xuat
+gạch block đặc,GK01,tu khoa de xuat
+gạch block 190,GK02,tu khoa de xuat
+gạch bê tông rỗng 390x190x190,GK02,tu khoa de xuat
+gạch không nung rỗng 19,GK02,tu khoa de xuat
+gạch block 100,GK03,tu khoa de xuat
+gạch bê tông rỗng 390x100x190,GK03,tu khoa de xuat
+gạch không nung rỗng 10,GK03,tu khoa de xuat
+gạch bê tông bọt,GK04,tu khoa de xuat
+gạch CLC,GK04,tu khoa de xuat
+gạch bọt,GK04,tu khoa de xuat
+gạch AAC 100,AAC01,tu khoa de xuat
+gạch bê tông khí chưng áp 10,AAC01,tu khoa de xuat
+gạch nhẹ 600x200x100,AAC01,tu khoa de xuat
+gạch siêu nhẹ,AAC01,tu khoa de xuat
+gạch AAC 150,AAC02,tu khoa de xuat
+gạch bê tông khí chưng áp 15,AAC02,tu khoa de xuat
+gạch nhẹ 600x200x150,AAC02,tu khoa de xuat
+gạch AAC 200,AAC03,tu khoa de xuat
+gạch bê tông khí chưng áp 20,AAC03,tu khoa de xuat
+gạch nhẹ 600x200x200,AAC03,tu khoa de xuat
+tấm ALC 100,ALC01,tu khoa de xuat
+tấm tường bê tông khí,ALC01,tu khoa de xuat
+panel ALC,ALC01,tu khoa de xuat
+tấm bê tông nhẹ,ALC01,tu khoa de xuat
+tấm ALC 150,ALC02,tu khoa de xuat
+panel ALC 150,ALC02,tu khoa de xuat
+tấm 3D,PN01,tu khoa de xuat
+panel 3D,PN01,tu khoa de xuat
+panel EPS,PN01,tu khoa de xuat
+tấm tường EPS,PN01,tu khoa de xuat
+tấm cemboard,TN01,tu khoa de xuat
+tấm xi măng sợi,TN01,tu khoa de xuat
+tấm DURAflex,TN01,tu khoa de xuat
+vách cemboard,TN01,tu khoa de xuat
+tấm thạch cao,TN02,tu khoa de xuat
+vách thạch cao,TN02,tu khoa de xuat
+Gyproc,TN02,tu khoa de xuat
+Knauf,TN02,tu khoa de xuat
+thạch cao chịu ẩm,TN03,tu khoa de xuat
+tấm chống ẩm,TN03,tu khoa de xuat
+thạch cao xanh,TN03,tu khoa de xuat
+lưới thép chống nứt,PK01,tu khoa de xuat
+lưới mắt cáo,PK01,tu khoa de xuat
+lưới tô tường,PK01,tu khoa de xuat
+râu thép,PK02,tu khoa de xuat
+bát neo tường,PK02,tu khoa de xuat
+thép râu,PK02,tu khoa de xuat
+keo dán tấm ALC,PK03,tu khoa de xuat
+vữa mối nối panel,PK03,tu khoa de xuat
+keo xử lý mối nối,PK03,tu khoa de xuat
+tấm sàn ALC,SA01,tu khoa de xuat
+sàn bê tông nhẹ,SA01,tu khoa de xuat
+tấm sàn bê tông khí,SA01,tu khoa de xuat
+tôn sàn deck,SA02,tu khoa de xuat
+tôn đổ sàn,SA02,tu khoa de xuat
+sàn deck,SA02,tu khoa de xuat
+dầm PPB,SA03,tu khoa de xuat
+dầm bê tông dự ứng lực,SA03,tu khoa de xuat
+dầm chữ T,SA03,tu khoa de xuat
+gạch block sàn,SA04,tu khoa de xuat
+block sàn dầm T,SA04,tu khoa de xuat
+tôn lạnh,MA01,tu khoa de xuat
+tôn mạ nhôm kẽm,MA01,tu khoa de xuat
+tôn 1 lớp,MA01,tu khoa de xuat
+tôn 0.45,MA01,tu khoa de xuat
+tôn PU,MA02,tu khoa de xuat
+tôn cách nhiệt PU,MA02,tu khoa de xuat
+tôn 3 lớp PU,MA02,tu khoa de xuat
+tôn xốp,MA02,tu khoa de xuat
+tôn EPS,MA03,tu khoa de xuat
+tôn cách nhiệt EPS,MA03,tu khoa de xuat
+tôn xốp EPS,MA03,tu khoa de xuat
+ngói đất nung,MA04,tu khoa de xuat
+ngói 22,MA04,tu khoa de xuat
+ngói đỏ,MA04,tu khoa de xuat
+ngói 22 viên,MA04,tu khoa de xuat
+ngói xi măng,MA05,tu khoa de xuat
+ngói màu,MA05,tu khoa de xuat
+ngói sóng,MA05,tu khoa de xuat
+ngói úp nóc,MA06,tu khoa de xuat
+ngói bò,MA06,tu khoa de xuat
+ngói nóc,MA06,tu khoa de xuat
+tôn mạ kẽm Z350,MA07,tu khoa de xuat
+tôn ven biển,MA07,tu khoa de xuat
+tôn mạ dày,MA07,tu khoa de xuat
+xốp EPS,CN01,tu khoa de xuat
+tấm xốp trắng,CN01,tu khoa de xuat
+mút xốp,CN01,tu khoa de xuat
+xốp XPS,CN02,tu khoa de xuat
+tấm XPS,CN02,tu khoa de xuat
+xốp cách nhiệt XPS,CN02,tu khoa de xuat
+bông thủy tinh,CN03,tu khoa de xuat
+glasswool,CN03,tu khoa de xuat
+bông cách nhiệt,CN03,tu khoa de xuat
+bông khoáng,CN04,tu khoa de xuat
+rockwool,CN04,tu khoa de xuat
+len đá,CN04,tu khoa de xuat
+PU foam,CN05,tu khoa de xuat
+phun PU,CN05,tu khoa de xuat
+foam cách nhiệt,CN05,tu khoa de xuat
+túi khí cách nhiệt,CN06,tu khoa de xuat
+tấm cách nhiệt túi khí,CN06,tu khoa de xuat
+xốp bạc,CN06,tu khoa de xuat
+màng khò nóng,CT01,tu khoa de xuat
+màng bitum,CT01,tu khoa de xuat
+màng chống thấm khò,CT01,tu khoa de xuat
+chống thấm xi măng 2 thành phần,CT02,tu khoa de xuat
+SikaTop 107,CT02,tu khoa de xuat
+Mapelastic,CT02,tu khoa de xuat
+chống thấm polyurethane,CT03,tu khoa de xuat
+chống thấm PU,CT03,tu khoa de xuat
+Sikalastic,CT03,tu khoa de xuat
+thép hình,TH09,tu khoa de xuat
+thép I,TH09,tu khoa de xuat
+thép H,TH09,tu khoa de xuat
+thép U,TH09,tu khoa de xuat
+thép V,TH09,tu khoa de xuat
+dây thép buộc,TH10,tu khoa de xuat
+dây buộc,TH10,tu khoa de xuat
+kẽm buộc,TH10,tu khoa de xuat
+bu lông,LK01,tu khoa de xuat
+ốc vít,LK01,tu khoa de xuat
+que hàn,LK02,tu khoa de xuat
+sơn chống gỉ,LK03,tu khoa de xuat
+sơn chống rỉ,LK03,tu khoa de xuat
+bê tông gạch vỡ,BT06,tu khoa de xuat
+BT gạch vỡ,BT06,tu khoa de xuat
+phụ gia bê tông,PG01,tu khoa de xuat
+phụ gia dẻo,PG01,tu khoa de xuat
+phụ gia đông kết nhanh,PG01,tu khoa de xuat
+Sika Latex,PG02,tu khoa de xuat
+phụ gia kết nối,PG02,tu khoa de xuat
+vữa không co ngót,VU05,tu khoa de xuat
+grout,VU05,tu khoa de xuat
+màng tự dính,CT04,tu khoa de xuat
+màng chống thấm tự dính,CT04,tu khoa de xuat
+băng cản nước,CT05,tu khoa de xuat
+waterstop,CT05,tu khoa de xuat
+thanh trương nở,CT06,tu khoa de xuat
+swellable,CT06,tu khoa de xuat
+con kê,PK04,tu khoa de xuat
+con kê bê tông,PK04,tu khoa de xuat
+lưới thủy tinh,PK05,tu khoa de xuat
+gỗ xẻ,CP03,tu khoa de xuat
+ván khuôn gỗ,CP03,tu khoa de xuat
+cây chống,CP04,tu khoa de xuat
+giàn giáo,CP04,tu khoa de xuat
+ty ren,CP05,tu khoa de xuat
+cùm cốp pha,CP05,tu khoa de xuat
+gạch ống,GO01,tu khoa de xuat
+gạch ống 8x8x19,GO01,tu khoa de xuat
+gạch ống 80x80x190,GO01,tu khoa de xuat
+gạch tuynel ống,GO01,tu khoa de xuat
+gạch thẻ,GT01,tu khoa de xuat
+gạch thẻ 4x8x19,GT01,tu khoa de xuat
+gạch chỉ thẻ,GT01,tu khoa de xuat
+cát mịn,CA05,tu khoa de xuat
+cát đen xây trát,CA05,tu khoa de xuat
+cát xây tô mịn,CA05,tu khoa de xuat
+vữa mác 100,VU06,tu khoa de xuat
+vữa M100,VU06,tu khoa de xuat
+vữa xi măng mác 100,VU06,tu khoa de xuat
+bê tông thương phẩm M100,BT07,tu khoa de xuat
+bê tông lót thương phẩm,BT07,tu khoa de xuat

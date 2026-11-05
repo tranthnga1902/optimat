@@ -26,7 +26,7 @@ def test_real_catalog_has_no_structural_errors():
     rep = run_checks(Catalog.from_csv(), today=date(2026, 10, 13))
     assert rep["ok"], [f for f in rep["findings"] if f["level"] == "error"]
     s = rep["summary"]
-    assert s["vat_lieu"] == 93 and s["phuong_an_tuong"] == 20 and s["theo_lop_tuong"]["330"]["phuong_an"] == 0
+    assert s["vat_lieu"] == 98 and s["phuong_an_tuong"] == 22 and s["theo_lop_tuong"]["330"]["phuong_an"] == 0
     items = {(f["area"], f["item"]) for f in rep["findings"]}
     assert ("phuong_an_tuong", "lớp 330") in items and ("phuong_an_tuong", "W-GK02-190") in items
     assert "# Kiểm soát dữ liệu" in to_markdown(rep)
@@ -108,10 +108,15 @@ def test_catalog_reference_comes_from_data():
     assert [f["id"] for f in ref["families"]] == list(cat.families.sort_values("sort_order").family_id)
     assert [c["id"] for c in ref["wall_classes"]] == list(config.WALL_THICKNESS_CLASSES)
     assert ref["concrete_grades"] == variants_of("BE_TONG_TRON")
+    from optimat.rough.materials import mortar_material
+    assert ref["mortar_grades"]
+    assert all(mortar_material(cat, grade) for grade in ref["mortar_grades"])
+    assert set(ref["plaster_thicknesses"]) == {v.split("/")[0] for v in variants_of("TRAT")}
+    assert ref["screed_thicknesses"] == variants_of("CAN_NEN")
     assert [m["id"] for m in ref["waterproof_materials"]] == variants_of("CHONG_THAM")
     assert len(ref["vehicles"]) == len(cat.vehicles) and ref["data_kinds"] == ["ACTUAL", "SAMPLE", "SYNTHETIC"]
     rule = client.get("/api/admin/tables/material_rules").json()
     assert any(c["comment"] for c in rule["columns"])          # cách điền cột lấy từ lược đồ database
-    tables = [t for c in client.get("/api/admin/db").json()["clusters"] for t in c["tables"]]
+    tables = client.get("/api/admin/db").json()['rule_views']
     assert {t["name"] for t in tables if t["kind"] == "rule"} == {"material_rules", "material_notes", "drawing_concepts",
                                                                  "convention_clauses", "room_rules", "rough_norms"}

@@ -40,6 +40,16 @@ def test_nsga2_matches_brute_force(sample_dxf):
     assert len(found) >= 0.8 * len(exact)
 
 
+def test_group_without_option_is_skipped(sample_dxf):
+    """Nhóm tường không có phương án (vd. 330) bị bỏ kèm ghi chú, các nhóm còn lại vẫn được tối ưu."""
+    groups = takeoff_from_file(sample_dxf, 3300).groups
+    odd = groups[0].model_copy(update={"wall_type": "330"})
+    result = optimize(groups + [odd], Constraints(), Catalog.load(), None, method="brute")
+    assert result.solutions
+    assert all(c.wall_type != "330" for s in result.solutions for c in s.choices)
+    assert any("Tường 330" in n and "chưa gồm nhóm này" in n for n in result.notes)
+
+
 def test_labor_rate_from_table(sample_dxf):
     """Đơn giá nhân công lấy từ bảng labor_rates; bảng trống thì không điền số mặc định, chi phí nhân công = 0 kèm ghi chú."""
     import pandas as pd

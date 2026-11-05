@@ -1,0 +1,12 @@
+[
+  {
+    "file": "src/optimat/rough/materials.py",
+    "sha256": "86b32863e9a8907eb0bf8fd44e420e3279036b22fe7c44ca365776e0e2b064a1",
+    "bytes": 24678
+  },
+  {
+    "file": "tests/test_rough_materials.py",
+    "sha256": "890abeb6fa7ab371dad3023388728b89a763971bec255749a507c113bc206959",
+    "bytes": 12452
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "src/optimat/rough/stairs.py": "4fa680b591f1f6d05ef2d7fa21098c34e40b638ce346b2a9fbfb453af3fd40ff",
+  "tests/test_rough_stairs.py": "d3704ba375952f4a3e81729f8e8f9a3fb960e6081221db4962d381d349d12752",
+  "tests/test_rough_stairs_detect.py": "aa15e2f4db2bfb507594fa9bf0a4c504659d34d2a38174362bb5ccd244cf73ff"
+}

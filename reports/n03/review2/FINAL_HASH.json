@@ -1,0 +1,14 @@
+[
+  {
+    "file": "src/optimat/rough/secondary.py",
+    "sha256": "e2b5fba478147b66705128d0e1989295e5d4bbfebc30f46338cd668fb426f57d"
+  },
+  {
+    "file": "tests/test_rough_secondary.py",
+    "sha256": "565435b83e6dea1282c00a26d924a86e9bce79bfff8eeea3ab186a29fafe8cc5"
+  },
+  {
+    "file": "src/optimat/rough/takeoff.py",
+    "sha256": "aef9ffa5f006c940593689a322339d64f09466ad266187517fb04aa3387a2c4e"
+  }
+]

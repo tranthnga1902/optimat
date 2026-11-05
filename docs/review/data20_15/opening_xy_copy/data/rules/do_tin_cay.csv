@@ -1,0 +1,10 @@
+ma,muc,can_xac_nhan,mo_ta
+TC01,cao,0,"Ký hiệu khớp quy tắc ky_hieu_cau_kien.csv, có bằng chứng file/handle trên mặt bằng, tiết diện từ chữ hoặc mặt cắt thống nhất"
+TC02,trung_binh,1,"Thiếu thông số cấu tạo (cao dầm, kích thước móng, tiết diện cột): để trống, chờ người dùng nhập"
+TC03,thap,1,"Kích thước mâu thuẫn giữa các nguồn (chữ ghi, mặt cắt chi tiết, nét trên mặt bằng)"
+TC04,thap,1,"Ký hiệu không có nét cấu kiện gần (dầm không thấy cặp nét song song)"
+TC05,trung_binh,1,"Hình vẽ dùng chung nhiều tầng: khối lượng nhân số tầng đọc từ tiêu đề"
+TC06,trung_binh,0,"Không suy được tỷ lệ hình vẽ từ đường kích thước, đang coi số đo là mm thật"
+TC07,trung_binh,1,"Phiên bản (REV) ghi trên các bản vẽ không thống nhất"
+TC08,thap,1,"Cấu kiện có chi tiết nhưng không có ký hiệu trên mặt bằng nào"
+TC09,cao,0,"Người dùng đã xác nhận hoặc nhập tay (ghi đè các quy tắc trên)"

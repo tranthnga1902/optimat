@@ -1,0 +1,615 @@
+--- a/src/optimat/rough/takeoff.py
++++ b/src/optimat/rough/takeoff.py
+@@ -7,15 +7,16 @@
+ 
+ import math
+ import re
+-from typing import Optional
+-
+-from pydantic import BaseModel, Field, model_validator
++from typing import Literal, Optional
++
++from pydantic import BaseModel, Field, field_validator, model_validator
+ 
+ from .. import config
+ from ..catalog.repository import Catalog, default_catalog
+ from ..drawing.concepts import layer_role, match_block_signal
+ from ..drawing.encoding import normalize
+ from ..drawing.review import ReviewOpening, ReviewWall
++from ..drawing.registry import floors_of
+ from .areas import PlanParams, area_works, plan_geometry, room_labels
+ from .beams import Beam, beam_joints, beam_works, infer_beams, is_tie_beam
+ from .checks import cross_checks, envelope_by_orientation, floor_area_checks
+@@ -43,6 +44,44 @@
+     y: float
+ 
+ 
++def _beam_floor(value: str) -> str:
++    if not re.fullmatch(r"T[1-9]\d*|MONG|MAI|ST", value):
++        raise ValueError("Khóa tầng dầm phải là T1, T2… hoặc MONG/MAI/ST.")
++    return value
++
++
++class BeamViewScope(BaseModel):
++    floors: list[str] = Field(min_length=1)
++    evidence: str = Field(min_length=1)
++
++    @field_validator("floors")
++    @classmethod
++    def _floors(cls, values):
++        if len(set(values)) != len(values):
++            raise ValueError("Phạm vi dầm có tầng lặp.")
++        return [_beam_floor(v) for v in values]
++
++    @field_validator("evidence")
++    @classmethod
++    def _evidence(cls, value):
++        if not value.strip():
++            raise ValueError("Cần căn cứ xác nhận phạm vi dầm.")
++        return value
++
++
++class BeamFloorSource(BaseModel):
++    source: Literal["structural", "manual"]
++    ref: str = Field(min_length=1)
++    evidence: str = Field(min_length=1)
++
++    @field_validator("ref", "evidence")
++    @classmethod
++    def _nonempty(cls, value):
++        if not value.strip():
++            raise ValueError("Nguồn dầm và căn cứ chọn không được để trắng.")
++        return value
++
++
+ class PlanInput(PlanParams):
+     """Một mặt bằng đã (hoặc chưa) qua trang kiểm tra."""
+     height_mm: Optional[float] = None           # trống: chưa có chiều cao tầng, mặt bằng chưa tính
+@@ -51,11 +90,23 @@
+     openings: list[ReviewOpening] = Field(default_factory=list)
+     columns: list[Column] = Field(default_factory=list)
+     beams: Optional[list[Beam]] = None          # None: suy từ tường và cột
++    beam_floor_key: Optional[str] = None
++    beam_floor_evidence: Optional[str] = None
+     stairs: list[Stair] = Field(default_factory=list)
+     labels: list[RoomLabel] = Field(default_factory=list)
+     wall_systems: dict[str, Optional[str]] = Field(default_factory=dict)   # tường -> phương án tường đã quy đổi
+     found: dict[str, list[str]] = Field(default_factory=dict)   # vai trò phần thô (ngoài cột) -> layer/block thấy trên mặt bằng
+     members: list[LinearMember] = Field(default_factory=list)   # giằng tường, sê nô trên mặt bằng này (giằng trừ khỏi xây)
++
++    @model_validator(mode="after")
++    def _beam_floor_pair(self):
++        if (self.beam_floor_key is None) != (self.beam_floor_evidence is None):
++            raise ValueError("Khóa tầng dầm và căn cứ tầng phải đi cùng nhau.")
++        if self.beam_floor_key is not None:
++            _beam_floor(self.beam_floor_key)
++            if not self.beam_floor_evidence.strip():
++                raise ValueError("Cần căn cứ xác nhận tầng của mặt bằng.")
++        return self
+ 
+ 
+ # bộ phận phần thô thấy theo ký hiệu nhưng chưa bóc tự động: nhắc người dùng nhập
+@@ -86,7 +137,9 @@
+     plans: list[PlanInput]
+     plan_scope_confirmed: bool = False
+     structural_beams: dict[str, list[Beam]] = Field(default_factory=dict)   # dầm đọc từ mặt bằng kết cấu, theo tiêu đề
+-    structural_floors: dict[str, int] = Field(default_factory=dict)        # số tầng dùng chung mặt bằng kết cấu (mặc định 1)
++    structural_floors: dict[str, int] = Field(default_factory=dict)        # đối chiếu số tầng với scope; không dùng làm số nhân
++    beam_view_scopes: dict[str, BeamViewScope] = Field(default_factory=dict)
++    beam_floor_sources: dict[str, BeamFloorSource] = Field(default_factory=dict)
+     column_sections: dict[str, tuple[float, float]] = Field(default_factory=dict)   # tiết diện cột ghi chữ trên bản vẽ kết cấu
+     sheets: list[dict] = Field(default_factory=list)       # 14 loại bản vẽ: có / chưa có trong file (drawing/sheets.py)
+     notes: list[str] = Field(default_factory=list)         # cảnh báo khi đọc bản vẽ kết cấu
+@@ -100,6 +153,26 @@
+ 
+     @model_validator(mode="after")
+     def _unique_plan_names(self):
++        for view in self.beam_view_scopes:
++            if view not in self.structural_beams:
++                raise ValueError(f"Phạm vi dầm tham chiếu view không có: {view}.")
++        for floor, choice in self.beam_floor_sources.items():
++            _beam_floor(floor)
++            if choice.source == "structural":
++                if choice.ref not in self.structural_beams:
++                    raise ValueError(f"Nguồn dầm không có view {choice.ref}.")
++                scope = self.beam_view_scopes.get(choice.ref)
++                if floor not in (scope.floors if scope else floors_of(choice.ref)):
++                    raise ValueError(f"View {choice.ref} không phủ tầng {floor}.")
++            else:
++                plans = [p for p in self.plans if p.name == choice.ref]
++                if len(plans) != 1:
++                    raise ValueError(f"Nguồn dầm nhập tay không xác định duy nhất: {choice.ref}.")
++                p = plans[0]
++                scope = [p.beam_floor_key] if p.beam_floor_key else floors_of(p.name)
++                if (scope != [floor] or not p.beams or not any(b.keep for b in p.beams)
++                        or any(b.source != "manual" for b in p.beams if b.keep)):
++                    raise ValueError(f"Nguồn nhập tay {choice.ref} cần dầm manual và đúng một tầng {floor}.")
+         # tên mặt bằng là khóa (dầm, thép, chi tiết theo tầng): bản vẽ có hai tiêu đề trùng thì đánh số thêm
+         seen: dict[str, int] = {}
+         for p in self.plans:
+@@ -141,6 +214,8 @@
+     wall_group_issues: list[str] = Field(default_factory=list)
+     totals: list[WorkTotal] = Field(default_factory=list)
+     beams: dict[str, list[Beam]] = Field(default_factory=dict)       # dầm đã dùng theo mặt bằng (kể cả dầm suy)
++    plan_beams: dict[str, list[Beam]] = Field(default_factory=dict)  # nguồn plan/infer local, không trộn geometry KC
++    structural_beams: dict[str, list[Beam]] = Field(default_factory=dict)  # geometry view KC gốc, không đổi khóa tầng
+     takeoff_id: Optional[int] = None                                   # dòng đã lưu trong takeoff_results (nếu có)
+     formwork: list[WorkTotal] = Field(default_factory=list)            # cốp pha cộng theo cấu kiện (mỗi cấu kiện một dòng)
+     by_group: list[GroupTotal] = Field(default_factory=list)           # vật liệu gộp theo 5 nhóm (đầu vào bộ tối ưu)
+@@ -181,12 +256,84 @@
+     return out
+ 
+ 
++def _beam_allocation(req: RoughRequest, skipped: set[str]):
++    """Một owner mỗi tầng; scope không chứng minh hai bản vẽ cùng hệ tọa độ."""
++    scopes, candidates, invalid = {}, {}, {}
++    pending = []
++    for view in req.structural_beams:
++        explicit = req.beam_view_scopes.get(view)
++        scope = explicit.floors if explicit else floors_of(view)
++        scopes[view] = scope
++        if not scope:
++            pending.append((view, "chưa xác định phạm vi tầng của view dầm"))
++            continue
++        if view in req.structural_floors and req.structural_floors[view] != len(scope):
++            invalid[view] = "số tầng khai báo không khớp phạm vi tầng của view"
++        for floor in scope:
++            candidates.setdefault(floor, []).append(view)
++    plan_floors = {}
++    local = {}
++    for p in req.plans:
++        if p.name in skipped:
++            continue
++        scope = [p.beam_floor_key] if p.beam_floor_key else floors_of(p.name)
++        floor = scope[0] if len(scope) == 1 else None
++        plan_floors[p.name] = floor
++        if floor:
++            local.setdefault(floor, []).append(p.name)
++    owners = {}
++    for floor in sorted(set(candidates) | set(local) | set(req.beam_floor_sources)):
++        views = candidates.get(floor, [])
++        choice = req.beam_floor_sources.get(floor)
++        if choice:
++            if choice.source == "manual" and choice.ref in skipped:
++                pending.append((floor, "mặt bằng dầm nhập tay được chọn đang bị loại do trùng tiêu đề"))
++                continue
++            if choice.source == "structural" and choice.ref in invalid:
++                pending.append((floor, f"{choice.ref}: {invalid[choice.ref]}"))
++                continue
++            owners[floor] = (choice.source, choice.ref, "C", choice.evidence)
++        elif len(views) == 1 and views[0] not in invalid:
++            view = views[0]
++            explicit = req.beam_view_scopes.get(view)
++            owners[floor] = ("structural", view, "C" if explicit else "B",
++                             explicit.evidence if explicit else f"phạm vi suy từ tiêu đề {view}")
++        elif views:
++            reason = "; ".join(f"{v}: {invalid[v]}" for v in views if v in invalid)
++            pending.append((floor, reason or f"nhiều view cùng tầng ({', '.join(sorted(views))}); chưa chọn owner"))
++        elif len(local.get(floor, [])) == 1:
++            name = local[floor][0]
++            p = next(p for p in req.plans if p.name == name)
++            owners[floor] = ("plan", name, "C" if p.beam_floor_key else "B",
++                             p.beam_floor_evidence or f"tầng suy từ tiêu đề {name}")
++        else:
++            pending.append((floor, "nhiều mặt bằng kiến trúc cùng tầng; chưa chọn nguồn dầm"))
++    return owners, pending, plan_floors, scopes
++
++
++def _beam_trace(items, status, evidence, missing=()):
++    for item in items:
++        item.status = worst_status(item.status, status)
++        if item.quantity is not None and not item.missing:
++            item.inputs.append(f"phạm vi/nguồn dầm: {status}")
++        item.evidence.append(evidence)
++        item.missing = list(dict.fromkeys([*item.missing, *missing]))
++
++
++def _pending_beams(plan, reason):
++    return [WorkItem(code=code, name=WORKS[code][0], unit=WORKS[code][1], plan=plan,
++                     element="phạm vi dầm chờ xác nhận", quantity=None, status="D",
++                     formwork_of="DAM" if code == "COP_PHA" else None, missing=[reason], evidence=[reason])
++            for code in ("DAM", "COP_PHA")]
++
++
+ def compute_rough(req: RoughRequest, catalog: Catalog | None = None) -> RoughResult:
+     catalog = catalog or default_catalog()
+     params = req.params
+     works: list[WorkItem] = []
+     warnings: list[str] = []
+     used_beams: dict[str, list[Beam]] = {}
++    plan_beams = {p.name: list(p.beams or []) for p in req.plans}
+     envelope: dict[str, dict] = {}
+     floor_areas: dict[str, float] = {}         # m² sàn từng tầng (trong tim tường bao) cho kiểm tra KH05
+     by_param: set[tuple[str, str]] = set()     # (mặt bằng, phương án tường) lấy từ ProjectParams.wall_systems_by_class
+@@ -216,20 +363,47 @@
+         warnings.append(f"QU-05: \"{name}\" trùng tiêu đề với \"{keep}\": coi là một tầng, chỉ tính \"{keep}\" "
+                         f"(tường {length[keep] / 1000:.1f} m, bản bỏ qua {length[name] / 1000:.1f} m). "
+                         "Nếu là hai tầng khác nhau, sửa tiêu đề trên bản vẽ.")
+-    beam_length = {v: sum(math.hypot(b.x2 - b.x1, b.y2 - b.y1) for b in bs if b.keep) for v, bs in req.structural_beams.items()}
+-    beam_dup = duplicate_plans(beam_length, _floor_key)
+-    for name, keep in beam_dup.items():
+-        warnings.append(f"QU-05: mặt bằng kết cấu \"{name}\" cùng tầng với \"{keep}\": chỉ tính dầm của \"{keep}\" "
+-                        f"({beam_length[keep] / 1000:.1f} m dầm, bản bỏ qua {beam_length[name] / 1000:.1f} m).")
++    beam_owners, beam_pending, plan_floors, beam_scopes = _beam_allocation(req, set(dup))
++    beam_sources = {}
++    for plan, reason in beam_pending:
++        works += _pending_beams(plan, reason)
++        warnings.append(f"O01: {plan}: {reason}.")
+     ground_keep = {keep for name, keep in dup.items() if by_name[name].is_ground}
+     for p in req.plans:
+         if p.name in dup:
+             continue
+         if p.name in ground_keep and not p.is_ground:     # bản bỏ qua được chọn làm tầng trệt: bản được tính thay nó
+             p = p.model_copy(update={"is_ground": True})
++        floor = plan_floors.get(p.name)
++        owner = beam_owners.get(floor)
++        selected = owner and owner[0] in ("plan", "manual") and owner[1] == p.name
++        # Tầng chưa map vẫn giữ phần số plan; không dùng KC tầng khác để tắt suy.
++        unresolved = floor is None and bool(req.structural_beams)
++        local_allowed = selected or floor is None
++        beams = (p.beams if p.beams is not None else infer_beams(p.columns, p.walls)) if local_allowed else []
++        beams, warn = beam_joints(beams, p.columns, params)
++        warnings += warn
++        used_beams[p.name] = beams
++        if p.beams is None:
++            plan_beams[p.name] = beams
++        beam_sources[p.name] = {b.source for b in beams if b.keep}
++        w, warn = beam_works(p.name, beams, params)
++        status = owner[2] if selected else "B"
++        trace = f"{p.name}; tầng {floor or 'chưa xác định'}; " + (owner[3] if selected else "chưa có mapping tầng")
++        issue = ["chưa loại trừ chồng phạm vi với view KC chưa ánh xạ tầng"] if unresolved else []
++        if any(not s for s in beam_scopes.values()) and selected and floor not in req.beam_floor_sources:
++            issue.append("còn view KC chưa xác định phạm vi; chưa loại trừ chồng tầng")
++        _beam_trace(w, "D" if issue else status, trace, issue)
++        works += w
++        warnings += warn
++        if p.beams is not None and not selected and floor is not None:
++            warnings.append(f"O01: {p.name}: dầm plan chưa được chọn; không cộng thêm vào nguồn tầng {floor}.")
++        if local_allowed and p.beams is not None and not any(b.keep for b in p.beams):
++            warnings.append(f"O01: {p.name}: beams=[] hoặc toàn bộ keep=False: không suy dầm, chưa xác nhận thiết kế không có dầm.")
++            works += _pending_beams(p.name, "dầm plan rỗng hoặc đã loại hết; chưa xác nhận phạm vi dầm đã đủ")
+         for role, names in p.found.items():
+             label, hint = FOUND_HINT.get(role, (role, "kiểm tra"))
+-            if (role == "STAIR" and p.stairs) or (role == "BEAM" and (p.beams is not None or req.structural_beams)):
++            if (role == "STAIR" and p.stairs) or (role == "BEAM" and (p.beams is not None or owner and owner[0] == "structural")):
+                 continue
+             warnings.append(f"{p.name}: bản vẽ có {label} ({', '.join(names[:3])}): {hint}.")
+         if not p.height_mm:
+@@ -249,13 +423,9 @@
+             if w.masonry and systems.get(w.id) is None and (chosen := params.wall_systems_by_class.get(w.cls)):
+                 systems[w.id] = chosen
+                 by_param.add((p.name, chosen))
+-        # có dầm từ bản vẽ kết cấu thì không suy dầm trên mặt bằng kiến trúc (tránh đếm hai lần)
+-        beams = p.beams if p.beams is not None else [] if req.structural_beams else infer_beams(p.columns, p.walls)
+-        beams, warn = beam_joints(beams, p.columns, params)
+-        warnings += warn
+         warnings += _section_checks(p, beams, params, req.column_sections)
+         wall_params = params
+-        depths = sorted({b.d_mm for b in beams or [b for bs in req.structural_beams.values() for b in bs] if b.keep and b.d_mm})
++        depths = sorted({b.d_mm for b in beams if b.keep and b.d_mm})
+         if params.beam_depth_mm is None and len(depths) == 1:     # dầm nhập tay có cao dầm: dùng để trừ khỏi tường
+             wall_params = params.model_copy(update={"beam_depth_mm": depths[0]})
+         for fn in (lambda: wall_works(p.name, p.height_mm, p.walls, p.openings, wall_params, catalog, systems, overlaps),
+@@ -263,14 +433,14 @@
+                    lambda: ([], []) if req.column_schedule else column_works(p.name, p.columns, p.height_mm, params, beams),
+                    lambda: stair_works(p.name, p.stairs, p.height_mm, params)):
+             w, warn = fn()
++            if req.structural_beams and wall_params.beam_depth_mm is None:
++                for item in w:
++                    if item.code in ("XAY", "TRAT"):
++                        item.missing.append("chưa có cao dầm riêng mặt bằng để trừ tường; mapping KC không chứng minh căn chỉnh")
++                        item.status = "D"
+             if wall_params is not params:
+-                # Chỉ metadata: ghi đúng nguồn dầm caller thực sự dùng, không đổi chọn nguồn O01.
+-                depth_inputs = [(p.name, b) for b in beams if b.keep and b.d_mm == wall_params.beam_depth_mm] if beams else [
+-                    (view, b) for view, bs in req.structural_beams.items() for b in bs
+-                    if b.keep and b.d_mm == wall_params.beam_depth_mm]
++                depth_inputs = [(p.name, b) for b in beams if b.keep and b.d_mm == wall_params.beam_depth_mm]
+                 depth_source = "; ".join(f"{view}: {b.id} ({b.source}), d={b.d_mm:g} mm" for view, b in depth_inputs)
+-                if not beams:
+-                    depth_source += "; nguồn KC chưa được O01 xác nhận liên kết tầng/căn chỉnh"
+                 for item in w:
+                     if item.code in ("XAY", "TRAT"):
+                         for dimension in item.dimensions:
+@@ -288,10 +458,6 @@
+         w, warn = linear_works(p.name, p.members, tie_groups=tie_groups)
+         works += w
+         warnings += warn
+-        used_beams[p.name] = beams
+-        w, warn = beam_works(p.name, beams, params)
+-        works += w
+-        warnings += warn
+         geom = plan_geometry([w for w in p.walls if w.masonry], [(l.kind, l.text, l.x, l.y) for l in p.labels])
+         w, warn = area_works(geom, params, p)
+         outline = p.outline_area_m2 if p.outline_area_m2 is not None else geom.outline_area_m2 if geom.closed else None
+@@ -303,20 +469,25 @@
+         env = envelope_by_orientation(p.walls, p.openings, p.height_mm, params.north_deg)
+         if env:
+             envelope[p.name] = env
+-    for view, beams in req.structural_beams.items():
+-        if view in beam_dup:
+-            continue
+-        beams, warn = beam_joints(beams, [], params, footing_rects(params.foundations, view))
++    # Giữ geometry theo view gốc, kể cả nguồn chưa được chọn; không coi mapping tầng là căn chỉnh XY.
++    used_beams.update(req.structural_beams)
++    for floor, (kind, view, status, evidence) in sorted(beam_owners.items()):
++        if kind != "structural":
++            continue
++        beams, warn = beam_joints(req.structural_beams[view], [], params, footing_rects(params.foundations, view))
+         warnings += warn
+         used_beams[view] = beams
+-        w, warn = beam_works(view, beams, params)
+-        w += _slab_form_deduction(view, beams, [], params)
+-        n = req.structural_floors.get(view, 1)
+-        if n > 1:       # một mặt bằng dầm dùng cho nhiều tầng: nhân khối lượng
+-            w = [x.model_copy(update={"quantity": None if x.quantity is None else round(x.quantity * n, 3),
+-                                      "formula": f"{n} tầng × ({x.formula})",
+-                                      "dimensions": [d.model_copy(update={"repetitions": d.repetitions*n,
+-                                          "note": d.note + f"; kích thước/số lượng cho một lần, lặp {n} tầng"}) for d in x.dimensions]}) for x in w]
++        label = f"{view} → {floor}"
++        beam_sources[label] = {b.source for b in beams if b.keep}
++        w, warn = beam_works(label, beams, params)
++        w += _slab_form_deduction(label, beams, [], params)
++        trace = f"view {view}; tầng đích {floor}; phạm vi gốc {', '.join(beam_scopes[view])}; {evidence}"
++        issue = []
++        if any(not s for s in beam_scopes.values()) and floor not in req.beam_floor_sources:
++            issue.append("còn view KC chưa xác định phạm vi; chưa loại trừ chồng tầng")
++        if not any(b.keep for b in beams):
++            w += _pending_beams(label, "view KC rỗng hoặc toàn bộ dầm đã loại; chưa xác nhận đủ phạm vi")
++        _beam_trace(w, "D" if issue else status, trace, issue)
+         works += w
+         warnings += warn
+     works += schedule_column_works(req.column_schedule)
+@@ -350,7 +521,11 @@
+             w.evidence.append("phương án tường theo thông số công trình (wall_systems_by_class), bản vẽ không ghi vật liệu")
+     assign_status(works, params,
+                   {p.name: p.height_source or ("nhập tay" if p.height_mm else "chưa có") for p in req.plans},
+-                  {name: {b.source for b in bs if b.keep} for name, bs in used_beams.items()})
++                  beam_sources)
++    for collision in sorted(set(plan_beams) & set(req.structural_beams)):
++        used_beams.pop(collision, None)
++        warnings.append(f"O01: tên plan/view KC trùng '{collision}': bỏ khóa khỏi beams legacy để tránh ghi đè nguồn; "
++                        "xem plan_beams và structural_beams riêng, không coi hai nguồn đã căn chỉnh XY.")
+     bill = materials_for_works(works, params, catalog)
+     if params.material_classes:            # chỉ xuất loại vật liệu người dùng chọn; công tác vẫn tính đủ
+         dropped = [m for m in bill.materials if m.raw_class not in params.material_classes]
+@@ -384,6 +559,7 @@
+                        wall_groups=[] if scope_issues or wall_group_issues else wall_groups,
+                        wall_group_issues=scope_issues + wall_group_issues,
+                        warnings=warnings + bill.warnings, totals=totals, beams=used_beams, formwork=formwork,
++                       plan_beams=plan_beams, structural_beams=req.structural_beams,
+                        by_group=group_totals(bill.materials, catalog), by_class=class_totals(bill.materials),
+                        envelope_by_orientation=envelope,
+                        status=worst_status(*(w.status for w in works), *(m.status for m in bill.materials)))
+--- a/tests/test_rough_beam_sources.py
++++ b/tests/test_rough_beam_sources.py
+@@ -0,0 +1,190 @@
++"""O01: chọn nguồn theo tầng, fixture SYNTHETIC không đọc CAD/DB."""
++import pytest
++from pydantic import ValidationError
++
++from optimat.catalog.repository import Catalog
++from optimat.drawing.review import ReviewWall
++from optimat.rough.beams import Beam
++from optimat.rough.models import ProjectParams
++from optimat.rough.takeoff import PlanInput, RoughRequest, compute_rough
++
++
++@pytest.fixture(scope="module")
++def cat():
++    return Catalog.from_csv(None)
++
++
++def beam(source="structural", **kw):
++    return Beam(**(dict(id="D1", x1=0, y1=0, x2=4000, y2=0, b_mm=200, d_mm=400, source=source) | kw))
++
++
++def plan(floor=2, **kw):
++    return PlanInput(**(dict(name=f"TẦNG {floor}", height_mm=3000, walls=[]) | kw))
++
++
++def request(**kw):
++    return RoughRequest(**(dict(plans=[], params=ProjectParams(slab_thickness_mm=100,
++        formwork_type="go", steel_kg_per_m3={"DAM": 100})) | kw))
++
++
++def total(res, code="DAM", formwork=False):
++    return next(t for t in (res.formwork if formwork else res.totals) if t.code == code)
++
++
++def test_kc_only_its_floor_and_no_manual_double_count(cat, monkeypatch):
++    calls = []
++    def infer(cols, walls):
++        calls.append(True)
++        return [beam("inferred", id="SUY")]
++    monkeypatch.setattr("optimat.rough.takeoff.infer_beams", infer)
++    req = request(plans=[plan(beams=[beam("manual")]), plan(3)],
++                  structural_beams={"KC TẦNG 2": [beam()]})
++    res = compute_rough(req, cat)
++    assert len(calls) == 1
++    assert total(res).quantity == pytest.approx(.48)
++    assert total(res, "DAM", True).quantity == pytest.approx(6.4)
++    assert res.beams["TẦNG 2"] == []
++    assert any("chưa được chọn" in w for w in res.warnings)
++    assert {w.plan for w in res.works if w.code == "DAM"} == {"KC TẦNG 2 → T2", "TẦNG 3"}
++
++
++def test_explicit_manual_replaces_kc(cat):
++    req = request(plans=[plan(beams=[beam("manual")])], structural_beams={"KC TẦNG 2": [beam(x2=8000)]},
++        beam_floor_sources={"T2": dict(source="manual", ref="TẦNG 2", evidence="Chọn thay thế")})
++    res = compute_rough(req, cat)
++    assert total(res).quantity == pytest.approx(.24)
++    assert total(res, "DAM", True).quantity == pytest.approx(3.2)
++    assert res.beams["KC TẦNG 2"][0].x2 == 8000
++    assert next(w for w in res.works if w.code == "DAM").status == "C"
++
++
++@pytest.mark.parametrize("empty", [[], [beam(keep=False)]])
++def test_empty_kc_no_inference_or_manual_fallback(cat, monkeypatch, empty):
++    monkeypatch.setattr("optimat.rough.takeoff.infer_beams", lambda *a: pytest.fail("Không được suy bù KC"))
++    res = compute_rough(request(plans=[plan(beams=[beam("manual")])],
++                                structural_beams={"KC TẦNG 2": empty}), cat)
++    assert total(res).quantity is None and not total(res).complete
++    assert total(res, "DAM", True).status == "D"
++
++
++def test_missing_kc_section_not_filled_by_manual(cat):
++    res = compute_rough(request(plans=[plan(beams=[beam("manual")])],
++                     structural_beams={"KC TẦNG 2": [beam(d_mm=None)]}), cat)
++    assert total(res).quantity is None and total(res).status == "D"
++    assert any("cao dầm" in m for w in res.works if w.code == "DAM" for m in w.missing)
++
++
++def overlapping(choice=False, reverse=False):
++    views = {"A": [beam()], "B": [beam()]}
++    scopes = {"A": dict(floors=["T2", "T3", "T4"], evidence="Phạm vi A"),
++              "B": dict(floors=["T4", "T5"], evidence="Phạm vi B")}
++    if reverse:
++        views = dict(reversed(list(views.items())))
++    return request(structural_beams=views, beam_view_scopes=scopes, structural_floors={"A": 3, "B": 2},
++        beam_floor_sources={"T4": dict(source="structural", ref="B", evidence="Chọn B cho T4")} if choice else {})
++
++
++@pytest.mark.parametrize("reverse", [False, True])
++@pytest.mark.parametrize("choice,expected,complete", [(True, .96, True), (False, .72, False)])
++def test_overlapping_views_keep_each_floor_once(cat, choice, expected, complete, reverse):
++    res = compute_rough(overlapping(choice, reverse), cat)
++    assert total(res).quantity == pytest.approx(expected)
++    assert total(res).complete is complete
++    assert total(res, "DAM", True).quantity == pytest.approx(expected / .24 * 3.2)
++    known = [w for w in res.works if w.code == "DAM" and w.quantity is not None]
++    assert len(known) == (4 if choice else 3)
++    assert all(w.quantity == pytest.approx(.24) for w in known)
++    assert set(res.beams) == {"A", "B"}
++    if not choice:
++        assert total(res).status == "D"
++        assert any(w.plan == "T4" and w.quantity is None for w in res.works if w.code == "DAM")
++        mats = [m for m in res.materials if any(u.work == "DAM" for u in m.uses)]
++        assert mats and all(not m.complete and m.status == "D" for m in mats)
++        from optimat.rough.boq import export_for_optimizer, boq_workbook
++        assert export_for_optimizer(res)["missing"]
++        assert any("nhiều view" in str(row) for row in boq_workbook(res)["Theo tầng"].values)
++
++
++@pytest.mark.parametrize("count", [0, 2, 4])
++def test_count_mismatch_is_pending_not_multiplied(cat, count):
++    req = overlapping(True)
++    req.structural_floors["A"] = count
++    res = compute_rough(req, cat)
++    assert total(res).quantity == pytest.approx(.48)  # chỉ B:T4/T5
++    assert not total(res).complete
++
++
++def test_unknown_scope_does_not_disable_other_floor_inference(cat, monkeypatch):
++    monkeypatch.setattr("optimat.rough.takeoff.infer_beams", lambda *a: [beam("inferred")])
++    res = compute_rough(request(plans=[plan(3)], structural_beams={"KHÔNG RÕ": [beam()]}), cat)
++    assert total(res).quantity == pytest.approx(.24)
++    assert total(res).status == "D" and not total(res).complete
++
++
++def test_none_and_empty_plan_beams_are_different(cat, monkeypatch):
++    calls = []
++    monkeypatch.setattr("optimat.rough.takeoff.infer_beams", lambda *a: calls.append(1) or [beam("inferred")])
++    res = compute_rough(request(plans=[plan(2), plan(3, beams=[])]), cat)
++    assert calls == [1] and total(res).quantity == pytest.approx(.24)
++    assert not total(res).complete and total(res).status == "D"
++    assert any("beams=[]" in w for w in res.warnings)
++
++
++def test_all_local_beams_removed_keeps_pending_and_other_floor_known(cat, monkeypatch):
++    monkeypatch.setattr("optimat.rough.takeoff.infer_beams", lambda *a: pytest.fail("Không suy bù dầm đã loại"))
++    res = compute_rough(request(plans=[plan(2, beams=[beam("manual", keep=False)]),
++                                       plan(3, beams=[beam("manual")])]), cat)
++    assert total(res).quantity == pytest.approx(.24) and not total(res).complete and total(res).status == "D"
++    assert total(res, "DAM", True).quantity == pytest.approx(3.2) and not total(res, "DAM", True).complete
++    assert res.beams["TẦNG 2"][0].keep is False
++    assert any(w.plan == "TẦNG 2" and w.quantity is None and w.missing for w in res.works if w.code == "DAM")
++
++
++def test_no_kc_depth_transfer_or_false_alignment(cat):
++    wall = ReviewWall(id="W1", cls="220", role="envelope", x1=0, y1=0, x2=10000, y2=0, mat="GN01")
++    res = compute_rough(request(plans=[plan(2, walls=[wall]), plan(3, walls=[wall], beams=[])],
++                         structural_beams={"KC TẦNG 2": [beam()]}), cat)
++    masonry = [w for w in res.works if w.code == "XAY"]
++    assert len(masonry) == 2 and all(w.status == "D" for w in masonry)
++    assert all(any("cao dầm" in m or "chiều cao dầm" in m for m in w.missing) for w in masonry)
++    assert all("KC TẦNG 2" not in d.source for w in masonry for d in w.dimensions)
++
++
++def test_beams_not_lost_when_plan_height_missing(cat):
++    res = compute_rough(request(plans=[plan(height_mm=None, beams=[beam("manual")])]), cat)
++    assert total(res).quantity == pytest.approx(.24)
++
++
++@pytest.mark.parametrize("patch", [
++    {"beam_view_scopes": {"missing": dict(floors=["T2"], evidence="x")}},
++    {"beam_view_scopes": {"KC TẦNG 2": dict(floors=["T2", "T2"], evidence="x")}},
++    {"beam_view_scopes": {"KC TẦNG 2": dict(floors=["L1"], evidence="x")}},
++    {"beam_view_scopes": {"KC TẦNG 2": dict(floors=["T2"], evidence=" ")}},
++    {"beam_floor_sources": {"T3": dict(source="structural", ref="KC TẦNG 2", evidence="x")}},
++    {"beam_floor_sources": {"T2": dict(source="manual", ref="missing", evidence="x")}},
++    {"plans": [dict(name="x", walls=[], beam_floor_key="T2")]},
++])
++def test_bad_scope_or_choice_validation(patch):
++    with pytest.raises(ValidationError):
++        request(**(dict(structural_beams={"KC TẦNG 2": [beam()]}) | patch))
++
++
++def test_explicit_plan_mapping_and_lau_equivalent(cat):
++    p = plan(name="Mặt bằng tùy đặt", beam_floor_key="T2", beam_floor_evidence="Theo hồ sơ", beams=[beam("manual")])
++    res = compute_rough(request(plans=[p], structural_beams={"KC LẦU 1": [beam()]}), cat)
++    assert total(res).quantity == pytest.approx(.24)
++    assert res.beams[p.name] == []
++
++
++@pytest.mark.parametrize("kc_floor,expected", [("T3", .48), ("T2", .24)])
++def test_plan_and_kc_same_name_keep_source_maps_without_legacy_overwrite(cat, kc_floor, expected):
++    p = plan(beams=[beam("manual", id="LOCAL")])
++    req = request(plans=[p], structural_beams={p.name: [beam(id="KC")]},
++        beam_view_scopes={p.name: dict(floors=[kc_floor], evidence="Xác nhận tầng KC")})
++    res = compute_rough(req, cat)
++    assert total(res).quantity == pytest.approx(expected) and total(res).complete
++    assert total(res, "DAM", True).quantity == pytest.approx(expected / .24 * 3.2)
++    assert p.name not in res.beams
++    assert res.plan_beams[p.name][0].id == "LOCAL" and res.plan_beams[p.name][0].source == "manual"
++    assert res.structural_beams[p.name][0].id == "KC" and res.structural_beams[p.name][0].source == "structural"
++    assert any("trùng" in w and "plan_beams" in w for w in res.warnings)
+--- a/tests/test_rough_takeoff.py
++++ b/tests/test_rough_takeoff.py
+@@ -121,5 +121,12 @@
+     small = [Beam(id="ĐK3", x1=0, y1=0, x2=1200, y2=0, b_mm=200, d_mm=300, source="structural")]
+     req = RoughRequest(params=FULL, plans=[], structural_beams={"MẶT BẰNG MÓNG - ĐÀ KIỀNG": small, "MẶT BẰNG ĐÀ KIỀNG": big})
+     res = compute_rough(req, Catalog.from_csv(None))
+-    assert {w.plan for w in res.works if w.code == "DAM"} == {"MẶT BẰNG ĐÀ KIỀNG"}
++    dam = next(t for t in res.totals if t.code == "DAM")
++    assert dam.quantity is None and not dam.complete and dam.status == "D"
+     assert any("cùng tầng" in w and "MÓNG - ĐÀ KIỀNG" in w for w in res.warnings)
++    req = RoughRequest(**(req.model_dump() | {"beam_floor_sources": {"MONG": {
++        "source": "structural", "ref": "MẶT BẰNG ĐÀ KIỀNG", "evidence": "Người kiểm chọn bản phủ đủ"}}}))
++    chosen = compute_rough(req, Catalog.from_csv(None))
++    assert {w.plan for w in chosen.works if w.code == "DAM"} == {"MẶT BẰNG ĐÀ KIỀNG → MONG"}
++    assert next(t for t in chosen.totals if t.code == "DAM").complete
++    assert set(chosen.beams) == set(req.structural_beams)
+--- a/tests/test_work_dimensions.py
++++ b/tests/test_work_dimensions.py
+@@ -172,11 +172,15 @@
+ def test_structural_repetition_changes_only_repetitions_not_length_or_count(catalog):
+     b = Beam(id="D1", x1=0, y1=0, x2=4000, y2=0, b_mm=200, d_mm=400, source="structural")
+     req = RoughRequest(plans=[], params=ProjectParams(slab_thickness_mm=100), structural_beams={"KC T2-3-4": [b]},
+-                       structural_floors={"KC T2-3-4": 3})
+-    w = one(compute_rough(req, catalog).works, "DAM"); d = w.dimensions[0]
+-    assert w.quantity == pytest.approx(0.72)
+-    assert (d.length_m, d.count, d.repetitions) == (4, 1, 3)
+-    assert "lặp 3 tầng" in d.note
++                       structural_floors={"KC T2-3-4": 3}, beam_view_scopes={"KC T2-3-4": {
++                           "floors": ["T2", "T3", "T4"], "evidence": "Xác nhận phạm vi ba tầng"}})
++    res = compute_rough(req, catalog)
++    works = [w for w in res.works if w.code == "DAM"]
++    assert {w.plan for w in works} == {f"KC T2-3-4 → T{i}" for i in (2, 3, 4)}
++    assert sum(w.quantity for w in works) == pytest.approx(0.72)
++    assert all(w.quantity == pytest.approx(.24) for w in works)
++    assert all((d.length_m, d.count, d.repetitions) == (4, 1, 1) for w in works for d in w.dimensions)
++    assert next(t for t in res.formwork if t.code == "DAM").quantity == pytest.approx(9.6)
+ 
+ 
+ def request_for_http(opening=False):

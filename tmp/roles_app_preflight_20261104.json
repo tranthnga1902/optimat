@@ -1,0 +1,43 @@
+{
+  "database": "optimat",
+  "host_local": true,
+  "schema": "public",
+  "runtime_target_verified": false,
+  "tables": {
+    "project_document_revisions": {
+      "oid": 167922,
+      "count": 0
+    },
+    "project_profile_revisions": {
+      "oid": 167942,
+      "count": 1
+    },
+    "projects": {
+      "oid": 142603,
+      "count": 23
+    },
+    "project_files": {
+      "oid": 142596,
+      "count": 126
+    },
+    "takeoff_results": {
+      "oid": 142656,
+      "count": 24
+    }
+  },
+  "role_counts": {},
+  "sql_sha256": {
+    "scripts/db/project_documents.sql": "6d322334a36dc8a09d72be1352469661123f85f46d238fd34fb9f49d73467575",
+    "scripts/db/project_document_roles.sql": "547b8b44bc2154fe97c4e236f7239283ea55abca5a3e12397e21e4acfaed9a6d",
+    "scripts/db/project_document_roles_rollback.sql": "0c547c4ddd73e73ddc655c60cd86d47eaa42c4a73be5985aa583472276adc5f2",
+    "src/optimat/db/project_documents.py": "4d06dc2ba902b58d605dd03e3518750238f1b80a5a231abb8fc0155f409ec9ea"
+  },
+  "role_constraint": [
+    {
+      "name": "ck_document_role",
+      "validated": true,
+      "definition": "CHECK (((role)::text = ANY ((ARRAY['KT'::character varying, 'KC'::character varying, 'THAM_KHAO'::character varying])::text[])))"
+    }
+  ],
+  "assessment": "old_constraint_delta_not_applied"
+}

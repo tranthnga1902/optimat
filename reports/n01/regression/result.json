@@ -1,0 +1,25 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 562.5,
+  "finished_utc": "2026-11-03T10:08:35.007178+00:00",
+  "summary_lines": [
+    "=========== 427 passed, 15 skipped, 2 xfailed in 558.65s (0:09:18) ============"
+  ],
+  "hash_before_count": 204,
+  "hash_after_count": 204,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "status": "COMPLETED",
+  "collected": 444,
+  "passed": 427,
+  "skipped": 15,
+  "xfailed": 2,
+  "failed": 0,
+  "errors": 0,
+  "pytest_duration_seconds": 558.65,
+  "collector_session_exit_code": 0,
+  "frontend_outside_hash_scope": true
+}

@@ -1,0 +1,71 @@
+diff --git a/reports/demo_0511/concrete_grade_0411/materials.py.before.txt b/src/optimat/rough/materials.py
+index aac35a0..4bb79eb 100644
+--- a/reports/demo_0511/concrete_grade_0411/materials.py.before.txt
++++ b/src/optimat/rough/materials.py
+@@ -47,7 +47,7 @@ def _worse_confirmation(a: str | None, b: str | None) -> str | None:
+ 
+ 
+ def _grade_number(grade: str | None) -> str | None:
+-    m = re.search(r"(\d+)", grade or "")
++    m = re.fullmatch(r"(?:bê tông(?: thương phẩm)?\s+)?(?:mác\s*)?m?\s*([0-9]+)", (grade or "").strip(), re.I)
+     return m.group(1) if m else None
+ 
+ 
+@@ -68,7 +68,9 @@ def ready_mix_material(catalog: Catalog, grade: str | None) -> str | None:
+     if n is None:
+         return None
+     m = catalog.materials
+-    hit = m[m.name.str.startswith("Bê tông thương phẩm") & m.name.str.contains(rf"\bM{n}\b", regex=True)]
++    # Tên danh mục có thể chú thích cấp B trong ngoặc, còn mác mua phải khớp nguyên vẹn.
++    label = rf"Bê tông thương phẩm\s+(?:mác\s+)?M\s*{n}(?:\s*\(\s*≈?\s*B[0-9]+(?:[.,][0-9]+)?\s*\))?"
++    hit = m[m.name.str.strip().str.fullmatch(label, case=False, na=False)]
+     return None if hit.empty else str(hit.material_id.iloc[0])
+ 
+ 
+diff --git a/reports/demo_0511/concrete_grade_0411/test_rough_materials.py.before.txt b/tests/test_rough_materials.py
+index b33684f..cbf3814 100644
+--- a/reports/demo_0511/concrete_grade_0411/test_rough_materials.py.before.txt
++++ b/tests/test_rough_materials.py
+@@ -122,6 +122,42 @@ def test_concrete_ready_mix_and_site_mix(cat):
+     assert any("mác bê tông" in m for m in none.materials[0].missing)
+ 
+ 
++@pytest.mark.parametrize("grade", ["M250/M300", "M250.5", "M250,5", "M250 chống thấm W8", "B250"])
++@pytest.mark.parametrize("supply", ["ready_mix", "site_mix"])
++@pytest.mark.parametrize("unclear_code", ["COT", "BE_TONG_LOT"])
++def test_concrete_unclear_grade_stays_separate(cat, grade, supply, unclear_code):
++    structural = unclear_code == "COT"
++    clear_code = "BE_TONG_LOT" if structural else "COT"
++    params = ProjectParams(concrete_supply=supply, concrete_grade=grade if structural else "M250",
++                           lean_concrete_grade="M250" if structural else grade)
++    bill = materials_for_works([work(clear_code, 2), work(unclear_code, 3)], params, cat)
++    pending, = [m for m in bill.materials if m.material_id is None]
++    assert grade in pending.name and any(grade in reason for reason in pending.missing)
++    assert pending.unit == "m³" and pending.quantity == 3 and not pending.complete and pending.status == "D"
++    assert [u.work for u in pending.uses] == [unclear_code] and pending.best_price is None and pending.est_cost is None
++    mix, = [i for i in bill.intermediates if i.grade == grade]
++    assert mix.material_id is None and mix.quantity == 3
++    known = [m for m in bill.materials if m.material_id is not None]
++    assert all([u.work for u in m.uses] == [clear_code] for m in known)
++    if supply == "ready_mix":
++        assert [m.material_id for m in known] == ["BT03"] and known[0].quantity == 2
++    else:
++        assert {m.material_id for m in known} == {"XM02", "CA01", "DA01"}
++        assert line(bill, "XM02").quantity == pytest.approx(2 * 0.31775, abs=1e-3)
++
++
++@pytest.mark.parametrize("grade", ["M250", "250", " m 250 ", "mác 250", "Bê tông thương phẩm mác M250"])
++def test_ready_mix_single_grade_forms(cat, grade):
++    assert ready_mix_material(cat, grade) == "BT03"
++
++
++@pytest.mark.parametrize("label", ["M250.5", "M250,5", "M250/M300"])
++def test_ready_mix_catalog_noninteger_or_combined_grade(cat, label):
++    materials = cat.materials.copy()
++    materials.loc[materials.material_id == "BT03", "name"] = f"Bê tông thương phẩm {label} (≈B20)"
++    assert ready_mix_material(replace(cat, materials=materials), "M250") is None
++
++
+ def test_plaster_uses_norm_and_mortar_mix(cat):
+     # J05c: khóa định mức trát = dày/họ vật liệu nền của phương án tường (tests/test_rough_plaster.py)
+     norms = (Norm("TRAT", "15/CLAY_SOLID", "@VUA", "Vữa trát", 0.017, "m³ / m²", "BẢNG-THỬ", "", ""),)

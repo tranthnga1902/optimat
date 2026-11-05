@@ -1,0 +1,25 @@
+{
+  "status": "source_frozen_for_integration",
+  "base_build": "4jlXI5sLtByy4nUnvUq92",
+  "manifest_sha256": "c512ff83d23035ea80424ce6f7676aea87749dacb11ba38eec79ba385188dad5",
+  "patch_sha256": "b89908d78c5ccffc460ff044bf37c03843287fa004ea7fef9ed15ee1fedccc3f",
+  "checks": {
+    "canonical_typecheck_no_emit": true,
+    "canonical_focused_eslint": true,
+    "overlay_typecheck_no_emit": true,
+    "overlay_eslint_all_four_files": true,
+    "git_apply_check_on_promoted_source": true,
+    "old_snapshot_no_structural_columns": true,
+    "column_trace_final_v3_reader_and_rowIndex": true,
+    "advice_scope_project_shared_and_selected": true,
+    "mixed_scope_before_failure_reproduced": true,
+    "mixed_scope_ready_mix_and_site_mix_after": true
+  },
+  "fixtures": {
+    "docs/review/data20_03/column_fix/reader_actual/final_v3/reader.json": "61b0b16325bfe5387b2ec3dabc9692c746cd4e23806c523622d964762ad7d69e",
+    "docs/review/data20_04/column_material_binding/ui_input.json": "e2fb0437d07c4fdbbb39b3974c26d4425c081aa0e061f09f3ec0aab6092eadde",
+    "reports/c2_ui_final_v3/mixed_scope.json": "21b8cf10368a4033a62b0e33e3ed22d5a08f6d0b24679ac5c32ba9ba69d1be68"
+  },
+  "deployment_performed": false,
+  "browser_verified": false
+}

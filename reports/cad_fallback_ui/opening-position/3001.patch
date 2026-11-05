@@ -1,0 +1,13 @@
+--- a/src/app/(user)/do-boc/Board.tsx
++++ b/src/app/(user)/do-boc/Board.tsx
+@@ -175,8 +175,9 @@
+             </g>
+             <g style={{ display: rec }}>
+               {S.openings.map((o) => {
++                if (typeof o.x !== "number" || !Number.isFinite(o.x) || typeof o.y !== "number" || !Number.isFinite(o.y)) return null;
+                 const w = byId[o.wall];
+-                if (!w) return null;
++                if (!w || o.w == null) return null;
+                 const L2 = (w.x2 - w.x1) ** 2 + (w.y2 - w.y1) ** 2 || 1;
+                 const t = Math.max(0, Math.min(1, ((o.x - w.x1) * (w.x2 - w.x1) + (o.y - w.y1) * (w.y2 - w.y1)) / L2));
+                 const px = w.x1 + t * (w.x2 - w.x1), py = w.y1 + t * (w.y2 - w.y1);

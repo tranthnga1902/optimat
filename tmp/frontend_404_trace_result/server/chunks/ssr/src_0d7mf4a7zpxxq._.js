@@ -1,0 +1,3 @@
+module.exports=[[62443,a=>{var b=a.i(7997),c=a.i(70346);a.s(["default",0,function({children:a}){return(0,b.jsx)(c.Shell,{role:"user",children:a})}])},75321,a=>{let b=(0,a.i(11857).registerClientReference)(function(){throw Error("Attempted to call Shell() from the server but Shell is on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.")},"[project]/src/components/Shell.tsx","Shell");a.s(["Shell",0,b])},70346,a=>{var b=a.i(75321);a.n(b)}],22247,function(a){a.n(a.i(62443))}];
+
+//# sourceMappingURL=src_0d7mf4a7zpxxq._.js.map

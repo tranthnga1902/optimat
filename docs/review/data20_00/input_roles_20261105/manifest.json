@@ -1,0 +1,18 @@
+{
+  "base_note": "Hai tệp canonical chưa được Git theo dõi. Base được dựng lại bằng cách đảo đúng các sửa đổi của 00; so hash UTF-8 LF trên candidate trước khi áp dụng. Nếu lệch, review hunk, không chép đè.",
+  "patch_sha256": "2fab0d7563e611e663939bb5f8f9111b4d210d60788a826ba4efaa5f9b99c0e3",
+  "files": [
+    {
+      "path": "frontend/src/app/(user)/du-an-cua-toi/ProjectDossier.tsx",
+      "base_utf8_lf_sha256": "83620fc057011dfbf147b54e32312bf1ff2f2f3765e2a723710b89982bee0124",
+      "after_utf8_lf_sha256": "5cc57789842060ce9ad5dc0de7ae204a3d496bf6ffc82fa39d61688992c4d095",
+      "after_disk_sha256": "b018413858983aa228a9e16e04875813a27d87075b56a40438e64bb1522399f0"
+    },
+    {
+      "path": "frontend/src/components/ProjectFilesPanel.tsx",
+      "base_utf8_lf_sha256": "d1069cf5cff826679ef563f377825b44e19c58fb70ace39ebd544ea337a8d8d0",
+      "after_utf8_lf_sha256": "aa3a53a6bcb533d197a5b579918479fc7af213b08166a12595005efcdfd9eb59",
+      "after_disk_sha256": "66c29fd7c00bf96a6085fab0a297ff6a10807fb45942986c246b80fc45d40053"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+id,cong_trinh_id,cong_tac_id,dong_vat_tu_goc,material_id,ten_vat_tu,quy_cach,don_vi_goc,don_vi,luong,co_so_luong,he_so,nguon_he_so,hao_hut,dung_lam_dap_an,loai_nguon,nguon,trang_thai_kiem,nguoi_kiem,ngay_kiem,thieu
+F-V01,ct_fx,F-C02,,,,Thép tròn Ø ≤ 10,tấn,kg,100,lap_dat,,,da_gom,cho_kiem,du_toan,x,nhap,,,
+F-V02,ct_fx,F-C02,2,,,Thép tròn Ø ≤ 10,m³,viên,102,mua,1.02,fixture,da_gom,cho_kiem,du_toan,x,nhap,,,

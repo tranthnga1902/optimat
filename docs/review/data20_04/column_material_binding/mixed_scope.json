@@ -1,0 +1,219 @@
+{
+  "data_kind": "SYNTHETIC",
+  "browser": false,
+  "database": false,
+  "openai": false,
+  "saved_receipts": 0,
+  "source_sha256": {
+    "src/optimat/rough/materials.py": "5bc8c5ef06a942a2da6c1e85ddb18c10bb56c0cc164bed51d90c10bb033feb3c",
+    "src/optimat/rough/models.py": "ec6430eab39cd9ffc75261e784e857bb29062544d7f9e01d96756e89ff1b6e0c",
+    "frontend/src/app/(user)/do-boc/row-advisory.ts": "024a690d65f123e4be04e82ed8f1a35ac94f3247b818803cd9b3cf204143f857",
+    "frontend/src/app/(user)/dieu-chinh/advice-scope.ts": "3522df96ef415b5deff420b217709a1626b06e8035fd36fc270b0e517a3dcab8"
+  },
+  "quantity_scope_passed": true,
+  "missing_scope_passed": false,
+  "cases": [
+    {
+      "supply": "ready_mix",
+      "installation_by_work": [
+        {
+          "element": "C-TEST [synthetic-a]",
+          "key": "w:0",
+          "net": null,
+          "missing": [
+            "dày sàn đỉnh và căn cứ trừ sàn"
+          ],
+          "unchecked": [
+            {
+              "id": "BT03",
+              "quantity": null,
+              "after_waste": null,
+              "missing": [
+                "Công tác chưa kiểm; chưa xác định hao hụt và lượng mua.",
+                "Chưa tách được lượng vật tư cho riêng dòng này."
+              ]
+            }
+          ],
+          "reviewed": [
+            {
+              "id": "BT03",
+              "quantity": null,
+              "after_waste": null,
+              "missing": [
+                "dày sàn đỉnh và căn cứ trừ sàn",
+                "hao hụt thi công (%)",
+                "Chưa có lượng sau hao hụt riêng cho phạm vi này."
+              ]
+            }
+          ]
+        },
+        {
+          "element": "C-TEST [synthetic-b]",
+          "key": "w:1",
+          "net": 0.29,
+          "missing": [],
+          "unchecked": [
+            {
+              "id": "BT03",
+              "quantity": 0.29,
+              "after_waste": null,
+              "missing": [
+                "Công tác chưa kiểm; chưa xác định hao hụt và lượng mua."
+              ]
+            }
+          ],
+          "reviewed": [
+            {
+              "id": "BT03",
+              "quantity": 0.29,
+              "after_waste": null,
+              "missing": [
+                "dày sàn đỉnh và căn cứ trừ sàn",
+                "hao hụt thi công (%)",
+                "Chưa có lượng sau hao hụt riêng cho phạm vi này."
+              ]
+            }
+          ]
+        }
+      ],
+      "reasons_from_a_visible_on_b": [
+        "dày sàn đỉnh và căn cứ trừ sàn"
+      ]
+    },
+    {
+      "supply": "site_mix",
+      "installation_by_work": [
+        {
+          "element": "C-TEST [synthetic-a]",
+          "key": "w:0",
+          "net": null,
+          "missing": [
+            "dày sàn đỉnh và căn cứ trừ sàn"
+          ],
+          "unchecked": [
+            {
+              "id": "XM02",
+              "quantity": null,
+              "after_waste": null,
+              "missing": [
+                "Công tác chưa kiểm; chưa xác định hao hụt và lượng mua.",
+                "Chưa tách được lượng vật tư cho riêng dòng này."
+              ]
+            },
+            {
+              "id": "CA01",
+              "quantity": null,
+              "after_waste": null,
+              "missing": [
+                "Công tác chưa kiểm; chưa xác định hao hụt và lượng mua.",
+                "Chưa tách được lượng vật tư cho riêng dòng này."
+              ]
+            },
+            {
+              "id": "DA01",
+              "quantity": null,
+              "after_waste": null,
+              "missing": [
+                "Công tác chưa kiểm; chưa xác định hao hụt và lượng mua.",
+                "Chưa tách được lượng vật tư cho riêng dòng này."
+              ]
+            }
+          ],
+          "reviewed": [
+            {
+              "id": "XM02",
+              "quantity": null,
+              "after_waste": null,
+              "missing": [
+                "dày sàn đỉnh và căn cứ trừ sàn",
+                "Chưa có lượng sau hao hụt riêng cho phạm vi này."
+              ]
+            },
+            {
+              "id": "CA01",
+              "quantity": null,
+              "after_waste": null,
+              "missing": [
+                "dày sàn đỉnh và căn cứ trừ sàn",
+                "Chưa có lượng sau hao hụt riêng cho phạm vi này."
+              ]
+            },
+            {
+              "id": "DA01",
+              "quantity": null,
+              "after_waste": null,
+              "missing": [
+                "dày sàn đỉnh và căn cứ trừ sàn",
+                "Chưa có lượng sau hao hụt riêng cho phạm vi này."
+              ]
+            }
+          ]
+        },
+        {
+          "element": "C-TEST [synthetic-b]",
+          "key": "w:1",
+          "net": 0.29,
+          "missing": [],
+          "unchecked": [
+            {
+              "id": "XM02",
+              "quantity": 0.0921,
+              "after_waste": null,
+              "missing": [
+                "Công tác chưa kiểm; chưa xác định hao hụt và lượng mua."
+              ]
+            },
+            {
+              "id": "CA01",
+              "quantity": 0.1489,
+              "after_waste": null,
+              "missing": [
+                "Công tác chưa kiểm; chưa xác định hao hụt và lượng mua."
+              ]
+            },
+            {
+              "id": "DA01",
+              "quantity": 0.2428,
+              "after_waste": null,
+              "missing": [
+                "Công tác chưa kiểm; chưa xác định hao hụt và lượng mua."
+              ]
+            }
+          ],
+          "reviewed": [
+            {
+              "id": "XM02",
+              "quantity": 0.0921,
+              "after_waste": null,
+              "missing": [
+                "dày sàn đỉnh và căn cứ trừ sàn",
+                "Chưa có lượng sau hao hụt riêng cho phạm vi này."
+              ]
+            },
+            {
+              "id": "CA01",
+              "quantity": 0.1489,
+              "after_waste": null,
+              "missing": [
+                "dày sàn đỉnh và căn cứ trừ sàn",
+                "Chưa có lượng sau hao hụt riêng cho phạm vi này."
+              ]
+            },
+            {
+              "id": "DA01",
+              "quantity": 0.2428,
+              "after_waste": null,
+              "missing": [
+                "dày sàn đỉnh và căn cứ trừ sàn",
+                "Chưa có lượng sau hao hụt riêng cho phạm vi này."
+              ]
+            }
+          ]
+        }
+      ],
+      "reasons_from_a_visible_on_b": [
+        "dày sàn đỉnh và căn cứ trừ sàn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "oracle_id": "D20-07-VN002-C2-4A-3150-6750",
+  "project_key": "nha_sang_hai_duong_4x15",
+  "split": "build",
+  "data_kind": "ACTUAL",
+  "scope": "one physical column segment; internal development comparison only",
+  "files": {
+    "kien_truc": {
+      "path": "data/drawings/build/nha_sang_hai_duong_4x15_kien_truc.dxf",
+      "sha256": "719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6"
+    },
+    "ket_cau": {
+      "path": "data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    },
+    "kc_pdf": {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ KẾT CẤU.pdf",
+      "sha256": "4b6ca4f97e80b85ae4d1df555f13ad1b531c8243f52f300ec34d436357060344"
+    }
+  },
+  "design_revision": null,
+  "identity": {
+    "column_type": "C-2",
+    "grid_x": "4",
+    "grid_y": "A",
+    "local_instance_key": "C2@4/A",
+    "count": 1,
+    "excluded_instances": [
+      "C2@4/B",
+      "other floors and segments"
+    ],
+    "design_type_quantity_SL02_not_used_as_instance_count": true,
+    "lower_level_name": "tầng2",
+    "upper_level_name": "tầng3",
+    "physical_database_element_id": null
+  },
+  "evidence": {
+    "plan": {
+      "path": "docs/review/data20_00/VN002_C2_A4_PLAN.png",
+      "sha256": "d9d96c5d95e3ad04d6d327cd8bbea243cf347c0be63dd9bc4dac37b5e192cf81",
+      "pdf_page": 19,
+      "region": "bottom-right grid4/A; C-2 22x22; separate upper-right4/B",
+      "cad_handle": null,
+      "cad_xy": null
+    },
+    "section": {
+      "path": "docs/review/data20_00/VN002_C2_A4_SECTION.png",
+      "sha256": "57d53511872e8581174ae64fc2def566db0de364e8d8be9b0fee2098d23d1e7c",
+      "pdf_page": 22,
+      "region": "C-2 elevation3.150 to6.750; cross section2-2 220x220",
+      "cad_handle": null,
+      "cad_xy": null
+    },
+    "lower_floor": {
+      "path": "docs/review/data20_00/VN002_C2_A4_FLOOR2.png",
+      "sha256": "7e9ba23a4872dcb53730cab548e653f7a3da255d8e5fcbcadb6065feb4aaf13f",
+      "pdf_page": 23,
+      "region": "floor2 grid4/A adjoining zone +3.150 H120",
+      "cad_handle": null,
+      "cad_xy": null
+    },
+    "upper_slab": {
+      "path": "docs/review/data20_00/VN002_C2_A4_SLAB.png",
+      "sha256": "8210c5a71abed3095113bbfb3e736092e3d6c64143bf9b3eb875f413106398d3",
+      "pdf_page": 24,
+      "region": "floor3 grid4/A adjoining zone +6.750 H120",
+      "cad_handle": null,
+      "cad_xy": null
+    }
+  },
+  "inputs": {
+    "width": {
+      "value": 220,
+      "unit": "mm",
+      "evidence_keys": [
+        "plan",
+        "section"
+      ],
+      "method": "read_design_annotation_from_pdf_crop",
+      "human_approved": false
+    },
+    "depth": {
+      "value": 220,
+      "unit": "mm",
+      "evidence_keys": [
+        "plan",
+        "section"
+      ],
+      "method": "read_design_annotation_from_pdf_crop",
+      "human_approved": false
+    },
+    "z_from": {
+      "value": 3.15,
+      "unit": "m",
+      "evidence_keys": [
+        "section",
+        "lower_floor"
+      ],
+      "method": "read_design_annotation_from_pdf_crop",
+      "human_approved": false
+    },
+    "z_to": {
+      "value": 6.75,
+      "unit": "m",
+      "evidence_keys": [
+        "section",
+        "upper_slab"
+      ],
+      "method": "read_design_annotation_from_pdf_crop",
+      "human_approved": false
+    },
+    "top_slab_thickness": {
+      "value": 120,
+      "unit": "mm",
+      "evidence_keys": [
+        "upper_slab"
+      ],
+      "method": "read_design_annotation_from_pdf_crop",
+      "human_approved": false
+    }
+  },
+  "expected": {
+    "gross": {
+      "value": "0.1742400",
+      "unit": "m3",
+      "formula": "1*(220/1000)*(220/1000)*(6.750-3.150)",
+      "basis": "full floor-to-floor geometric prism"
+    },
+    "net_conditional": {
+      "value": "0.1684320",
+      "unit": "m3",
+      "formula": "1*(220/1000)*(220/1000)*(6.750-3.150-120/1000)",
+      "condition": "column-plan convention: lower floor top to upper slab soffit; beam volumes clipped at column; slab overlap allocated once",
+      "source_rule": "src/optimat/rough/columns.py:242",
+      "extra_beam_depth_deduction_m": 0,
+      "extra_beam_depth_deduction_reason": "no additional400mm deduction under this convention; not an assertion that beam depth is zero"
+    },
+    "allocated_top_slab_overlap": {
+      "value": "0.0058080",
+      "unit": "m3",
+      "additive_with_gross": false
+    }
+  },
+  "missing_joints": {
+    "actual_beam_end_clipping_snapshot": null,
+    "actual_slab_boundary_snapshot": null,
+    "joint_partition_runtime_verified": false,
+    "reason": "Need run evidence for this exact instance; source annotations and arithmetic do not prove generated geometry matches."
+  },
+  "approval": {
+    "verification_status": "chua_kiem",
+    "human_approval": false,
+    "reviewer": null,
+    "reviewed_at": null
+  },
+  "product_run_receipt": null,
+  "limitations": [
+    "Not acceptance ground truth or as-built measurement.",
+    "PDF CAD annotations use mm per dimensions; KC header has INSUNITS0, not independently established geometric scaling.",
+    "Image sources identify design position; CAD handle/xy not extracted in this report, kept null.",
+    "No multiplication by type SL02; no reinforcement/formwork/material purchase quantities inferred.",
+    "Pair hashes identify files, not verified compatible design revisions."
+  ]
+}

@@ -13,7 +13,12 @@ from sqlalchemy import Engine, create_engine
 
 
 def get_database_url() -> str | None:
-    return os.environ.get("DATABASE_URL") or None
+    url = os.environ.get("DATABASE_URL") or None
+    # Render cấp postgresql://... ; SQLAlchemy mặc định tìm psycopg2 (chưa cài), nên chỉ định psycopg 3
+    for prefix in ("postgres://", "postgresql://"):
+        if url and url.startswith(prefix):
+            return "postgresql+psycopg://" + url[len(prefix):]
+    return url
 
 
 @lru_cache(maxsize=4)

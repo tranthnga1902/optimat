@@ -1,0 +1,131 @@
+{
+  "source_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "reader_input": "final_v3/reader.json",
+  "used": "compute_rough; structural columns only",
+  "database": false,
+  "openai": false,
+  "browser": false,
+  "checked": false,
+  "catalog": "CSV",
+  "works": 52,
+  "column_segments": [
+    {
+      "axis": "4/A",
+      "instance_id": "5336a248e7a9b93bfe770983",
+      "works": [
+        {
+          "work_key": "w:22",
+          "rowIndex": 22,
+          "code": "COT",
+          "element": "c-2 [5336a248e7a9b93bfe770983]",
+          "raw": null,
+          "known": "0.17424",
+          "quantity": null,
+          "missing": [
+            "dày sàn đỉnh và căn cứ trừ sàn"
+          ],
+          "contributions": [
+            {
+              "name": "Bê tông (chưa chọn mác)",
+              "material_id": null,
+              "work": "COT",
+              "rowIndex": 22,
+              "plan": "T2",
+              "quantity": null,
+              "via": "COT ? m³",
+              "status": "D",
+              "stage": "khung",
+              "waste_included": false
+            }
+          ]
+        },
+        {
+          "work_key": "w:50",
+          "rowIndex": 50,
+          "code": "COP_PHA",
+          "element": "cốp pha c-2 [5336a248e7a9b93bfe770983]",
+          "raw": null,
+          "known": null,
+          "quantity": null,
+          "missing": [
+            "dày sàn đỉnh và căn cứ trừ sàn",
+            "chưa kiểm giao dầm và mặt cốp pha của instance"
+          ],
+          "contributions": [
+            {
+              "name": "Vật liệu cốp pha",
+              "material_id": null,
+              "work": "COP_PHA",
+              "rowIndex": 50,
+              "plan": "T2",
+              "quantity": null,
+              "via": "COP_PHA ? m²",
+              "status": "D",
+              "stage": "khung",
+              "waste_included": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "axis": "4/B",
+      "instance_id": "bc82cfd24f38f91258e814d8",
+      "works": [
+        {
+          "work_key": "w:19",
+          "rowIndex": 19,
+          "code": "COT",
+          "element": "c-2 [bc82cfd24f38f91258e814d8]",
+          "raw": null,
+          "known": "0.17424",
+          "quantity": null,
+          "missing": [
+            "dày sàn đỉnh và căn cứ trừ sàn"
+          ],
+          "contributions": [
+            {
+              "name": "Bê tông (chưa chọn mác)",
+              "material_id": null,
+              "work": "COT",
+              "rowIndex": 19,
+              "plan": "T2",
+              "quantity": null,
+              "via": "COT ? m³",
+              "status": "D",
+              "stage": "khung",
+              "waste_included": false
+            }
+          ]
+        },
+        {
+          "work_key": "w:47",
+          "rowIndex": 47,
+          "code": "COP_PHA",
+          "element": "cốp pha c-2 [bc82cfd24f38f91258e814d8]",
+          "raw": null,
+          "known": null,
+          "quantity": null,
+          "missing": [
+            "dày sàn đỉnh và căn cứ trừ sàn",
+            "chưa kiểm giao dầm và mặt cốp pha của instance"
+          ],
+          "contributions": [
+            {
+              "name": "Vật liệu cốp pha",
+              "material_id": null,
+              "work": "COP_PHA",
+              "rowIndex": 47,
+              "plan": "T2",
+              "quantity": null,
+              "via": "COP_PHA ? m²",
+              "status": "D",
+              "stage": "khung",
+              "waste_included": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

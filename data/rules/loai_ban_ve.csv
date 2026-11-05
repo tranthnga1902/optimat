@@ -3,7 +3,7 @@ BV04,Mặt bằng móng,ket_cau,^mat bang (ket cau )?(mong|coc|da kieng|dam mong
 BV05,Chi tiết móng,ket_cau,^(chi tiet|mat cat|thep) (mong|coc|da kieng)|^mong [a-z]?[a-z]?\d,,FOUNDATION,"Bê tông, thép, cốp pha","MÓNG M1…M4 (ket_cau)"
 BV06,Mặt bằng cột,ket_cau,^mat bang (\S+ )*?(co )?cot\b,,COLUMN,"Bê tông, thép, cốp pha",
 BV07,Chi tiết cột,ket_cau,^(chi tiet|mat cat|thep|bang thong ke) (cot|co cot)|^cot [a-z]?[a-z]?\d,,COLUMN,"Thép, bê tông",
-BV08,Mặt bằng dầm,ket_cau,^mat bang (bo tri )?dam\b|^mat bang ket cau( (tang|lau)\b|$),,BEAM,"Bê tông, thép, cốp pha","MẶT BẰNG DẦM SÀN LẦU 1, MẶT BẰNG DẦM MÁI (ket_cau)"
+BV08,Mặt bằng dầm,ket_cau,^mat bang (bo tri )?dam\b|^mat bang ket cau( (tang|lau)\b|$| va\b),,BEAM,"Bê tông, thép, cốp pha","MẶT BẰNG DẦM SÀN LẦU 1, MẶT BẰNG DẦM MÁI (ket_cau); mặt bằng kết cấu và bố trí thép sàn (nha_cap_4)"
 BV09,Chi tiết dầm,ket_cau,^(chi tiet|mat cat|thep) (dam|da kieng)|^dam [a-z]?[a-z]?\d|^da kieng [a-z]?[a-z]?\d,,BEAM,"Thép, bê tông","DẦM D1…D8, ĐÀ KIỀNG ĐK2 300X500 (ket_cau)"
 BV11,Chi tiết cốt thép sàn,ket_cau,^(chi tiet |mat bang )?(bo tri )?(cot )?thep san|^chi tiet san,,SLAB,Thép,
 BV10,Mặt bằng kết cấu sàn,ket_cau,^mat bang (ket cau )?san\b,,SLAB,"Bê tông, thép, cốp pha","MẶT BẰNG SÀN TRỆT, SÀN LẦU 1, SÀN MÁI (ket_cau)"
@@ -12,5 +12,5 @@ BV13,Mặt bằng và chi tiết mái,ket_cau,^((mat bang|chi tiet|mat cat|ket c
 BV14,"Chi tiết giằng tường, lanh tô",ket_cau,^(chi tiet|mat cat|thep) (giang|lanh to|o vang)|^(lanh to|giang tuong)\b,,LINTEL,"Bê tông, thép, cốp pha",
 BV02,Mặt đứng kiến trúc,kien_truc,^mat (dung|tien|ben|sau)\b,,WALL,"Gạch, vữa xây (kết hợp mặt bằng)",
 BV03,Mặt cắt kiến trúc,kien_truc,^mat cat\b,mong|dam|cot|san|thang|mai|giang|lanh to,WALL SLAB,"Gạch, vữa, bê tông (kết hợp kết cấu)",
-BV01,Mặt bằng kiến trúc,kien_truc,^mat bang\b,dien|nuoc|cap |thoat|chieu sang|chong set|tran|lat |tong the|phoi canh|noi that|thiet bi|dieu hoa|pccc,WALL,"Gạch, vữa xây","MẶT BẰNG TẦNG 1, MẶT BẰNG TRỆT (nha_pho, nha_dan)"
+BV01,Mặt bằng kiến trúc,kien_truc,^mat bang\b,ket cau|dien|nuoc|cap |thoat|chieu sang|chong set|tran|lat |tong the|phoi canh|noi that|thiet bi|dieu hoa|pccc,WALL,"Gạch, vữa xây","MẶT BẰNG TẦNG 1, MẶT BẰNG TRỆT (nha_pho, nha_dan)"
 BV15,Bảng thống kê,ket_cau,^(bang )?(thong ke|tong hop) (cot thep|thep|cot|dam|cua|vat lieu|cau kien|be tong)|^bang thong ke\b,,BEAM COLUMN SLAB FOUNDATION,"Thép, bê tông (đối chiếu khối lượng)","BẢNG THỐNG KÊ THÉP DẦM, THỐNG KÊ CỬA; bảng thống kê cột xếp vào BV07 (dòng trên khớp trước)"

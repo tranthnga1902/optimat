@@ -1,0 +1,310 @@
+--- before/src/optimat/rough/rebar.py
++++ after/src/optimat/rough/rebar.py
+@@ -15,10 +15,11 @@
+ from __future__ import annotations
+ 
+ import re
++from collections import Counter
+ from functools import lru_cache
+ from pathlib import Path
+ from statistics import median
+-from typing import Optional
++from typing import Literal, Optional
+ 
+ import pandas as pd
+ from pydantic import BaseModel, Field
+@@ -34,6 +35,13 @@
+ ROW_GAP_STOP = 3.0
+ KG_TOL = 0.03                # lệch so với cột khối lượng của bảng quá 3% thì cảnh báo
+ LENGTH_MM = (100.0, 30000.0)  # chiều dài cắt hợp lý (mm); ngoài khoảng: nghi sai đơn vị
++
++
++class RebarScope(BaseModel):
++    """Phạm vi áp dụng bảng; tách khỏi vị trí hình vẽ và tên/số hiệu thanh."""
++    levels: tuple[int, ...]
++    element_code: str
++    quantity_basis: Literal["total", "per_member"]
+ 
+ 
+ class RebarRow(BaseModel):
+@@ -55,6 +63,11 @@
+     evidence: str = ""
+     missing: list[str] = Field(default_factory=list)
+     notes: list[str] = Field(default_factory=list)
++    table_id: str = ""                           # chỉ có nghĩa trong Drawing/phiên bản của lượt đọc
++    scope: Optional[RebarScope] = None
++    scope_source: Optional[Literal["title", "confirmed"]] = None
++    scope_evidence: str = ""
++    raw_cells: dict[str, str] = Field(default_factory=dict)   # ô gốc và đơn vị; không so trùng chỉ bằng None
+ 
+     @property
+     def formula(self) -> str:
+@@ -180,6 +193,7 @@
+                        dia_mm=_num(cells.get("duong_kinh", "")), schedule_kg=_num(cells.get("khoi_luong", "")),
+                        bars_per_member=_num(cells.get("sl_1ck", "")), members=_num(cells.get("so_ck", "")),
+                        total_bars=_num(cells.get("tong_thanh", "")),
++                       raw_cells={**cells, "_length_unit": "m" if length_in_m else "mm"},
+                        evidence=f"{name}, dòng {len(out) + 1} (x={r[0].x:.0f}, y={y:.0f}, layer {r[0].layer}): "
+                                 + " | ".join(f"{k}={v}" for k, v in cells.items()))
+         L = _num(cells.get("chieu_dai", ""))
+@@ -222,20 +236,73 @@
+     return out, warnings
+ 
+ 
++def _title_scope(title: str) -> RebarScope | None:
++    """Chỉ nhận tiêu đề ghi tầng và nghĩa tổng; không suy từ vị trí/layer hay tên C1."""
++    text = re.sub(r"\s+", " ", normalize(title)).strip()
++    match = re.fullmatch(
++        r"(?:bang )?thong ke (?:cot )?thep "
++        r"(.+?) "
++        r"(?:tang|lau) (\d+(?:\s*,\s*\d+)*) \(tong (toan tang|pham vi)\)", text)
++    if not match:
++        return None
++    levels = tuple(sorted({int(n) for n in match[2].split(",")}))
++    if len(levels) > 1 and match[3] != "pham vi":
++        return None
++    code = "ALL" if match[1] == "toan bo cau kien" else next(
++        (code for code, pattern in load_rules()[1] if pattern.fullmatch(match[1])), None)
++    return RebarScope(levels=levels, element_code=code, quantity_basis="total") if code else None
++
++
++def _table_content(rows: list[RebarRow]) -> Counter:
++    """So bảng có bội số, cả hình dạng/ô chưa đọc được; không so nguồn tọa độ hay tổng kg đơn thuần."""
++    return Counter((normalize(r.element), normalize(r.mark), normalize(r.shape), r.element_code,
++                    r.dia_mm, r.cut_length_mm, r.bars_per_member, r.members, r.total_bars,
++                    r.kg_per_m, r.kg_per_m_source, r.kg, r.schedule_kg,
++                    tuple(r.missing), tuple(r.notes), tuple(sorted(r.raw_cells.items()))) for r in rows)
++
++
+ def read_rebar_schedules(drawing) -> tuple[list[RebarRow], list[str]]:
+-    """Mọi bảng thống kê thép trên bản vẽ. Dòng trùng hệt nhau (bảng vẽ lặp ở hai chỗ) chỉ giữ dòng đầu."""
+-    rows, warnings, seen = [], [], {}
+-    for title in [t for t in drawing.texts if TITLE_RE.search(normalize(t.text))]:
++    """Chỉ bỏ bảng nguyên tương đương có cùng scope tường minh trong một Drawing; giữ dòng trong bảng."""
++    rows, warnings, tables, pending = [], [], [], set()
++    titles = sorted((t for t in drawing.texts if TITLE_RE.search(normalize(t.text))),
++                    key=lambda t: (-t.y, t.x, t.text))
++    for index, title in enumerate(titles):
+         r, w = read_table(drawing, title)
+         warnings += w
++        if not r:
++            continue
++        table_id = f"table:{title.x:g}:{title.y:g}:{index}"
++        scope = _title_scope(title.text)
++        if scope and scope.element_code != "ALL" and any(
++                row.element_code not in (None, scope.element_code) for row in r):
++            warnings.append(f"Bảng {table_id}: nhóm cấu kiện trong tiêu đề khác nội dung, chưa xác định phạm vi.")
++            scope = None
+         for row in r:
+-            key = (normalize(row.element), normalize(row.mark), row.dia_mm, row.cut_length_mm, row.total_bars)
+-            if key in seen and row.mark:
+-                warnings.append(f"Bảng '{row.table}' dòng {row.row} trùng hệt {seen[key]} ({row.element} {row.mark}): "
+-                                "không cộng lần hai, kiểm tra bảng lặp.")
+-                continue
+-            seen[key] = f"bảng '{row.table}' dòng {row.row}"
+-            rows.append(row)
++            row.table_id = table_id
++            row.scope = scope
++            row.scope_source = "title" if scope else None
++            row.scope_evidence = title.text
++        content = _table_content(r)
++        duplicate = next((tid for tid, s, c in tables if scope is not None and scope == s and content == c), None)
++        if duplicate is not None:
++            warnings.append(f"Bảng {table_id} '{title.text}' trùng hệt bảng {duplicate}, cùng phạm vi tổng "
++                            f"{scope.element_code} tầng {scope.levels} theo tiêu đề: giữ {duplicate}, không cộng lần hai.")
++            continue
++        for tid, previous_scope, previous_content in tables:
++            overlap = (scope is not None and previous_scope is not None
++                       and (scope.element_code == previous_scope.element_code
++                            or "ALL" in (scope.element_code, previous_scope.element_code))
++                       and bool(set(scope.levels) & set(previous_scope.levels)))
++            unknown = (scope is None or previous_scope is None) and bool(content.keys() & previous_content.keys())
++            if overlap or unknown:
++                pending.update((tid, table_id))
++                warnings.append(f"Bảng {tid} và {table_id}: nghi lặp/chồng phạm vi hoặc cùng phạm vi khác nội dung; "
++                                "giữ cả hai, chờ xác nhận, chưa coi tổng là hoàn chỉnh.")
++        tables.append((table_id, scope, content))
++        rows += r
++    for row in rows:
++        if row.table_id in pending:
++            row.missing.append("phạm vi bảng thép nghi lặp/chồng hoặc khác nội dung: chờ xác nhận")
+     if rows:
+         warnings.append("Cốt thép theo bảng thống kê: chiều dài cắt lấy nguyên từ bảng (đã gồm neo, nối, uốn, móc theo "
+                         "thiết kế), hệ thống không tự cộng neo, nối.")
+--- before/tests/test_rough_rebar.py
++++ after/tests/test_rough_rebar.py
+@@ -6,7 +6,7 @@
+ from optimat.drawing.dxf_reader import Drawing, TextItem
+ from optimat.rough.materials import STEEL_NAME
+ from optimat.rough.models import WORKS, ProjectParams, WorkItem
+-from optimat.rough.rebar import _num, element_code, read_rebar_schedules, unit_mass
++from optimat.rough.rebar import RebarRow, _num, element_code, read_rebar_schedules, unit_mass
+ from optimat.rough.steel import steel_works
+ from optimat.rough.takeoff import RoughRequest, compute_rough
+ 
+@@ -20,8 +20,8 @@
+         ["M1", "1", "", "Ø12", "1500", "4", ""]]                # sau dòng TỔNG: không đọc
+ 
+ 
+-def _table(x0, y0):
+-    t = [TextItem("BẢNG THỐNG KÊ CỐT THÉP", x0, y0, "TK", "unicode", 100)]
++def _table(x0, y0, title="BẢNG THỐNG KÊ CỐT THÉP"):
++    t = [TextItem(title, x0, y0, "TK", "unicode", 100)]
+     t += [TextItem(h, x0 + i * 1000, y0 - 500, "TK", "unicode", 100) for i, h in enumerate(HEADER)]
+     for r, row in enumerate(ROWS):
+         t += [TextItem(c, x0 + i * 1000, y0 - 700 - r * 150, "TK", "unicode", 100) for i, c in enumerate(row) if c]
+@@ -103,7 +103,8 @@
+ 
+ @pytest.mark.xfail(strict=True, reason="Bảng lặp không có số hiệu đang được cộng hai lần")
+ def test_duplicate_table_without_mark_counted_once():
+-    texts = _table(0, 1000) + _table(0, -5000)
++    title = "BẢNG THỐNG KÊ CỐT THÉP TOÀN BỘ CẤU KIỆN TẦNG 1 (TỔNG TOÀN TẦNG)"
++    texts = _table(0, 1000, title) + _table(0, -5000, title)
+     for t in texts:
+         if t.text in {"1", "2"}:
+             t.text = ""
+@@ -125,8 +126,143 @@
+ 
+ 
+ def test_duplicate_table_counted_once():
+-    rows, warnings = read_rebar_schedules(_drawing(_table(0, 1000) + _table(0, -5000)))
++    title = "BẢNG THỐNG KÊ CỐT THÉP TOÀN BỘ CẤU KIỆN TẦNG 1 (TỔNG TOÀN TẦNG)"
++    rows, warnings = read_rebar_schedules(_drawing(_table(0, 1000, title) + _table(0, -5000, title)))
+     assert len(rows) == 5 and any("trùng hệt" in w for w in warnings)
++
++
++def _scoped_table(y, level="1", records=None, title=None):
++    """Bảng SYNTHETIC: toàn bộ số thanh trong phạm vi đã ghi, không phải đáp án build."""
++    title = title or f"BẢNG THỐNG KÊ CỐT THÉP DẦM TẦNG {level} (TỔNG TOÀN TẦNG)"
++    records = records if records is not None else [["D1", "1", "thẳng", "Ø16", "2000", "10", "31,60"]]
++    texts = [TextItem(title, 0, y, "TK", "unicode", 100)]
++    texts += [TextItem(h, i * 1000, y - 500, "TK", "unicode", 100) for i, h in enumerate(HEADER)]
++    for j, record in enumerate(records + [["TỔNG", "", "", "", "", "", ""]]):
++        texts += [TextItem(value, i * 1000, y - 700 - j * 150, "TK", "unicode", 100)
++                  for i, value in enumerate(record) if value]
++    return texts
++
++
++@pytest.mark.parametrize("mark", ["1", ""])
++def test_scoped_whole_table_copy_keeps_one_with_source(mark):
++    records = [["D1", mark, "thẳng", "Ø16", "2000", "10", "31,60"]]
++    rows, warnings = read_rebar_schedules(_drawing(_scoped_table(1000, records=records)
++                                                + _scoped_table(-5000, records=records)))
++    assert len(rows) == 1 and rows[0].kg == pytest.approx(31.6)
++    assert rows[0].scope.levels == (1,) and rows[0].scope.quantity_basis == "total"
++    assert rows[0].scope_source == "title" and "TẦNG 1" in rows[0].scope_evidence
++    assert rows[0].table_id and not rows[0].missing
++    assert any("trùng hệt" in w and "giữ" in w and "table:" in w for w in warnings)
++
++
++def test_independent_levels_same_content_both_survive():
++    rows, warnings = read_rebar_schedules(_drawing(_scoped_table(1000, "1") + _scoped_table(-5000, "2")))
++    assert len(rows) == 2 and sum(r.kg for r in rows) == pytest.approx(63.2)
++    assert {r.scope.levels for r in rows} == {(1,), (2,)}
++    assert len({r.table_id for r in rows}) == 2 and all(r.evidence for r in rows)
++    assert not any(r.missing for r in rows) and not any("trùng hệt" in w for w in warnings)
++
++
++def test_whole_table_comparison_preserves_repeated_rows():
++    record = ["D1", "1", "thẳng", "Ø16", "2000", "10", "31,60"]
++    texts = _scoped_table(1000, records=[record, record]) + _scoped_table(-5000, records=[record, record])
++    rows, _ = read_rebar_schedules(_drawing(texts))
++    assert len(rows) == 2 and sum(r.kg for r in rows) == pytest.approx(63.2)
++
++
++@pytest.mark.parametrize("second", [
++    ["D1", "1", "thẳng", "Ø16", "1000", "20", "31,60"],
++    ["D1", "1", "uốn", "Ø16", "2000", "10", "31,60"],
++])
++def test_equal_kg_or_changed_shape_not_proof_of_copy(second):
++    rows, warnings = read_rebar_schedules(_drawing(_scoped_table(1000)
++                                                + _scoped_table(-5000, records=[second])))
++    assert len(rows) == 2 and sum(r.kg for r in rows) == pytest.approx(63.2)
++    assert all(any("chờ xác nhận" in m for m in r.missing) for r in rows)
++    assert any("khác nội dung" in w for w in warnings)
++
++
++@pytest.mark.parametrize("marked", [True, False])
++def test_legacy_unscoped_tables_are_not_deduplicated(marked):
++    texts = _table(0, 1000) + _table(0, -5000)
++    if not marked:
++        for t in texts:
++            if t.text in {"1", "2"}:
++                t.text = ""
++    rows, warnings = read_rebar_schedules(_drawing(texts))
++    assert len(rows) == 10 and all(r.scope is None for r in rows)
++    assert all(any("chờ xác nhận" in m for m in r.missing) for r in rows)
++    assert any("nghi lặp" in w for w in warnings)
++
++
++@pytest.mark.parametrize("title", [
++    "BẢNG THỐNG KÊ CỐT THÉP", "BẢNG THỐNG KÊ CỐT THÉP DẦM TẦNG 1",
++    "BẢNG THỐNG KÊ CỐT THÉP DẦM TẦNG 1 (MỘT MẪU)",
++    "BẢNG THỐNG KÊ CỐT THÉP DẦM TẦNG 1,2 (TỔNG TOÀN TẦNG)",
++    "BẢNG THỐNG KÊ CỐT THÉP CỘT TẦNG 1 (TỔNG TOÀN TẦNG)",
++])
++def test_ambiguous_or_conflicting_title_never_establishes_scope(title):
++    rows, _ = read_rebar_schedules(_drawing(_scoped_table(1000, title=title)
++                                          + _scoped_table(-5000, title=title)))
++    assert len(rows) == 2 and all(r.scope is None and r.missing for r in rows)
++
++
++def test_multi_level_total_is_not_multiplied_or_merged_with_one_level():
++    title = "BẢNG THỐNG KÊ CỐT THÉP DẦM TẦNG 1,2 (TỔNG PHẠM VI)"
++    rows, _ = read_rebar_schedules(_drawing(_scoped_table(1000, title=title)
++                                          + _scoped_table(-5000, title=title)))
++    assert len(rows) == 1 and rows[0].kg == pytest.approx(31.6) and rows[0].scope.levels == (1, 2)
++    rows, _ = read_rebar_schedules(_drawing(_scoped_table(1000, title=title) + _scoped_table(-5000)))
++    assert len(rows) == 2 and all(r.missing for r in rows)
++
++
++def test_partial_table_overlap_does_not_remove_rows():
++    a = ["D1", "1", "thẳng", "Ø16", "2000", "10", "31,60"]
++    b = ["D2", "2", "thẳng", "Ø16", "1000", "10", "15,80"]
++    rows, _ = read_rebar_schedules(_drawing(_scoped_table(1000, records=[a, b]) + _scoped_table(-5000)))
++    assert len(rows) == 3 and all(r.missing for r in rows)
++
++
++def test_unreadable_cells_not_compared_as_equal_none():
++    a = ["D1", "1", "thẳng", "Ø16", "12.00,5", "10", ""]
++    b = ["D1", "1", "thẳng", "Ø16", "1,20.5", "10", ""]
++    rows, _ = read_rebar_schedules(_drawing(_scoped_table(1000, records=[a])
++                                          + _scoped_table(-5000, records=[b])))
++    assert len(rows) == 2 and all(r.kg is None and r.cut_length_mm is None for r in rows)
++    assert rows[0].raw_cells["chieu_dai"] != rows[1].raw_cells["chieu_dai"]
++    assert all(any("chiều dài cắt" in m for m in r.missing) for r in rows)
++
++
++def test_scope_comparison_is_local_and_repeatable():
++    texts = _scoped_table(1000) + _scoped_table(-5000) + _scoped_table(-11000, "2")
++    for ordered in (texts, list(reversed(texts))):
++        for _ in range(2):
++            rows, _ = read_rebar_schedules(_drawing(ordered))
++            assert len(rows) == 2 and sum(r.kg for r in rows) == pytest.approx(63.2)
++    first, _ = read_rebar_schedules(_drawing(_scoped_table(1000)))
++    second, _ = read_rebar_schedules(_drawing(_scoped_table(1000)))
++    assert len(first + second) == 2
++
++
++def test_whole_table_content_ignores_row_order_but_keeps_raw_cells():
++    a = ["D1", "1", "thẳng", "Ø16", "2000", "10", "31,60"]
++    b = ["D2", "2", "uốn", "Ø16", "1000", "10", "15,80"]
++    rows, _ = read_rebar_schedules(_drawing(_scoped_table(1000, records=[a, b])
++                                          + _scoped_table(-5000, records=[b, a])))
++    assert len(rows) == 2 and sum(r.kg for r in rows) == pytest.approx(47.4)
++    copied = RebarRow.model_validate_json(rows[0].model_dump_json())
++    assert copied.raw_cells == rows[0].raw_cells and copied.raw_cells["_length_unit"] == "mm"
++    assert copied.scope == rows[0].scope and copied.scope_evidence == rows[0].scope_evidence
++    assert copied.table_id == rows[0].table_id
++
++
++def test_legacy_rebar_row_roundtrip_needs_no_scope():
++    payload = dict(table="Bảng cũ", row=1, element="D1", element_code="DAM", kg=31.6,
++                   evidence="nguồn cũ", missing=["lý do cũ"])
++    row = RebarRow(**payload)
++    copied = RebarRow(**row.model_dump())
++    assert all(getattr(copied, key) == value for key, value in payload.items())
++    assert copied.scope is None and copied.table_id == "" and copied.raw_cells == {}
+ 
+ 
+ def test_schedule_steel_separate_from_ratio():

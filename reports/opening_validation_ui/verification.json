@@ -1,0 +1,22 @@
+{
+  "3002": {
+    "baseline": "XLGfOY4MIuGt8ZUp-wppq",
+    "logs": [
+      "before.log",
+      "after.log",
+      "confirm.log",
+      "types.json"
+    ],
+    "fixture": "Known, null width, null height, ignored null, invalid finite/positive/type; no network or database."
+  },
+  "3001": {
+    "baseline": "LKTDjEOitNSiJBETPtyW8",
+    "logs": [
+      "before.log",
+      "after.log",
+      "confirm.log",
+      "types.json"
+    ],
+    "fixture": "Known, null width, null height, ignored null, invalid finite/positive/type; no network or database."
+  }
+}

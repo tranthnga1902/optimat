@@ -1,0 +1,9 @@
+# QA15 — tổ hợp CAD frontend bốn file
+
+05/11/2026 — **PASS source/harness**, không phát hiện blocker mới trong scope đã giao. Manifest `reports/cad_review_bbox_opening/manifest.json` khớp SHA256 `f4badd409ad9600a334925c0949a14cf1e0c93ad9a32fa7a9618211eb59dd433`; Board/ReadPreview đối chiếu tested-viewer.json và manifest17 `on_width_worklist_toolbar`. Copy toàn bộ src từ hai opening-candidates đã ghép overlay; kiểm đúng bốn target trước chạy, cả tám file copy/candidate không đổi sau ba harness. Receipt `receipt.json` và log trong 3001/3002.
+
+- Sáu lượt EXIT0: fit, partial-confirm, worklist trên từng nền. Restore/mở plan/overview dùng fitBox với bbox âm; legacy/invalid bbox dùng fitSize, hộp điểm giữ hợp lệ. Confirm harness giữ kiểm quota/retry, lỗi response, không POST/ghi lại và sáu ca đổi ngữ cảnh cùng tab; đây là hook harness với API/storage giả, không HTTP hay localStorage thật.
+- `check-origin.cjs`/`origin.log` thêm kiểm hàm thật trên cả hai copy: origin plan → overview translate x chênh thuận, y chênh đảo; missing origin trả null, bbox âm giữ nguyên. ReadPreview source đổi world y thành preview.origin[1]-y. Native CAD dùng SVG từ backend; không đo pixel/browser trong lượt này.
+- Review source giữ nút chế độ/vẽ/cửa/vừa khung ngoài details; controls hiển thị và zoom trong details. Vừa khung ưu tiên display_bbox; fallback geometry khi không CAD. Không thay quantity hay xác nhận bằng toolbar. Worklist harness giữ scope plan/reference, removed wall, nguồn KC và empty-document signals.
+
+Chưa rebuild/browser/runtime/DB/actual CAD hoặc full/TestClient; không tuyên bố toolbar visual/keyboard mobile hay phối hợp backend HTTP đã nghiệm thu. Receipt HTTP SYN của 01 và browser toolbar17 là bằng chứng riêng. Chưa DTO tọa độ/checkpoint, DIM, manual restore hoặc actual UI INPUT. Không update project26 hay thử lại upload Tân Bình.

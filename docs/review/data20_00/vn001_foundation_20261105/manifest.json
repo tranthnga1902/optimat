@@ -1,0 +1,144 @@
+{
+  "status": "FOCUSED_SOURCE_ONLY",
+  "integration_matrix": "DIM01–10 PREPARED/NOT_RUN",
+  "scope": "Bản nguồn hiện tại và phần mã sau sửa. Các trích đoạn có mã phụ thuộc từ phiên khác; không phải patch áp tự động. Không xác nhận bản dựng, DB, API hay trình duyệt.",
+  "contract": [
+    "L trên chi tiết băng ghi gross_length_mm, chỉ tham khảo; length_mm dùng để tính sau xử lý giao.",
+    "Hai dòng cùng tên khác dữ liệu/nguồn giữ riêng. Thiếu căn cứ vị trí thì các công tác bị ảnh hưởng để null và giữ lý do. Dòng lặp toàn bộ cùng nguồn chỉ lấy một lần.",
+    "Nhiều chi tiết CAD cùng tên có kích thước khác nhau: giữ nguồn xung đột, không tự chọn kích thước cuối.",
+    "Không dùng vị trí móng đang mâu thuẫn để tự trừ giao dầm."
+  ],
+  "files_sha256": {
+    "src/optimat/rough/models.py": "76ca6a45f0259068384846e2d7f577d40b96d3f5bdf58f6de60e2708aa4bf3a8",
+    "src/optimat/rough/foundations.py": "5ae4514fcbd86ca6ae6de02314c7d8d6e99f9b7438ba31cbb41ecf1bfc8a8e2d",
+    "src/optimat/rough/structural.py": "5231868a09ded55b3722b67f0253fb646448bfaee4c1b6f6cd865773d0e6f6e1",
+    "src/optimat/drawing/sheets.py": "24542a567fee7fe4fd333cf957ef017525ac34e85874c25e5b66f8910dd000b9",
+    "src/optimat/drawing/registry.py": "f4f927252bb2d2b06095213114ed4db5cd7e57144a03f1d556b7d2da1dff1d6c",
+    "data/rules/ky_hieu_cau_kien.csv": "03495da69d456c7dedf56c7bd2f294c2af31216e3791f89ca4f8acabe715b825",
+    "tests/test_rough_structural.py": "24f2d91c81fe796868874929d2d5d40acd743452699eccc36fb9f2f67b463710",
+    "tests/test_rough_foundations.py": "ff662c03de156b650a7e50a397b8fd5cdd878d01460a07029982bcbe93125b04"
+  },
+  "after_hunks": [
+    {
+      "path": "src/optimat/rough/models.py",
+      "symbol": "FoundationItem",
+      "start": 91,
+      "end": 108,
+      "sha256_lf": "78fd0b7448ca1ada79b7f0408ae85b6a7787e415f0077e09753a3a8fb2b449d8"
+    },
+    {
+      "path": "src/optimat/rough/foundations.py",
+      "symbol": "_footing_rows",
+      "start": 127,
+      "end": 150,
+      "sha256_lf": "d8a9de34f2f31a7091da3b639e1db4e3ba217f473bc1f31262aaddd4eac27e92"
+    },
+    {
+      "path": "src/optimat/rough/foundations.py",
+      "symbol": "foundation_works",
+      "start": 153,
+      "end": 275,
+      "sha256_lf": "83542e81a6623c13061029d8ea1311b5b47a053802d0f2c3a173051fbb11abcf"
+    },
+    {
+      "path": "src/optimat/rough/foundations.py",
+      "symbol": "footing_rects",
+      "start": 278,
+      "end": 290,
+      "sha256_lf": "255ba02ae069a7566ed45e641e35fcef13750d95c6a5cc4c3a91fb6126fc8e43"
+    },
+    {
+      "path": "src/optimat/rough/structural.py",
+      "symbol": "element_of",
+      "start": 65,
+      "end": 72,
+      "sha256_lf": "ca6155d79c327b38bb028e06fb8ae7ec6784231a120bb2ee881159d154108bb9"
+    },
+    {
+      "path": "src/optimat/rough/structural.py",
+      "symbol": "footing_detail_sizes",
+      "start": 154,
+      "end": 189,
+      "sha256_lf": "b2de383c0f27a42f17b273049c493c78a1c615fd9c5932e508e52b180faa13fa"
+    },
+    {
+      "path": "src/optimat/rough/structural.py",
+      "symbol": "read_structural",
+      "start": 462,
+      "end": 580,
+      "sha256_lf": "62a4e5975ddb41a45840d3ca03e1b4d012b00bccd7defa0e865d31bca8a2585d"
+    },
+    {
+      "path": "src/optimat/drawing/sheets.py",
+      "symbol": "find_views",
+      "start": 106,
+      "end": 120,
+      "sha256_lf": "39a00dd0eaec2535d366dd7a8761f31790b1a9bf4e89a6703cc788bb7a1def31"
+    },
+    {
+      "path": "src/optimat/drawing/sheets.py",
+      "symbol": "title_height_reference",
+      "start": 100,
+      "end": 103,
+      "sha256_lf": "64bc766f460bf1f327d36352738bce30ec204f905c3958927adc8057555a24e0"
+    },
+    {
+      "path": "src/optimat/drawing/registry.py",
+      "symbol": "build_registry",
+      "start": 269,
+      "end": 402,
+      "sha256_lf": "a4b76b42c2692e29a1f35049bb387f28ba02d8cb7761ca60ed445a1694f6fbf2"
+    },
+    {
+      "path": "data/rules/ky_hieu_cau_kien.csv",
+      "symbol": "K12",
+      "start": 6,
+      "end": 6,
+      "sha256_lf": "fef906fe367550fc474592249c12659ba1701b27bedc275f018afdb27be18069"
+    },
+    {
+      "path": "tests/test_rough_structural.py",
+      "symbol": "test_strip_footing_uses_explicit_length_and_leaves_section_pending",
+      "start": 59,
+      "end": 72,
+      "sha256_lf": "377601fb0dc4f80dfa5e4cda193520cedfc5c061b24f155d828a6fe0d4423309"
+    },
+    {
+      "path": "tests/test_rough_foundations.py",
+      "symbol": "test_conflicting_cad_details_do_not_overwrite_by_mark",
+      "start": 106,
+      "end": 116,
+      "sha256_lf": "1462e6e337cf56f77ecacf58bcc13f293c3b12e6f36619c88e1507ab4d46f4cc"
+    },
+    {
+      "path": "tests/test_rough_foundations.py",
+      "symbol": "test_repeated_mark_needs_positions_before_measuring",
+      "start": 85,
+      "end": 103,
+      "sha256_lf": "8cabcf6db12197cd65ae443657d79724b2d6c12f7b6253feed0ff57101e2dc69"
+    },
+    {
+      "path": "tests/test_rough_foundations.py",
+      "symbol": "test_duplicate_footing_counted_once",
+      "start": 80,
+      "end": 82,
+      "sha256_lf": "192516871ac3a7e0fb755f6fc3f86445792126beae119cdff4f67aecbcf0f8f2"
+    },
+    {
+      "path": "tests/test_rough_foundations.py",
+      "symbol": "test_tie_beam_through_footing_not_double_counted",
+      "start": 128,
+      "end": 138,
+      "sha256_lf": "e57ff449553b955f7291556fc0a482fca169ddf84766b85bf7f65fc2ebbd58c6"
+    }
+  ],
+  "postimage_sha256": "4e59ba370399afec3e2ca45858f760ad1652c8e32cb06d6df69571b5924c8fd9",
+  "tests": [
+    "tests/test_rough_structural.py::test_strip_footing_uses_explicit_length_and_leaves_section_pending",
+    "tests/test_rough_foundations.py::test_conflicting_cad_details_do_not_overwrite_by_mark",
+    "tests/test_rough_foundations.py::test_repeated_mark_needs_positions_before_measuring",
+    "tests/test_rough_foundations.py::test_duplicate_footing_counted_once",
+    "tests/test_rough_foundations.py::test_tie_beam_through_footing_not_double_counted"
+  ],
+  "exit_code": 0
+}

@@ -1,0 +1,13 @@
+{
+  "canonical": "src/optimat/rough/rebar.py",
+  "base_sha256": "a05915b14795a4a48f4d9f9532945f88bcc43c8a084dacf877d1ef7dcb7d6085",
+  "candidate_sha256": "850a70e3211b22de1a8fabc5e9e409d895997c3dd06972cc2160bcfd90ce3667",
+  "canonical_current_sha256": "a05915b14795a4a48f4d9f9532945f88bcc43c8a084dacf877d1ef7dcb7d6085",
+  "canonical_matches_base": true,
+  "tests_sha256": "b41cc22b697e11570ab01fed97caf2439b0ad62c040697a47624865fd6aeed3b",
+  "scope": "only read_table differs; all other top-level function/class ASTs unchanged",
+  "before": "4failed,exit1,before.log",
+  "after": "135passed in9.01s,exit0,session59010 terminal,stage_final.log",
+  "loader": "staging/run_tests.py injects candidate as optimat.rough.rebar in child only before importing callers; assert module file",
+  "not_applied_to_canonical": true
+}

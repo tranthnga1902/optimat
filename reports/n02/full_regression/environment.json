@@ -1,0 +1,35 @@
+{
+  "started_utc": "2026-11-03T14:04:20.806300+00:00",
+  "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+  "python_executable": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "outside_sandbox": true,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\n02\\full_regression\\pytest_temp"
+  ],
+  "flags": {
+    "DATABASE_URL_present": false,
+    "OPTIMAT_TEST_DATABASE_URL_present": false,
+    "OPTIMAT_NO_DOTENV": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPTIMAT_CATALOG_OVERLAY": "data/sample/catalog",
+    "pytest_cacheprovider_enabled": false,
+    "runxfail": false
+  },
+  "outside_hash_scope": [
+    "frontend",
+    "SQL",
+    "docs",
+    "other reports"
+  ],
+  "scope_note": "normal full regression after N02-b3, no business acceptance; UI worker20288 untouched"
+}

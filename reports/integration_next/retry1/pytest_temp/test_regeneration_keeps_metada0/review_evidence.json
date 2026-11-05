@@ -1,0 +1,297 @@
+{
+  "reviewer": "Codex",
+  "method": "CAD entity text, drawing sheets, quantity arithmetic and geometric overlap review",
+  "human_approval": false,
+  "cases": {
+    "nha_huong_hai_duong_7x12": {
+      "steel": [
+        {
+          "work": "W005",
+          "groups": [
+            {
+              "name": "móng",
+              "handles": [
+                "1014D92",
+                "1014D93",
+                "1014D94",
+                "1014D95",
+                "1014D96"
+              ]
+            },
+            {
+              "name": "bể phốt",
+              "handles": [
+                "10055E9",
+                "10055EA",
+                "10055EB",
+                "10055EC"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W010",
+          "groups": [
+            {
+              "name": "cột",
+              "handles": [
+                "1015953",
+                "1015954",
+                "1015955"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W012",
+          "groups": [
+            {
+              "name": "dầm",
+              "handles": [
+                "1019FB9",
+                "1019FBA",
+                "1019FBB"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W014",
+          "groups": [
+            {
+              "name": "sàn",
+              "handles": [
+                "1018240"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W017",
+          "groups": [
+            {
+              "name": "lanh tô",
+              "handles": [
+                "10190F5",
+                "10190F6",
+                "10190F7"
+              ]
+            }
+          ]
+        }
+      ],
+      "issues": [
+        {
+          "id": "HUONG-BM2-LENGTH",
+          "work": "W002",
+          "status": "resolved_measurement_convention",
+          "explanation": "BM-2 dài tổng 7,29 m; phần không giao ba băng ngang rộng 0,80 m là 7,29-3*0,80=4,89 m. Chỉ giải quyết chiều dài không giao, không xác nhận mọi hệ số đào đất.",
+          "sheets": [
+            "KC-01-02",
+            "KC-01-04"
+          ]
+        },
+        {
+          "id": "HUONG-BM2-WIDTH",
+          "work": "W006",
+          "status": "source_profile_mismatch",
+          "explanation": "Mặt cắt BM-2 rộng đáy 1,00 m, nhưng diễn giải bê tông BM-2 dùng 0,80 m. Tiết diện đúng theo hình: 1*0,25+(1+0,3)*0,25/2+0,3*0,1=0,4425 m²; diễn giải nguồn dùng 0,3675 m². Không sửa tổng móng khi chưa giải quyết hết phần giao theo cao độ.",
+          "sheets": [
+            "KC-01-04"
+          ]
+        },
+        {
+          "id": "HUONG-BM4-LABEL",
+          "work": "W002",
+          "status": "source_label_typo",
+          "explanation": "Hai dòng cùng ghi BM-5. Dòng L=10,48 m tương ứng BM-4: 12,08-2*0,80=10,48; dòng L=10,99 m mới là BM-5: 12,59-2*0,80=10,99. Không thay số gốc.",
+          "sheets": [
+            "KC-01-02",
+            "KC-01-04"
+          ]
+        },
+        {
+          "id": "HUONG-BM4-LABEL-LEAN",
+          "work": "W004",
+          "status": "source_label_typo",
+          "explanation": "Dòng BM-5 có L=10,48 m trong bê tông lót cũng tương ứng BM-4; giữ số gốc và ghi tên chuẩn riêng.",
+          "sheets": [
+            "KC-01-02",
+            "KC-01-04"
+          ]
+        },
+        {
+          "id": "HUONG-LINTEL-DIAMETER",
+          "work": "W017",
+          "status": "source_diameter_mismatch",
+          "explanation": "Nguồn ghi Phi 12: 92,9 kg. Bảng tổng hợp CAD ghi Ø16: 92,9 kg; bảng thống kê và chi tiết lanh tô cũng dùng Ø16. Chuẩn hóa quy cách thành Ø16 trong nhãn từ bản vẽ; giữ Phi12 nguyên bản nguồn.",
+          "sheets": [
+            "KC-06-03",
+            "KC-06-04"
+          ]
+        },
+        {
+          "id": "HUONG-TANK-INTERNAL-SUM",
+          "work": "W005",
+          "issue_type": "internal_schedule_arithmetic_conflict",
+          "status": "reviewed_unresolved",
+          "explanation": "Bể phốt KLCT Ø6/10/12=16.6/164.8/44.8 kg khác tổng15.7/163.8/43.6; đáy ba khối lượng dòng126.5 khác KLCT124.8.",
+          "handles": [
+            "100557B",
+            "100558D",
+            "1005546",
+            "10055B8",
+            "10055E2",
+            "100557C",
+            "100558E",
+            "10055E9",
+            "10055EB",
+            "10055EC"
+          ],
+          "pdf_page": 14,
+          "sheet": "KC-01-08",
+          "report": "reports/review_housing_20261103/KIEM_TONG_BANG_THEP.md"
+        }
+      ]
+    },
+    "nha_sang_hai_duong_4x15": {
+      "steel": [
+        {
+          "work": "W007",
+          "groups": [
+            {
+              "name": "móng",
+              "handles": [
+                "118F2E7",
+                "118F2E8",
+                "118F2E9",
+                "118F2EA",
+                "118F2EB",
+                "118F2EC"
+              ]
+            },
+            {
+              "name": "bể phốt",
+              "handles": [
+                "11735D6",
+                "11735D7",
+                "11735D8",
+                "11735D9"
+              ]
+            },
+            {
+              "name": "bể nước",
+              "handles": [
+                "11735DE",
+                "11735DF",
+                "11735E0"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W012",
+          "groups": [
+            {
+              "name": "cột",
+              "handles": [
+                "118F894",
+                "118F895",
+                "118F896"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W014",
+          "groups": [
+            {
+              "name": "dầm",
+              "handles": [
+                "118FE3E",
+                "118FE3F",
+                "118FE40",
+                "118FE41"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W016",
+          "groups": [
+            {
+              "name": "sàn",
+              "handles": [
+                "11903E9"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W018",
+          "groups": [
+            {
+              "name": "cầu thang",
+              "handles": [
+                "1190991",
+                "1190992"
+              ]
+            }
+          ]
+        },
+        {
+          "work": "W020",
+          "groups": [
+            {
+              "name": "lanh tô",
+              "handles": [
+                "1190F3A",
+                "1190F3B",
+                "1190F3C",
+                "1190F3D"
+              ]
+            }
+          ]
+        }
+      ],
+      "issues": [
+        {
+          "id": "SANG-TANK-STEEL",
+          "work": "W007",
+          "status": "source_schedule_mismatch",
+          "explanation": "Bể phốt: nguồn Phi10=133,5 kg, Phi12=39,4 kg; CAD tương ứng 116,8 và 37,6 kg. Bể nước: nguồn Phi10=200 kg, CAD=168,4 kg. Phần móng 2491 kg khớp; tổng đúng theo các tổng hợp CAD là 2491+191,2+219=2901,2 kg (2,9012 tấn), khác nguồn 2,952 tấn.",
+          "sheets": [
+            "KC-01-08",
+            "KC-01-09",
+            "KC-02-03"
+          ]
+        },
+        {
+          "id": "SANG-PILE-TEMPORARY-LENGTH",
+          "work": "W002",
+          "status": "design_provisional_not_as_built",
+          "explanation": "34 cọc × 10 m = 340 m khớp ghi chú thiết kế. Chiều dài là tạm tính, không phải số nghiệm thu sau ép thử.",
+          "sheets": [
+            "KC-01-01",
+            "KC-01-02"
+          ]
+        },
+        {
+          "id": "SANG-WATER-TANK-INTERNAL-SUM",
+          "work": "W007",
+          "issue_type": "internal_schedule_arithmetic_conflict",
+          "status": "reviewed_unresolved",
+          "explanation": "Bể nước KLCT Ø12 DM1=20.6 và DM2=17.0 cộng37.6 kg khác tổng36.9 kg. Không chọn số thay thế.",
+          "handles": [
+            "11735D2",
+            "11735B6",
+            "11735E0"
+          ],
+          "pdf_page": 18,
+          "sheet": "KC-01-12",
+          "report": "reports/review_housing_20261103/KIEM_TONG_BANG_THEP.md"
+        }
+      ]
+    }
+  }
+}

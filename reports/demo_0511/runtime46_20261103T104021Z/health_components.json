@@ -1,0 +1,38 @@
+[
+  {
+    "iteration": 1,
+    "component": "price_model",
+    "seconds": 0.1407,
+    "available": true
+  },
+  {
+    "iteration": 1,
+    "component": "dwg_converter",
+    "seconds": 0.1077,
+    "available": true
+  },
+  {
+    "iteration": 1,
+    "component": "db_config",
+    "seconds": 0.0,
+    "available": true
+  },
+  {
+    "iteration": 2,
+    "component": "price_model",
+    "seconds": 0.1513,
+    "available": true
+  },
+  {
+    "iteration": 2,
+    "component": "dwg_converter",
+    "seconds": 0.1117,
+    "available": true
+  },
+  {
+    "iteration": 2,
+    "component": "db_config",
+    "seconds": 0.0,
+    "available": true
+  }
+]

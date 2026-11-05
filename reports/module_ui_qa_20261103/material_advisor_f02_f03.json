@@ -1,0 +1,29 @@
+{
+  "status": "source_checked_not_built",
+  "changedFile": "frontend/src/components/MaterialAdvisor.tsx",
+  "before": "3ADDAE2C22886B9DD5EFEB67CA2F38FDDCF453C8E6F0BADEB5787CA9731F76CE",
+  "after": "02B29C730581E92631C82F2F195767073013B958053E16C763A7D4F385E7C5A3",
+  "inputsWithIdenticalBeforeAndAfterSha256": {
+    "frontend/src/app/(user)/dieu-chinh/materials.tsx": "8800E17217E69E3A4A0CABBF55F28CC01965E4F81E0A8A2E86DD4F510E6CF8F5",
+    "frontend/src/components/AssistantWindow.tsx": "27D7019D95F01A3E21C313CEFDF7A819473D5690DC29FDDD488199D59591B551",
+    "frontend/src/lib/review-session.ts": "1DB96FC93D21492F52AA0D721D645DA8B7976E7A79ACEB7634A3432620B6BB6C",
+    "frontend/.next-404-stage/BUILD_ID": "DB9455BEAA055B032B88C1BABA60B0728185FB76C7AB2536FCE7A20CEC31B956",
+    "frontend/src/app/(user)/toi-uu/Proposal.tsx": "C8BF841B7699C431BB356F6C5EAD18DA2FD6A8BE0D6287DD783290A3CE1CD7AA",
+    "src/optimat/agent/material_advisor.py": "463E8F88B2C92958B6217CDE60EA419ECDBB345EF2569E912094D2ADB300210E",
+    "src/optimat/catalog/pricing.py": "6D442DC717088959F1AFE1A331B495BA1FB28524BE0A53DBF04DB8845B5E740C",
+    "frontend/src/app/(user)/dieu-chinh/advice-scope.ts": "43F864851636141CFAEDACD1916B4D1C3DEC4AA708D6A15F3CF6152992958734"
+  },
+  "checks": [
+    {
+      "command": "eslint --no-cache src/components/MaterialAdvisor.tsx",
+      "exit": 0,
+      "log": "material_advisor_f02_f03_eslint.log"
+    },
+    {
+      "command": "tsc --noEmit --incremental false -p tsconfig.json",
+      "exit": 0,
+      "log": "material_advisor_f02_f03_typescript.log"
+    }
+  ],
+  "patch": "material_advisor_f02_f03.patch"
+}

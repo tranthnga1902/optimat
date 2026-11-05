@@ -2,6 +2,7 @@
 mỗi ký hiệu layer liệt kê các layer thật mà nó thắng (đúng thứ tự ưu tiên của match_layer)."""
 from __future__ import annotations
 
+import json
 import re
 from functools import lru_cache
 from pathlib import Path
@@ -12,20 +13,40 @@ from .encoding import normalize
 
 # thứ tự là thứ tự ưu tiên hình: thư viện mẫu trước bản vẽ thật; không dùng data/sample (block giả của bản vẽ thử)
 SAMPLE_DIRS = (config.DATA_DIR / "drawings" / "thu_vien", config.DATA_DIR / "drawings" / "build")
+# kết quả quét lưu ra đĩa: đọc bản vẽ mẫu mất 20–40 s mỗi lần khởi động máy chủ
+CACHE = config.DATA_DIR / "drawings" / ".concept_samples.json"
 DRAWN = {"LINE", "ARC", "CIRCLE", "ELLIPSE", "LWPOLYLINE", "POLYLINE", "SPLINE", "SOLID"}   # bỏ chữ, hatch
 
 
 @lru_cache(maxsize=1)
 def _scan() -> tuple[dict[str, tuple[str, list]], dict[str, str]]:
     """Đọc mỗi bản vẽ mẫu một lần: tên block → (bản vẽ, các nét đã rời rạc hóa), tên layer → bản vẽ.
+    Dùng lại CACHE khi các bản vẽ mẫu không đổi (đường dẫn, kích thước, giờ sửa).
     shortcut: thêm bản vẽ mẫu mới cần khởi động lại máy chủ để quét lại."""
+    paths = sorted(p for d in SAMPLE_DIRS if d.exists() for p in d.glob("*.dxf"))
+    sig = [[str(p), p.stat().st_size, p.stat().st_mtime_ns] for p in paths]
+    try:
+        cached = json.loads(CACHE.read_text(encoding="utf8"))
+        if cached["sig"] == sig:
+            return cached["blocks"], cached["layers"]
+    except (OSError, ValueError, KeyError):
+        pass
+    blocks, layers = _read(paths)
+    try:
+        CACHE.write_text(json.dumps({"sig": sig, "blocks": blocks, "layers": layers}), encoding="utf8")
+    except OSError:      # không ghi được cache thì lần khởi động sau quét lại
+        pass
+    return blocks, layers
+
+
+def _read(paths: list[Path]) -> tuple[dict[str, tuple[str, list]], dict[str, str]]:
     import ezdxf
     from ezdxf import disassemble
 
     from .dxf_reader import original_block_name
     blocks: dict[str, tuple[str, list]] = {}
     layers: dict[str, str] = {}
-    for path in sorted(p for d in SAMPLE_DIRS if d.exists() for p in d.glob("*.dxf")):
+    for path in paths:
         try:
             doc = ezdxf.readfile(path)
         except Exception:     # bản vẽ hỏng thì bỏ qua, các bản khác vẫn có hình

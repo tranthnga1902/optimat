@@ -26,7 +26,7 @@ from .dimensions import inside, read_dimensions, view_scale
 from .dxf_reader import Drawing
 from .encoding import normalize
 from .plans import find_plans
-from .sheets import TITLE_REL_HEIGHT, find_views, sheet_inventory, sheet_type_of
+from .sheets import TITLE_REL_HEIGHT, find_views, sheet_inventory, sheet_type_of, title_height_reference
 
 CONFIDENCE_FILE = config.DATA_DIR / "rules" / "do_tin_cay.csv"
 LEVELS = {"thap": 0, "trung_binh": 1, "cao": 2}
@@ -303,7 +303,7 @@ def build_registry(sources: list[tuple[str, Drawing]], symbol_overrides: dict[st
                 f.elevation_m = f.elevation_m if f.elevation_m is not None else p.level_m
         # tiêu đề nhận được loại -> ViewInfo; chữ cỡ tiêu đề không nhận được loại -> unmatched
         title_texts = {(round(v.x), round(v.y)) for v in views}
-        big = max((t.height for t in d.texts if sheet_type_of(t.text)), default=0)
+        big = title_height_reference([t for t in d.texts if sheet_type_of(t.text)])
         for t in d.texts:
             n = normalize(t.text).strip()
             if (round(t.x), round(t.y)) not in title_texts and big and t.height >= TITLE_REL_HEIGHT * big \
@@ -379,6 +379,9 @@ def build_registry(sources: list[tuple[str, Drawing]], symbol_overrides: dict[st
         for key, size in st.footing_detail_sizes(views, details, fdims).items():
             cid = f"FOUNDATION:{key}"
             c = comps.setdefault(cid, _new(cid, "FOUNDATION", "móng", key.upper()))
+            if size.get("conflict"):
+                issues.append(Issue(kind="xung_dot_kich_thuoc", component=cid,
+                                    message=f"Các chi tiết móng cùng ký hiệu khác kích thước: {size['nguon']}"))
             vals = {k: v for k, v in size.items() if k in REQUIRED["FOUNDATION"] + ("lean_thickness_mm",) and v is not None}
             if vals:
                 ev = c.details[0] if c.details else EvidenceRef(file=file, bbox=(0, 0, 0, 0), rule="CHI_TIET")

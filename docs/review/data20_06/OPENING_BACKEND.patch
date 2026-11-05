@@ -1,0 +1,256 @@
+--- a/src/optimat/drawing/review.py
++++ b/src/optimat/drawing/review.py
+@@ -41,8 +41,8 @@
+     id: str
+     wall: Optional[str] = None
+     kind: str = "door"                        # door | window | block
+-    w: float                                  # rộng (mm)
+-    h: Optional[float] = None                 # cao (mm); trống: chưa trừ lỗ mở (Quy ước B7)
++    w: Optional[float] = Field(default=None, gt=0, allow_inf_nan=False, strict=True)
++    h: Optional[float] = Field(default=None, gt=0, allow_inf_nan=False, strict=True)
+     keep: bool = True
+     src: str = "auto"
+     ev: Optional[str] = None                  # truy vết: dấu hiệu nhận ra cửa (block D1, cung cánh cửa, nét kính)
+@@ -60,13 +60,28 @@
+     openings: list[ReviewOpening] = Field(default_factory=list)
+ 
+ 
++class PendingWallGroup(BaseModel):
++    wall_type: str
++    role: str
++    wall_ids: list[str]
++    opening_ids: list[str]
++    gross_area_m2: float
++    known_opening_area_m2: float
++    net_area_m2: None = None
++    missing: list[str]
++
++
+ class ReviewResult(BaseModel):
+     file: str
+     plan: str
+     height_mm: float
+     length_rule: str = "tim"
+     groups: list[WallGroup]
+-    total_net_area_m2: float
++    total_net_area_m2: Optional[float]
++    known_net_area_m2: float = 0
++    complete: bool = True
++    pending_groups: list[PendingWallGroup] = Field(default_factory=list)
++    pending_openings: list[ReviewOpening] = Field(default_factory=list)
+     walls_kept: int
+     walls_removed: int
+     walls_added: int
+@@ -93,6 +108,8 @@
+         raise ValueError(f"Quy tắc chiều dài không hợp lệ: {plan.length_rule} (chỉ nhận {', '.join(LENGTH_RULES)}).")
+     walls = [w for w in plan.walls if w.keep and w.masonry]
+     ids = {w.id for w in walls}
++    incomplete = [o for o in plan.openings if o.keep and (o.w is None or o.h is None or o.wall not in ids)]
++    unassigned = [o for o in incomplete if o.wall not in ids]
+     if plan.length_rule == "thong_thuy":
+         # tường bê tông giữ lại vẫn là mặt giao: tính thông thủy trên mọi tường đang giữ
+         lengths = net_lengths([(w.id, w.x1, w.y1, w.x2, w.y2, float(w.cls)) for w in plan.walls if w.keep])
+@@ -106,8 +123,9 @@
+         if o.wall not in ids:
+             warnings.append(f"Lỗ mở {o.id} không gắn với tường nào đang giữ, không trừ.")
+             continue
+-        if o.h is None:
+-            warnings.append(f"Lỗ mở {o.id} chưa có chiều cao, không trừ.")
++        if o.w is None or o.h is None:
++            missing = ', '.join(x for x, absent in (('rộng mm', o.w is None), ('cao mm', o.h is None)) if absent)
++            warnings.append(f"{plan.plan}, lỗ {o.id} (tường {o.wall}): thiếu {missing}; chưa xác định lượng trừ.")
+             continue
+         open_area[o.wall] = open_area.get(o.wall, 0.0) + o.w * min(o.h, H) / 1e6
+     for wid, area in open_area.items():
+@@ -129,6 +147,7 @@
+         if res.note:
+             warnings.append(f"Tường {w.id}: {res.note}")
+     groups = []
++    pending_groups = []
+     # mỗi phương án tường (hay mã vật liệu khi chưa quy đổi được) một nhóm: bảng vật liệu áp đúng định mức từng phương án
+     kind = lambda w: system_of.get(w.id) or w.mat or ""  # noqa: E731
+     for cls, role, k in sorted({(w.cls, w.role, kind(w)) for w in walls}):
+@@ -136,6 +155,15 @@
+         length_m = sum(lengths[w.id] for w in members) / 1000
+         gross = length_m * H / 1000
+         opening = sum(open_area.get(w.id, 0.0) for w in members)
++        pending = [o for o in incomplete if o.wall in {w.id for w in members}] + unassigned
++        if pending:
++            pending_groups.append(PendingWallGroup(wall_type=cls, role=role, wall_ids=[w.id for w in members],
++                opening_ids=[o.id for o in pending], gross_area_m2=round(gross, 2),
++                known_opening_area_m2=round(opening, 2),
++                missing=[f"lỗ {o.id}: chưa gắn tường đang giữ" if o.wall not in ids else
++                         f"lỗ {o.id} (tường {o.wall}): thiếu " + ', '.join(
++                         x for x, absent in (('rộng mm', o.w is None), ('cao mm', o.h is None)) if absent) for o in pending]))
++            continue
+         by_mat: dict[str, float] = {}
+         for w in members:
+             if w.mat:
+@@ -154,11 +182,18 @@
+     bill_missing = [f"Tường {b.wall_type} {role_vi.get(b.role, b.role)}, {'vữa' if b.kind == 'mortar' else 'vật liệu'}"
+                     f"{' ' + b.material_id if b.material_id else ''}: thiếu {', '.join(b.missing)}" for b in bill if b.missing]
+     costs = [b.est_cost for b in bill]
++    if incomplete:
++        bill_missing.extend(f"{plan.plan}, lỗ {o.id}: " +
++                            (f"tường {o.wall} chưa hợp lệ" if o.wall not in ids else
++                             'thiếu ' + ', '.join(x for x, absent in (('rộng mm', o.w is None), ('cao mm', o.h is None)) if absent))
++                            for o in incomplete)
++    known = round(sum(g.net_area_m2 for g in groups), 2)
+     return ReviewResult(
+         bill=bill, bill_missing=bill_missing,
+-        bill_total=round(sum(costs)) if costs and all(c is not None for c in costs) else None,
++        bill_total=round(sum(costs)) if not incomplete and costs and all(c is not None for c in costs) else None,
+         file=plan.file, plan=plan.plan, height_mm=H, length_rule=plan.length_rule, groups=groups,
+-        total_net_area_m2=round(sum(g.net_area_m2 for g in groups), 2),
++        total_net_area_m2=known if not incomplete else None, known_net_area_m2=known,
++        complete=not incomplete, pending_groups=pending_groups, pending_openings=incomplete,
+         walls_kept=len(walls), walls_removed=sum(1 for w in plan.walls if not w.keep),
+         walls_added=sum(1 for w in plan.walls if w.src == "manual" and w.keep),
+         walls_edited=sum(1 for w in plan.walls if w.edited and w.src != "manual" and w.keep),
+--- a/src/optimat/rough/walls.py
++++ b/src/optimat/rough/walls.py
+@@ -69,25 +69,33 @@
+     for o in openings:
+         if o.keep and o.wall in ids:
+             by_wall.setdefault(o.wall, []).append(o)
++    all_kept_ids = {w.id for w in walls if w.keep}
++    orphans = [o for o in openings if o.keep and o.wall not in all_kept_ids]
++    orphan_missing = [f"lỗ {o.id}: chưa gắn tường đang giữ" for o in orphans]
+ 
+     works: list[WorkItem] = []
+     lintel_total, lintel_form, lintel_count, lintel_parts = 0.0, 0.0, 0, []
+     lintel_dimensions = []
++    incomplete_lintels = list(orphan_missing)
+     keys = sorted({(w.cls, w.role, system_of.get(w.id)) for w in kept}, key=lambda k: (k[0], k[1], k[2] or ""))
+     for cls, role, system in keys:
+         members = [w for w in kept if w.cls == cls and w.role == role and system_of.get(w.id) == system]
+         t, t_note = _thickness_m(system, cls, view)
+         length = sum(math.hypot(w.x2 - w.x1, w.y2 - w.y1) for w in members) / 1000
+         ops = [o for w in members for o in by_wall.get(w.id, [])]
+-        no_h = [o.id for o in ops if o.h is None]
++        incomplete = [o for o in ops if o.w is None or o.h is None]
++        missing_openings = [f"lỗ {o.id} (tường {o.wall}): thiếu " +
++                            ', '.join(x for x, missing in (('rộng mm', o.w is None), ('cao mm', o.h is None)) if missing)
++                            for o in incomplete]
++        group_missing = missing_openings + orphan_missing
+         # ngưỡng lỗ nhỏ không trừ (ProjectParams.min_opening_m2, mặc định 0 = trừ mọi lỗ): lỗ nhỏ hơn ngưỡng vẫn có lanh tô
+-        small = [o for o in ops if o.h is not None and o.w * o.h / 1e6 < params.min_opening_m2]
+-        open_area = sum(o.w * min(o.h, h_wall) for o in ops if o.h is not None and o not in small) / 1e6
++        small = [o for o in ops if o.w is not None and o.h is not None and o.w * o.h / 1e6 < params.min_opening_m2]
++        open_area = sum(o.w * min(o.h, h_wall) for o in ops if o.w is not None and o.h is not None and o not in small) / 1e6
+         lintel = sum((o.w + 2 * (params.lintel_bearing_mm or 0)) / 1000 * t * (params.lintel_height_mm or 0) / 1000
+-                     for o in ops) if lintel_ok else 0.0
++                     for o in ops if o.w is not None) if lintel_ok else 0.0
+         # cốp pha lanh tô: đáy dưới lỗ cửa (rộng lỗ × dày tường) + hai thành suốt chiều dài lanh tô
+         form = sum(o.w / 1000 * t + 2 * (o.w + 2 * (params.lintel_bearing_mm or 0)) / 1000 * (params.lintel_height_mm or 0) / 1000
+-                   for o in ops) if lintel_ok else 0.0
++                   for o in ops if o.w is not None) if lintel_ok else 0.0
+         columns = sum((column_len_in_walls or {}).get(w.id, 0.0) for w in members) / 1000 * t * h_wall / 1000
+         gross = length * h_wall / 1000
+         net_area = max(0.0, gross - open_area)
+@@ -96,57 +104,60 @@
+         formula = (f"{_fmt(length)} m × {_fmt(h_wall / 1000)} m × {_fmt(t)} m ({t_note}) − {_fmt(open_area)} m² cửa × {_fmt(t)} m"
+                    + (f" − {_fmt(lintel)} m³ lanh tô" if lintel else "") + (f" − {_fmt(columns)} m³ cột" if columns else "")
+                    + (f" ({len(small)} lỗ < {_fmt(params.min_opening_m2)} m² không trừ theo ngưỡng cấu hình)" if small else ""))
+-        missing = [] if system else ["phương án tường (vật liệu xây)"]
++        missing = ([] if system else ["phương án tường (vật liệu xây)"]) + group_missing
+         issues = []
+         if beam is None or not math.isfinite(beam) or beam < 0:
+             issues.append("cần xác nhận chiều cao dầm trừ khỏi tường (nhập 0 nếu không có dầm)")
+         if volume < -1e-8 or not math.isfinite(volume):
+             issues.append("kiểm tra thể tích tường và các phần đã khấu trừ")
+-        if any(o.w <= 0 or (o.h is not None and o.h <= 0) for o in ops):
+-            issues.append("cần kiểm tra kích thước lỗ mở")
+         dimensions = [dict(label=w.id, count=1, length_m=math.hypot(w.x2-w.x1, w.y2-w.y1)/1000,
+                            width_m=t, height_m=h_wall/1000, floor_height_m=height_mm/1000, source=f"{plan}: tường {w.id}; {t_note}",
+                            field_sources={"width_m": t_note, "height_m": "PlanInput.height_mm − ProjectParams.beam_depth_mm" if beam is not None else "PlanInput.height_mm (chưa trừ dầm)",
+                                           "floor_height_m": "PlanInput.height_mm"},
+                            note="Cao xây khác cao tầng; raw từng đoạn trước trừ cửa/cột/giằng, không phải net. " + ("Chưa trừ dầm" if beam is None else "Đã trừ cao dầm")) for w in members]
+         lintel_dimensions.extend(dict(label=f"lanh tô {o.id}", count=1,
+-            length_m=(o.w + 2*params.lintel_bearing_mm)/1000 if params.lintel_bearing_mm is not None else None,
++            length_m=(o.w + 2*params.lintel_bearing_mm)/1000 if o.w is not None and params.lintel_bearing_mm is not None else None,
+             width_m=t, height_m=params.lintel_height_mm/1000 if params.lintel_height_mm is not None else None,
+-            source=f"{plan}: lỗ mở {o.id}, rộng {o.w:g} mm; gối/cao lanh tô từ thông số công trình",
++            source=f"{plan}: lỗ mở {o.id}, rộng {f'{o.w:g}' if o.w is not None else 'chưa có'} mm; gối/cao lanh tô từ thông số công trình",
+             note="Hình học lanh tô trước xử lý chạm dầm L1; không thay khối lượng cuối",
+             field_sources={"length_m": "ReviewOpening.w + 2 × ProjectParams.lintel_bearing_mm", "width_m": t_note,
+                            "height_m": "ProjectParams.lintel_height_mm"}) for o in ops)
+-        works.append(_work("XAY", volume, dimensions=dimensions, plan=plan, element=label, wall_system_id=system, formula=formula, missing=missing,
++        works.append(_work("XAY", None if group_missing else volume, dimensions=dimensions, plan=plan, element=label, wall_system_id=system, formula=formula, missing=missing,
+                            masonry_geometry=MasonryGeometry(wall_type=cls, role=role, length_m=length,
+                                gross_area_m2=gross, opening_area_m2=open_area, thickness_m=t,
+-                               issues=issues + (["lỗ mở chưa đủ chiều cao"] if no_h else [])
++                               issues=issues + group_missing
+                                       + (lintel_missing if ops and not lintel_ok else []))))
+-        if no_h:   # lanh tô chỉ cần rộng lỗ nên vẫn tính; diện tích lỗ cần cao
+-            warnings.append(f"{plan}, {label}: {len(no_h)} lỗ mở chưa có chiều cao ({', '.join(no_h)}), khối xây và trát chưa trừ các lỗ này.")
++        if incomplete:
++            warnings.append(f"{plan}, {label}: " + '; '.join(missing_openings) + '; chưa chốt diện tích trừ và khối lượng.')
++        if orphan_missing:
++            warnings.append(f"{plan}, {label}: " + '; '.join(orphan_missing) + '; chưa xác định nhóm tường bị ảnh hưởng.')
++        if any(o.w is not None and o.h is None for o in ops):
++            warnings.append(f"{plan}, {label}: lanh tô theo chiều rộng đã biết, chưa đối chiếu giao dầm do thiếu chiều cao lỗ.")
+         if ops and not lintel_ok:
+             warnings.append(f"{plan}, {label}: chưa nhập {', '.join(lintel_missing)}, khối xây chưa trừ lanh tô.")
+         faces = [("mặt trong", 1), ("mặt ngoài", 1)] if role == "envelope" else [("hai mặt", 2)]
+         for face, n in faces:
+-            works.append(_work("TRAT", n * net_area, dimensions=[{**d, "faces": n, "thickness_m": params.plaster_thickness_mm/1000 if params.plaster_thickness_mm is not None else None,
++            works.append(_work("TRAT", None if group_missing else n * net_area, dimensions=[{**d, "faces": n, "thickness_m": params.plaster_thickness_mm/1000 if params.plaster_thickness_mm is not None else None,
+                                "field_sources": {**d["field_sources"], "faces": "Vai trò tường/số mặt trát", "thickness_m": "ProjectParams.plaster_thickness_mm"},
+                                "note": d["note"] + f"; trát {n} mặt; dày lớp khác bề dày khối xây"} for d in dimensions], plan=plan, element=f"{label}, {face}", wall_system_id=system,
+                                variant=None if params.plaster_thickness_mm is None else f"{params.plaster_thickness_mm:g}",
+                                formula=f"{n} × ({_fmt(length)} m × {_fmt(h_wall / 1000)} m − {_fmt(open_area)} m² cửa)",
+-                               missing=[] if params.plaster_thickness_mm is not None else ["chiều dày trát"]))
++                               missing=group_missing + ([] if params.plaster_thickness_mm is not None else ["chiều dày trát"])))
+         if ops:
+             lintel_total += lintel
+             lintel_form += form
+             lintel_count += len(ops)
+             lintel_parts.append(f"{len(ops)} lỗ {label}")
+-    if lintel_count:
+-        works.append(_work("LANH_TO", lintel_total if lintel_ok else None, dimensions=lintel_dimensions, plan=plan, element=f"{lintel_count} lanh tô",
++            incomplete_lintels.extend(f"lỗ {o.id} (tường {o.wall}): thiếu rộng mm" for o in ops if o.w is None)
++    if lintel_count or orphans:
++        works.append(_work("LANH_TO", lintel_total if lintel_ok and not incomplete_lintels else None, dimensions=lintel_dimensions, plan=plan, element=f"{lintel_count} lanh tô",
+                            formula=("Σ (rộng lỗ + 2 × " + _fmt((params.lintel_bearing_mm or 0) / 1000) + " m) × dày tường × "
+                                     + _fmt((params.lintel_height_mm or 0) / 1000) + " m; " + ", ".join(lintel_parts))
+                            if lintel_ok else ", ".join(lintel_parts),
+-                           missing=lintel_missing))
+-        works.append(_work("COP_PHA", lintel_form if lintel_ok else None, dimensions=lintel_dimensions, plan=plan, element=f"cốp pha {lintel_count} lanh tô",
++                           missing=lintel_missing + incomplete_lintels))
++        works.append(_work("COP_PHA", lintel_form if lintel_ok and not incomplete_lintels else None, dimensions=lintel_dimensions, plan=plan, element=f"cốp pha {lintel_count} lanh tô",
+                            formwork_of="LANH_TO",
+-                           formula="Σ rộng lỗ × dày tường + 2 × (rộng lỗ + 2 × gối) × cao lanh tô", missing=lintel_missing))
++                           formula="Σ rộng lỗ × dày tường + 2 × (rộng lỗ + 2 × gối) × cao lanh tô", missing=lintel_missing + incomplete_lintels))
+     return works, warnings
+ 
+ 
+@@ -155,5 +166,5 @@
+     walls = [ReviewWall(id=w.wall_id, cls=w.thickness_class, role=w.role or "partition", x1=w.x1, y1=w.y1, x2=w.x2,
+                         y2=w.y2, mat=w.material_id, masonry=w.is_masonry) for w in result.walls]
+     openings = [ReviewOpening(id=f"O{i}", wall=o.wall_id, kind=o.kind, w=o.width_mm, h=o.height_mm)
+-                for i, o in enumerate(result.openings, start=1) if o.width_mm is not None]  # chưa có rộng: takeoff đã cảnh báo, không trừ
++                for i, o in enumerate(result.openings, start=1)]
+     return walls, openings, {w.wall_id: w.wall_system_id for w in result.walls}
+--- a/src/optimat/rough/secondary.py
++++ b/src/optimat/rough/secondary.py
+@@ -383,7 +383,7 @@
+     skipped = []
+     for o in openings:
+         w = by_id.get(o.wall)
+-        if not o.keep or w is None or o.h is None or o.h + lt <= h_wall:
++        if not o.keep or w is None or o.w is None or o.h is None or o.h + lt <= h_wall:
+             continue
+         thick, _ = _thickness_m(systems.get(w.id), w.cls, view)
+         v = (o.w + 2 * bearing) / 1000 * thick * lt / 1000
+--- a/src/optimat/rough/checks.py
++++ b/src/optimat/rough/checks.py
+@@ -115,6 +115,8 @@
+     env = [w for w in walls if w.keep and w.masonry and w.role == "envelope"]
+     if not env:
+         return {}
++    if any(o.keep and o.wall in {w.id for w in env} and (o.w is None or o.h is None) for o in openings):
++        return {}
+     cx, cy = centroid or (sum((w.x1 + w.x2) / 2 for w in env) / len(env), sum((w.y1 + w.y2) / 2 for w in env) / len(env))
+     by_wall: dict[str, float] = {}
+     for o in openings:

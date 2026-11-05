@@ -1,0 +1,77 @@
+{
+  "at": "2026-11-04T10:29:46.0840339+07:00",
+  "cwd": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\frontend",
+  "bind": "127.0.0.1:3001",
+  "oldBuild": "H7eQgDZ8u5vo-N2SW_pLT",
+  "newBuild": "9YNZoA-zaLYiXseciOaUF",
+  "candidateApi": "http://127.0.0.1:8001",
+  "status": "verified",
+  "before": {
+    "pid": 29096,
+    "start": "2026-11-04T09:45:18.7820335+07:00",
+    "build": "H7eQgDZ8u5vo-N2SW_pLT",
+    "servedSHA256": "7A3BFAF119A35FAE81067A66E8DF89FADE8F01F43120556E74F128237F09DA4C",
+    "identityAndServedHtmlRecheckedBeforeStop": true
+  },
+  "candidate": {
+    "pid": 39344,
+    "start": "2026-11-04T10:28:45.6584577+07:00",
+    "command": "\"D:\\laragon\\bin\\nodejs\\node-v22\\node.exe\" node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3001",
+    "dist": ".next-web80-20261104",
+    "build": "9YNZoA-zaLYiXseciOaUF",
+    "stdout": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\module_ui_qa_20261103\\web80_3001_20261104_102839_177.candidate.log",
+    "stderr": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\module_ui_qa_20261103\\web80_3001_20261104_102839_177.candidate.err.log",
+    "buildReceiptSha256": "EAF4627D6C430B5220A17EF0C5202E295950DEC570B6C59BD3A8E8C5274F9FB7"
+  },
+  "pages": {
+    "/du-an-cua-toi": {
+      "http": 200,
+      "htmlSHA256": "1454EAFCD2ACEC52B30A27B7FAA51D25051FB402232590991DCA7C3D8234B4B5",
+      "jsCssFiles": 13
+    },
+    "/dang-nhap": {
+      "http": 200,
+      "htmlSHA256": "76C4FB109DA5BAC422E68B250EFA20CA65E916AF0BD27077AFF3CC8FEEFE4870",
+      "jsCssFiles": 10
+    },
+    "/toi-uu": {
+      "http": 200,
+      "htmlSHA256": "0061DCBCBA31D283E6905AA67F5EF16E75D7FB0D149152561B8ADFE6D544B89F",
+      "jsCssFiles": 13
+    }
+  },
+  "assets": {
+    "/_next/static/chunks/0__ejemj7365l.js": "130A0F3882DB6CA35C35F6D98F15DC5737E1FEC56E1CA2BE5AE7EAAED98FAD59",
+    "/_next/static/chunks/0cz1d0mv5g_q7.js": "0973C1D64C88ADC8E3C950410CB58B288F72118D5965B78049438DEB8F2F9683",
+    "/_next/static/chunks/0s_0smniij33k.css": "1C7C221FE351A68CEEFF46C44B690F91DD2314C447320E5A794CE3FF25CD9A60",
+    "/_next/static/chunks/0sa7uvt3h0kdf.css": "A7394123D063AADE9531391F9A7728ED5E169521F54B6CB50BE48FAEBD3A3D21",
+    "/_next/static/chunks/0ssqr03lk-c8r.js": "7365416994155485E238654E306F4BA6202381927F044D983F8F107B38853F24",
+    "/_next/static/chunks/1_txwh4m4zbbx.js": "AF8E61C66EF89C646E39DD374AC3C53F8D7C21D7170DF29E4FCB08A5FFD885CB",
+    "/_next/static/chunks/1tq6ppe__m8m-.js": "3AC471B1370C62C670C29BA66167A8F9EB56132716933774276A9EE188421F1F",
+    "/_next/static/chunks/1vo0wohvofgd7.js": "E1AE6D6B14991A7802E3BCAF5D030547BFA3FEE71199DEE34B9896B3B8D1ADB4",
+    "/_next/static/chunks/1x6obpmlu1_c2.js": "7C0BE00BFD43494DCDDC8817168E952D9900555C3E80355686A423EEDD2BAB22",
+    "/_next/static/chunks/21poqdgvjdll4.js": "62E1AE1D25ECACFDA6F04E104359B9A953F83BAA29FB734FC8AD506AA92D80B6",
+    "/_next/static/chunks/2j5x_ukdjbtxo.js": "B493238C7933D3D61F7DB6D46DCB0F4ABACC236994E767FD0732CF49899E463E",
+    "/_next/static/chunks/3eljhetyxix8q.js": "5EE8C3C8D12E974243C88054718B931E1438FA15266467CE8D313D6E27FE74CB",
+    "/_next/static/chunks/turbopack-3-ry682tkyiqk.js": "8BBB58CBFD4633C1D828C6BC37BC32ABC768A149C01B1DFC4F5131FD81274551",
+    "/_next/static/chunks/2pil-k9t2rt3u.js": "721C6F9F6FD3984CD9E0917C00338D503A74DFE2B44635C2D3955777E4D5BC3F",
+    "/_next/static/chunks/2rotb-xm8inja.js": "77E2198F4082F3E88897BB1D1FF6D7F602E013494D2F895782DBD3618A023AAA"
+  },
+  "proxy": {
+    "openapiHTTP": 200,
+    "paths": 58,
+    "assistantPostRoutesPresent": true,
+    "healthHTTP": 200,
+    "health": "ok",
+    "anonymousAuthHTTP": 200,
+    "auth": true,
+    "anonymousUserNull": true
+  },
+  "afterListeners": {
+    "8000": 10060,
+    "3000": 27012,
+    "3001": 39344,
+    "8001": 40212
+  },
+  "finished": "2026-11-04T10:29:54.1661211+07:00"
+}

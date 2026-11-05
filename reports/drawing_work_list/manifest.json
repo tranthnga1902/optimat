@@ -1,0 +1,40 @@
+{
+  "3002": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\p0-3002-release-r2",
+    "p0_v3_manifest_sha256": "5c1d7dc4268dbeb6852840d80af0447602b75b3a3cdfd43db63cb294650a352e",
+    "files": {
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base": "ed311d255a501a157837ff734f25005af41a3339cbe5f525de4e73f099211101",
+        "sha256": "e4fa5e72bddb9e13730f4b1d7cf55b5260a9a5baf61afc0ae352a081b9e0a9c5"
+      },
+      "src/app/(user)/do-boc/DrawingWorkList.tsx": {
+        "base": null,
+        "sha256": "751b83d5d7c07534bd48e72feda4d6279d3f708b4858b9cdf4ca67ff4c56e329"
+      },
+      "src/app/(user)/do-boc/model.ts": {
+        "base": "ade4237e1c31d9b2ba7e53048bbf6e795ee81c8a45b9b16188c88166b457f8a1",
+        "sha256": "15d1b600c8fa64e2c0cea81a585ee4c37bb16ba98810f3fab343bd43947c27e5"
+      }
+    },
+    "patch_sha256": "5e233597a8ea7345f841b43f9484ffd0a57a199f7cef198af66f5b95f55156bf"
+  },
+  "3001": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\c2-p0-3001-release-r2",
+    "p0_v3_manifest_sha256": "5c1d7dc4268dbeb6852840d80af0447602b75b3a3cdfd43db63cb294650a352e",
+    "files": {
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base": "8a04d794eaf2958793c50752558443c14016fb86953e2d9fe78a51e3b4e56378",
+        "sha256": "5743ef0458cf836a583f9d91ad20184cf7fe5d652f72905d8106f44c20f6cb25"
+      },
+      "src/app/(user)/do-boc/DrawingWorkList.tsx": {
+        "base": null,
+        "sha256": "751b83d5d7c07534bd48e72feda4d6279d3f708b4858b9cdf4ca67ff4c56e329"
+      },
+      "src/app/(user)/do-boc/model.ts": {
+        "base": "57b19cb0d52532b690b6eee6ef7b0f842abb7276d61d244196992216428ecb4d",
+        "sha256": "50af95bed8e5a8578714ceff68c4ab75db8a47365974505958f74477f1b258d9"
+      }
+    },
+    "patch_sha256": "cf0d5ff14c45293480c2995c7be466a45c8a3aa62f2fbbdc1e9afed15aa1d41b"
+  }
+}

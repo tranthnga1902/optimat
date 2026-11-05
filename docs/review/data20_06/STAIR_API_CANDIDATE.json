@@ -1,0 +1,19 @@
+{
+  "base_sha256": "ecf631350200ce1050ffbb774ff1a0aca1a5c300da1ad84ba7dc3ec6e574948e",
+  "files": [
+    {
+      "path": "docs/review/data20_06/STAIR_CANDIDATE_project_analysis.py",
+      "sha256": "8c0deceb3d22642b90369784a995cfdc6fad75698c4f60b91c217a53c3cf2495"
+    },
+    {
+      "path": "src/optimat/api/stair_evidence.py",
+      "sha256": "78af71ba97d54cfecbead3e716a3fc3e032cbb4365ac836fa16723eab96fa009"
+    },
+    {
+      "path": "tests/test_stair_evidence_api.py",
+      "sha256": "753ea87182b9cd8c3e1fac99a120062f39c1ac2a504ad6d96ac7ae8a6e478cc0"
+    }
+  ],
+  "scope": "C2 frozen base plus stair evidence endpoint; Office excluded",
+  "tests": "3 passed: scoped source-to-model-to-compute, partial, missing, conflict, cross-project and profile; no runtime, TestClient or DB"
+}

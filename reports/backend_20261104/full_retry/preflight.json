@@ -1,0 +1,31 @@
+{
+  "observed_utc": "2026-11-04T02:42:34.317462+00:00",
+  "two_snapshot_interval_seconds": 3,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "delta_from_attempt0": {
+    "changed": [
+      "tests/test_admin_db.py"
+    ],
+    "added": [],
+    "removed": []
+  },
+  "delta_from_accepted_test_fix": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "accepted_change": "tests/test_admin_db.py 28-table contract plus readonly/empty revision fallback, accepted by01",
+  "test_started": true,
+  "approval": "01 full retry slot after frontend clean build terminal; original user approval remains",
+  "real_cad_exclusions": [
+    "tests/test_drawing_io.py::test_real_drawing_read_in_world_coords",
+    "tests/test_rough_build_drawings.py::test_nha_dan_columns_and_rough",
+    "tests/test_rough_build_drawings.py::test_nha_pho_columns",
+    "tests/test_registry.py::test_ket_cau_build_drawing",
+    "tests/test_rough_structural.py::test_ket_cau_build_drawing"
+  ]
+}

@@ -1,0 +1,254 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 772 items
+
+tests\test_admin_db.py .ss                                               [  0%]
+tests\test_agent_api.py .......                                          [  1%]
+tests\test_app_data.py ........                                          [  2%]
+tests\test_auth_admin.py ..s                                             [  2%]
+tests\test_bulletin.py ...                                               [  3%]
+tests\test_c01_duong_co_so.py ..............                             [  4%]
+tests\test_catalog_pricing.py ...................................        [  9%]
+tests\test_compare_estimate.py .                                         [  9%]
+tests\test_concepts.py ............                                      [ 11%]
+tests\test_db.py ssssssssssss                                            [ 12%]
+tests\test_drawing_io.py ......................                          [ 15%]
+tests\test_encoding_plans.py .............                               [ 17%]
+tests\test_evaluate_rough.py ..                                          [ 17%]
+tests\test_export_boq_cli.py ...                                         [ 17%]
+tests\test_final_wall_groups_ui.py ...                                   [ 18%]
+tests\test_ground_truth_d02.py ...............                           [ 20%]
+tests\test_ground_truth_manifest.py ............                         [ 21%]
+tests\test_import_housing_estimates.py ....                              [ 22%]
+tests\test_ingest.py .................................                   [ 26%]
+tests\test_libredwg.py ..........                                        [ 27%]
+tests\test_material_notes.py ...                                         [ 28%]
+tests\test_material_rules.py ....................                        [ 30%]
+tests\test_optimize.py ......                                            [ 31%]
+tests\test_optimize_procurement.py ..................................... [ 36%]
+...............                                                          [ 38%]
+tests\test_rebar_scope_api.py ..........................                 [ 41%]
+tests\test_registry.py ......................                            [ 44%]
+tests\test_render.py ...                                                 [ 44%]
+tests\test_review.py ..F..                                               [ 45%]
+tests\test_review_housing_quantities.py .....                            [ 46%]
+tests\test_rough_agent.py .....                                          [ 46%]
+tests\test_rough_api.py ...                                              [ 47%]
+tests\test_rough_areas.py .......                                        [ 48%]
+tests\test_rough_beams.py ...                                            [ 48%]
+tests\test_rough_build_drawings.py ..                                    [ 48%]
+tests\test_rough_columns.py ......                                       [ 49%]
+tests\test_rough_formwork_materials.py ............                      [ 51%]
+tests\test_rough_foundations.py ..........                               [ 52%]
+tests\test_rough_joints.py .......                                       [ 53%]
+tests\test_rough_materials.py ..................................         [ 57%]
+tests\test_rough_partial.py .........................................    [ 63%]
+tests\test_rough_plaster.py ...................                          [ 65%]
+tests\test_rough_rebar.py .............................................. [ 71%]
+................................                                         [ 75%]
+tests\test_rough_secondary.py .......................................... [ 81%]
+............................                                             [ 84%]
+tests\test_rough_stairs.py ..                                            [ 84%]
+tests\test_rough_stairs_detect.py ...                                    [ 85%]
+tests\test_rough_status.py .................                             [ 87%]
+tests\test_rough_steel.py ...                                            [ 87%]
+tests\test_rough_structural.py ............................              [ 91%]
+tests\test_rough_takeoff.py ..........                                   [ 92%]
+tests\test_rough_walls.py .....                                          [ 93%]
+tests\test_s04_walls.py ..................                               [ 95%]
+tests\test_takeoff.py .......                                            [ 96%]
+tests\test_takeoff_structural_concurrency.py ........                    [ 97%]
+tests\test_takeoff_view_concurrency.py .....                             [ 98%]
+tests\test_thresholds.py ..                                              [ 98%]
+tests\test_view_progress.py ....                                         [ 99%]
+tests\test_wall_procurement_flow.py ......                               [100%]
+
+================================== FAILURES ===================================
+_______________________________ test_review_api _______________________________
+
+sample_dxf = 'C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\sample\\sample_floor.dxf'
+
+    def test_review_api(sample_dxf):
+        client = TestClient(app)
+        with open(sample_dxf, "rb") as f:
+>           view = client.post("/api/takeoff/view", files={"file": ("sample_floor.dxf", f, "application/dxf")})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_review.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\httpx2\_client.py:1203: in post
+    return self.request(
+.venv\Lib\site-packages\starlette\testclient.py:457: in request
+    return super().request(
+.venv\Lib\site-packages\httpx2\_client.py:796: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:979: in send
+    response = self._send_handling_auth(
+.venv\Lib\site-packages\httpx2\_client.py:1007: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv\Lib\site-packages\httpx2\_client.py:1042: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1075: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:354: in handle_request
+    raise exc
+.venv\Lib\site-packages\starlette\testclient.py:351: in handle_request
+    portal.call(self.app, scope, receive, send)
+.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\applications.py:1216: in __call__
+    await super().__call__(scope, receive, send)
+.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:2791: in app
+    await route.handle(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:282: in handle
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\routing.py:769: in app
+    response = actual_response_class(content, **response_args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\responses.py:195: in __init__
+    super().__init__(content, status_code, headers, media_type, background)
+.venv\Lib\site-packages\starlette\responses.py:46: in __init__
+    self.body = self.render(content)
+                ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\responses.py:198: in render
+    return json.dumps(
+D:\laragon\bin\python\python-3.13\Lib\json\__init__.py:238: in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\json\encoder.py:200: in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.encoder.JSONEncoder object at 0x000001FCF2747260>
+o = {'file': 'sample_floor.dxf', 'plans': [{'file': 'sample_floor.dxf', 'height_mm': None, 'length_rule': 'tim', 'size': [... ghi trong tiêu đề, ví dụ "(+3.30)", hoặc ký hiệu cao độ ±0.000, +3.300 trong mặt bằng.', 'muc': 'K', ...}, ...]}, ...}
+_one_shot = True
+
+    def iterencode(self, o, _one_shot=False):
+        """Encode the given object and yield each string
+        representation as available.
+    
+        For example::
+    
+            for chunk in JSONEncoder().iterencode(bigobject):
+                mysocket.write(chunk)
+    
+        """
+        if self.check_circular:
+            markers = {}
+        else:
+            markers = None
+        if self.ensure_ascii:
+            _encoder = encode_basestring_ascii
+        else:
+            _encoder = encode_basestring
+    
+        def floatstr(o, allow_nan=self.allow_nan,
+                _repr=float.__repr__, _inf=INFINITY, _neginf=-INFINITY):
+            # Check for specials.  Note that this type of test is processor
+            # and/or platform-specific, so do tests which don't depend on the
+            # internals.
+    
+            if o != o:
+                text = 'NaN'
+            elif o == _inf:
+                text = 'Infinity'
+            elif o == _neginf:
+                text = '-Infinity'
+            else:
+                return _repr(o)
+    
+            if not allow_nan:
+                raise ValueError(
+                    "Out of range float values are not JSON compliant: " +
+                    repr(o))
+    
+            return text
+    
+    
+        if self.indent is None or isinstance(self.indent, str):
+            indent = self.indent
+        else:
+            indent = ' ' * self.indent
+        if _one_shot and c_make_encoder is not None:
+            _iterencode = c_make_encoder(
+                markers, self.default, _encoder, indent,
+                self.key_separator, self.item_separator, self.sort_keys,
+                self.skipkeys, self.allow_nan)
+        else:
+            _iterencode = _make_iterencode(
+                markers, self.default, _encoder, indent, floatstr,
+                self.key_separator, self.item_separator, self.sort_keys,
+                self.skipkeys, _one_shot)
+>       return _iterencode(o, 0)
+               ^^^^^^^^^^^^^^^^^
+E       ValueError: Out of range float values are not JSON compliant: nan
+
+D:\laragon\bin\python\python-3.13\Lib\json\encoder.py:261: ValueError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_admin_db.py:34: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_admin_db.py:61: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_auth_admin.py:41: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:46: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:57: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:71: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:79: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:87: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:109: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:145: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:180: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:217: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:250: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:281: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_db.py:324: chưa đặt OPTIMAT_TEST_DATABASE_URL
+FAILED tests/test_review.py::test_review_api - ValueError: Out of range float...
+============ 1 failed, 756 passed, 15 skipped in 562.59s (0:09:22) ============

@@ -1,0 +1,10 @@
+{
+  "baseline": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\toolbar-qa-candidate",
+  "files_sha256": {
+    "src/app/globals.css": "f553c34b5bfa7a592cb29370edff829a7defc91abfc06c23cf31bb9f26956956",
+    "src/components/Sheet.tsx": "d6d5b5e1a58185fc09b68e90cdaceca2d8870b2e0a7b343bada1f0a526a6a72a",
+    "src/app/(user)/do-boc/review.module.css": "5cb19f6247b1b6e22e004e293a855275ec7dab180b49477b94f39d7ce160884b"
+  },
+  "patch_sha256": "b16338b4020d324cd41933a5d1b4495b7af26bbd7383024db897138e9c249ba9",
+  "patch": "3002.patch"
+}

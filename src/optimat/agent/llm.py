@@ -108,21 +108,32 @@ def llm_available() -> bool:
     return config.LLM_PROVIDER == "ollama"
 
 
-def chat_openai(messages: list[dict], tools: list[dict] | None = None, json_mode: bool = False) -> dict:
-    """Gọi Chat Completions của OpenAI, trả về message của trợ lý (có thể kèm tool_calls)."""
+LAST_USAGE: dict = {}   # token của lần gọi gần nhất (KD02 ghi vào nhật ký chi phí)
+
+
+def chat_openai(messages: list[dict], tools: list[dict] | None = None, json_mode: bool = False,
+                schema: tuple[str, dict] | None = None) -> dict:
+    """Gọi Chat Completions của OpenAI, trả về message của trợ lý (có thể kèm tool_calls).
+    schema = (tên, JSON Schema): ép đầu ra đúng schema (Structured Outputs, strict)."""
     key = os.environ.get("OPENAI_API_KEY")
     if not key:
         raise LLMUnavailable("Chưa đặt biến môi trường OPENAI_API_KEY.")
     body: dict = {"model": config.OPENAI_MODEL, "messages": messages}
     if tools:
         body["tools"] = tools
-    if json_mode:
+    if schema:
+        body["response_format"] = {"type": "json_schema",
+                                   "json_schema": {"name": schema[0], "schema": schema[1], "strict": True}}
+    elif json_mode:
         body["response_format"] = {"type": "json_object"}
     try:
         resp = requests.post(config.OPENAI_URL, json=body, timeout=config.OPENAI_TIMEOUT_S,
                              headers={"Authorization": f"Bearer {key}"})
         resp.raise_for_status()
-        return resp.json()["choices"][0]["message"]
+        data = resp.json()
+        LAST_USAGE.clear()
+        LAST_USAGE.update(data.get("usage") or {})
+        return data["choices"][0]["message"]
     except (requests.RequestException, KeyError, IndexError, ValueError) as exc:
         raise LLMUnavailable(f"Không gọi được mô hình {config.OPENAI_MODEL}: {exc}") from exc
 

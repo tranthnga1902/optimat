@@ -1,0 +1,267 @@
+﻿Bộ môn,Tệp DXF,SHA256,Layer gốc,Đối tượng trực tiếp modelspace,Đối tượng trực tiếp paperspace,Đối tượng trong định nghĩa block,Kiểu ở modelspace,Kiểu ở paperspace,Kiểu trong định nghĩa block
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,.A-net Hatch,25,0,0,"{""HATCH"": 25}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,.A-net Manh,0,0,5,{},{},"{""LWPOLYLINE"": 3, ""LINE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,.A-net Noi that,0,0,194,{},{},"{""LINE"": 118, ""ARC"": 68, ""CIRCLE"": 8}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,.A-net Thay,28,0,0,"{""INSERT"": 28}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,.A-net Truc,27,0,1,"{""LINE"": 27}",{},"{""LINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,0,41,0,2328,"{""LINE"": 16, ""LWPOLYLINE"": 13, ""CIRCLE"": 8, ""INSERT"": 4}",{},"{""LINE"": 1208, ""ARC"": 460, ""LWPOLYLINE"": 352, ""INSERT"": 75, ""MTEXT"": 75, ""CIRCLE"": 55, ""HATCH"": 29, ""TEXT"": 22, ""SPLINE"": 19, ""REGION"": 18, ""SOLID"": 9, ""ATTDEF"": 4, ""ELLIPSE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,0-HATCH,4,0,0,"{""LINE"": 4}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,0-NOITHAT,0,0,8,{},{},"{""LINE"": 8}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,01.Cut,1322,0,53,"{""LWPOLYLINE"": 1005, ""ARC"": 114, ""LINE"": 57, ""INSERT"": 56, ""CIRCLE"": 34, ""HATCH"": 30, ""MTEXT"": 26}",{},"{""LWPOLYLINE"": 27, ""LINE"": 24, ""CIRCLE"": 1, ""INSERT"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,02.Thay,1459,0,64,"{""LWPOLYLINE"": 937, ""LINE"": 430, ""CIRCLE"": 52, ""INSERT"": 24, ""HATCH"": 9, ""ARC"": 6, ""DIMENSION"": 1}",{},"{""LWPOLYLINE"": 47, ""LINE"": 14, ""INSERT"": 2, ""MTEXT"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,03.Manh,253,0,619,"{""LWPOLYLINE"": 138, ""LINE"": 56, ""INSERT"": 38, ""CIRCLE"": 11, ""HATCH"": 10}",{},"{""LWPOLYLINE"": 293, ""LINE"": 280, ""HATCH"": 22, ""CIRCLE"": 12, ""INSERT"": 9, ""ARC"": 3}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,04.Khuat,33,0,79,"{""LWPOLYLINE"": 33}",{},"{""LWPOLYLINE"": 78, ""ARC"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,05 noi that,0,0,121,{},{},"{""LWPOLYLINE"": 59, ""LINE"": 40, ""ARC"": 18, ""CIRCLE"": 4}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,05.Text,999,0,172,"{""TEXT"": 611, ""INSERT"": 256, ""LINE"": 77, ""LWPOLYLINE"": 30, ""MTEXT"": 23, ""CIRCLE"": 1, ""ARC"": 1}",{},"{""SPLINE"": 54, ""LINE"": 53, ""TEXT"": 45, ""ARC"": 13, ""LWPOLYLINE"": 5, ""CIRCLE"": 1, ""ATTDEF"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,06.betong,265,0,25,"{""INSERT"": 151, ""LWPOLYLINE"": 95, ""LINE"": 19}",{},"{""LWPOLYLINE"": 19, ""LINE"": 4, ""INSERT"": 1, ""HATCH"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,07.Noi that,16,0,0,"{""LINE"": 12, ""INSERT"": 2, ""LWPOLYLINE"": 2}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,07.noithat,269,0,98,"{""LWPOLYLINE"": 180, ""LINE"": 38, ""CIRCLE"": 36, ""ARC"": 10, ""INSERT"": 5}",{},"{""LWPOLYLINE"": 66, ""LINE"": 24, ""CIRCLE"": 4, ""WIPEOUT"": 3, ""INSERT"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,08.Dim,2472,0,14996,"{""DIMENSION"": 2281, ""INSERT"": 141, ""LEADER"": 24, ""LINE"": 15, ""LWPOLYLINE"": 9, ""HATCH"": 2}",{},"{""LINE"": 8151, ""INSERT"": 4564, ""MTEXT"": 2281}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,09.Hatch,420,0,51,"{""HATCH"": 408, ""INSERT"": 8, ""LWPOLYLINE"": 4}",{},"{""HATCH"": 44, ""CIRCLE"": 4, ""LWPOLYLINE"": 3}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,1,96,0,26,"{""LWPOLYLINE"": 96}",{},"{""LWPOLYLINE"": 16, ""LINE"": 6, ""HATCH"": 2, ""CIRCLE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,10.Text,493,0,159,"{""TEXT"": 463, ""LINE"": 10, ""CIRCLE"": 10, ""LWPOLYLINE"": 10}",{},"{""TEXT"": 159}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,10.truc,230,0,3,"{""LINE"": 213, ""LWPOLYLINE"": 17}",{},"{""LINE"": 3}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,11.Khung bo,0,0,30,{},{},"{""LWPOLYLINE"": 30}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,12.Khung,0,0,72,{},{},"{""LINE"": 69, ""LWPOLYLINE"": 3}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,12.Kinh,0,0,2,{},{},"{""LINE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,13.netcat,12,0,0,"{""LINE"": 12}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,14. Net cua,22,0,0,"{""INSERT"": 22}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,2,0,0,69,{},{},"{""LINE"": 37, ""ARC"": 26, ""LWPOLYLINE"": 4, ""INSERT"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,3,50,0,2,"{""LWPOLYLINE"": 50}",{},"{""ATTDEF"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,4中心线,0,0,2,{},{},"{""LINE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,7,4,0,0,"{""LWPOLYLINE"": 4}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,a,0,0,1,{},{},"{""HATCH"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,A-Door,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,A-Dot_Line,0,0,114,{},{},"{""LWPOLYLINE"": 49, ""LINE"": 43, ""ARC"": 17, ""CIRCLE"": 5}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,A-Flor-Hral,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,A-Hatch thiet bi,0,0,2,{},{},"{""HATCH"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Alliance-dim,18,0,0,"{""LWPOLYLINE"": 18}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Alliance-khuat,3,0,0,"{""ARC"": 2, ""LWPOLYLINE"": 1}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Alliance-manh,135,0,6,"{""LINE"": 88, ""ARC"": 32, ""LWPOLYLINE"": 14, ""CIRCLE"": 1}",{},"{""LWPOLYLINE"": 5, ""LINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Alu,17,0,669,"{""INSERT"": 17}",{},"{""LINE"": 525, ""ARC"": 89, ""SPLINE"": 53, ""INSERT"": 1, ""ELLIPSE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,AUDIT_I_140531152754-0,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,AUDIT_I_140723151307-0,3,0,0,"{""TEXT"": 3}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,AUDIT_I_140806231233-0,12,0,0,"{""TEXT"": 12}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,AUDIT_I_141219094445-0,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,AUDIT_I_150227145504-0,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,AUDIT_I_160217234026-0,79,0,0,"{""TEXT"": 48, ""LWPOLYLINE"": 31}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,axis,3,0,0,"{""LINE"": 3}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,b-hatch,140,0,0,"{""ARC"": 130, ""LINE"": 4, ""CIRCLE"": 3, ""HATCH"": 3}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,BOLT,0,0,1,{},{},"{""LINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,bánh xe cửa trượt,0,0,11,{},{},"{""LWPOLYLINE"": 6, ""ARC"": 2, ""CIRCLE"": 2, ""LINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Bánh xe cửa trượt nhôm,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Bản lề cửa,9,0,231,"{""INSERT"": 9}",{},"{""LINE"": 156, ""ARC"": 70, ""LWPOLYLINE"": 5}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CA-dim,5,0,0,"{""INSERT"": 3, ""LEADER"": 2}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CA.cat 30,2,0,3,"{""INSERT"": 2}",{},"{""INSERT"": 2, ""LWPOLYLINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CA.dim 08,5,0,0,"{""HATCH"": 3, ""LINE"": 2}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CA.manh 08,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CA.noi that 15,24,0,117,"{""CIRCLE"": 16, ""LWPOLYLINE"": 6, ""INSERT"": 2}",{},"{""ARC"": 53, ""LINE"": 50, ""SPLINE"": 8, ""LWPOLYLINE"": 4, ""ELLIPSE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CA.thay 145,129,0,35,"{""INSERT"": 55, ""LWPOLYLINE"": 48, ""LINE"": 14, ""LEADER"": 8, ""HATCH"": 3, ""DIMENSION"": 1}",{},"{""LWPOLYLINE"": 25, ""INSERT"": 5, ""LINE"": 4, ""MTEXT"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CA.vat lieu 08,2,0,3,"{""INSERT"": 2}",{},"{""LINE"": 2, ""LWPOLYLINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Cat,5,0,0,"{""LINE"": 5}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Cat 30_KaTa,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CATPHU,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CCA - DIM,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CCA - DOOR,16,0,0,"{""INSERT"": 16}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CCA - TUONG,22,0,0,"{""LINE"": 17, ""LWPOLYLINE"": 5}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Chiều mở cửa thấy,2,0,2,"{""LWPOLYLINE"": 2}",{},"{""LWPOLYLINE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,co,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Coban,3,0,1,"{""INSERT"": 3}",{},"{""INSERT"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,CUA,0,0,5,{},{},"{""ATTDEF"": 3, ""CIRCLE"": 1, ""LINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Cycad-DIM,24,0,0,"{""TEXT"": 20, ""MTEXT"": 4}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Cycad-NETKHUAT,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Cycad-NETMANH,16,0,0,"{""LINE"": 16}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Defpoints,2,0,6849,"{""LWPOLYLINE"": 2}",{},"{""POINT"": 6849}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,diemnhan,30,0,10,"{""LWPOLYLINE"": 24, ""HATCH"": 3, ""CIRCLE"": 3}",{},"{""LWPOLYLINE"": 8, ""HATCH"": 1, ""CIRCLE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,DIM,148,0,17,"{""LINE"": 96, ""CIRCLE"": 24, ""ARC"": 12, ""LWPOLYLINE"": 10, ""LEADER"": 5, ""HATCH"": 1}",{},"{""ARC"": 9, ""LINE"": 5, ""INSERT"": 2, ""HATCH"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Dim and mark text,0,0,34,{},{},"{""MTEXT"": 34}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Dimension,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Door-Windows,18,0,0,"{""LWPOLYLINE"": 14, ""LINE"": 4}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,fur,5,0,0,"{""MTEXT"": 5}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,GHE,1,0,9,"{""INSERT"": 1}",{},"{""LWPOLYLINE"": 6, ""ARC"": 3}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,GOKINH,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,H,8,0,2,"{""HATCH"": 6, ""LEADER"": 2}",{},"{""HATCH"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,HACH,31,0,1,"{""INSERT"": 14, ""HATCH"": 13, ""LWPOLYLINE"": 4}",{},"{""HATCH"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,HATCH,26,0,7,"{""LINE"": 20, ""HATCH"": 6}",{},"{""LINE"": 7}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,I. Hatch,4,0,4,"{""LINE"": 4}",{},"{""LINE"": 4}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,i_Hatch thiet bi,4,0,0,"{""INSERT"": 4}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,KH,0,0,2,{},{},"{""LWPOLYLINE"": 1, ""SOLID"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Khóa cửa,0,0,366,{},{},"{""LINE"": 288, ""ARC"": 38, ""LWPOLYLINE"": 21, ""ELLIPSE"": 13, ""SPLINE"": 4, ""CIRCLE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Khóa cửa nhôm,3,0,2,"{""INSERT"": 3}",{},"{""INSERT"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,kichthuoc,241,0,0,"{""LINE"": 202, ""LWPOLYLINE"": 39}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,KT,11,0,0,"{""TEXT"": 11}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,KT KHUNG BAO,103,0,27,"{""ARC"": 92, ""HATCH"": 11}",{},"{""ARC"": 17, ""HATCH"": 10}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Kí hiệu chiều mở cửa Khuất,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Kí hiệu chiều mở cửa thấy,16,0,0,"{""LWPOLYLINE"": 12, ""LINE"": 4}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Kí hiệu mã số,54,0,10,"{""MTEXT"": 48, ""TEXT"": 6}",{},"{""MTEXT"": 10}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,kính,74,0,23,"{""LWPOLYLINE"": 70, ""LINE"": 4}",{},"{""LWPOLYLINE"": 16, ""LINE"": 7}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,lat san,15,0,0,"{""LWPOLYLINE"": 9, ""LINE"": 6}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Long nheo,12,0,0,"{""INSERT"": 12}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,manh 08,0,0,1,{},{},"{""CIRCLE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Mặt cắt,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,nep,75,0,0,"{""LWPOLYLINE"": 75}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,nep kinh,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NET CHU VIET,0,0,13,{},{},"{""TEXT"": 13}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NET DAY DIEN,2,0,0,"{""INSERT"": 2}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NET LIEN DAM,0,0,6,{},{},"{""LWPOLYLINE"": 5, ""INSERT"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NET LIEN MANH,0,0,21,{},{},"{""LWPOLYLINE"": 13, ""LINE"": 8}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NET MANH,0,0,453,{},{},"{""LINE"": 360, ""ARC"": 68, ""SPLINE"": 14, ""CIRCLE"": 6, ""ELLIPSE"": 3, ""LWPOLYLINE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Net Nhôm,24,0,8,"{""ARC"": 16, ""HATCH"": 4, ""LWPOLYLINE"": 3, ""INSERT"": 1}",{},"{""INSERT"": 7, ""REGION"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Net Text,2,0,0,"{""INSERT"": 2}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NET VUA,1,0,42,"{""INSERT"": 1}",{},"{""LINE"": 36, ""ARC"": 4, ""LWPOLYLINE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NETMANH,0,0,19,{},{},"{""CIRCLE"": 9, ""LINE"": 8, ""ARC"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NHO,0,0,2,{},{},"{""LWPOLYLINE"": 1, ""LINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Nhôm,45,0,59,"{""LWPOLYLINE"": 45}",{},"{""LWPOLYLINE"": 59}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NN_KI HIEU,20,0,0,"{""LINE"": 14, ""LWPOLYLINE"": 6}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,noi that 15,0,0,1,{},{},"{""LWPOLYLINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NOITHAT,7,0,185,"{""INSERT"": 6, ""LWPOLYLINE"": 1}",{},"{""LINE"": 123, ""ARC"": 40, ""ELLIPSE"": 19, ""LWPOLYLINE"": 2, ""CIRCLE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,note,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,NS_noi that 15,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,nét mờ,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Nẹp nhôm,20,0,12,"{""LWPOLYLINE"": 11, ""INSERT"": 8, ""LINE"": 1}",{},"{""LWPOLYLINE"": 10, ""INSERT"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,OTA.CAT,0,0,2,{},{},"{""LWPOLYLINE"": 2}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,OTA.HATCH,0,0,1,{},{},"{""HATCH"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,OTA.THIET BI,0,0,36,{},{},"{""LWPOLYLINE"": 11, ""LINE"": 9, ""ARC"": 8, ""CIRCLE"": 4, ""INSERT"": 4}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,OTA.TUONG,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Ron,62,0,120,"{""INSERT"": 62}",{},"{""LINE"": 61, ""LWPOLYLINE"": 26, ""INSERT"": 20, ""ARC"": 13}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,silicon,160,0,28,"{""ARC"": 152, ""HATCH"": 8}",{},"{""ARC"": 28}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,text,143,0,14,"{""TEXT"": 132, ""INSERT"": 11}",{},"{""MTEXT"": 8, ""ATTDEF"": 3, ""CIRCLE"": 1, ""LWPOLYLINE"": 1, ""HATCH"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Thay,141,0,15,"{""LINE"": 105, ""LWPOLYLINE"": 36}",{},"{""LWPOLYLINE"": 13, ""CIRCLE"": 1, ""LINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,thay 145,0,0,1,{},{},"{""CIRCLE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Thay 145_KaTa,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,thick,45,0,0,"{""LINE"": 36, ""LWPOLYLINE"": 9}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Thiet bi,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,THIETBI,3,0,200,"{""INSERT"": 3}",{},"{""ARC"": 84, ""LINE"": 80, ""POLYLINE"": 18, ""LWPOLYLINE"": 14, ""CIRCLE"": 4}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,thin,168,0,50,"{""LINE"": 152, ""LWPOLYLINE"": 14, ""INSERT"": 2}",{},"{""LINE"": 50}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,toa do tim,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Tpl_Bound,34,0,0,"{""LWPOLYLINE"": 34}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,TRUC,10,0,0,"{""LWPOLYLINE"": 6, ""LINE"": 4}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,truc1,58,0,0,"{""LWPOLYLINE"": 58}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,TS-NET MO,5,0,1,"{""INSERT"": 5}",{},"{""INSERT"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,TUONG,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Tường gạch,9,0,0,"{""HATCH"": 6, ""LWPOLYLINE"": 3}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,VNCC-Ar-Text,126,0,0,"{""TEXT"": 126}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Vít,0,0,20,{},{},"{""LINE"": 14, ""ARC"": 6}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,wall,54,0,0,"{""LWPOLYLINE"": 40, ""LINE"": 13, ""CIRCLE"": 1}",{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,WC,0,0,0,{},{},{}
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Đường gióng,102,0,20,"{""LINE"": 60, ""HATCH"": 40, ""LWPOLYLINE"": 2}",{},"{""LINE"": 15, ""HATCH"": 4, ""LWPOLYLINE"": 1}"
+KT,nha_sang_hai_duong_4x15_kien_truc.dxf,719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6,Đệm kính,6,0,0,"{""LINE"": 4, ""LWPOLYLINE"": 2}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,-CONCRETE,0,0,2,{},{},"{""TEXT"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,.A-net Noi that,0,0,194,{},{},"{""LINE"": 118, ""ARC"": 68, ""CIRCLE"": 8}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,.A-net Truc,0,0,1,{},{},"{""LINE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,0,10,2,1343,"{""INSERT"": 10}","{""VIEWPORT"": 2}","{""LINE"": 816, ""ARC"": 313, ""LWPOLYLINE"": 123, ""INSERT"": 40, ""CIRCLE"": 38, ""HATCH"": 6, ""ATTDEF"": 3, ""TEXT"": 2, ""MTEXT"": 1, ""OLE2FRAME"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,0-Netin,0,0,2,{},{},"{""LINE"": 1, ""LWPOLYLINE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,00.KC-Text 1,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,01.Cut,0,0,10,{},{},"{""LWPOLYLINE"": 9, ""CIRCLE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,02.Thay,0,0,37,{},{},"{""LWPOLYLINE"": 28, ""LINE"": 9}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,03.Manh,0,0,317,{},{},"{""LWPOLYLINE"": 208, ""LINE"": 72, ""HATCH"": 18, ""CIRCLE"": 10, ""INSERT"": 7, ""ARC"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,04.Khuat,0,0,28,{},{},"{""LWPOLYLINE"": 27, ""ARC"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,05.Text,44,0,285,"{""INSERT"": 44}",{},"{""TEXT"": 105, ""INSERT"": 60, ""SPLINE"": 53, ""LINE"": 51, ""ARC"": 13, ""LWPOLYLINE"": 3}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,06.betong,0,0,6,{},{},"{""LWPOLYLINE"": 6}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,07.Noi that,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,07.noithat,0,0,22,{},{},"{""LINE"": 8, ""LWPOLYLINE"": 8, ""CIRCLE"": 4, ""WIPEOUT"": 1, ""INSERT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,08.Dim,0,0,1,{},{},"{""INSERT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,09.Hatch,0,0,11,{},{},"{""HATCH"": 11}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,1,0,0,17,{},{},"{""LWPOLYLINE"": 17}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,10.Text,0,0,69,{},{},"{""TEXT"": 69}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,10.truc,4,0,0,"{""INSERT"": 4}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,11-KYHIEU,0,0,3,{},{},"{""SPLINE"": 3}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,11.Khung bo,0,0,30,{},{},"{""LWPOLYLINE"": 30}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,12.Khung,0,0,72,{},{},"{""LINE"": 69, ""LWPOLYLINE"": 3}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,12.Kinh,0,0,2,{},{},"{""LINE"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,14. Net cua,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,1ghi chu,0,0,1,{},{},"{""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,2,0,0,69,{},{},"{""LINE"": 37, ""ARC"": 26, ""LWPOLYLINE"": 4, ""INSERT"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,251TO-VAT-LIEU,1,0,10,"{""HATCH"": 1}",{},"{""HATCH"": 10}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,@BVA_ghi chu khung ten,0,0,57,{},{},"{""TEXT"": 32, ""LINE"": 25}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,@BVA_Khungten,0,0,4,{},{},"{""LINE"": 4}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,A-Betong,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,A-CAT,0,0,4,{},{},"{""SPLINE"": 4}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,A-Tuong,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Alliance-dim,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Alu,0,0,1,{},{},"{""INSERT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,AXIS,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,AXIS_SUB,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,BAO,0,0,1,{},{},"{""HATCH"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,BOLT,0,0,1,{},{},"{""LINE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,BORDER,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,BORDER_TK,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Bản lề cửa,0,0,16,{},{},"{""LINE"": 16}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,CA.thay 145,0,0,3,{},{},"{""LWPOLYLINE"": 3}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,CHI,0,0,14,{},{},"{""LINE"": 10, ""INSERT"": 2, ""HATCH"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Chiều mở cửa thấy,0,0,2,{},{},"{""LWPOLYLINE"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,d,1,0,8,"{""DIMENSION"": 1}",{},"{""LINE"": 5, ""INSERT"": 2, ""MTEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Defpoints,50,0,4407,"{""INSERT"": 50}",{},"{""POINT"": 4399, ""LINE"": 8}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,DIM,29,0,129,"{""LWPOLYLINE"": 24, ""INSERT"": 5}",{},"{""LINE"": 73, ""LWPOLYLINE"": 35, ""ARC"": 10, ""INSERT"": 8, ""HATCH"": 1, ""DIMENSION"": 1, ""MTEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Dim and mark text,0,0,34,{},{},"{""MTEXT"": 34}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,E-Text,0,0,6,{},{},"{""TEXT"": 6}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,G-ANNO-TTLB,88,0,0,"{""TEXT"": 88}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,HATCH,28,0,21,"{""HATCH"": 27, ""INSERT"": 1}",{},"{""HATCH"": 13, ""LINE"": 7, ""INSERT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,HIDDEN,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,I. Hatch,0,0,4,{},{},"{""LINE"": 4}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,i_Hatch thiet bi,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KC.QDC A3$0$3,9,0,0,"{""LINE"": 9}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KC.QDC A3$0$8,14,0,0,"{""LWPOLYLINE"": 8, ""HATCH"": 6}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KC.QDC A3$0$9,21,0,0,"{""LINE"": 14, ""LEADER"": 4, ""CIRCLE"": 3}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KC.QDC A3$0$NETKHUAT,8,0,0,"{""LWPOLYLINE"": 8}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KCVN-MANH,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KCVN-TEMP,0,0,28,{},{},"{""LINE"": 28}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KCVN-TEXT,3,0,0,"{""TEXT"": 3}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KCVN-THAY,0,0,2,{},{},"{""LWPOLYLINE"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KCVN-THEP,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KHONG_IN,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,khungten-frame,0,0,79,{},{},"{""TEXT"": 41, ""LINE"": 15, ""LWPOLYLINE"": 14, ""ATTDEF"": 5, ""MTEXT"": 4}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Khóa cửa,0,0,113,{},{},"{""LINE"": 73, ""LWPOLYLINE"": 15, ""ELLIPSE"": 13, ""ARC"": 11, ""CIRCLE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Khóa cửa nhôm,0,0,2,{},{},"{""INSERT"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,KT KHUNG BAO,0,0,17,{},{},"{""ARC"": 11, ""HATCH"": 6}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Kí hiệu mã số,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,kính,0,0,16,{},{},"{""LWPOLYLINE"": 12, ""LINE"": 4}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS - LANH TO,14,0,0,"{""LWPOLYLINE"": 14}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-CAT,253,0,0,"{""INSERT"": 200, ""LWPOLYLINE"": 24, ""LINE"": 24, ""CIRCLE"": 5}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-COC,14,0,84,"{""INSERT"": 14}",{},"{""INSERT"": 72, ""LINE"": 10, ""LWPOLYLINE"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-DIM,3217,0,10049,"{""DIMENSION"": 1316, ""LEADER"": 572, ""LINE"": 565, ""INSERT"": 354, ""LWPOLYLINE"": 353, ""SOLID"": 27, ""HATCH"": 13, ""CIRCLE"": 10, ""ARC"": 7}",{},"{""LINE"": 5268, ""INSERT"": 2811, ""MTEXT"": 1461, ""LWPOLYLINE"": 332, ""DIMENSION"": 145, ""HATCH"": 14, ""LEADER"": 6, ""CIRCLE"": 6, ""ARC"": 5, ""SOLID"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-HATCH,382,0,126,"{""LINE"": 190, ""HATCH"": 122, ""SOLID"": 52, ""ARC"": 12, ""LWPOLYLINE"": 4, ""INSERT"": 2}",{},"{""LWPOLYLINE"": 63, ""INSERT"": 21, ""LINE"": 13, ""HATCH"": 11, ""CIRCLE"": 11, ""TEXT"": 4, ""ARC"": 2, ""SPLINE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-TEXT,2394,0,91,"{""TEXT"": 2100, ""ATTDEF"": 184, ""LWPOLYLINE"": 84, ""MTEXT"": 18, ""LINE"": 8}",{},"{""TEXT"": 77, ""ATTDEF"": 9, ""LINE"": 4, ""LWPOLYLINE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-THAY,1926,0,228,"{""LINE"": 1200, ""LWPOLYLINE"": 279, ""CIRCLE"": 248, ""INSERT"": 184, ""SOLID"": 6, ""ARC"": 5, ""HATCH"": 4}",{},"{""LINE"": 136, ""INSERT"": 63, ""LWPOLYLINE"": 23, ""CIRCLE"": 5, ""SOLID"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-THEP,2233,0,16,"{""LINE"": 941, ""LWPOLYLINE"": 750, ""INSERT"": 222, ""ARC"": 162, ""CIRCLE"": 134, ""HATCH"": 24}",{},"{""LINE"": 14, ""CIRCLE"": 1, ""ARC"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-THOAT XI,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,LS-TRUC,122,0,50,"{""LINE"": 122}",{},"{""LINE"": 50}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,manh 08,0,0,1,{},{},"{""CIRCLE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,NET MANH,0,0,397,{},{},"{""LINE"": 334, ""ARC"": 40, ""SPLINE"": 14, ""CIRCLE"": 6, ""ELLIPSE"": 3}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Net Nhôm,0,0,8,{},{},"{""INSERT"": 7, ""REGION"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Net Text,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,NET VUA,0,0,42,{},{},"{""LINE"": 36, ""ARC"": 4, ""LWPOLYLINE"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,NETMANH,0,0,19,{},{},"{""CIRCLE"": 9, ""LINE"": 8, ""ARC"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Nhôm,0,0,39,{},{},"{""LWPOLYLINE"": 39}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,NN_KI HIEU,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,noi that 15,0,0,1,{},{},"{""LWPOLYLINE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,NOITHAT,0,0,2,{},{},"{""LWPOLYLINE"": 1, ""CIRCLE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,NUOC 07-11$0$CTN,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,nuoc cap,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Nuoc-cap,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Nẹp nhôm,0,0,8,{},{},"{""LWPOLYLINE"": 6, ""INSERT"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Ron,0,0,46,{},{},"{""INSERT"": 16, ""LINE"": 13, ""ARC"": 13, ""LWPOLYLINE"": 4}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,S-GRID-IDEN,0,0,66,{},{},"{""INSERT"": 28, ""MTEXT"": 28, ""LINE"": 8, ""CIRCLE"": 2}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,silicon,0,0,8,{},{},"{""ARC"": 8}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,STEEL,0,0,334,{},{},"{""LINE"": 270, ""ARC"": 60, ""CIRCLE"": 1, ""HATCH"": 1, ""TEXT"": 1, ""INSERT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT,0,2,4,{},"{""VIEWPORT"": 2}","{""TEXT"": 3, ""ATTDEF"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT_CD,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT_SLCK,53,0,2,"{""TEXT"": 53}",{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT_TCK,53,0,2,"{""TEXT"": 53}",{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT_THBT,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT_THCT,188,0,2,"{""TEXT"": 188}",{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT_TK,786,0,765,"{""LINE"": 505, ""INSERT"": 241, ""TEXT"": 38, ""LWPOLYLINE"": 2}",{},"{""ATTDEF"": 728, ""TEXT"": 21, ""LINE"": 15, ""LWPOLYLINE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT_TMC,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TEXT_TMCS,0,0,2,{},{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,thay 145,0,0,1,{},{},"{""CIRCLE"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,THEP DAI,2,0,0,"{""LWPOLYLINE"": 2}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,THONG HOI,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,THONGKE,403,0,2,"{""LINE"": 403}",{},"{""LINE"": 1, ""TEXT"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Tpl_Bound,44,0,0,"{""LWPOLYLINE"": 44}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,truc1,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,tt-bo2,24,0,0,"{""LINE"": 24}",{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,TV-MB,0,0,4,{},{},"{""LWPOLYLINE"": 3, ""ARC"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Vít,0,0,20,{},{},"{""LINE"": 14, ""ARC"": 6}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,W-Ctn2,0,0,16,{},{},"{""LINE"": 12, ""LWPOLYLINE"": 2, ""CIRCLE"": 1, ""HATCH"": 1}"
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,WALLS,0,0,0,{},{},{}
+KC,nha_sang_hai_duong_4x15_ket_cau.dxf,22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c,Đường gióng,0,0,16,{},{},"{""LINE"": 11, ""HATCH"": 4, ""LWPOLYLINE"": 1}"

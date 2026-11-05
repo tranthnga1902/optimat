@@ -1,0 +1,35 @@
+{
+  "exit_code": 0,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rebar_element_tokens.py",
+    "tests/test_rebar_table_boundaries.py",
+    "tests/test_rough_rebar.py",
+    "tests/test_rough_partial.py",
+    "tests/test_rough_takeoff.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=docs\\review\\data20_05\\rebar_table_fix\\temp_canonical"
+  ],
+  "hash_before": {
+    "src\\optimat\\rough\\rebar.py": "76f09b3d09a2b33a3e5d568c49ece3f5e9d46c083a52cb6790088dec8aa4c6b0",
+    "tests\\test_rebar_element_tokens.py": "afd689bb2bfb5c1d4872e29e7a4d961c363fbaccc25237fadcdbb42148a91e7a",
+    "tests\\test_rebar_table_boundaries.py": "b41cc22b697e11570ab01fed97caf2439b0ad62c040697a47624865fd6aeed3b",
+    "tests\\test_rough_rebar.py": "b536485c37017ea34db0f0a9730e5c6f7c7d3b74d7631f717c986e5e4b56f930",
+    "tests\\test_rough_partial.py": "c334fc03134ca003daca7f1b107745619f41a7db1f7ae3afc4ed23d8009705db",
+    "tests\\test_rough_takeoff.py": "09c52e34eba2d39bf1e0a5e15909f85ecd0e7b3f147a4bb68ec5fda9ca98b500"
+  },
+  "hash_after": {
+    "src\\optimat\\rough\\rebar.py": "76f09b3d09a2b33a3e5d568c49ece3f5e9d46c083a52cb6790088dec8aa4c6b0",
+    "tests\\test_rebar_element_tokens.py": "afd689bb2bfb5c1d4872e29e7a4d961c363fbaccc25237fadcdbb42148a91e7a",
+    "tests\\test_rebar_table_boundaries.py": "b41cc22b697e11570ab01fed97caf2439b0ad62c040697a47624865fd6aeed3b",
+    "tests\\test_rough_rebar.py": "b536485c37017ea34db0f0a9730e5c6f7c7d3b74d7631f717c986e5e4b56f930",
+    "tests\\test_rough_partial.py": "c334fc03134ca003daca7f1b107745619f41a7db1f7ae3afc4ed23d8009705db",
+    "tests\\test_rough_takeoff.py": "09c52e34eba2d39bf1e0a5e15909f85ecd0e7b3f147a4bb68ec5fda9ca98b500"
+  },
+  "stable": true,
+  "DB_HTTP_OpenAI": false
+}

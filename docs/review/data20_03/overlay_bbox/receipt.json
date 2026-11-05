@@ -1,0 +1,59 @@
+{
+  "kind": "SYNTHETIC_READONLY_PROBE_NOT_PROJECT",
+  "segments": 17,
+  "arcs": 1,
+  "texts": 1,
+  "blocks": 1,
+  "bbox_mm": [
+    0.0,
+    -397.8,
+    21000.0,
+    1000.0
+  ],
+  "size": [
+    21000.0,
+    1397.8
+  ],
+  "origin": [
+    0.0,
+    1000.0
+  ],
+  "text_payload": [
+    {
+      "t": "REMOTE_TEXT",
+      "x": 16000.0,
+      "y": 1000.0,
+      "enc": "unicode"
+    }
+  ],
+  "arcs_payload": [
+    [
+      12000.0,
+      1000.0,
+      600.0,
+      0.0,
+      90.0
+    ]
+  ],
+  "plan_paths": 5,
+  "overview_paths": 5,
+  "overview_size": [
+    21000.0,
+    1397.8
+  ],
+  "crop_small_counts": {
+    "segments": 1,
+    "arcs": 0,
+    "texts": 0
+  },
+  "source_hash_before": {
+    "src/optimat/drawing/viewer.py": "9e1857950985802eba40091737b4cf2f9e59f187489f3a0d161e3a0f1c2c38f6",
+    "src/optimat/drawing/render.py": "a5235e2962dbdfa8602f3146f5eb66bf26edcac2bcfd1c60f3c215afb39d6145",
+    "src/optimat/drawing/dxf_reader.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0"
+  },
+  "source_hash_after": {
+    "src/optimat/drawing/viewer.py": "9e1857950985802eba40091737b4cf2f9e59f187489f3a0d161e3a0f1c2c38f6",
+    "src/optimat/drawing/render.py": "a5235e2962dbdfa8602f3146f5eb66bf26edcac2bcfd1c60f3c215afb39d6145",
+    "src/optimat/drawing/dxf_reader.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0"
+  }
+}

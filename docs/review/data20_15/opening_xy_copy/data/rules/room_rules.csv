@@ -1,0 +1,8 @@
+rule_id,pattern,kind,note
+R01,\bwc\b,WET,"Tên phòng ""WC"": sàn vệ sinh, cần chống thấm"
+R02,\bve sinh\b,WET,"Tên phòng ""vệ sinh"""
+R03,\bvs\d*\b,WET,"Viết tắt ""VS"", ""VS1"""
+R04,\b(phong )?tam\b,WET,"Tên phòng ""tắm"""
+R05,\btoilet\b,WET,"Tên phòng ""toilet"""
+R06,\bban cong\b,BALCONY,"Ban công: thường nằm ngoài tường bao, diện tích nhập tay"
+R07,\blo ?gia\b,BALCONY,"Lô gia"

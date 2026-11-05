@@ -1,0 +1,13 @@
+{
+  "mode": "actual_CAD_local_advisor",
+  "context_file": "context.from_saved_request.json",
+  "model_requested": "gpt-5.6-luna",
+  "utc": "2026-11-04T08:04:34.044169+00:00",
+  "context_sha256": "7da7031588d892bced47d226d71d02ff8f18e6251c3396f59d10124d89f9bc0c",
+  "human_approval": false,
+  "drawings_sent": false,
+  "browser_e2e": false,
+  "calls": 1,
+  "payload_sha256": "65b9e76882be8a65f5cb511204f15825b18229bd3fd61cbd58548f3cced09804",
+  "provider_returned": true
+}

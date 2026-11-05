@@ -1,0 +1,54 @@
+--- a/src/optimat/drawing/render.py
++++ b/src/optimat/drawing/render.py
+@@ -9,6 +9,7 @@
+ from __future__ import annotations
+ 
+ import copy
++import math
+ import re
+ import xml.etree.ElementTree as ET
+ from dataclasses import dataclass
+@@ -25,6 +26,7 @@
+ class RenderedView:
+     svg: str              # nội dung <g> đã đặt về tọa độ của trang kiểm tra (mm, gốc góc trên trái, y hướng xuống)
+     background: str       # màu nền dùng khi vẽ
++    display_bbox: tuple[float,float,float,float] | None = None  # viewer mm, y xuống; không phải bbox nhận diện
+ 
+ 
+ def _style_font(doc, name: str) -> str:
+@@ -82,6 +84,13 @@
+                                    color_policy=config.ColorPolicy.COLOR,
+                                    lineweight_policy=config.LineweightPolicy.ABSOLUTE)
+         Frontend(RenderContext(doc), self.backend, config=cfg).draw_layout(doc.modelspace(), finalize=True)
++        bounds = self.backend.player().bbox()
++        self.bounds_mm = None
++        if bounds.has_data:
++            values = (bounds.extmin.x*self.scale,bounds.extmin.y*self.scale,
++                      bounds.extmax.x*self.scale,bounds.extmax.y*self.scale)
++            if all(math.isfinite(v) for v in values):
++                self.bounds_mm = values
+ 
+     def view(self, bbox_mm: tuple[float, float, float, float] | None, origin_mm: tuple[float, float],
+              margin_mm: float = 1500.0) -> RenderedView:
+@@ -93,9 +102,11 @@
+         s = self.scale
+         backend = copy.deepcopy(self.backend)          # get_string biến đổi bản ghi tại chỗ: dùng bản sao
+         box = None
++        visible_mm = self.bounds_mm
+         if bbox_mm is not None:
+             x0, y0, x1, y1 = bbox_mm
+             box = BoundingBox2d([Vec2((x0 - margin_mm) / s, (y0 - margin_mm) / s), Vec2((x1 + margin_mm) / s, (y1 + margin_mm) / s)])
++            visible_mm = (x0-margin_mm,y0-margin_mm,x1+margin_mm,y1+margin_mm)
+         page = layout.Page(0, 0, layout.Units.mm, margins=layout.Margins.all(0))
+         settings = layout.Settings(output_coordinate_space=1_000_000, crop_at_margins=box is not None)
+         root = backend.get_xml_root_element(page, settings=settings, render_box=box)
+@@ -116,7 +127,8 @@
+         g = (f'<g class="cad" transform="matrix({A:.9g},0,0,{D:.9g},{E:.6f},{F:.6f})">'
+              '<style>.cad path,.cad polyline,.cad polygon,.cad line,.cad circle,.cad ellipse{vector-effect:non-scaling-stroke}</style>'
+              f"{inner}</g>")
+-        return RenderedView(g, "#000000")
++        display = None if visible_mm is None else (visible_mm[0]-ox,oy-visible_mm[3],visible_mm[2]-ox,oy-visible_mm[1])
++        return RenderedView(g, "#000000", display)
+ 
+ 
+ def render_drawing(drawing, bbox_mm=None, origin_mm=(0.0, 0.0)) -> RenderedView | None:

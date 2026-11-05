@@ -1,0 +1,56 @@
+1:"$Sreact.fragment"
+2:"/_next/static/chunks/1tq6ppe__m8m-.js"
+3:I[39756,["$2"],"default"]
+4:"/_next/static/chunks/1_txwh4m4zbbx.js"
+5:I[58298,["$2","$4"],"default"]
+6:I[37457,["$2"],"default"]
+7:"/_next/static/chunks/21poqdgvjdll4.js"
+8:I[22016,["$2","$7"],""]
+b:"/_next/static/chunks/3eljhetyxix8q.js"
+c:I[4121,["$2","$b"],"Shell"]
+11:"/_next/static/chunks/2rotb-xm8inja.js"
+12:I[1652,["$2","$b","$11"],"Optimize"]
+13:I[97367,["$2"],"OutletBoundary"]
+14:"$Sreact.suspense"
+17:"ViewportBoundary"
+18:I[97367,["$2"],"$17"]
+1a:"MetadataBoundary"
+1b:I[97367,["$2"],"$1a"]
+1e:I[68027,["$2"],"default",1]
+:HL["/_next/static/chunks/0sa7uvt3h0kdf.css","style"]
+:HL["/_next/static/media/051742360c26797e-s.p.1bkzbscqrt8rl.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/3c285486269019b7-s.p.2g-0we2o5_ngd.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/53e45098eac42afb-s.p.1uklb5el4zgvl.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/625a092f804baad3-s.p.1zvg0ggiaivzo.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/6f42e0a3b0519c4d-s.p.13y-iz2lazqtb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/8f46d218c8f79e34-s.p.2wu4yy186g04j.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/8ffc259da9d23054-s.p.10uaeld2xxvpt.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/a3bcb02a0e9e5d11-s.p.25pbmqxk8u2s7.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/a4f4f75ad654963f-s.p.1hvvd1t-trplq.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/fa39153a3fc630ba-s.p.36fqqi66-3tjb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/chunks/240zypd2h7pof.css","style"]
+9:X
+d:X
+f:X
+16:X
+10:[["children",{"s":"__PAGE__","h":514,"d":{"r":["$","$1","c",{"children":[["$","$L12",null,{}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/240zypd2h7pof.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/2rotb-xm8inja.js","async":true,"nonce":"$undefined"}]],["$","$L13",null,{"children":["$","$14",null,{"name":"Next.MetadataOutlet","children":"$@15"}]}]]}],"p":true,"v":"$16"}}]]
+e:[["children",{"s":"toi-uu","h":514,"d":{"r":["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],"p":true,"v":"$f"},"c":"$Q10"}]]
+a:[["children",{"s":"(user)","h":514,"d":{"r":["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3eljhetyxix8q.js","async":true,"nonce":"$undefined"}]],["$","$Lc",null,{"role":"user","children":["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","main",null,{"className":"mx-auto flex min-h-screen max-w-[520px] flex-col justify-center gap-3 p-6","children":[["$","h1",null,{"className":"m-0 text-[28px] font-bold","children":"404 · Không tìm thấy trang"}],["$","p",null,{"className":"m-0 text-muted","children":"Đường dẫn không tồn tại hoặc đã được đổi tên."}],["$","div",null,{"className":"flex flex-wrap gap-2","children":["$","$L8",null,{"className":"btn primary","href":"/","children":"Về trang chính"}]}]]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]]}],"p":true,"v":"$d"},"c":"$Qe"}]]
+1d:X
+1f:X
+20:X
+0:{"P":null,"c":["","toi-uu"],"q":"","i":false,"t":{"t":{"s":"","h":530,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/0sa7uvt3h0kdf.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1tq6ppe__m8m-.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"vi","className":"mYUAQa_variable SR4DPG_variable","children":["$","body",null,{"className":"font-sans antialiased","children":["$","$L3",null,{"parallelRouterKey":"children","error":"$5","errorStyles":[],"errorScripts":[["$","script","script-0",{"src":"/_next/static/chunks/1_txwh4m4zbbx.js","async":true,"nonce":"$undefined"}]],"template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","main",null,{"className":"mx-auto flex min-h-screen max-w-[520px] flex-col justify-center gap-3 p-6","children":[["$","h1",null,{"className":"m-0 text-[28px] font-bold","children":"404 · Không tìm thấy trang"}],["$","p",null,{"className":"m-0 text-muted","children":"Đường dẫn không tồn tại hoặc đã được đổi tên."}],["$","div",null,{"className":"flex flex-wrap gap-2","children":["$","$L8",null,{"className":"btn primary","href":"/","children":"Về trang chính"}]}]]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],"p":true,"v":"$9"},"c":"$Qa"},"h":{"r":["$","$1","h",{"children":[null,["$","$L18",null,{"children":"$L19"}],["$","$L1b",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$14",null,{"name":"Next.Metadata","children":"$L1c"}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":true,"v":"$1d"}},"m":"$undefined","G":["$1e",[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/0sa7uvt3h0kdf.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]]],"S":true,"r":"$1f","s":"$20","a":"$@21","l":"$undefined","p":"$undefined","d":"$undefined","b":"oWnM3ZoBlYORzZeEWnOtz","u":"$@22"}
+f:C
+20:300
+19:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+23:I[27201,["$2"],"IconMark"]
+15:null
+1c:[["$","title","0",{"children":"Phương án tối ưu · OptiMat AI"}],["$","meta","1",{"name":"description","content":"Từ bản vẽ đến phương án vật liệu tối ưu: đo bóc tường, tra giá, tối ưu NSGA-II."}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.117ezoe8m31dk.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L23","3",{}]]
+20:C
+1d:C
+1f:C
+16:C
+d:C
+9:C
+22:false
+21:null

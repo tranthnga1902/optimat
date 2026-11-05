@@ -1,0 +1,35 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const ts=require('../../frontend/node_modules/typescript');
+const base='frontend/src/';
+const jsx=(type,props)=>({type,props});
+const components=new Proxy({},{get:(_,key)=>key});
+const data=new Map([['optimat-review','OLD'],['optimat-confirmed','OLD_CONFIRMED'],['optimat-project-history','HISTORY']]);
+let failKey='';const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>{if(k===failKey){failKey='';throw Error('quota')}data.set(k,v)},removeItem:k=>data.delete(k)};
+const events=[];
+function load(file,dependency){const box={exports:{},require:dependency,localStorage:storage,window:{dispatchEvent:e=>events.push(e.detail)},CustomEvent:class{constructor(_,p){this.detail=p.detail}},console};vm.runInNewContext(ts.transpileModule(fs.readFileSync(base+file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,box);return box.exports;}
+const sessionLib=load('lib/review-session.ts',()=>components);
+const session={data:{file:'A',overview:{cad:'BIG'},plans:[{cad:'BG',walls:[{id:'W1',mat:'G02'}]}]},states:{0:{height_mm:3800,walls:[{id:'W1',mat:'G02'}]}},confirmed:{0:{groups:[{design_material_id:'G02'}],confirmed_at:'now',takeoff_id:12}},pi:0};
+failKey='optimat-rough-params';assert.throws(()=>sessionLib.saveMaterialSession(session,[session.confirmed[0]],{concrete_grade:'M250'}));
+assert.equal(data.get('optimat-review'),'OLD');assert.equal(data.get('optimat-confirmed'),'OLD_CONFIRMED');assert.equal(data.get('optimat-project-history'),'HISTORY');
+sessionLib.saveMaterialSession(session,[session.confirmed[0]],{concrete_grade:'M250'});
+assert.equal(JSON.parse(data.get('optimat-review')).states[0].height_mm,3800);assert.equal(JSON.parse(data.get('optimat-review')).data.overview.cad,undefined);
+assert.equal(JSON.parse(data.get('optimat-confirmed'))[0].groups[0].design_material_id,'G02');assert.equal(data.get('optimat-materials-ready'),'true');assert.equal(data.get('optimat-rough'),'null');assert.equal(data.get('optimat-optimization'),'null');assert.equal(data.get('optimat-project-history'),'HISTORY');
+const model=load('app/(user)/do-boc/model.ts',()=>components);
+const deps=name=>name==='react/jsx-runtime'?{jsx,jsxs:jsx,Fragment:'Fragment'}:name==='@/lib/reference'?{useReference:()=>({ref:{concrete_grades:['M250'],mortar_grades:['M75'],plaster_thicknesses:['15'],screed_thicknesses:['30']},error:''})}:name==='@/lib/review-session'?sessionLib:name==='./model'?model:name.endsWith('.css')?{}:components;
+const rough=load('app/(user)/do-boc/Rough.tsx',deps);
+function flatten(tree){if(tree==null||typeof tree==='boolean')return '';if(Array.isArray(tree))return tree.map(flatten).join(' ');if(typeof tree!=='object')return String(tree);if(typeof tree.type==='function')return flatten(tree.type(tree.props));return flatten(tree.props?.children);}
+const tree=rough.RoughTab({P:{plan:{name:'T1'}},pp:{cols:[]},values:{concrete_grade:'M250'},rough:{totals:[],works:[],materials:[],warnings:[]},busy:false,onParam(){},onPlanParam(){},onRun(){},structural:null,onStructural(){}});
+const visible=flatten(tree);assert.ok(visible.includes('Tính phần thô'));assert.ok(!visible.includes('Mác bê tông'));assert.ok(!visible.includes('Đơn giá'));assert.ok(!visible.includes('Thành tiền'));
+const route=fs.readFileSync(base+'app/(user)/dieu-chinh/page.tsx','utf8');assert.ok(route.includes('<Materials />'));assert.ok(!route.includes('<Review'));
+const materialSource=fs.readFileSync(base+'app/(user)/dieu-chinh/materials.tsx','utf8');assert.ok(!materialSource.includes('<Board'));assert.ok(!materialSource.includes('<RoughTab'));assert.ok(materialSource.includes('optimat-material-draft'));
+console.log('PASS: material save is consistent/rollback on quota; geometry/confirmation/history preserved; derived results invalidated; material and rough UI responsibilities separated.');
+const projectBox={exports:{},require:()=>({store:{get:(key,fallback)=>{try{return JSON.parse(storage.getItem(key))??fallback}catch{return fallback}}}}),localStorage:storage,crypto:require('node:crypto'),Date};
+vm.runInNewContext(ts.transpileModule(fs.readFileSync(base+'lib/projects.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,projectBox);
+storage.setItem('optimat-project-history','[]');storage.setItem('optimat-project-name',JSON.stringify('A'));storage.setItem('optimat-project-info',JSON.stringify({note:'A'}));
+const draft={file:'A',choices:{0:{W1:'G03'}},params:{concrete_grade:'M300'}};
+storage.setItem('optimat-material-draft',JSON.stringify(draft));
+projectBox.exports.switchProject({id:'newB',name:'B',at:'now',values:{'optimat-project-name':'"B"','optimat-project-info':'{"note":"B"}'}});
+assert.equal(storage.getItem('optimat-material-draft'),null);
+const archived=JSON.parse(storage.getItem('optimat-project-history'))[0];assert.deepEqual(JSON.parse(archived.values['optimat-material-draft']),draft);
+projectBox.exports.switchProject(archived);assert.deepEqual(JSON.parse(storage.getItem('optimat-material-draft')),draft);assert.equal(storage.getItem('optimat-materials-ready'),'true');
+console.log('PASS: material draft and saved stage isolated for new project and restored from project history.');

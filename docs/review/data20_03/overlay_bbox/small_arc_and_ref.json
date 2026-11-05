@@ -1,0 +1,41 @@
+{
+  "small_arc": {
+    "reader_arcs": [
+      {
+        "cx": 500.0,
+        "cy": 500.0,
+        "r": 100.0
+      }
+    ],
+    "overlay_arcs": [],
+    "cad_paths": 2
+  },
+  "qa00_ref": {
+    "source": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\tmp\\qa00_bounds_ref_5000.dxf",
+    "sha256": "baeefe696dcdcd1cb0e359b58f0ff97d95b6501c9041b87474f7ecdf45d829fd",
+    "bbox": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ],
+    "size": [
+      1000.0,
+      1000.0
+    ],
+    "texts": [
+      {
+        "t": "REF",
+        "x": 5000.0,
+        "y": -4000.0,
+        "enc": "unicode"
+      }
+    ],
+    "plan_paths": 2,
+    "overview_paths": 3,
+    "overview_size": [
+      1000.0,
+      1000.0
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+--- reports\demo_0511\q01\round2\secondary.before.py
++++ src/optimat/rough/secondary.py
+@@ -62,19 +62,19 @@
+         groups: dict[tuple, list[LinearMember]] = {}
+         for m in members:
+             if m.keep and m.kind == code:
+-                groups.setdefault((m.b_mm, m.d_mm), []).append(m)
+-        for (b, d), items in sorted(groups.items(), key=lambda kv: (kv[0][0] or 0, kv[0][1] or 0)):
++                groups.setdefault((m.b_mm, m.d_mm, m.source), []).append(m)
++        for (b, d, source), items in sorted(groups.items(), key=lambda kv: (kv[0][0] or 0, kv[0][1] or 0, kv[0][2])):
+             L = sum(m.length_mm for m in items) / 1000
+             missing = [lab for v, lab in ((b, f"rộng {name}"), (d, f"cao {name}")) if v is None]
+             ids = ", ".join(sorted({m.id for m in items})[:5])
+             label = f"{len(items)} {name}" + (f" {b:.0f}×{d:.0f}" if not missing else "") + f" ({ids})"
+             evidence = [f"{m.id} ({m.source}) trục ({m.x1:.0f},{m.y1:.0f})–({m.x2:.0f},{m.y2:.0f})" for m in items]
+             works.append(_work(code, L * b * d / 1e6 if not missing else None, plan=plan, element=label, missing=missing,
+-                               evidence=evidence, formula=f"{_fmt(L)} m × {_fmt(b / 1000) if b else 'rộng'} m × "
++                               source=source, evidence=evidence, formula=f"{_fmt(L)} m × {_fmt(b / 1000) if b else 'rộng'} m × "
+                                                           f"{_fmt(d / 1000) if d else 'cao'} m"))
+             form = None if missing else (2 * d / 1000 * L if code == "GIANG_TUONG" else (2 * d + b) / 1000 * L)
+             works.append(_work("COP_PHA", form, plan=plan, element=f"cốp pha {label}", formwork_of=code, missing=missing,
+-                               formula="2 × cao × dài (đáy nằm trên tường)" if code == "GIANG_TUONG"
++                               source=source, formula="2 × cao × dài (đáy nằm trên tường)" if code == "GIANG_TUONG"
+                                else "(2 × cao + rộng) × dài"))
+         if code == "SE_NO" and groups:
+             warnings.append(f"{plan}: sê nô tính theo tiết diện chữ nhật rộng × cao (quy ước gần đúng); sê nô chữ U cần sửa tay.")
+--- reports\demo_0511\q01\round2\test_rough_secondary.before.py
++++ tests/test_rough_secondary.py
+@@ -10,7 +10,8 @@
+ from optimat.drawing.review import ReviewOpening, ReviewWall
+ from optimat.rough.beams import Beam
+ from optimat.rough.models import ProjectParams, RoofItem
+-from optimat.rough.secondary import LinearMember, read_secondary, roof_kind
++from optimat.rough.secondary import LinearMember, linear_works, read_secondary, roof_kind
++from optimat.rough.status import assign_status
+ from optimat.rough.stairs import Stair, stair_works
+ from optimat.rough.takeoff import PlanInput, RoughRequest, compute_rough
+ 
+@@ -30,6 +31,41 @@
+ 
+ def _plan(**kw):
+     return PlanInput(name="T1", height_mm=3300, walls=[WALL], **kw)
++
++
++@pytest.mark.parametrize("kind", ["GIANG_TUONG", "SE_NO"])
++@pytest.mark.parametrize("source, expected", [("structural", "A"), ("manual", "C"), ("inferred", "C")])
++def test_linear_member_keeps_source_for_concrete_and_formwork(kind, source, expected):
++    member = LinearMember(id="G1", kind=kind, x1=0, y1=0, x2=4000, y2=0,
++                          b_mm=220, d_mm=150, source=source)
++    works, _ = linear_works("T1", [member])
++    quantities = [w.quantity for w in works]
++    assign_status(works, ProjectParams(), {})
++    concrete, formwork = works
++    assert all(w.source == source and w.status == expected for w in works)
++    assert concrete.quantity == pytest.approx(0.132)
++    assert formwork.quantity == pytest.approx(1.2 if kind == "GIANG_TUONG" else 2.08)
++    assert [w.quantity for w in works] == quantities
++    assert any(f"({source})" in e for e in concrete.evidence)
++
++
++@pytest.mark.parametrize("reverse", [False, True])
++def test_linear_members_same_section_keep_separate_sources(reverse):
++    members = [LinearMember(id="G1", kind="GIANG_TUONG", x1=0, y1=0, x2=4000, y2=0,
++                            b_mm=220, d_mm=150, source="structural"),
++               LinearMember(id="G2", kind="GIANG_TUONG", x1=4000, y1=0, x2=8000, y2=0,
++                            b_mm=220, d_mm=150, source="manual")]
++    works, _ = linear_works("T1", members[::-1] if reverse else members)
++    assign_status(works, ProjectParams(), {})
++    concrete = [w for w in works if w.code == "GIANG_TUONG"]
++    formwork = [w for w in works if w.code == "COP_PHA"]
++    assert len(concrete) == len(formwork) == 2
++    assert {w.source: w.status for w in concrete} == {"structural": "A", "manual": "C"}
++    assert {w.source for w in formwork} == {"structural", "manual"}
++    assert all(w.status == "C" for w in formwork)  # kế thừa yếu nhất của cùng cấu kiện/tầng
++    assert sum(w.quantity for w in concrete) == pytest.approx(0.264)
++    assert sum(w.quantity for w in formwork) == pytest.approx(2.4)
++    assert all(len(w.evidence) == 1 and f"({w.source})" in w.evidence[0] for w in concrete)
+ 
+ 
+ def test_lintel_not_double_counted_with_beam(cat):
+--- reports\demo_0511\q01\round2\test_rough_status.before.py
++++ tests/test_rough_status.py
+@@ -1,4 +1,6 @@
+ """Trạng thái dữ liệu A/B/C/D, nhóm vật liệu, khối lượng kg, kiểm tra chéo, tường bao theo hướng (đặc tả 30/10/2026 mục 3, 7, 11)."""
++from copy import deepcopy
++
+ import pytest
+ 
+ from optimat.catalog.repository import Catalog
+@@ -94,7 +96,10 @@
+     'tinh', có cảnh báo nêu nguồn; hệ số có khoảng min–max cho khoảng giá trị. Hệ số có norm_code: giữ trạng thái công tác."""
+     from optimat.rough.materials import materials_for_works
+     from optimat.rough.norms import Norm
+-    cat = Catalog.from_csv(None)
++    cat = deepcopy(Catalog.from_csv(None))
++    synthetic = cat.materials.material_id.isin(["XM02", "CA01"])
++    cat.materials.loc[synthetic, "waste_pct"] = 0.0  # chỉ cô lập trạng thái hệ số trong dữ liệu kiểm thử
++    cat.materials.loc[synthetic, "data_kind"] = "SYNTHETIC"
+     w = WorkItem(code="SAN", name="s", unit="m³", quantity=10.0, status="B")
+     ref = Norm("BE_TONG_TRON", "M250", "XM02", "", 415.125, "kg / m³", "", "cem.gov.vn", "", confirmation="nguon", checked_on="2026-10-30")
+     rng = Norm("BE_TONG_TRON", "M250", "CA01", "", None, "m³ / m³", "", "kinh nghiệm", "", qty_min=0.4, qty_max=0.5, confirmation="kinh_nghiem")
+@@ -107,6 +112,13 @@
+     da = next(m for m in bill.materials if m.material_id == "DA01")
+     assert da.status == "B" and da.confirmation == "nguon" and da.quantity_min is None
+     assert sum("hệ số tham khảo" in m for m in bill.warnings) == 2
++    cat.materials.loc[synthetic, "waste_pct"] = float("nan")
++    missing_waste = materials_for_works([w], ProjectParams(concrete_supply="site_mix", concrete_grade="M250"), cat,
++                                       (ref, rng, official))
++    for m in missing_waste.materials:
++        if m.material_id in ("XM02", "CA01"):
++            assert m.status == "D" and not m.complete and m.quantity_with_waste is None
++            assert "hao hụt thi công (%)" in m.missing
+ 
+ 
+ def test_min_opening_threshold_is_a_parameter():

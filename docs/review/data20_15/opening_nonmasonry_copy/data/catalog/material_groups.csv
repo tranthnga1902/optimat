@@ -1,0 +1,6 @@
+group_id,sort_order,name,description
+be_tong_cot_thep,1,Vật liệu bê tông cốt thép,"Xi măng, cốt liệu, nước, phụ gia, bê tông, cốt thép"
+phan_tho,2,Vật liệu thi công phần thô,"Gạch xây, vữa, khối xây, chống thấm, giàn giáo, cốp pha"
+hoan_thien,3,Vật liệu hoàn thiện,"Ốp lát, sơn, kính, thạch cao, gỗ, cửa, vật liệu hoàn thiện"
+khac_phap_ly,4,Vật liệu khác và khung pháp lý,"Quy chuẩn, an toàn cháy, cách nhiệt, vật liệu xanh, bitum, composite, hợp quy"
+ket_cau_thep_bao_che,5,Vật liệu kết cấu thép và bao che,"Thép hình, thép tấm, thép ống, liên kết, chống ăn mòn, tôn, panel, xà gồ"

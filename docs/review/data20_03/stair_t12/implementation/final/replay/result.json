@@ -1,0 +1,2213 @@
+{
+  "works": [
+    {
+      "code": "XAY",
+      "name": "Xây tường",
+      "unit": "m³",
+      "quantity": null,
+      "plan": "Thang T1 → T2",
+      "element": "bậc xây thang THÉP BẢN THANG T1",
+      "variant": null,
+      "masonry_geometry": null,
+      "dimensions": [],
+      "quantity_detail": null,
+      "wall_system_id": null,
+      "steel_element": null,
+      "formwork_of": null,
+      "formula": "Bậc xây gạch tách khỏi bê tông; chưa có lượng xây",
+      "source": "auto",
+      "basis": "stair_steps_masonry",
+      "evidence": [
+        "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây"
+      ],
+      "missing": [
+        "hình học bậc xây từng vế và quy cách gạch/vữa; chưa bóc riêng"
+      ],
+      "status": "D",
+      "inputs": [
+        "thiếu: hình học bậc xây từng vế và quy cách gạch/vữa; chưa bóc riêng"
+      ],
+      "stage": "tuong"
+    },
+    {
+      "code": "CAU_THANG",
+      "name": "Bê tông cầu thang",
+      "unit": "m³",
+      "quantity": null,
+      "plan": "Thang T1 → T2",
+      "element": "thang THÉP BẢN THANG T1",
+      "variant": null,
+      "masonry_geometry": null,
+      "dimensions": [
+        {
+          "label": "THÉP BẢN THANG T1/candidate-flight-1: bản nghiêng",
+          "basis": "input",
+          "count": 1.0,
+          "repetitions": 1,
+          "length_m": null,
+          "gross_length_m": null,
+          "deducted_length_m": null,
+          "width_m": null,
+          "height_m": null,
+          "floor_height_m": null,
+          "bottom_level_m": null,
+          "top_level_m": null,
+          "slope_ratio": null,
+          "faces": null,
+          "concrete_height_m": null,
+          "thickness_m": 0.12,
+          "top_length_m": null,
+          "top_width_m": null,
+          "slope_length_m": null,
+          "diameter_m": null,
+          "area_m2": null,
+          "opening_area_m2": null,
+          "net_area_m2": null,
+          "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+          "field_sources": {
+            "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+          },
+          "missing_fields": [
+            "length_m",
+            "width_m",
+            "height_m",
+            "slope_length_m"
+          ],
+          "not_applicable_fields": [
+            "gross_length_m",
+            "deducted_length_m",
+            "floor_height_m",
+            "bottom_level_m",
+            "top_level_m",
+            "slope_ratio",
+            "faces",
+            "concrete_height_m",
+            "top_length_m",
+            "top_width_m",
+            "diameter_m",
+            "area_m2",
+            "opening_area_m2",
+            "net_area_m2"
+          ],
+          "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+        },
+        {
+          "label": "THÉP BẢN THANG T1/candidate-flight-2: bản nghiêng",
+          "basis": "input",
+          "count": 1.0,
+          "repetitions": 1,
+          "length_m": null,
+          "gross_length_m": null,
+          "deducted_length_m": null,
+          "width_m": null,
+          "height_m": null,
+          "floor_height_m": null,
+          "bottom_level_m": null,
+          "top_level_m": null,
+          "slope_ratio": null,
+          "faces": null,
+          "concrete_height_m": null,
+          "thickness_m": 0.12,
+          "top_length_m": null,
+          "top_width_m": null,
+          "slope_length_m": null,
+          "diameter_m": null,
+          "area_m2": null,
+          "opening_area_m2": null,
+          "net_area_m2": null,
+          "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+          "field_sources": {
+            "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+          },
+          "missing_fields": [
+            "length_m",
+            "width_m",
+            "height_m",
+            "slope_length_m"
+          ],
+          "not_applicable_fields": [
+            "gross_length_m",
+            "deducted_length_m",
+            "floor_height_m",
+            "bottom_level_m",
+            "top_level_m",
+            "slope_ratio",
+            "faces",
+            "concrete_height_m",
+            "top_length_m",
+            "top_width_m",
+            "diameter_m",
+            "area_m2",
+            "opening_area_m2",
+            "net_area_m2"
+          ],
+          "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+        },
+        {
+          "label": "THÉP BẢN THANG T1/candidate-flight-3: bản nghiêng",
+          "basis": "input",
+          "count": 1.0,
+          "repetitions": 1,
+          "length_m": null,
+          "gross_length_m": null,
+          "deducted_length_m": null,
+          "width_m": null,
+          "height_m": null,
+          "floor_height_m": null,
+          "bottom_level_m": null,
+          "top_level_m": null,
+          "slope_ratio": null,
+          "faces": null,
+          "concrete_height_m": null,
+          "thickness_m": 0.12,
+          "top_length_m": null,
+          "top_width_m": null,
+          "slope_length_m": null,
+          "diameter_m": null,
+          "area_m2": null,
+          "opening_area_m2": null,
+          "net_area_m2": null,
+          "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+          "field_sources": {
+            "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+          },
+          "missing_fields": [
+            "length_m",
+            "width_m",
+            "height_m",
+            "slope_length_m"
+          ],
+          "not_applicable_fields": [
+            "gross_length_m",
+            "deducted_length_m",
+            "floor_height_m",
+            "bottom_level_m",
+            "top_level_m",
+            "slope_ratio",
+            "faces",
+            "concrete_height_m",
+            "top_length_m",
+            "top_width_m",
+            "diameter_m",
+            "area_m2",
+            "opening_area_m2",
+            "net_area_m2"
+          ],
+          "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+        },
+        {
+          "label": "THÉP BẢN THANG T1/candidate-arrival",
+          "basis": "input",
+          "count": 1.0,
+          "repetitions": 1,
+          "length_m": null,
+          "gross_length_m": null,
+          "deducted_length_m": null,
+          "width_m": null,
+          "height_m": null,
+          "floor_height_m": null,
+          "bottom_level_m": null,
+          "top_level_m": null,
+          "slope_ratio": null,
+          "faces": null,
+          "concrete_height_m": null,
+          "thickness_m": 0.15,
+          "top_length_m": null,
+          "top_width_m": null,
+          "slope_length_m": null,
+          "diameter_m": null,
+          "area_m2": null,
+          "opening_area_m2": null,
+          "net_area_m2": null,
+          "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+          "field_sources": {
+            "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+            "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+            "area_m2": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán"
+          },
+          "missing_fields": [
+            "area_m2"
+          ],
+          "not_applicable_fields": [
+            "length_m",
+            "gross_length_m",
+            "deducted_length_m",
+            "width_m",
+            "height_m",
+            "floor_height_m",
+            "bottom_level_m",
+            "top_level_m",
+            "slope_ratio",
+            "faces",
+            "concrete_height_m",
+            "top_length_m",
+            "top_width_m",
+            "slope_length_m",
+            "diameter_m",
+            "opening_area_m2",
+            "net_area_m2"
+          ],
+          "note": "Chiếu thuộc unknown; không gán dày chiếu sang vế"
+        }
+      ],
+      "quantity_detail": {
+        "unit": "m³",
+        "rows": [
+          {
+            "row_id": "candidate-flight-1:waist",
+            "label": "Bản nghiêng candidate-flight-1",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": null,
+            "method": "box",
+            "dimensions": {
+              "label": "THÉP BẢN THANG T1/candidate-flight-1: bản nghiêng",
+              "basis": "input",
+              "count": 1.0,
+              "repetitions": 1,
+              "length_m": null,
+              "gross_length_m": null,
+              "deducted_length_m": null,
+              "width_m": null,
+              "height_m": null,
+              "floor_height_m": null,
+              "bottom_level_m": null,
+              "top_level_m": null,
+              "slope_ratio": null,
+              "faces": null,
+              "concrete_height_m": null,
+              "thickness_m": 0.12,
+              "top_length_m": null,
+              "top_width_m": null,
+              "slope_length_m": null,
+              "diameter_m": null,
+              "area_m2": null,
+              "opening_area_m2": null,
+              "net_area_m2": null,
+              "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+              "field_sources": {
+                "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+              },
+              "missing_fields": [
+                "length_m",
+                "width_m",
+                "height_m",
+                "slope_length_m"
+              ],
+              "not_applicable_fields": [
+                "gross_length_m",
+                "deducted_length_m",
+                "floor_height_m",
+                "bottom_level_m",
+                "top_level_m",
+                "slope_ratio",
+                "faces",
+                "concrete_height_m",
+                "top_length_m",
+                "top_width_m",
+                "diameter_m",
+                "area_m2",
+                "opening_area_m2",
+                "net_area_m2"
+              ],
+              "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+            },
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+            ],
+            "missing": [
+              "candidate-flight-1: run_mm hoặc nguồn",
+              "candidate-flight-1: rise_mm hoặc nguồn",
+              "candidate-flight-1: width_mm hoặc nguồn"
+            ]
+          },
+          {
+            "row_id": "candidate-flight-1:steps",
+            "label": "Bậc xây gạch không thuộc bê tông",
+            "group": "",
+            "role": "reference",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": "0",
+            "method": "box",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây"
+            ],
+            "missing": []
+          },
+          {
+            "row_id": "candidate-flight-2:waist",
+            "label": "Bản nghiêng candidate-flight-2",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": null,
+            "method": "box",
+            "dimensions": {
+              "label": "THÉP BẢN THANG T1/candidate-flight-2: bản nghiêng",
+              "basis": "input",
+              "count": 1.0,
+              "repetitions": 1,
+              "length_m": null,
+              "gross_length_m": null,
+              "deducted_length_m": null,
+              "width_m": null,
+              "height_m": null,
+              "floor_height_m": null,
+              "bottom_level_m": null,
+              "top_level_m": null,
+              "slope_ratio": null,
+              "faces": null,
+              "concrete_height_m": null,
+              "thickness_m": 0.12,
+              "top_length_m": null,
+              "top_width_m": null,
+              "slope_length_m": null,
+              "diameter_m": null,
+              "area_m2": null,
+              "opening_area_m2": null,
+              "net_area_m2": null,
+              "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+              "field_sources": {
+                "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+              },
+              "missing_fields": [
+                "length_m",
+                "width_m",
+                "height_m",
+                "slope_length_m"
+              ],
+              "not_applicable_fields": [
+                "gross_length_m",
+                "deducted_length_m",
+                "floor_height_m",
+                "bottom_level_m",
+                "top_level_m",
+                "slope_ratio",
+                "faces",
+                "concrete_height_m",
+                "top_length_m",
+                "top_width_m",
+                "diameter_m",
+                "area_m2",
+                "opening_area_m2",
+                "net_area_m2"
+              ],
+              "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+            },
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+            ],
+            "missing": [
+              "candidate-flight-2: run_mm hoặc nguồn",
+              "candidate-flight-2: rise_mm hoặc nguồn",
+              "candidate-flight-2: width_mm hoặc nguồn"
+            ]
+          },
+          {
+            "row_id": "candidate-flight-2:steps",
+            "label": "Bậc xây gạch không thuộc bê tông",
+            "group": "",
+            "role": "reference",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": "0",
+            "method": "box",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây"
+            ],
+            "missing": []
+          },
+          {
+            "row_id": "candidate-flight-3:waist",
+            "label": "Bản nghiêng candidate-flight-3",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": null,
+            "method": "box",
+            "dimensions": {
+              "label": "THÉP BẢN THANG T1/candidate-flight-3: bản nghiêng",
+              "basis": "input",
+              "count": 1.0,
+              "repetitions": 1,
+              "length_m": null,
+              "gross_length_m": null,
+              "deducted_length_m": null,
+              "width_m": null,
+              "height_m": null,
+              "floor_height_m": null,
+              "bottom_level_m": null,
+              "top_level_m": null,
+              "slope_ratio": null,
+              "faces": null,
+              "concrete_height_m": null,
+              "thickness_m": 0.12,
+              "top_length_m": null,
+              "top_width_m": null,
+              "slope_length_m": null,
+              "diameter_m": null,
+              "area_m2": null,
+              "opening_area_m2": null,
+              "net_area_m2": null,
+              "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+              "field_sources": {
+                "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+              },
+              "missing_fields": [
+                "length_m",
+                "width_m",
+                "height_m",
+                "slope_length_m"
+              ],
+              "not_applicable_fields": [
+                "gross_length_m",
+                "deducted_length_m",
+                "floor_height_m",
+                "bottom_level_m",
+                "top_level_m",
+                "slope_ratio",
+                "faces",
+                "concrete_height_m",
+                "top_length_m",
+                "top_width_m",
+                "diameter_m",
+                "area_m2",
+                "opening_area_m2",
+                "net_area_m2"
+              ],
+              "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+            },
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+            ],
+            "missing": [
+              "candidate-flight-3: run_mm hoặc nguồn",
+              "candidate-flight-3: rise_mm hoặc nguồn",
+              "candidate-flight-3: width_mm hoặc nguồn"
+            ]
+          },
+          {
+            "row_id": "candidate-flight-3:steps",
+            "label": "Bậc xây gạch không thuộc bê tông",
+            "group": "",
+            "role": "reference",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": "0",
+            "method": "box",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây"
+            ],
+            "missing": []
+          },
+          {
+            "row_id": "candidate-arrival:landing",
+            "label": "Chiếu candidate-arrival",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m³",
+            "raw_quantity": null,
+            "method": "box",
+            "dimensions": {
+              "label": "THÉP BẢN THANG T1/candidate-arrival",
+              "basis": "input",
+              "count": 1.0,
+              "repetitions": 1,
+              "length_m": null,
+              "gross_length_m": null,
+              "deducted_length_m": null,
+              "width_m": null,
+              "height_m": null,
+              "floor_height_m": null,
+              "bottom_level_m": null,
+              "top_level_m": null,
+              "slope_ratio": null,
+              "faces": null,
+              "concrete_height_m": null,
+              "thickness_m": 0.15,
+              "top_length_m": null,
+              "top_width_m": null,
+              "slope_length_m": null,
+              "diameter_m": null,
+              "area_m2": null,
+              "opening_area_m2": null,
+              "net_area_m2": null,
+              "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+              "field_sources": {
+                "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+                "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+                "area_m2": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán"
+              },
+              "missing_fields": [
+                "area_m2"
+              ],
+              "not_applicable_fields": [
+                "length_m",
+                "gross_length_m",
+                "deducted_length_m",
+                "width_m",
+                "height_m",
+                "floor_height_m",
+                "bottom_level_m",
+                "top_level_m",
+                "slope_ratio",
+                "faces",
+                "concrete_height_m",
+                "top_length_m",
+                "top_width_m",
+                "slope_length_m",
+                "diameter_m",
+                "opening_area_m2",
+                "net_area_m2"
+              ],
+              "note": "Chiếu thuộc unknown; không gán dày chiếu sang vế"
+            },
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán"
+            ],
+            "missing": [
+              "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+              "candidate-arrival: area_m2 hoặc nguồn"
+            ]
+          }
+        ],
+        "detail_level": "components",
+        "known_part_raw": null,
+        "total_raw": null,
+        "complete": false,
+        "scope_complete": false,
+        "legacy_quantity": null,
+        "legacy_delta": null
+      },
+      "wall_system_id": null,
+      "steel_element": null,
+      "formwork_of": null,
+      "formula": "Σ rộng vế × hypot(run,rise) × dày vuông góc + bậc BT có nguồn + chiếu thuộc thang",
+      "source": "manual",
+      "basis": "stair_components",
+      "evidence": [
+        "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+        "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+        "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây",
+        "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán"
+      ],
+      "missing": [
+        "candidate-flight-1: run_mm hoặc nguồn",
+        "candidate-flight-1: rise_mm hoặc nguồn",
+        "candidate-flight-1: width_mm hoặc nguồn",
+        "candidate-flight-2: run_mm hoặc nguồn",
+        "candidate-flight-2: rise_mm hoặc nguồn",
+        "candidate-flight-2: width_mm hoặc nguồn",
+        "candidate-flight-3: run_mm hoặc nguồn",
+        "candidate-flight-3: rise_mm hoặc nguồn",
+        "candidate-flight-3: width_mm hoặc nguồn",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ],
+      "status": "D",
+      "inputs": [
+        "thiếu: candidate-flight-1: run_mm hoặc nguồn",
+        "thiếu: candidate-flight-1: rise_mm hoặc nguồn",
+        "thiếu: candidate-flight-1: width_mm hoặc nguồn",
+        "thiếu: candidate-flight-2: run_mm hoặc nguồn",
+        "thiếu: candidate-flight-2: rise_mm hoặc nguồn",
+        "thiếu: candidate-flight-2: width_mm hoặc nguồn",
+        "thiếu: candidate-flight-3: run_mm hoặc nguồn",
+        "thiếu: candidate-flight-3: rise_mm hoặc nguồn",
+        "thiếu: candidate-flight-3: width_mm hoặc nguồn",
+        "thiếu: candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "thiếu: candidate-arrival: area_m2 hoặc nguồn",
+        "thiếu: chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ],
+      "stage": "khung"
+    },
+    {
+      "code": "COT_THEP",
+      "name": "Cốt thép",
+      "unit": "tấn",
+      "quantity": null,
+      "plan": "Thang T1 → T2",
+      "element": "thép cầu thang",
+      "variant": null,
+      "masonry_geometry": null,
+      "dimensions": [],
+      "quantity_detail": null,
+      "wall_system_id": null,
+      "steel_element": "CAU_THANG",
+      "formwork_of": null,
+      "formula": "0 m³ × hàm lượng",
+      "source": "auto",
+      "basis": null,
+      "evidence": [],
+      "missing": [
+        "hàm lượng thép cầu thang (kg/m³)",
+        "bảng thống kê thép cầu thang",
+        "khối lượng bê tông cầu thang",
+        "candidate-flight-1: run_mm hoặc nguồn",
+        "candidate-flight-1: rise_mm hoặc nguồn",
+        "candidate-flight-1: width_mm hoặc nguồn",
+        "candidate-flight-2: run_mm hoặc nguồn",
+        "candidate-flight-2: rise_mm hoặc nguồn",
+        "candidate-flight-2: width_mm hoặc nguồn",
+        "candidate-flight-3: run_mm hoặc nguồn",
+        "candidate-flight-3: rise_mm hoặc nguồn",
+        "candidate-flight-3: width_mm hoặc nguồn",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ],
+      "status": "D",
+      "inputs": [
+        "thiếu: hàm lượng thép cầu thang (kg/m³)",
+        "thiếu: bảng thống kê thép cầu thang",
+        "thiếu: khối lượng bê tông cầu thang",
+        "thiếu: candidate-flight-1: run_mm hoặc nguồn",
+        "thiếu: candidate-flight-1: rise_mm hoặc nguồn",
+        "thiếu: candidate-flight-1: width_mm hoặc nguồn",
+        "thiếu: candidate-flight-2: run_mm hoặc nguồn",
+        "thiếu: candidate-flight-2: rise_mm hoặc nguồn",
+        "thiếu: candidate-flight-2: width_mm hoặc nguồn",
+        "thiếu: candidate-flight-3: run_mm hoặc nguồn",
+        "thiếu: candidate-flight-3: rise_mm hoặc nguồn",
+        "thiếu: candidate-flight-3: width_mm hoặc nguồn",
+        "thiếu: candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "thiếu: candidate-arrival: area_m2 hoặc nguồn",
+        "thiếu: chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ],
+      "stage": "khung"
+    },
+    {
+      "code": "COP_PHA",
+      "name": "Cốp pha",
+      "unit": "m²",
+      "quantity": null,
+      "plan": "Thang T1 → T2",
+      "element": "thang THÉP BẢN THANG T1",
+      "variant": null,
+      "masonry_geometry": null,
+      "dimensions": [
+        {
+          "label": "THÉP BẢN THANG T1/candidate-flight-1: bản nghiêng",
+          "basis": "input",
+          "count": 1.0,
+          "repetitions": 1,
+          "length_m": null,
+          "gross_length_m": null,
+          "deducted_length_m": null,
+          "width_m": null,
+          "height_m": null,
+          "floor_height_m": null,
+          "bottom_level_m": null,
+          "top_level_m": null,
+          "slope_ratio": null,
+          "faces": null,
+          "concrete_height_m": null,
+          "thickness_m": 0.12,
+          "top_length_m": null,
+          "top_width_m": null,
+          "slope_length_m": null,
+          "diameter_m": null,
+          "area_m2": null,
+          "opening_area_m2": null,
+          "net_area_m2": null,
+          "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+          "field_sources": {
+            "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+          },
+          "missing_fields": [
+            "length_m",
+            "width_m",
+            "height_m",
+            "slope_length_m"
+          ],
+          "not_applicable_fields": [
+            "gross_length_m",
+            "deducted_length_m",
+            "floor_height_m",
+            "bottom_level_m",
+            "top_level_m",
+            "slope_ratio",
+            "faces",
+            "concrete_height_m",
+            "top_length_m",
+            "top_width_m",
+            "diameter_m",
+            "area_m2",
+            "opening_area_m2",
+            "net_area_m2"
+          ],
+          "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+        },
+        {
+          "label": "THÉP BẢN THANG T1/candidate-flight-2: bản nghiêng",
+          "basis": "input",
+          "count": 1.0,
+          "repetitions": 1,
+          "length_m": null,
+          "gross_length_m": null,
+          "deducted_length_m": null,
+          "width_m": null,
+          "height_m": null,
+          "floor_height_m": null,
+          "bottom_level_m": null,
+          "top_level_m": null,
+          "slope_ratio": null,
+          "faces": null,
+          "concrete_height_m": null,
+          "thickness_m": 0.12,
+          "top_length_m": null,
+          "top_width_m": null,
+          "slope_length_m": null,
+          "diameter_m": null,
+          "area_m2": null,
+          "opening_area_m2": null,
+          "net_area_m2": null,
+          "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+          "field_sources": {
+            "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+          },
+          "missing_fields": [
+            "length_m",
+            "width_m",
+            "height_m",
+            "slope_length_m"
+          ],
+          "not_applicable_fields": [
+            "gross_length_m",
+            "deducted_length_m",
+            "floor_height_m",
+            "bottom_level_m",
+            "top_level_m",
+            "slope_ratio",
+            "faces",
+            "concrete_height_m",
+            "top_length_m",
+            "top_width_m",
+            "diameter_m",
+            "area_m2",
+            "opening_area_m2",
+            "net_area_m2"
+          ],
+          "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+        },
+        {
+          "label": "THÉP BẢN THANG T1/candidate-flight-3: bản nghiêng",
+          "basis": "input",
+          "count": 1.0,
+          "repetitions": 1,
+          "length_m": null,
+          "gross_length_m": null,
+          "deducted_length_m": null,
+          "width_m": null,
+          "height_m": null,
+          "floor_height_m": null,
+          "bottom_level_m": null,
+          "top_level_m": null,
+          "slope_ratio": null,
+          "faces": null,
+          "concrete_height_m": null,
+          "thickness_m": 0.12,
+          "top_length_m": null,
+          "top_width_m": null,
+          "slope_length_m": null,
+          "diameter_m": null,
+          "area_m2": null,
+          "opening_area_m2": null,
+          "net_area_m2": null,
+          "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+          "field_sources": {
+            "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+            "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+          },
+          "missing_fields": [
+            "length_m",
+            "width_m",
+            "height_m",
+            "slope_length_m"
+          ],
+          "not_applicable_fields": [
+            "gross_length_m",
+            "deducted_length_m",
+            "floor_height_m",
+            "bottom_level_m",
+            "top_level_m",
+            "slope_ratio",
+            "faces",
+            "concrete_height_m",
+            "top_length_m",
+            "top_width_m",
+            "diameter_m",
+            "area_m2",
+            "opening_area_m2",
+            "net_area_m2"
+          ],
+          "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+        },
+        {
+          "label": "THÉP BẢN THANG T1/candidate-arrival",
+          "basis": "input",
+          "count": 1.0,
+          "repetitions": 1,
+          "length_m": null,
+          "gross_length_m": null,
+          "deducted_length_m": null,
+          "width_m": null,
+          "height_m": null,
+          "floor_height_m": null,
+          "bottom_level_m": null,
+          "top_level_m": null,
+          "slope_ratio": null,
+          "faces": null,
+          "concrete_height_m": null,
+          "thickness_m": 0.15,
+          "top_length_m": null,
+          "top_width_m": null,
+          "slope_length_m": null,
+          "diameter_m": null,
+          "area_m2": null,
+          "opening_area_m2": null,
+          "net_area_m2": null,
+          "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+          "field_sources": {
+            "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+            "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+            "area_m2": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán"
+          },
+          "missing_fields": [
+            "area_m2"
+          ],
+          "not_applicable_fields": [
+            "length_m",
+            "gross_length_m",
+            "deducted_length_m",
+            "width_m",
+            "height_m",
+            "floor_height_m",
+            "bottom_level_m",
+            "top_level_m",
+            "slope_ratio",
+            "faces",
+            "concrete_height_m",
+            "top_length_m",
+            "top_width_m",
+            "slope_length_m",
+            "diameter_m",
+            "opening_area_m2",
+            "net_area_m2"
+          ],
+          "note": "Chiếu thuộc unknown; không gán dày chiếu sang vế"
+        }
+      ],
+      "quantity_detail": {
+        "unit": "m²",
+        "rows": [
+          {
+            "row_id": "candidate-flight-1:soffit",
+            "label": "Đáy bản nghiêng candidate-flight-1",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m²",
+            "raw_quantity": null,
+            "method": "area",
+            "dimensions": {
+              "label": "THÉP BẢN THANG T1/candidate-flight-1: bản nghiêng",
+              "basis": "input",
+              "count": 1.0,
+              "repetitions": 1,
+              "length_m": null,
+              "gross_length_m": null,
+              "deducted_length_m": null,
+              "width_m": null,
+              "height_m": null,
+              "floor_height_m": null,
+              "bottom_level_m": null,
+              "top_level_m": null,
+              "slope_ratio": null,
+              "faces": null,
+              "concrete_height_m": null,
+              "thickness_m": 0.12,
+              "top_length_m": null,
+              "top_width_m": null,
+              "slope_length_m": null,
+              "diameter_m": null,
+              "area_m2": null,
+              "opening_area_m2": null,
+              "net_area_m2": null,
+              "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+              "field_sources": {
+                "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+              },
+              "missing_fields": [
+                "length_m",
+                "width_m",
+                "height_m",
+                "slope_length_m"
+              ],
+              "not_applicable_fields": [
+                "gross_length_m",
+                "deducted_length_m",
+                "floor_height_m",
+                "bottom_level_m",
+                "top_level_m",
+                "slope_ratio",
+                "faces",
+                "concrete_height_m",
+                "top_length_m",
+                "top_width_m",
+                "diameter_m",
+                "area_m2",
+                "opening_area_m2",
+                "net_area_m2"
+              ],
+              "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+            },
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+            ],
+            "missing": [
+              "candidate-flight-1: hình học và nguồn đáy bản nghiêng"
+            ]
+          },
+          {
+            "row_id": "candidate-flight-1:risers",
+            "label": "Không đổ BT thành bậc xây",
+            "group": "",
+            "role": "reference",
+            "sign": 1,
+            "unit": "m²",
+            "raw_quantity": "0",
+            "method": "area",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây"
+            ],
+            "missing": []
+          },
+          {
+            "row_id": "candidate-flight-2:soffit",
+            "label": "Đáy bản nghiêng candidate-flight-2",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m²",
+            "raw_quantity": null,
+            "method": "area",
+            "dimensions": {
+              "label": "THÉP BẢN THANG T1/candidate-flight-2: bản nghiêng",
+              "basis": "input",
+              "count": 1.0,
+              "repetitions": 1,
+              "length_m": null,
+              "gross_length_m": null,
+              "deducted_length_m": null,
+              "width_m": null,
+              "height_m": null,
+              "floor_height_m": null,
+              "bottom_level_m": null,
+              "top_level_m": null,
+              "slope_ratio": null,
+              "faces": null,
+              "concrete_height_m": null,
+              "thickness_m": 0.12,
+              "top_length_m": null,
+              "top_width_m": null,
+              "slope_length_m": null,
+              "diameter_m": null,
+              "area_m2": null,
+              "opening_area_m2": null,
+              "net_area_m2": null,
+              "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+              "field_sources": {
+                "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+              },
+              "missing_fields": [
+                "length_m",
+                "width_m",
+                "height_m",
+                "slope_length_m"
+              ],
+              "not_applicable_fields": [
+                "gross_length_m",
+                "deducted_length_m",
+                "floor_height_m",
+                "bottom_level_m",
+                "top_level_m",
+                "slope_ratio",
+                "faces",
+                "concrete_height_m",
+                "top_length_m",
+                "top_width_m",
+                "diameter_m",
+                "area_m2",
+                "opening_area_m2",
+                "net_area_m2"
+              ],
+              "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+            },
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+            ],
+            "missing": [
+              "candidate-flight-2: hình học và nguồn đáy bản nghiêng"
+            ]
+          },
+          {
+            "row_id": "candidate-flight-2:risers",
+            "label": "Không đổ BT thành bậc xây",
+            "group": "",
+            "role": "reference",
+            "sign": 1,
+            "unit": "m²",
+            "raw_quantity": "0",
+            "method": "area",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây"
+            ],
+            "missing": []
+          },
+          {
+            "row_id": "candidate-flight-3:soffit",
+            "label": "Đáy bản nghiêng candidate-flight-3",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m²",
+            "raw_quantity": null,
+            "method": "area",
+            "dimensions": {
+              "label": "THÉP BẢN THANG T1/candidate-flight-3: bản nghiêng",
+              "basis": "input",
+              "count": 1.0,
+              "repetitions": 1,
+              "length_m": null,
+              "gross_length_m": null,
+              "deducted_length_m": null,
+              "width_m": null,
+              "height_m": null,
+              "floor_height_m": null,
+              "bottom_level_m": null,
+              "top_level_m": null,
+              "slope_ratio": null,
+              "faces": null,
+              "concrete_height_m": null,
+              "thickness_m": 0.12,
+              "top_length_m": null,
+              "top_width_m": null,
+              "slope_length_m": null,
+              "diameter_m": null,
+              "area_m2": null,
+              "opening_area_m2": null,
+              "net_area_m2": null,
+              "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+              "field_sources": {
+                "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "width_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "height_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+                "slope_length_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+              },
+              "missing_fields": [
+                "length_m",
+                "width_m",
+                "height_m",
+                "slope_length_m"
+              ],
+              "not_applicable_fields": [
+                "gross_length_m",
+                "deducted_length_m",
+                "floor_height_m",
+                "bottom_level_m",
+                "top_level_m",
+                "slope_ratio",
+                "faces",
+                "concrete_height_m",
+                "top_length_m",
+                "top_width_m",
+                "diameter_m",
+                "area_m2",
+                "opening_area_m2",
+                "net_area_m2"
+              ],
+              "note": "Dài ngang/rise riêng vế; dày phải vuông góc; không dùng chiều dài cắt thép"
+            },
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng"
+            ],
+            "missing": [
+              "candidate-flight-3: hình học và nguồn đáy bản nghiêng"
+            ]
+          },
+          {
+            "row_id": "candidate-flight-3:risers",
+            "label": "Không đổ BT thành bậc xây",
+            "group": "",
+            "role": "reference",
+            "sign": 1,
+            "unit": "m²",
+            "raw_quantity": "0",
+            "method": "area",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây"
+            ],
+            "missing": []
+          },
+          {
+            "row_id": "candidate-arrival:soffit",
+            "label": "Đáy chiếu candidate-arrival",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m²",
+            "raw_quantity": null,
+            "method": "area",
+            "dimensions": {
+              "label": "THÉP BẢN THANG T1/candidate-arrival",
+              "basis": "input",
+              "count": 1.0,
+              "repetitions": 1,
+              "length_m": null,
+              "gross_length_m": null,
+              "deducted_length_m": null,
+              "width_m": null,
+              "height_m": null,
+              "floor_height_m": null,
+              "bottom_level_m": null,
+              "top_level_m": null,
+              "slope_ratio": null,
+              "faces": null,
+              "concrete_height_m": null,
+              "thickness_m": 0.15,
+              "top_length_m": null,
+              "top_width_m": null,
+              "slope_length_m": null,
+              "diameter_m": null,
+              "area_m2": null,
+              "opening_area_m2": null,
+              "net_area_m2": null,
+              "source": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+              "field_sources": {
+                "count": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+                "thickness_m": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán",
+                "area_m2": "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi; Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán"
+              },
+              "missing_fields": [
+                "area_m2"
+              ],
+              "not_applicable_fields": [
+                "length_m",
+                "gross_length_m",
+                "deducted_length_m",
+                "width_m",
+                "height_m",
+                "floor_height_m",
+                "bottom_level_m",
+                "top_level_m",
+                "slope_ratio",
+                "faces",
+                "concrete_height_m",
+                "top_length_m",
+                "top_width_m",
+                "slope_length_m",
+                "diameter_m",
+                "opening_area_m2",
+                "net_area_m2"
+              ],
+              "note": "Chiếu thuộc unknown; không gán dày chiếu sang vế"
+            },
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+              "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán"
+            ],
+            "missing": [
+              "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+              "candidate-arrival: area_m2 hoặc nguồn"
+            ]
+          },
+          {
+            "row_id": "surfaces:unknown",
+            "label": "Cạnh/gối/giao cốp pha chưa kiểm",
+            "group": "",
+            "role": "contribution",
+            "sign": 1,
+            "unit": "m²",
+            "raw_quantity": null,
+            "method": "area",
+            "dimensions": null,
+            "conversion": null,
+            "factors": [],
+            "expression": "",
+            "sources": [
+              "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi"
+            ],
+            "missing": [
+              "chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện"
+            ]
+          }
+        ],
+        "detail_level": "components",
+        "known_part_raw": null,
+        "total_raw": null,
+        "complete": false,
+        "scope_complete": false,
+        "legacy_quantity": null,
+        "legacy_delta": null
+      },
+      "wall_system_id": null,
+      "steel_element": null,
+      "formwork_of": "CAU_THANG",
+      "formula": "Σ đáy bản/chiếu và thành bậc đổBT có nguồn; cạnh/gối/giao còn thiếu",
+      "source": "manual",
+      "basis": "stair_components",
+      "evidence": [
+        "Thang T1 → T2: Stair.THÉP BẢN THANG T1; chưa có nguồn phạm vi",
+        "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; DIM vuông góc bản nghiêng",
+        "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; note bậc xây",
+        "Nguồn scoped07, chưa duyệt: data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf; SHA 22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c; KC-06-01/p37; THÉP BẢN THANG T1; chiếu tới, vị trí/diện tích/sở hữu chưa gán"
+      ],
+      "missing": [
+        "candidate-flight-1: hình học và nguồn đáy bản nghiêng",
+        "candidate-flight-2: hình học và nguồn đáy bản nghiêng",
+        "candidate-flight-3: hình học và nguồn đáy bản nghiêng",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ],
+      "status": "D",
+      "inputs": [
+        "thiếu: candidate-flight-1: hình học và nguồn đáy bản nghiêng",
+        "thiếu: candidate-flight-2: hình học và nguồn đáy bản nghiêng",
+        "thiếu: candidate-flight-3: hình học và nguồn đáy bản nghiêng",
+        "thiếu: candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "thiếu: candidate-arrival: area_m2 hoặc nguồn",
+        "thiếu: chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện",
+        "thiếu: chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ],
+      "stage": "khung"
+    }
+  ],
+  "intermediates": [
+    {
+      "kind": "be_tong",
+      "grade": null,
+      "material_id": null,
+      "name": "Bê tông (chưa chọn mác)",
+      "unit": "m³",
+      "quantity": null,
+      "complete": false
+    }
+  ],
+  "materials": [
+    {
+      "material_id": null,
+      "name": "Gạch xây (chưa chọn phương án tường)",
+      "unit": "",
+      "quantity": null,
+      "complete": false,
+      "waste_pct": null,
+      "quantity_with_waste": null,
+      "uses": [
+        {
+          "work": "XAY",
+          "rowIndex": 0,
+          "plan": "Thang T1 → T2",
+          "quantity": null,
+          "via": "XAY ? m³",
+          "status": "D",
+          "stage": "tuong",
+          "waste_included": false
+        }
+      ],
+      "missing": [
+        "hình học bậc xây từng vế và quy cách gạch/vữa; chưa bóc riêng",
+        "phương án tường (vật liệu xây)"
+      ],
+      "status": "D",
+      "group_id": null,
+      "raw_class": "gach",
+      "weight_kg": null,
+      "transport_volume_m3": null,
+      "quantity_min": null,
+      "quantity_max": null,
+      "confirmation": null,
+      "best_price": null,
+      "price_source": null,
+      "est_cost": null
+    },
+    {
+      "material_id": null,
+      "name": "Nhu cầu vữa xây hoặc vật liệu liên kết",
+      "unit": "",
+      "quantity": null,
+      "complete": false,
+      "waste_pct": null,
+      "quantity_with_waste": null,
+      "uses": [
+        {
+          "work": "XAY",
+          "rowIndex": 0,
+          "plan": "Thang T1 → T2",
+          "quantity": null,
+          "via": "XAY ? m³",
+          "status": "D",
+          "stage": "tuong",
+          "waste_included": false
+        }
+      ],
+      "missing": [
+        "hình học bậc xây từng vế và quy cách gạch/vữa; chưa bóc riêng",
+        "cần xác minh phương án tường, loại liên kết và định mức"
+      ],
+      "status": "D",
+      "group_id": null,
+      "raw_class": "vua_be_tong",
+      "weight_kg": null,
+      "transport_volume_m3": null,
+      "quantity_min": null,
+      "quantity_max": null,
+      "confirmation": null,
+      "best_price": null,
+      "price_source": null,
+      "est_cost": null
+    },
+    {
+      "material_id": null,
+      "name": "Bê tông (chưa chọn mác)",
+      "unit": "m³",
+      "quantity": null,
+      "complete": false,
+      "waste_pct": null,
+      "quantity_with_waste": null,
+      "uses": [
+        {
+          "work": "CAU_THANG",
+          "rowIndex": 1,
+          "plan": "Thang T1 → T2",
+          "quantity": null,
+          "via": "CAU_THANG ? m³",
+          "status": "D",
+          "stage": "khung",
+          "waste_included": false
+        }
+      ],
+      "missing": [
+        "candidate-flight-1: run_mm hoặc nguồn",
+        "candidate-flight-1: rise_mm hoặc nguồn",
+        "candidate-flight-1: width_mm hoặc nguồn",
+        "candidate-flight-2: run_mm hoặc nguồn",
+        "candidate-flight-2: rise_mm hoặc nguồn",
+        "candidate-flight-2: width_mm hoặc nguồn",
+        "candidate-flight-3: run_mm hoặc nguồn",
+        "candidate-flight-3: rise_mm hoặc nguồn",
+        "candidate-flight-3: width_mm hoặc nguồn",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu",
+        "mác bê tông"
+      ],
+      "status": "D",
+      "group_id": null,
+      "raw_class": "vua_be_tong",
+      "weight_kg": null,
+      "transport_volume_m3": null,
+      "quantity_min": null,
+      "quantity_max": null,
+      "confirmation": null,
+      "best_price": null,
+      "price_source": null,
+      "est_cost": null
+    },
+    {
+      "material_id": null,
+      "name": "Cốt thép (chưa chia nhóm đường kính)",
+      "unit": "tấn",
+      "quantity": null,
+      "complete": false,
+      "waste_pct": null,
+      "quantity_with_waste": null,
+      "uses": [
+        {
+          "work": "COT_THEP",
+          "rowIndex": 2,
+          "plan": "Thang T1 → T2",
+          "quantity": null,
+          "via": "COT_THEP ? tấn",
+          "status": "D",
+          "stage": "khung",
+          "waste_included": false
+        }
+      ],
+      "missing": [
+        "hàm lượng thép cầu thang (kg/m³)",
+        "bảng thống kê thép cầu thang",
+        "khối lượng bê tông cầu thang",
+        "candidate-flight-1: run_mm hoặc nguồn",
+        "candidate-flight-1: rise_mm hoặc nguồn",
+        "candidate-flight-1: width_mm hoặc nguồn",
+        "candidate-flight-2: run_mm hoặc nguồn",
+        "candidate-flight-2: rise_mm hoặc nguồn",
+        "candidate-flight-2: width_mm hoặc nguồn",
+        "candidate-flight-3: run_mm hoặc nguồn",
+        "candidate-flight-3: rise_mm hoặc nguồn",
+        "candidate-flight-3: width_mm hoặc nguồn",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu",
+        "bảng thống kê thép để chia nhóm đường kính"
+      ],
+      "status": "D",
+      "group_id": null,
+      "raw_class": "thep",
+      "weight_kg": null,
+      "transport_volume_m3": null,
+      "quantity_min": null,
+      "quantity_max": null,
+      "confirmation": null,
+      "best_price": null,
+      "price_source": null,
+      "est_cost": null
+    },
+    {
+      "material_id": "TH10",
+      "name": "Dây thép buộc 1 ly",
+      "unit": "kg",
+      "quantity": null,
+      "complete": false,
+      "waste_pct": null,
+      "quantity_with_waste": null,
+      "uses": [
+        {
+          "work": "COT_THEP",
+          "rowIndex": 2,
+          "plan": "Thang T1 → T2",
+          "quantity": null,
+          "via": "COT_THEP ? tấn × 11,96 kg / tấn",
+          "status": "D",
+          "stage": "khung",
+          "waste_included": false
+        }
+      ],
+      "missing": [
+        "hàm lượng thép cầu thang (kg/m³)",
+        "bảng thống kê thép cầu thang",
+        "khối lượng bê tông cầu thang",
+        "candidate-flight-1: run_mm hoặc nguồn",
+        "candidate-flight-1: rise_mm hoặc nguồn",
+        "candidate-flight-1: width_mm hoặc nguồn",
+        "candidate-flight-2: run_mm hoặc nguồn",
+        "candidate-flight-2: rise_mm hoặc nguồn",
+        "candidate-flight-2: width_mm hoặc nguồn",
+        "candidate-flight-3: run_mm hoặc nguồn",
+        "candidate-flight-3: rise_mm hoặc nguồn",
+        "candidate-flight-3: width_mm hoặc nguồn",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu"
+      ],
+      "status": "D",
+      "group_id": "be_tong_cot_thep",
+      "raw_class": "thep",
+      "weight_kg": null,
+      "transport_volume_m3": null,
+      "quantity_min": null,
+      "quantity_max": null,
+      "confirmation": "tinh",
+      "best_price": null,
+      "price_source": null,
+      "est_cost": null
+    },
+    {
+      "material_id": null,
+      "name": "Vật liệu cốp pha",
+      "unit": "",
+      "quantity": null,
+      "complete": false,
+      "waste_pct": null,
+      "quantity_with_waste": null,
+      "uses": [
+        {
+          "work": "COP_PHA",
+          "rowIndex": 3,
+          "plan": "Thang T1 → T2",
+          "quantity": null,
+          "via": "COP_PHA ? m²",
+          "status": "D",
+          "stage": "khung",
+          "waste_included": false
+        }
+      ],
+      "missing": [
+        "candidate-flight-1: hình học và nguồn đáy bản nghiêng",
+        "candidate-flight-2: hình học và nguồn đáy bản nghiêng",
+        "candidate-flight-3: hình học và nguồn đáy bản nghiêng",
+        "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+        "candidate-arrival: area_m2 hoặc nguồn",
+        "chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện",
+        "chưa xác nhận phạm vi từng thang/vế/chiếu",
+        "loại ván khuôn (gỗ | ván ép)"
+      ],
+      "status": "D",
+      "group_id": null,
+      "raw_class": "khac",
+      "weight_kg": null,
+      "transport_volume_m3": null,
+      "quantity_min": null,
+      "quantity_max": null,
+      "confirmation": null,
+      "best_price": null,
+      "price_source": null,
+      "est_cost": null
+    }
+  ],
+  "warnings": [
+    "Chưa xác định tầng trệt: chưa tính nền tầng trệt (đệm cát, bê tông lót).",
+    "Thang T1 → T2: chưa có chiều cao tầng, chưa tính phần thô của mặt bằng này.",
+    "Thang T1 → T2, thang THÉP BẢN THANG T1: chỉ tính component có nguồn; không dùng H tầng, mặc định BT bậc hoặc DAI thép thay hình học.",
+    "Ca máy chưa tính: chưa có định mức hao phí máy theo TT 38/2026/TT-BXD.",
+    "Xây tường (Thang T1 → T2): chưa có khối lượng, thiếu hình học bậc xây từng vế và quy cách gạch/vữa; chưa bóc riêng.",
+    "Bê tông cầu thang (Thang T1 → T2): chưa có khối lượng, thiếu candidate-flight-1: run_mm hoặc nguồn, candidate-flight-1: rise_mm hoặc nguồn, candidate-flight-1: width_mm hoặc nguồn, candidate-flight-2: run_mm hoặc nguồn, candidate-flight-2: rise_mm hoặc nguồn, candidate-flight-2: width_mm hoặc nguồn, candidate-flight-3: run_mm hoặc nguồn, candidate-flight-3: rise_mm hoặc nguồn, candidate-flight-3: width_mm hoặc nguồn, candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn, candidate-arrival: area_m2 hoặc nguồn, chưa xác nhận phạm vi từng thang/vế/chiếu.",
+    "Cốt thép (Thang T1 → T2): chưa có khối lượng, thiếu hàm lượng thép cầu thang (kg/m³), bảng thống kê thép cầu thang, khối lượng bê tông cầu thang, candidate-flight-1: run_mm hoặc nguồn, candidate-flight-1: rise_mm hoặc nguồn, candidate-flight-1: width_mm hoặc nguồn, candidate-flight-2: run_mm hoặc nguồn, candidate-flight-2: rise_mm hoặc nguồn, candidate-flight-2: width_mm hoặc nguồn, candidate-flight-3: run_mm hoặc nguồn, candidate-flight-3: rise_mm hoặc nguồn, candidate-flight-3: width_mm hoặc nguồn, candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn, candidate-arrival: area_m2 hoặc nguồn, chưa xác nhận phạm vi từng thang/vế/chiếu.",
+    "Định mức định mức COT_THEP → Dây thép buộc: hệ số tham khảo (tinh; TT 38/2026/TT-BXD Phụ lục II (datafiles.chinhphu.vn)), chưa có số hiệu bảng TT 38/2026/TT-BXD: vật liệu từ dòng này là tạm tính (C).",
+    "Cốp pha (Thang T1 → T2): chưa có khối lượng, thiếu candidate-flight-1: hình học và nguồn đáy bản nghiêng, candidate-flight-2: hình học và nguồn đáy bản nghiêng, candidate-flight-3: hình học và nguồn đáy bản nghiêng, candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn, candidate-arrival: area_m2 hoặc nguồn, chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện, chưa xác nhận phạm vi từng thang/vế/chiếu."
+  ],
+  "plan_scope_confirmed": false,
+  "quantity_summary": {
+    "schema_version": 1,
+    "quantity_snapshot_hash": "6b96161fe4bde7e22500c7babf301dea872f5df079cb5459f44f3c89de7f0a62",
+    "context": {
+      "concrete_grade": null,
+      "lean_concrete_grade": null,
+      "concrete_supply": null,
+      "masonry_mortar_grade": null,
+      "plaster_mortar_grade": null,
+      "screed_mortar_grade": null,
+      "formwork_type": null
+    },
+    "groups": [
+      {
+        "group_id": "g:0",
+        "key": {
+          "stage": "tuong",
+          "code": "XAY",
+          "variant": null,
+          "unit": "m³",
+          "source": "auto",
+          "basis": "stair_steps_masonry",
+          "formwork_of": null,
+          "steel_element": null,
+          "wall_system_id": null,
+          "specification": {
+            "masonry_mortar_grade": null,
+            "wall_system_id": null
+          },
+          "isolated_work_key": "w:0"
+        },
+        "member_work_keys": [
+          "w:0"
+        ],
+        "compatibility": "isolated_unknown",
+        "compatibility_reasons": [
+          "chưa có masonry_mortar_grade để gộp cùng quy cách",
+          "chưa có wall_system_id để gộp cùng quy cách"
+        ],
+        "calculation_methods": [],
+        "known_part_raw": null,
+        "total_raw": null,
+        "complete": false,
+        "coverage": {
+          "work_count": 1,
+          "components": 0,
+          "aggregate": 0,
+          "unavailable": 0,
+          "no_detail": 1,
+          "quantity_complete_works": 0,
+          "quantity_incomplete_works": 1,
+          "contribution_rows": 0,
+          "known_contribution_rows": 0,
+          "unknown_contribution_rows": 0,
+          "reference_rows": 0,
+          "compatibility_pending_works": 1,
+          "legacy_D_works": 1,
+          "legacy_missing_works": 1,
+          "complete_components": false
+        },
+        "missing_work_refs": [
+          {
+            "work_key": "w:0",
+            "row_id": null,
+            "reasons": [
+              "chưa có diễn giải raw"
+            ]
+          }
+        ]
+      },
+      {
+        "group_id": "g:1",
+        "key": {
+          "stage": "khung",
+          "code": "CAU_THANG",
+          "variant": null,
+          "unit": "m³",
+          "source": "manual",
+          "basis": "stair_components",
+          "formwork_of": null,
+          "steel_element": null,
+          "wall_system_id": null,
+          "specification": {
+            "concrete_grade": null,
+            "concrete_supply": null
+          },
+          "isolated_work_key": "w:1"
+        },
+        "member_work_keys": [
+          "w:1"
+        ],
+        "compatibility": "isolated_unknown",
+        "compatibility_reasons": [
+          "chưa có concrete_grade để gộp cùng quy cách",
+          "chưa có concrete_supply để gộp cùng quy cách"
+        ],
+        "calculation_methods": [
+          "box"
+        ],
+        "known_part_raw": null,
+        "total_raw": null,
+        "complete": false,
+        "coverage": {
+          "work_count": 1,
+          "components": 1,
+          "aggregate": 0,
+          "unavailable": 0,
+          "no_detail": 0,
+          "quantity_complete_works": 0,
+          "quantity_incomplete_works": 1,
+          "contribution_rows": 4,
+          "known_contribution_rows": 0,
+          "unknown_contribution_rows": 4,
+          "reference_rows": 3,
+          "compatibility_pending_works": 1,
+          "legacy_D_works": 1,
+          "legacy_missing_works": 1,
+          "complete_components": false
+        },
+        "missing_work_refs": [
+          {
+            "work_key": "w:1",
+            "row_id": "candidate-flight-1:waist",
+            "reasons": [
+              "candidate-flight-1: run_mm hoặc nguồn",
+              "candidate-flight-1: rise_mm hoặc nguồn",
+              "candidate-flight-1: width_mm hoặc nguồn"
+            ]
+          },
+          {
+            "work_key": "w:1",
+            "row_id": "candidate-flight-2:waist",
+            "reasons": [
+              "candidate-flight-2: run_mm hoặc nguồn",
+              "candidate-flight-2: rise_mm hoặc nguồn",
+              "candidate-flight-2: width_mm hoặc nguồn"
+            ]
+          },
+          {
+            "work_key": "w:1",
+            "row_id": "candidate-flight-3:waist",
+            "reasons": [
+              "candidate-flight-3: run_mm hoặc nguồn",
+              "candidate-flight-3: rise_mm hoặc nguồn",
+              "candidate-flight-3: width_mm hoặc nguồn"
+            ]
+          },
+          {
+            "work_key": "w:1",
+            "row_id": "candidate-arrival:landing",
+            "reasons": [
+              "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+              "candidate-arrival: area_m2 hoặc nguồn"
+            ]
+          },
+          {
+            "work_key": "w:1",
+            "row_id": null,
+            "reasons": [
+              "candidate-flight-1: run_mm hoặc nguồn",
+              "candidate-flight-1: rise_mm hoặc nguồn",
+              "candidate-flight-1: width_mm hoặc nguồn",
+              "candidate-flight-2: run_mm hoặc nguồn",
+              "candidate-flight-2: rise_mm hoặc nguồn",
+              "candidate-flight-2: width_mm hoặc nguồn",
+              "candidate-flight-3: run_mm hoặc nguồn",
+              "candidate-flight-3: rise_mm hoặc nguồn",
+              "candidate-flight-3: width_mm hoặc nguồn",
+              "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+              "candidate-arrival: area_m2 hoặc nguồn",
+              "chưa xác nhận phạm vi từng thang/vế/chiếu"
+            ]
+          }
+        ]
+      },
+      {
+        "group_id": "g:2",
+        "key": {
+          "stage": "khung",
+          "code": "COT_THEP",
+          "variant": null,
+          "unit": "tấn",
+          "source": "auto",
+          "basis": null,
+          "formwork_of": null,
+          "steel_element": "CAU_THANG",
+          "wall_system_id": null,
+          "specification": {},
+          "isolated_work_key": "w:2"
+        },
+        "member_work_keys": [
+          "w:2"
+        ],
+        "compatibility": "isolated_unknown",
+        "compatibility_reasons": [
+          "chưa có quy cách/cấp thép có cấu trúc để gộp; không đoán từ ký hiệu"
+        ],
+        "calculation_methods": [],
+        "known_part_raw": null,
+        "total_raw": null,
+        "complete": false,
+        "coverage": {
+          "work_count": 1,
+          "components": 0,
+          "aggregate": 0,
+          "unavailable": 0,
+          "no_detail": 1,
+          "quantity_complete_works": 0,
+          "quantity_incomplete_works": 1,
+          "contribution_rows": 0,
+          "known_contribution_rows": 0,
+          "unknown_contribution_rows": 0,
+          "reference_rows": 0,
+          "compatibility_pending_works": 1,
+          "legacy_D_works": 1,
+          "legacy_missing_works": 1,
+          "complete_components": false
+        },
+        "missing_work_refs": [
+          {
+            "work_key": "w:2",
+            "row_id": null,
+            "reasons": [
+              "chưa có diễn giải raw"
+            ]
+          }
+        ]
+      },
+      {
+        "group_id": "g:3",
+        "key": {
+          "stage": "khung",
+          "code": "COP_PHA",
+          "variant": null,
+          "unit": "m²",
+          "source": "manual",
+          "basis": "stair_components",
+          "formwork_of": "CAU_THANG",
+          "steel_element": null,
+          "wall_system_id": null,
+          "specification": {
+            "formwork_type": null,
+            "formwork_of": "CAU_THANG"
+          },
+          "isolated_work_key": "w:3"
+        },
+        "member_work_keys": [
+          "w:3"
+        ],
+        "compatibility": "isolated_unknown",
+        "compatibility_reasons": [
+          "chưa có formwork_type để gộp cùng quy cách"
+        ],
+        "calculation_methods": [
+          "area"
+        ],
+        "known_part_raw": null,
+        "total_raw": null,
+        "complete": false,
+        "coverage": {
+          "work_count": 1,
+          "components": 1,
+          "aggregate": 0,
+          "unavailable": 0,
+          "no_detail": 0,
+          "quantity_complete_works": 0,
+          "quantity_incomplete_works": 1,
+          "contribution_rows": 5,
+          "known_contribution_rows": 0,
+          "unknown_contribution_rows": 5,
+          "reference_rows": 3,
+          "compatibility_pending_works": 1,
+          "legacy_D_works": 1,
+          "legacy_missing_works": 1,
+          "complete_components": false
+        },
+        "missing_work_refs": [
+          {
+            "work_key": "w:3",
+            "row_id": "candidate-flight-1:soffit",
+            "reasons": [
+              "candidate-flight-1: hình học và nguồn đáy bản nghiêng"
+            ]
+          },
+          {
+            "work_key": "w:3",
+            "row_id": "candidate-flight-2:soffit",
+            "reasons": [
+              "candidate-flight-2: hình học và nguồn đáy bản nghiêng"
+            ]
+          },
+          {
+            "work_key": "w:3",
+            "row_id": "candidate-flight-3:soffit",
+            "reasons": [
+              "candidate-flight-3: hình học và nguồn đáy bản nghiêng"
+            ]
+          },
+          {
+            "work_key": "w:3",
+            "row_id": "candidate-arrival:soffit",
+            "reasons": [
+              "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+              "candidate-arrival: area_m2 hoặc nguồn"
+            ]
+          },
+          {
+            "work_key": "w:3",
+            "row_id": "surfaces:unknown",
+            "reasons": [
+              "chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện"
+            ]
+          },
+          {
+            "work_key": "w:3",
+            "row_id": null,
+            "reasons": [
+              "candidate-flight-1: hình học và nguồn đáy bản nghiêng",
+              "candidate-flight-2: hình học và nguồn đáy bản nghiêng",
+              "candidate-flight-3: hình học và nguồn đáy bản nghiêng",
+              "candidate-arrival: quyền sở hữu chiếu/giao chưa có nguồn",
+              "candidate-arrival: area_m2 hoặc nguồn",
+              "chưa kiểm mặt cạnh, gối và khoản giao cốp pha theo từng cấu kiện",
+              "chưa xác nhận phạm vi từng thang/vế/chiếu"
+            ]
+          }
+        ]
+      }
+    ],
+    "coverage": {
+      "work_count": 4,
+      "components": 2,
+      "aggregate": 0,
+      "unavailable": 0,
+      "no_detail": 2,
+      "quantity_complete_works": 0,
+      "quantity_incomplete_works": 4,
+      "contribution_rows": 9,
+      "known_contribution_rows": 0,
+      "unknown_contribution_rows": 9,
+      "reference_rows": 6,
+      "compatibility_pending_works": 4,
+      "legacy_D_works": 4,
+      "legacy_missing_works": 4,
+      "complete_components": false
+    }
+  },
+  "wall_groups": [],
+  "wall_group_issues": [
+    "Thang T1 → T2, bậc xây thang THÉP BẢN THANG T1: hình học bậc xây từng vế và quy cách gạch/vữa; chưa bóc riêng, chưa xác định cấu tạo tường, khối xây chưa đủ căn cứ"
+  ],
+  "totals": [
+    {
+      "code": "XAY",
+      "name": "Xây tường",
+      "unit": "m³",
+      "quantity": null,
+      "complete": false,
+      "items": 1,
+      "status": "D"
+    },
+    {
+      "code": "CAU_THANG",
+      "name": "Bê tông cầu thang",
+      "unit": "m³",
+      "quantity": null,
+      "complete": false,
+      "items": 1,
+      "status": "D"
+    },
+    {
+      "code": "COT_THEP",
+      "name": "Cốt thép",
+      "unit": "tấn",
+      "quantity": null,
+      "complete": false,
+      "items": 1,
+      "status": "D"
+    },
+    {
+      "code": "COP_PHA",
+      "name": "Cốp pha",
+      "unit": "m²",
+      "quantity": null,
+      "complete": false,
+      "items": 1,
+      "status": "D"
+    }
+  ],
+  "beams": {
+    "Thang T1 → T2": []
+  },
+  "plan_beams": {
+    "Thang T1 → T2": []
+  },
+  "structural_beams": {},
+  "takeoff_id": null,
+  "formwork": [
+    {
+      "code": "CAU_THANG",
+      "name": "Cốp pha cầu thang",
+      "unit": "m²",
+      "quantity": null,
+      "complete": false,
+      "items": 1,
+      "status": "D"
+    }
+  ],
+  "by_group": [
+    {
+      "group_id": "be_tong_cot_thep",
+      "name": "Vật liệu bê tông cốt thép",
+      "in_scope": true,
+      "materials": [
+        "TH10"
+      ],
+      "weight_kg": null,
+      "weight_complete": false,
+      "status": "D"
+    },
+    {
+      "group_id": "phan_tho",
+      "name": "Vật liệu thi công phần thô",
+      "in_scope": true,
+      "materials": [],
+      "weight_kg": null,
+      "weight_complete": true,
+      "status": null
+    },
+    {
+      "group_id": "hoan_thien",
+      "name": "Vật liệu hoàn thiện",
+      "in_scope": false,
+      "materials": [],
+      "weight_kg": null,
+      "weight_complete": true,
+      "status": null
+    },
+    {
+      "group_id": "khac_phap_ly",
+      "name": "Vật liệu khác và khung pháp lý",
+      "in_scope": false,
+      "materials": [],
+      "weight_kg": null,
+      "weight_complete": true,
+      "status": null
+    },
+    {
+      "group_id": "ket_cau_thep_bao_che",
+      "name": "Vật liệu kết cấu thép và bao che",
+      "in_scope": false,
+      "materials": [],
+      "weight_kg": null,
+      "weight_complete": true,
+      "status": null
+    },
+    {
+      "group_id": "chua_ro",
+      "name": "Chưa xếp nhóm (danh mục chưa có mã)",
+      "in_scope": true,
+      "materials": [
+        "Gạch xây (chưa chọn phương án tường)",
+        "Nhu cầu vữa xây hoặc vật liệu liên kết",
+        "Bê tông (chưa chọn mác)",
+        "Cốt thép (chưa chia nhóm đường kính)",
+        "Vật liệu cốp pha"
+      ],
+      "weight_kg": null,
+      "weight_complete": false,
+      "status": "D"
+    }
+  ],
+  "by_class": [
+    {
+      "group_id": "gach",
+      "name": "Gạch xây",
+      "in_scope": true,
+      "materials": [
+        "Gạch xây (chưa chọn phương án tường)"
+      ],
+      "weight_kg": null,
+      "weight_complete": false,
+      "status": "D"
+    },
+    {
+      "group_id": "vua_be_tong",
+      "name": "Vữa, bê tông thành phẩm",
+      "in_scope": true,
+      "materials": [
+        "Nhu cầu vữa xây hoặc vật liệu liên kết",
+        "Bê tông (chưa chọn mác)"
+      ],
+      "weight_kg": null,
+      "weight_complete": false,
+      "status": "D"
+    },
+    {
+      "group_id": "thep",
+      "name": "Thép cốt, dây buộc",
+      "in_scope": true,
+      "materials": [
+        "Cốt thép (chưa chia nhóm đường kính)",
+        "TH10"
+      ],
+      "weight_kg": null,
+      "weight_complete": false,
+      "status": "D"
+    },
+    {
+      "group_id": "khac",
+      "name": "Khác (ngoài phần thô)",
+      "in_scope": false,
+      "materials": [
+        "Vật liệu cốp pha"
+      ],
+      "weight_kg": null,
+      "weight_complete": false,
+      "status": "D"
+    }
+  ],
+  "status": "D",
+  "envelope_by_orientation": {}
+}

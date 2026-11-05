@@ -13,10 +13,12 @@ from __future__ import annotations
 
 import math
 import re
+from functools import lru_cache
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import numpy as np
+import pandas as pd
 
 from .. import config
 from .dxf_reader import Drawing
@@ -56,7 +58,22 @@ def _title(text: str) -> str:
     return ABBREV[m.group(1)] + t[2:] if m else t
 
 
+PLAN_TITLE_FILE = config.DATA_DIR / "rules" / "tieu_de_mat_bang.csv"
+
+
+@lru_cache(maxsize=1)
+def extra_plan_titles() -> tuple[re.Pattern, ...]:
+    """Tiêu đề mặt bằng tầng đã duyệt thêm (KD05/KD06: AI đề xuất, người duyệt); khớp thì nhận dù có từ loại trừ."""
+    try:
+        rows = pd.read_csv(PLAN_TITLE_FILE, dtype=str, keep_default_na=False).to_dict("records")
+    except FileNotFoundError:
+        return ()
+    return tuple(re.compile(r["mau"]) for r in rows if r["mau"])
+
+
 def _is_plan_title(text: str) -> bool:
+    if any(p.search(re.sub(r"\s+", " ", _title(text)).strip()) for p in extra_plan_titles()):
+        return True
     # "sân thượng" bỏ dấu thành "san thuong", trùng từ loại "san " (mặt bằng sàn kết cấu)
     t = " " + _title(text).replace("san thuong", "san-thuong") + " "
     scale = re.search(r"\btl\s*:?\s*1\s*[:/]\s*(\d+)", t)
@@ -76,10 +93,16 @@ def _clusters(drawing: Drawing, window: tuple[float, float, float, float], max_l
     """Cụm nét trong khung: ô lưới 1 m có nét, nối các ô kề nhau. Bỏ nét hatch, khung, trục, nét quá dài."""
     wx0, wy0, wx1, wy1 = window
     cells: dict[tuple[int, int], int] = defaultdict(int)
+    excluded_layers = {}
     for s in drawing.segments:
-        if s.kind == "hatch" or any(w in normalize(s.layer) for w in FRAME_LAYER_WORDS):
+        if s.kind == "hatch":
             continue
         if not (wx0 <= s.x1 <= wx1 and wy0 <= s.y1 <= wy1 and wx0 <= s.x2 <= wx1 and wy0 <= s.y2 <= wy1):
+            continue
+        if s.layer not in excluded_layers:
+            layer = normalize(s.layer)
+            excluded_layers[s.layer] = any(w in layer for w in FRAME_LAYER_WORDS)
+        if excluded_layers[s.layer]:
             continue
         length = math.hypot(s.x2 - s.x1, s.y2 - s.y1)
         if length > max_line:
@@ -174,16 +197,41 @@ def _shrink(window, t, frames):
     return left, bottom, right, top
 
 
+SCALE_SUFFIX_RE = re.compile(r"\s*\btl\b.*$")
+
+
+def _merge_twin_titles(titles) -> tuple[list, set[int]]:
+    """Một hình ghi tiêu đề hai lần cạnh nhau, một dòng thêm tỷ lệ ("MẶT BẰNG LẦU 2" và "MẶT BẰNG LẦU 2 TL 1:50", bộ 46
+    cách nhau 19–21 m): gộp thành một tiêu đề ở giữa. Không gộp thì khung tìm chia đôi khoảng cách hai tiêu đề và cắt
+    mặt bằng nhà ống dài 25 m làm hai mảnh. Chỉ gộp cặp cùng tên tầng, cùng hàng, một dòng có tỷ lệ một dòng không.
+    Trả (tiêu đề sau gộp, id các tiêu đề đã gộp vào bạn để bỏ khỏi danh sách giới hạn khung)."""
+    out, absorbed = [], set()
+    for t in sorted(titles, key=lambda t: (-t.y, t.x)):
+        if id(t) in absorbed:
+            continue
+        key, scaled = SCALE_SUFFIX_RE.sub("", _title(t.text)).strip(), bool(SCALE_SUFFIX_RE.search(_title(t.text)))
+        twin = next((o for o in titles if o is not t and id(o) not in absorbed and abs(o.y - t.y) < 5000
+                     and abs(o.x - t.x) < 25000 and SCALE_SUFFIX_RE.sub("", _title(o.text)).strip() == key
+                     and bool(SCALE_SUFFIX_RE.search(_title(o.text))) != scaled), None)
+        if twin is None:
+            out.append(t)
+            continue
+        absorbed |= {id(t), id(twin)}
+        named = t if scaled else twin                     # giữ dòng có tỷ lệ làm tên (đọc được tỷ lệ chi tiết)
+        out.append(replace(named, x=(t.x + twin.x) / 2, y=min(t.y, twin.y)))
+    return out, absorbed
+
+
 def find_plans(drawing: Drawing) -> list[PlanRegion]:
     titles = [t for t in drawing.texts if _is_plan_title(t.text)]
     if not titles:
         return []
     big = max(t.height for t in titles) or 0
-    titles = [t for t in titles if t.height >= 0.6 * big]
+    titles, twins = _merge_twin_titles([t for t in titles if t.height >= 0.6 * big])
     # mọi tiêu đề cỡ lớn (cả mặt đứng, mặt cắt, kết cấu) dùng để giới hạn khung tìm
     # (bỏ chữ ngắn như tên trục "A", "1", ký hiệu cao độ: chúng nằm trong mặt bằng chứ không phải tiêu đề)
-    headings = [t for t in drawing.texts if big and t.height >= 0.6 * big
-                and any(w in _title(t.text) for w in HEADING_WORDS)]
+    headings = [t for t in drawing.texts if big and t.height >= 0.6 * big and id(t) not in twins
+                and any(w in _title(t.text) for w in HEADING_WORDS)] + [t for t in titles if not any(t is h for h in drawing.texts)]
     frames = _frame_lines(drawing)
     plans: list[PlanRegion] = []
     for t in sorted(titles, key=lambda t: (-t.y, t.x)):

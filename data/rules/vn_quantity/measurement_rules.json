@@ -1,0 +1,1467 @@
+[
+  {
+    "rule_id": "VN-QTO-001",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn I.1",
+    "pdf_page": 2,
+    "work_group": "chung",
+    "summary_vi": "Chọn mức chi tiết khối lượng theo hồ sơ và giai đoạn xác định chi phí.",
+    "required_inputs": [
+      "giai_doan",
+      "ho_so_thiet_ke",
+      "muc_dich"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "HƯỚNG DẪN XÁC ĐỊNH KHỐI LƯỢNG CÔNG TRÌNH \n(Kèm theo Quyết định số 1041/QĐ-BXD ngày 26 tháng 6 năm 2026  \ncủa Bộ trưởng Bộ Xây dựng) \n \nI. NGUYÊN TẮC XÁC ĐỊNH KHỐI LƯỢNG \n1. Khối lượng phục vụ xác định chi phí đ ầu tư xây d ựng được xác đ ịnh \nphù hợp với mức độ chi tiết của hồ sơ dự án, hồ sơ thiết kế và yêu cầu xác định \nchi phí tương ứng từng giai đoạn đầu tư xây dựng.  \nCác căn c ứ để xác định khối lượng bao g ồm hồ sơ dự án, hồ sơ thiết kế \nxây dựng, chỉ dẫn kỹ thuật, tiêu chu ẩn, quy chu ẩn kỹ thuật áp d ụng, mô hình \nthông tin công trình (BIM), dữ liệu từ phần mềm, công cụ số và các tài liệu khác \ncó liên quan. \n2. Loại khối lượng, mức độ chi tiết và đơn vị tính được lựa chọn phải phù \nhợp với loại thiết kế, giai đo ạn hình thành chi phí đ ầu tư xây d ựng và yêu c ầu \nxác định chi phí của dự án. \n3. Việc xác đ ịnh khối lượng phải tương ứng với loại giá xây d ựng theo \nyêu cầu của phương pháp xác định chi phí dự kiến áp dụng. \n4. Mỗi khối lượng chỉ được xác định một lần. Trường hợp có sự giao thoa \ngiữa các b ộ phận công trình, h ệ thống kỹ thuật hoặc ph ạm vi công vi ệc khác \nnhau thì phải xác định rõ phạm vi tính toán để tránh trùng lặp. \n5. Đơn v ị tính khối lượng phải tương ứng, phù hợp với đơn v ị sử dụng \ntrong suất vốn đầu tư, su ất chi phí, giá nhóm công tác xây d ựng, giá bộ phận, \nđơn vị kết cấu công trình, giá xây d ựng khác... theo phương pháp xác đ ịnh chi \nphí được áp dụng. \n6. Kết quả xác định khối lượng phải thể hiện rõ loại khối lượng cần xác \nđịnh ( theo quy mô công trình; theo h ệ thống k ỹ thuật, theo  dây chuy ền công \nnghệ; theo bộ phận, đơn vị kết cấu công trình;  theo nhóm công tác  xây dựng, \ncông tác xây dựng;…); căn cứ, nguồn dữ liệu và phương pháp xác đ ịnh để phục \nvụ công tác kiểm tra, rà soát, cập nhật và xác định chi phí đầu tư xây dựng. \nII. XÁC Đ ỊNH KHỐI LƯỢNG THEO GIAI ĐO ẠN HÌNH THÀNH \nCHI PHÍ ĐẦU TƯ XÂY DỰNG \n1. Xác định khối lượng để lập sơ bộ tổng mức đầu tư \na) Khối lượng để lập sơ bộ tổng mức đầu tư được xác định trên cơ s ở hồ \nsơ đề xuất chủ trương đầu tư hoặc hồ sơ báo cáo nghiên cứu tiền khả thi, phương \nán thiết kế sơ bộ, phương án công ngh ệ dự kiến, quy mô đầu tư, công suất hoặc \nnăng lực phục vụ và các yêu cầu khác của dự án. \nb) Khối lượng ở giai đoạn này có thể được xác định theo một hoặc một số \nloại kh ối lư ợng sau: Di ện tích, kh ối tích xây d ựng; chi ều dài tuy ến, quy mô \nmạng lưới hoặc phạm vi phục vụ; quy mô công su ất hoặc năng lực phục vụ của ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-002",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn I.2-I.3",
+    "pdf_page": 2,
+    "work_group": "chung",
+    "summary_vi": "Loại khối lượng và phương pháp đo phải tương ứng loại giá xây dựng áp dụng.",
+    "required_inputs": [
+      "loai_khoi_luong",
+      "loai_gia",
+      "don_vi"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "HƯỚNG DẪN XÁC ĐỊNH KHỐI LƯỢNG CÔNG TRÌNH \n(Kèm theo Quyết định số 1041/QĐ-BXD ngày 26 tháng 6 năm 2026  \ncủa Bộ trưởng Bộ Xây dựng) \n \nI. NGUYÊN TẮC XÁC ĐỊNH KHỐI LƯỢNG \n1. Khối lượng phục vụ xác định chi phí đ ầu tư xây d ựng được xác đ ịnh \nphù hợp với mức độ chi tiết của hồ sơ dự án, hồ sơ thiết kế và yêu cầu xác định \nchi phí tương ứng từng giai đoạn đầu tư xây dựng.  \nCác căn c ứ để xác định khối lượng bao g ồm hồ sơ dự án, hồ sơ thiết kế \nxây dựng, chỉ dẫn kỹ thuật, tiêu chu ẩn, quy chu ẩn kỹ thuật áp d ụng, mô hình \nthông tin công trình (BIM), dữ liệu từ phần mềm, công cụ số và các tài liệu khác \ncó liên quan. \n2. Loại khối lượng, mức độ chi tiết và đơn vị tính được lựa chọn phải phù \nhợp với loại thiết kế, giai đo ạn hình thành chi phí đ ầu tư xây d ựng và yêu c ầu \nxác định chi phí của dự án. \n3. Việc xác đ ịnh khối lượng phải tương ứng với loại giá xây d ựng theo \nyêu cầu của phương pháp xác định chi phí dự kiến áp dụng. \n4. Mỗi khối lượng chỉ được xác định một lần. Trường hợp có sự giao thoa \ngiữa các b ộ phận công trình, h ệ thống kỹ thuật hoặc ph ạm vi công vi ệc khác \nnhau thì phải xác định rõ phạm vi tính toán để tránh trùng lặp. \n5. Đơn v ị tính khối lượng phải tương ứng, phù hợp với đơn v ị sử dụng \ntrong suất vốn đầu tư, su ất chi phí, giá nhóm công tác xây d ựng, giá bộ phận, \nđơn vị kết cấu công trình, giá xây d ựng khác... theo phương pháp xác đ ịnh chi \nphí được áp dụng. \n6. Kết quả xác định khối lượng phải thể hiện rõ loại khối lượng cần xác \nđịnh ( theo quy mô công trình; theo h ệ thống k ỹ thuật, theo  dây chuy ền công \nnghệ; theo bộ phận, đơn vị kết cấu công trình;  theo nhóm công tác  xây dựng, \ncông tác xây dựng;…); căn cứ, nguồn dữ liệu và phương pháp xác đ ịnh để phục \nvụ công tác kiểm tra, rà soát, cập nhật và xác định chi phí đầu tư xây dựng. \nII. XÁC Đ ỊNH KHỐI LƯỢNG THEO GIAI ĐO ẠN HÌNH THÀNH \nCHI PHÍ ĐẦU TƯ XÂY DỰNG \n1. Xác định khối lượng để lập sơ bộ tổng mức đầu tư \na) Khối lượng để lập sơ bộ tổng mức đầu tư được xác định trên cơ s ở hồ \nsơ đề xuất chủ trương đầu tư hoặc hồ sơ báo cáo nghiên cứu tiền khả thi, phương \nán thiết kế sơ bộ, phương án công ngh ệ dự kiến, quy mô đầu tư, công suất hoặc \nnăng lực phục vụ và các yêu cầu khác của dự án. \nb) Khối lượng ở giai đoạn này có thể được xác định theo một hoặc một số \nloại kh ối lư ợng sau: Di ện tích, kh ối tích xây d ựng; chi ều dài tuy ến, quy mô \nmạng lưới hoặc phạm vi phục vụ; quy mô công su ất hoặc năng lực phục vụ của ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-003",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn I.4",
+    "pdf_page": 2,
+    "work_group": "giao_nhau",
+    "summary_vi": "Mỗi khối lượng chỉ xác định một lần; phân định phần giao thoa để tránh trùng.",
+    "required_inputs": [
+      "doi_tuong",
+      "pham_vi",
+      "giao_thoa"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "HƯỚNG DẪN XÁC ĐỊNH KHỐI LƯỢNG CÔNG TRÌNH \n(Kèm theo Quyết định số 1041/QĐ-BXD ngày 26 tháng 6 năm 2026  \ncủa Bộ trưởng Bộ Xây dựng) \n \nI. NGUYÊN TẮC XÁC ĐỊNH KHỐI LƯỢNG \n1. Khối lượng phục vụ xác định chi phí đ ầu tư xây d ựng được xác đ ịnh \nphù hợp với mức độ chi tiết của hồ sơ dự án, hồ sơ thiết kế và yêu cầu xác định \nchi phí tương ứng từng giai đoạn đầu tư xây dựng.  \nCác căn c ứ để xác định khối lượng bao g ồm hồ sơ dự án, hồ sơ thiết kế \nxây dựng, chỉ dẫn kỹ thuật, tiêu chu ẩn, quy chu ẩn kỹ thuật áp d ụng, mô hình \nthông tin công trình (BIM), dữ liệu từ phần mềm, công cụ số và các tài liệu khác \ncó liên quan. \n2. Loại khối lượng, mức độ chi tiết và đơn vị tính được lựa chọn phải phù \nhợp với loại thiết kế, giai đo ạn hình thành chi phí đ ầu tư xây d ựng và yêu c ầu \nxác định chi phí của dự án. \n3. Việc xác đ ịnh khối lượng phải tương ứng với loại giá xây d ựng theo \nyêu cầu của phương pháp xác định chi phí dự kiến áp dụng. \n4. Mỗi khối lượng chỉ được xác định một lần. Trường hợp có sự giao thoa \ngiữa các b ộ phận công trình, h ệ thống kỹ thuật hoặc ph ạm vi công vi ệc khác \nnhau thì phải xác định rõ phạm vi tính toán để tránh trùng lặp. \n5. Đơn v ị tính khối lượng phải tương ứng, phù hợp với đơn v ị sử dụng \ntrong suất vốn đầu tư, su ất chi phí, giá nhóm công tác xây d ựng, giá bộ phận, \nđơn vị kết cấu công trình, giá xây d ựng khác... theo phương pháp xác đ ịnh chi \nphí được áp dụng. \n6. Kết quả xác định khối lượng phải thể hiện rõ loại khối lượng cần xác \nđịnh ( theo quy mô công trình; theo h ệ thống k ỹ thuật, theo  dây chuy ền công \nnghệ; theo bộ phận, đơn vị kết cấu công trình;  theo nhóm công tác  xây dựng, \ncông tác xây dựng;…); căn cứ, nguồn dữ liệu và phương pháp xác đ ịnh để phục \nvụ công tác kiểm tra, rà soát, cập nhật và xác định chi phí đầu tư xây dựng. \nII. XÁC Đ ỊNH KHỐI LƯỢNG THEO GIAI ĐO ẠN HÌNH THÀNH \nCHI PHÍ ĐẦU TƯ XÂY DỰNG \n1. Xác định khối lượng để lập sơ bộ tổng mức đầu tư \na) Khối lượng để lập sơ bộ tổng mức đầu tư được xác định trên cơ s ở hồ \nsơ đề xuất chủ trương đầu tư hoặc hồ sơ báo cáo nghiên cứu tiền khả thi, phương \nán thiết kế sơ bộ, phương án công ngh ệ dự kiến, quy mô đầu tư, công suất hoặc \nnăng lực phục vụ và các yêu cầu khác của dự án. \nb) Khối lượng ở giai đoạn này có thể được xác định theo một hoặc một số \nloại kh ối lư ợng sau: Di ện tích, kh ối tích xây d ựng; chi ều dài tuy ến, quy mô \nmạng lưới hoặc phạm vi phục vụ; quy mô công su ất hoặc năng lực phục vụ của ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-004",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn I.5",
+    "pdf_page": 2,
+    "work_group": "don_vi",
+    "summary_vi": "Đơn vị khối lượng phải tương ứng đơn vị của giá, suất chi phí hoặc suất vốn áp dụng.",
+    "required_inputs": [
+      "don_vi_hinh_hoc",
+      "don_vi_gia",
+      "he_so_quy_doi"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "HƯỚNG DẪN XÁC ĐỊNH KHỐI LƯỢNG CÔNG TRÌNH \n(Kèm theo Quyết định số 1041/QĐ-BXD ngày 26 tháng 6 năm 2026  \ncủa Bộ trưởng Bộ Xây dựng) \n \nI. NGUYÊN TẮC XÁC ĐỊNH KHỐI LƯỢNG \n1. Khối lượng phục vụ xác định chi phí đ ầu tư xây d ựng được xác đ ịnh \nphù hợp với mức độ chi tiết của hồ sơ dự án, hồ sơ thiết kế và yêu cầu xác định \nchi phí tương ứng từng giai đoạn đầu tư xây dựng.  \nCác căn c ứ để xác định khối lượng bao g ồm hồ sơ dự án, hồ sơ thiết kế \nxây dựng, chỉ dẫn kỹ thuật, tiêu chu ẩn, quy chu ẩn kỹ thuật áp d ụng, mô hình \nthông tin công trình (BIM), dữ liệu từ phần mềm, công cụ số và các tài liệu khác \ncó liên quan. \n2. Loại khối lượng, mức độ chi tiết và đơn vị tính được lựa chọn phải phù \nhợp với loại thiết kế, giai đo ạn hình thành chi phí đ ầu tư xây d ựng và yêu c ầu \nxác định chi phí của dự án. \n3. Việc xác đ ịnh khối lượng phải tương ứng với loại giá xây d ựng theo \nyêu cầu của phương pháp xác định chi phí dự kiến áp dụng. \n4. Mỗi khối lượng chỉ được xác định một lần. Trường hợp có sự giao thoa \ngiữa các b ộ phận công trình, h ệ thống kỹ thuật hoặc ph ạm vi công vi ệc khác \nnhau thì phải xác định rõ phạm vi tính toán để tránh trùng lặp. \n5. Đơn v ị tính khối lượng phải tương ứng, phù hợp với đơn v ị sử dụng \ntrong suất vốn đầu tư, su ất chi phí, giá nhóm công tác xây d ựng, giá bộ phận, \nđơn vị kết cấu công trình, giá xây d ựng khác... theo phương pháp xác đ ịnh chi \nphí được áp dụng. \n6. Kết quả xác định khối lượng phải thể hiện rõ loại khối lượng cần xác \nđịnh ( theo quy mô công trình; theo h ệ thống k ỹ thuật, theo  dây chuy ền công \nnghệ; theo bộ phận, đơn vị kết cấu công trình;  theo nhóm công tác  xây dựng, \ncông tác xây dựng;…); căn cứ, nguồn dữ liệu và phương pháp xác đ ịnh để phục \nvụ công tác kiểm tra, rà soát, cập nhật và xác định chi phí đầu tư xây dựng. \nII. XÁC Đ ỊNH KHỐI LƯỢNG THEO GIAI ĐO ẠN HÌNH THÀNH \nCHI PHÍ ĐẦU TƯ XÂY DỰNG \n1. Xác định khối lượng để lập sơ bộ tổng mức đầu tư \na) Khối lượng để lập sơ bộ tổng mức đầu tư được xác định trên cơ s ở hồ \nsơ đề xuất chủ trương đầu tư hoặc hồ sơ báo cáo nghiên cứu tiền khả thi, phương \nán thiết kế sơ bộ, phương án công ngh ệ dự kiến, quy mô đầu tư, công suất hoặc \nnăng lực phục vụ và các yêu cầu khác của dự án. \nb) Khối lượng ở giai đoạn này có thể được xác định theo một hoặc một số \nloại kh ối lư ợng sau: Di ện tích, kh ối tích xây d ựng; chi ều dài tuy ến, quy mô \nmạng lưới hoặc phạm vi phục vụ; quy mô công su ất hoặc năng lực phục vụ của ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-005",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn I.6",
+    "pdf_page": 2,
+    "work_group": "truy_nguon",
+    "summary_vi": "Kết quả ghi rõ loại khối lượng, căn cứ, nguồn dữ liệu và phương pháp.",
+    "required_inputs": [
+      "loai_khoi_luong",
+      "nguon",
+      "phuong_phap"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "HƯỚNG DẪN XÁC ĐỊNH KHỐI LƯỢNG CÔNG TRÌNH \n(Kèm theo Quyết định số 1041/QĐ-BXD ngày 26 tháng 6 năm 2026  \ncủa Bộ trưởng Bộ Xây dựng) \n \nI. NGUYÊN TẮC XÁC ĐỊNH KHỐI LƯỢNG \n1. Khối lượng phục vụ xác định chi phí đ ầu tư xây d ựng được xác đ ịnh \nphù hợp với mức độ chi tiết của hồ sơ dự án, hồ sơ thiết kế và yêu cầu xác định \nchi phí tương ứng từng giai đoạn đầu tư xây dựng.  \nCác căn c ứ để xác định khối lượng bao g ồm hồ sơ dự án, hồ sơ thiết kế \nxây dựng, chỉ dẫn kỹ thuật, tiêu chu ẩn, quy chu ẩn kỹ thuật áp d ụng, mô hình \nthông tin công trình (BIM), dữ liệu từ phần mềm, công cụ số và các tài liệu khác \ncó liên quan. \n2. Loại khối lượng, mức độ chi tiết và đơn vị tính được lựa chọn phải phù \nhợp với loại thiết kế, giai đo ạn hình thành chi phí đ ầu tư xây d ựng và yêu c ầu \nxác định chi phí của dự án. \n3. Việc xác đ ịnh khối lượng phải tương ứng với loại giá xây d ựng theo \nyêu cầu của phương pháp xác định chi phí dự kiến áp dụng. \n4. Mỗi khối lượng chỉ được xác định một lần. Trường hợp có sự giao thoa \ngiữa các b ộ phận công trình, h ệ thống kỹ thuật hoặc ph ạm vi công vi ệc khác \nnhau thì phải xác định rõ phạm vi tính toán để tránh trùng lặp. \n5. Đơn v ị tính khối lượng phải tương ứng, phù hợp với đơn v ị sử dụng \ntrong suất vốn đầu tư, su ất chi phí, giá nhóm công tác xây d ựng, giá bộ phận, \nđơn vị kết cấu công trình, giá xây d ựng khác... theo phương pháp xác đ ịnh chi \nphí được áp dụng. \n6. Kết quả xác định khối lượng phải thể hiện rõ loại khối lượng cần xác \nđịnh ( theo quy mô công trình; theo h ệ thống k ỹ thuật, theo  dây chuy ền công \nnghệ; theo bộ phận, đơn vị kết cấu công trình;  theo nhóm công tác  xây dựng, \ncông tác xây dựng;…); căn cứ, nguồn dữ liệu và phương pháp xác đ ịnh để phục \nvụ công tác kiểm tra, rà soát, cập nhật và xác định chi phí đầu tư xây dựng. \nII. XÁC Đ ỊNH KHỐI LƯỢNG THEO GIAI ĐO ẠN HÌNH THÀNH \nCHI PHÍ ĐẦU TƯ XÂY DỰNG \n1. Xác định khối lượng để lập sơ bộ tổng mức đầu tư \na) Khối lượng để lập sơ bộ tổng mức đầu tư được xác định trên cơ s ở hồ \nsơ đề xuất chủ trương đầu tư hoặc hồ sơ báo cáo nghiên cứu tiền khả thi, phương \nán thiết kế sơ bộ, phương án công ngh ệ dự kiến, quy mô đầu tư, công suất hoặc \nnăng lực phục vụ và các yêu cầu khác của dự án. \nb) Khối lượng ở giai đoạn này có thể được xác định theo một hoặc một số \nloại kh ối lư ợng sau: Di ện tích, kh ối tích xây d ựng; chi ều dài tuy ến, quy mô \nmạng lưới hoặc phạm vi phục vụ; quy mô công su ất hoặc năng lực phục vụ của ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-006",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn II.1",
+    "pdf_page": 2,
+    "work_group": "so_bo_tong_muc",
+    "summary_vi": "Xác định khối lượng từ hồ sơ chủ trương, tiền khả thi, thiết kế sơ bộ và quy mô công suất.",
+    "required_inputs": [
+      "ho_so",
+      "quy_mo",
+      "cong_suat"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "HƯỚNG DẪN XÁC ĐỊNH KHỐI LƯỢNG CÔNG TRÌNH \n(Kèm theo Quyết định số 1041/QĐ-BXD ngày 26 tháng 6 năm 2026  \ncủa Bộ trưởng Bộ Xây dựng) \n \nI. NGUYÊN TẮC XÁC ĐỊNH KHỐI LƯỢNG \n1. Khối lượng phục vụ xác định chi phí đ ầu tư xây d ựng được xác đ ịnh \nphù hợp với mức độ chi tiết của hồ sơ dự án, hồ sơ thiết kế và yêu cầu xác định \nchi phí tương ứng từng giai đoạn đầu tư xây dựng.  \nCác căn c ứ để xác định khối lượng bao g ồm hồ sơ dự án, hồ sơ thiết kế \nxây dựng, chỉ dẫn kỹ thuật, tiêu chu ẩn, quy chu ẩn kỹ thuật áp d ụng, mô hình \nthông tin công trình (BIM), dữ liệu từ phần mềm, công cụ số và các tài liệu khác \ncó liên quan. \n2. Loại khối lượng, mức độ chi tiết và đơn vị tính được lựa chọn phải phù \nhợp với loại thiết kế, giai đo ạn hình thành chi phí đ ầu tư xây d ựng và yêu c ầu \nxác định chi phí của dự án. \n3. Việc xác đ ịnh khối lượng phải tương ứng với loại giá xây d ựng theo \nyêu cầu của phương pháp xác định chi phí dự kiến áp dụng. \n4. Mỗi khối lượng chỉ được xác định một lần. Trường hợp có sự giao thoa \ngiữa các b ộ phận công trình, h ệ thống kỹ thuật hoặc ph ạm vi công vi ệc khác \nnhau thì phải xác định rõ phạm vi tính toán để tránh trùng lặp. \n5. Đơn v ị tính khối lượng phải tương ứng, phù hợp với đơn v ị sử dụng \ntrong suất vốn đầu tư, su ất chi phí, giá nhóm công tác xây d ựng, giá bộ phận, \nđơn vị kết cấu công trình, giá xây d ựng khác... theo phương pháp xác đ ịnh chi \nphí được áp dụng. \n6. Kết quả xác định khối lượng phải thể hiện rõ loại khối lượng cần xác \nđịnh ( theo quy mô công trình; theo h ệ thống k ỹ thuật, theo  dây chuy ền công \nnghệ; theo bộ phận, đơn vị kết cấu công trình;  theo nhóm công tác  xây dựng, \ncông tác xây dựng;…); căn cứ, nguồn dữ liệu và phương pháp xác đ ịnh để phục \nvụ công tác kiểm tra, rà soát, cập nhật và xác định chi phí đầu tư xây dựng. \nII. XÁC Đ ỊNH KHỐI LƯỢNG THEO GIAI ĐO ẠN HÌNH THÀNH \nCHI PHÍ ĐẦU TƯ XÂY DỰNG \n1. Xác định khối lượng để lập sơ bộ tổng mức đầu tư \na) Khối lượng để lập sơ bộ tổng mức đầu tư được xác định trên cơ s ở hồ \nsơ đề xuất chủ trương đầu tư hoặc hồ sơ báo cáo nghiên cứu tiền khả thi, phương \nán thiết kế sơ bộ, phương án công ngh ệ dự kiến, quy mô đầu tư, công suất hoặc \nnăng lực phục vụ và các yêu cầu khác của dự án. \nb) Khối lượng ở giai đoạn này có thể được xác định theo một hoặc một số \nloại kh ối lư ợng sau: Di ện tích, kh ối tích xây d ựng; chi ều dài tuy ến, quy mô \nmạng lưới hoặc phạm vi phục vụ; quy mô công su ất hoặc năng lực phục vụ của ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-007",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn II.2.b",
+    "pdf_page": 3,
+    "work_group": "tong_muc",
+    "summary_vi": "Có thể dùng dữ liệu công trình tương tự hoặc thông số đặc trưng khi chưa đủ cơ sở.",
+    "required_inputs": [
+      "co_so_thiet_ke",
+      "du_lieu_tuong_tu"
+    ],
+    "conditions_vi": "Phải thể hiện nguồn và phương pháp; không coi số liệu tương tự là đo chính xác từ bản vẽ.",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "2 \n \ncông trình; nhóm công tác xây d ựng; bộ phận, đơn v ị kết c ấu công trình; h ệ \nthống kỹ thuật; dây chuyền công nghệ; số lượng công trình hoặc hạng mục công \ntrình; loại khối lượng khác của dự án. \nc) Khối lượng được xác định theo điểm b mục này phục vụ việc áp dụng \nsuất vốn đầu tư, suất chi phí ho ặc các loại giá xây dựng khác để xác định sơ bộ \ntổng mức đầu tư theo quy định. \n2. Xác định khối lượng để lập tổng mức đầu tư xây dựng \na) Khối lượng để lập tổng mức đầu tư xây dựng được xác định trên cơ sở \nhồ sơ Báo cáo nghiên cứu khả thi, phương án thiết kế, phương án công nghệ dự \nkiến, quy mô đ ầu tư, công su ất hoặc năng l ực phục vụ và một số yêu cầu khác \ncủa dự án. \nb) Trường hợp chưa đủ cơ sở xác định khối lượng như tại điểm a, có th ể \nsử dụng dữ liệu của công trình tương t ự hoặc các thông s ố đặc trưng c ủa công \ntrình để xác định khối lượng phục vụ xác định chi phí. \nc) Khối lượng ở giai đoạn này đư ợc xác định phù h ợp với việc xác định \nchi phí theo lo ại thi ết k ế được l ựa ch ọn ở giai đo ạn l ập báo cáo nghiên c ứu \nkhả thi (g ồm thi ết k ế cơ s ở, thi ết k ế FEED, thi ết k ế kỹ thuật). C ó th ể được \nxác đ ịnh theo m ột ho ặc một số loại khối lư ợng sau: Di ện tích, kh ối tích x ây \ndựng; chi ều dài tuy ến; quy mô công su ất hoặc năng l ực phục vụ; nhóm công \ntác xây dựng; công tác xây d ựng; bộ phận, đơn vị kết cấu công trình; h ệ thống \nkỹ thuật; dây chuy ền công ngh ệ; thiết bị, nhóm thi ết bị, dây chuy ền thi ết bị; \nloại khối lượng khác. \nd) Khối lượng được xác định theo điểm c mục này phục vụ việc áp dụng \nsuất vốn đầu tư, su ất chi phí ho ặc các lo ại giá xây dựng khác để xác định tổng \nmức đầu tư theo quy định.  \nđ) Trường hợp xác đ ịnh khối lượng để lập báo cáo kinh t ế - kỹ thuật thì \nkhối lượng được xác định theo hướng dẫn tại Mục II.3. \n3. Xác định khối lượng để lập dự toán xây dựng \na) Khối lượng để lập dự toán xây d ựng được xác đ ịnh trên cơ s ở hồ sơ \nthiết kế triển khai sau khi d ự án được phê duyệt (bao gồm thiết kế FEED, thiết \nkế kỹ thuật, thiết kế bản vẽ thi công ho ặc tài li ệu thiết kế khác theo quy đ ịnh) \nhoặc được trích xuất từ mô hình BIM, phần mềm và công cụ số khác. \nb) Khối lượng ở giai đoạn này có thể được xác định theo một hoặc một số \nloại khối lượng sau: Bộ phận, đơn vị kết cấu công trình; h ệ thống kỹ thuật; dây \nchuyền công nghệ; công tác xây d ựng; nhóm công tác xây d ựng; thiết bị, nhóm \nthiết bị; dây chuyền thiết bị; các khối lượng khác... \nc) Khối lượng được xác định theo điểm b mục này phục vụ việc áp dụng \ngiá xây dựng của nhóm công tác xây dựng; giá bộ phận, đơn vị kết cấu công trình; \ngiá công tác xây dựng; suất chi phí để xác định dự toán xây dựng theo quy định. \n4. Xác định khối lượng theo giai đoạn hình thành chi phí đầu tư xây dựng \ntham khảo tại Phụ lục I kèm theo. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-008",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn II.2.đ và II.3",
+    "pdf_page": 3,
+    "work_group": "du_toan",
+    "summary_vi": "Báo cáo kinh tế kỹ thuật xác định khối lượng theo hướng dẫn lập dự toán; dự toán dùng thiết kế sau phê duyệt hoặc dữ liệu số.",
+    "required_inputs": [
+      "giai_doan",
+      "ho_so_thiet_ke",
+      "nguon_so"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "2 \n \ncông trình; nhóm công tác xây d ựng; bộ phận, đơn v ị kết c ấu công trình; h ệ \nthống kỹ thuật; dây chuyền công nghệ; số lượng công trình hoặc hạng mục công \ntrình; loại khối lượng khác của dự án. \nc) Khối lượng được xác định theo điểm b mục này phục vụ việc áp dụng \nsuất vốn đầu tư, suất chi phí ho ặc các loại giá xây dựng khác để xác định sơ bộ \ntổng mức đầu tư theo quy định. \n2. Xác định khối lượng để lập tổng mức đầu tư xây dựng \na) Khối lượng để lập tổng mức đầu tư xây dựng được xác định trên cơ sở \nhồ sơ Báo cáo nghiên cứu khả thi, phương án thiết kế, phương án công nghệ dự \nkiến, quy mô đ ầu tư, công su ất hoặc năng l ực phục vụ và một số yêu cầu khác \ncủa dự án. \nb) Trường hợp chưa đủ cơ sở xác định khối lượng như tại điểm a, có th ể \nsử dụng dữ liệu của công trình tương t ự hoặc các thông s ố đặc trưng c ủa công \ntrình để xác định khối lượng phục vụ xác định chi phí. \nc) Khối lượng ở giai đoạn này đư ợc xác định phù h ợp với việc xác định \nchi phí theo lo ại thi ết k ế được l ựa ch ọn ở giai đo ạn l ập báo cáo nghiên c ứu \nkhả thi (g ồm thi ết k ế cơ s ở, thi ết k ế FEED, thi ết k ế kỹ thuật). C ó th ể được \nxác đ ịnh theo m ột ho ặc một số loại khối lư ợng sau: Di ện tích, kh ối tích x ây \ndựng; chi ều dài tuy ến; quy mô công su ất hoặc năng l ực phục vụ; nhóm công \ntác xây dựng; công tác xây d ựng; bộ phận, đơn vị kết cấu công trình; h ệ thống \nkỹ thuật; dây chuy ền công ngh ệ; thiết bị, nhóm thi ết bị, dây chuy ền thi ết bị; \nloại khối lượng khác. \nd) Khối lượng được xác định theo điểm c mục này phục vụ việc áp dụng \nsuất vốn đầu tư, su ất chi phí ho ặc các lo ại giá xây dựng khác để xác định tổng \nmức đầu tư theo quy định.  \nđ) Trường hợp xác đ ịnh khối lượng để lập báo cáo kinh t ế - kỹ thuật thì \nkhối lượng được xác định theo hướng dẫn tại Mục II.3. \n3. Xác định khối lượng để lập dự toán xây dựng \na) Khối lượng để lập dự toán xây d ựng được xác đ ịnh trên cơ s ở hồ sơ \nthiết kế triển khai sau khi d ự án được phê duyệt (bao gồm thiết kế FEED, thiết \nkế kỹ thuật, thiết kế bản vẽ thi công ho ặc tài li ệu thiết kế khác theo quy đ ịnh) \nhoặc được trích xuất từ mô hình BIM, phần mềm và công cụ số khác. \nb) Khối lượng ở giai đoạn này có thể được xác định theo một hoặc một số \nloại khối lượng sau: Bộ phận, đơn vị kết cấu công trình; h ệ thống kỹ thuật; dây \nchuyền công nghệ; công tác xây d ựng; nhóm công tác xây d ựng; thiết bị, nhóm \nthiết bị; dây chuyền thiết bị; các khối lượng khác... \nc) Khối lượng được xác định theo điểm b mục này phục vụ việc áp dụng \ngiá xây dựng của nhóm công tác xây dựng; giá bộ phận, đơn vị kết cấu công trình; \ngiá công tác xây dựng; suất chi phí để xác định dự toán xây dựng theo quy định. \n4. Xác định khối lượng theo giai đoạn hình thành chi phí đầu tư xây dựng \ntham khảo tại Phụ lục I kèm theo. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-009",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn III.3",
+    "pdf_page": 4,
+    "work_group": "ket_cau",
+    "summary_vi": "Khối lượng bộ phận kết cấu căn cứ kích thước hình học, số lượng, thông số thiết kế và mô tả vật liệu, điều kiện thi công.",
+    "required_inputs": [
+      "kich_thuoc",
+      "so_luong",
+      "vat_lieu",
+      "dieu_kien"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "3 \n \nIII. XÁC Đ ỊNH KH ỐI LƯ ỢNG XÂY D ỰNG THEO LOẠI KHỐI \nLƯỢNG CẦN XÁC ĐỊNH \n1. Xác định theo quy mô công trình \na) Khối lượng theo quy mô công trình có thể được xác định theo diện tích, \nkhối tích xây dựng, chiều dài tuyến, quy mô công suất hoặc năng lực phục vụ,… \ncủa công trình. \nb) Đơn v ị tính s ử dụng ph ải phù h ợp v ới đ ặc đi ểm c ủa công trình và \nphương pháp xác định chi phí áp dụng. \nc) Khi xác định khối lượng theo phương pháp này cần mô tả các thông tin \nchủ yếu ảnh hưởng đến chi phí như c ấp công trình, tính ch ất kết cấu, điều kiện \nxây dựng, công nghệ áp dụng và các thông tin kỹ thuật cần thiết khác. \n2. Xác định theo hệ thống kỹ thuật, dây chuyền công nghệ \na) Khối lư ợng có thể được phân chia thành các h ệ thống k ỹ thuật, dây \nchuyền công nghệ phù hợp với hồ sơ thiết kế, đặc điểm công nghệ và mục đích \nxác định chi phí. \nb) Hệ thống kỹ thuật, dây chuyền công nghệ được xác định theo chức năng, \nphạm vi phục vụ, công suất, năng lực phục vụ hoặc các tiêu chí phù hợp khác. \nc) Khối lượng được xác định theo hệ thống, tổ hợp, dây chuyền, khu vực \nphục vụ, công suất, năng lực phục vụ, chiều dài, diện tích phục vụ hoặc các đơn \nvị phù hợp khác theo đặc điểm của hệ thống kỹ thuật, dây chuyền công nghệ. \nd) Khi xác đ ịnh khối lượng cần mô t ả các thông tin ch ủ yếu ảnh hưởng \nđến chi phí như chức năng, phạm vi phục vụ, công suất, cấp kỹ thuật, mức độ tự \nđộng hóa, yêu cầu công nghệ và các thông số kỹ thuật liên quan. \n3. Xác định theo bộ phận, đơn vị kết cấu công trình \na) Khối lượng có th ể được phân chia thành các b ộ phận, đơn vị kết cấu \ncông trình phù hợp với hồ sơ thiết kế và yêu cầu xác định chi phí. \nb) Khối lượng được xác đ ịnh trên cơ s ở kích thước hình h ọc, số lượng, \ncác thông số kỹ thuật thể hiện trong hồ sơ thiết kế của từng bộ phận, đơn vị kết \ncấu công trình. \nc) Khi xác định khối lượng theo phương pháp này c ần mô tả rõ đặc điểm \nkết cấu, vật liệu chủ yếu, điều kiện thi công và các y ếu tố kỹ thuật khác có ảnh \nhưởng đến chi phí. \n4. Xác định theo nhóm công tác xây dựng, công tác xây dựng \na) Khối lượng công trình có th ể được xác đ ịnh và t ổng h ợp theo nhóm \ncông tác xây d ựng, công tác xây d ựng phù hợp với hệ thống giá xây d ựng và \nphương pháp xác định chi phí áp dụng. \nb) Khối lượng được xác định trên cơ sở phạm vi, điều kiện thực hiện, vật \nliệu sử dụng, đặc điểm kết cấu hoặc các yêu cầu kỹ thuật của nhóm công tác xây \ndựng, công tác xây dựng. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-010",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn III.4",
+    "pdf_page": 4,
+    "work_group": "cong_tac",
+    "summary_vi": "Nhóm công tác và công tác phải mô tả phạm vi, điều kiện thực hiện, vật liệu, kết cấu và yêu cầu kỹ thuật.",
+    "required_inputs": [
+      "pham_vi",
+      "vat_lieu",
+      "ket_cau",
+      "dieu_kien"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "3 \n \nIII. XÁC Đ ỊNH KH ỐI LƯ ỢNG XÂY D ỰNG THEO LOẠI KHỐI \nLƯỢNG CẦN XÁC ĐỊNH \n1. Xác định theo quy mô công trình \na) Khối lượng theo quy mô công trình có thể được xác định theo diện tích, \nkhối tích xây dựng, chiều dài tuyến, quy mô công suất hoặc năng lực phục vụ,… \ncủa công trình. \nb) Đơn v ị tính s ử dụng ph ải phù h ợp v ới đ ặc đi ểm c ủa công trình và \nphương pháp xác định chi phí áp dụng. \nc) Khi xác định khối lượng theo phương pháp này cần mô tả các thông tin \nchủ yếu ảnh hưởng đến chi phí như c ấp công trình, tính ch ất kết cấu, điều kiện \nxây dựng, công nghệ áp dụng và các thông tin kỹ thuật cần thiết khác. \n2. Xác định theo hệ thống kỹ thuật, dây chuyền công nghệ \na) Khối lư ợng có thể được phân chia thành các h ệ thống k ỹ thuật, dây \nchuyền công nghệ phù hợp với hồ sơ thiết kế, đặc điểm công nghệ và mục đích \nxác định chi phí. \nb) Hệ thống kỹ thuật, dây chuyền công nghệ được xác định theo chức năng, \nphạm vi phục vụ, công suất, năng lực phục vụ hoặc các tiêu chí phù hợp khác. \nc) Khối lượng được xác định theo hệ thống, tổ hợp, dây chuyền, khu vực \nphục vụ, công suất, năng lực phục vụ, chiều dài, diện tích phục vụ hoặc các đơn \nvị phù hợp khác theo đặc điểm của hệ thống kỹ thuật, dây chuyền công nghệ. \nd) Khi xác đ ịnh khối lượng cần mô t ả các thông tin ch ủ yếu ảnh hưởng \nđến chi phí như chức năng, phạm vi phục vụ, công suất, cấp kỹ thuật, mức độ tự \nđộng hóa, yêu cầu công nghệ và các thông số kỹ thuật liên quan. \n3. Xác định theo bộ phận, đơn vị kết cấu công trình \na) Khối lượng có th ể được phân chia thành các b ộ phận, đơn vị kết cấu \ncông trình phù hợp với hồ sơ thiết kế và yêu cầu xác định chi phí. \nb) Khối lượng được xác đ ịnh trên cơ s ở kích thước hình h ọc, số lượng, \ncác thông số kỹ thuật thể hiện trong hồ sơ thiết kế của từng bộ phận, đơn vị kết \ncấu công trình. \nc) Khi xác định khối lượng theo phương pháp này c ần mô tả rõ đặc điểm \nkết cấu, vật liệu chủ yếu, điều kiện thi công và các y ếu tố kỹ thuật khác có ảnh \nhưởng đến chi phí. \n4. Xác định theo nhóm công tác xây dựng, công tác xây dựng \na) Khối lượng công trình có th ể được xác đ ịnh và t ổng h ợp theo nhóm \ncông tác xây d ựng, công tác xây d ựng phù hợp với hệ thống giá xây d ựng và \nphương pháp xác định chi phí áp dụng. \nb) Khối lượng được xác định trên cơ sở phạm vi, điều kiện thực hiện, vật \nliệu sử dụng, đặc điểm kết cấu hoặc các yêu cầu kỹ thuật của nhóm công tác xây \ndựng, công tác xây dựng. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-011",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn IV.1.a-b",
+    "pdf_page": 5,
+    "work_group": "bim",
+    "summary_vi": "Có thể dùng khối lượng BIM trực tiếp, không bắt buộc đo lại 2D khi mô hình đạt yêu cầu kiểm tra, phạm vi, thông tin và truy xuất.",
+    "required_inputs": [
+      "kiem_tra_mo_hinh",
+      "pham_vi",
+      "thong_tin_doi_tuong",
+      "truy_xuat"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "4 \n \nc) Khi xác đ ịnh khối lượng theo phương pháp này c ần mô tả rõ đặc điểm \nnhóm công tác xây dựng, công tác xây dựng, vật liệu chủ yếu, điều kiện thi công \nvà các yếu tố kỹ thuật khác có ảnh hưởng đến chi phí. \n5. Xác đ ịnh khối lượng theo loại khối lượng c ần xác đ ịnh (v ới giá xây \ndựng tương ứng) tham khảo tại Phụ lục II kèm theo. \nIV. XÁC ĐỊNH KHỐI LƯỢNG TỪ MÔ HÌNH THÔNG TIN CÔNG \nTRÌNH (BIM) VÀ CÁC PHẦN MỀM, CÔNG CỤ SỐ  \n1. Xác định khối lượng từ mô hình BIM \na) Đối với các công trình  được triển khai ứng dụng Mô hình thông tin \ncông trình (BIM), khối lượng trích xuất trực tiếp từ mô hình được sử dụng để \nxác định chi phí.  \nKhối lượng được trích xuất trực tiếp từ mô hình BIM đạt yêu cầu không \nbắt buộc phải thực hiện xác định khối lượng bằ ng phương pháp thủ công từ hồ \nsơ thiết kế hai chiều (2D). \nb) Khối lượng được trích xuất từ mô hình BIM được sử dụng trực tiếp để \nxác định chi phí đầu tư xây dựng khi đáp ứng các yêu cầu sau: \n- Mô hình BIM đã được kiểm tra, rà soát để đảm bảo phù hợp với yêu cầu \ncủa dự án; \n- Mô hình BIM phản ánh rõ ràng phạm vi công việc, các bộ phận công \ntrình, hệ thống kỹ thuật, dây chuyền công nghệ hoặc các đối tượng cần thiết \nphục vụ xác định khối lượng; \n- Các đối tượng trong mô hình BIM có đủ thông tin cần thiết để xác định \nkhối lượng theo yêu cầu xác định chi phí; \n- Mô hình BIM bảo đảm khả năng truy xuất, tổng hợp và kiểm tra dữ liệu \nkhối lượng. \nc) Khối lượng được trích xuất từ mô hình BIM thông qua các phần mềm \nBIM hoặc hệ thống quản lý dữ liệu phù hợp và có thể được tổng hợp theo công \ntrình, hạng mục công trình, bộ phận , đơn vị kết cấu  công trình, nhóm công tác  \nxây dựng, công tác xây dựng , hệ thống kỹ thuật, dây chuyền công nghệ, thiết bị \nhoặc khối lượng khác theo yêu cầu để xác định chi phí. \n2. Xác định khối lượng từ các phần mềm và công cụ số khác \na) Đối với công trình sử dụng các phần mềm và công cụ số trong quá trình \nthiết kế, tính toán, phân tích hoặc quản lý dữ liệu dự án (bao gồm phần mềm \nthiết kế chuyên ngành, phần mềm tính toán và phân tích kỹ thuật, phần mềm \nquản lý dữ liệu dự án, phần mềm x ác định chi phí và các công cụ số khác), khối \nlượng được tạo lập hoặc trích xuất trực tiếp từ các phần mềm, công cụ số đó \nđược sử dụng để xác định chi phí đầu tư xây dựng ; không bắt buộc phải thực \nhiện xác định khối lượng bằng phương pháp thủ công từ hồ sơ thiết kế.  ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-012",
+    "source_id": "QD1041_2026",
+    "source_locator": "Hướng dẫn IV.2.a-b",
+    "pdf_page": 5,
+    "work_group": "phan_mem",
+    "summary_vi": "Có thể dùng khối lượng tạo lập từ công cụ số khi có dữ liệu kỹ thuật, đủ phạm vi và thông tin, truy xuất kiểm tra được.",
+    "required_inputs": [
+      "du_lieu_thiet_ke",
+      "pham_vi",
+      "thong_tin",
+      "truy_xuat"
+    ],
+    "conditions_vi": "Điều kiện chi tiết tại trang PDF 6.",
+    "parameters": {},
+    "authority_type": "huong_dan_tham_khao",
+    "effective_from": "2026-07-01",
+    "effective_to_exclusive": null,
+    "usage": "current_guidance",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://moc.gov.vn/Images/FileVanBan/BXD_1041-QD-BXD_26062026.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "4 \n \nc) Khi xác đ ịnh khối lượng theo phương pháp này c ần mô tả rõ đặc điểm \nnhóm công tác xây dựng, công tác xây dựng, vật liệu chủ yếu, điều kiện thi công \nvà các yếu tố kỹ thuật khác có ảnh hưởng đến chi phí. \n5. Xác đ ịnh khối lượng theo loại khối lượng c ần xác đ ịnh (v ới giá xây \ndựng tương ứng) tham khảo tại Phụ lục II kèm theo. \nIV. XÁC ĐỊNH KHỐI LƯỢNG TỪ MÔ HÌNH THÔNG TIN CÔNG \nTRÌNH (BIM) VÀ CÁC PHẦN MỀM, CÔNG CỤ SỐ  \n1. Xác định khối lượng từ mô hình BIM \na) Đối với các công trình  được triển khai ứng dụng Mô hình thông tin \ncông trình (BIM), khối lượng trích xuất trực tiếp từ mô hình được sử dụng để \nxác định chi phí.  \nKhối lượng được trích xuất trực tiếp từ mô hình BIM đạt yêu cầu không \nbắt buộc phải thực hiện xác định khối lượng bằ ng phương pháp thủ công từ hồ \nsơ thiết kế hai chiều (2D). \nb) Khối lượng được trích xuất từ mô hình BIM được sử dụng trực tiếp để \nxác định chi phí đầu tư xây dựng khi đáp ứng các yêu cầu sau: \n- Mô hình BIM đã được kiểm tra, rà soát để đảm bảo phù hợp với yêu cầu \ncủa dự án; \n- Mô hình BIM phản ánh rõ ràng phạm vi công việc, các bộ phận công \ntrình, hệ thống kỹ thuật, dây chuyền công nghệ hoặc các đối tượng cần thiết \nphục vụ xác định khối lượng; \n- Các đối tượng trong mô hình BIM có đủ thông tin cần thiết để xác định \nkhối lượng theo yêu cầu xác định chi phí; \n- Mô hình BIM bảo đảm khả năng truy xuất, tổng hợp và kiểm tra dữ liệu \nkhối lượng. \nc) Khối lượng được trích xuất từ mô hình BIM thông qua các phần mềm \nBIM hoặc hệ thống quản lý dữ liệu phù hợp và có thể được tổng hợp theo công \ntrình, hạng mục công trình, bộ phận , đơn vị kết cấu  công trình, nhóm công tác  \nxây dựng, công tác xây dựng , hệ thống kỹ thuật, dây chuyền công nghệ, thiết bị \nhoặc khối lượng khác theo yêu cầu để xác định chi phí. \n2. Xác định khối lượng từ các phần mềm và công cụ số khác \na) Đối với công trình sử dụng các phần mềm và công cụ số trong quá trình \nthiết kế, tính toán, phân tích hoặc quản lý dữ liệu dự án (bao gồm phần mềm \nthiết kế chuyên ngành, phần mềm tính toán và phân tích kỹ thuật, phần mềm \nquản lý dữ liệu dự án, phần mềm x ác định chi phí và các công cụ số khác), khối \nlượng được tạo lập hoặc trích xuất trực tiếp từ các phần mềm, công cụ số đó \nđược sử dụng để xác định chi phí đầu tư xây dựng ; không bắt buộc phải thực \nhiện xác định khối lượng bằng phương pháp thủ công từ hồ sơ thiết kế.  ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-013",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.1.4.d",
+    "pdf_page": 156,
+    "work_group": "lam_tron",
+    "summary_vi": "Bảng tổng hợp lấy kết quả thập phân đến ba số sau dấu phẩy.",
+    "required_inputs": [
+      "khoi_luong_chi_tiet",
+      "quy_tac_lam_tron"
+    ],
+    "conditions_vi": "",
+    "parameters": {
+      "decimal_places": 3
+    },
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "rounding",
+    "predicate": null,
+    "effect": {
+      "action": "round_aggregate",
+      "decimal_places": 3,
+      "tie_breaking": "not_specified_by_source"
+    },
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "3 \n \nc) Các ký hiệu dùng trong Bảng chi tiết khối lượng công tác xây dựng của \ncông trình, hạng mục công trình phải phù hợp với ký hiệu đã thể hiện trong bản \nvẽ thiết kế. Các khối lượng theo thống kê của thiết kế thì phải ghi rõ theo số liệu \nthống kê của thiết kế và chỉ rõ số hiệu của bản vẽ thiết kế có thống kê đó.      \nd) Kết quả đo bóc khối lượng công tác xây dựng từ Bảng chi tiết khối lượng \ncông tác xây dựng của công trình đượ c tổng hợp vào Bảng tổng hợp khối lượ ng \nxây dựng sau khi đã được xử lý theo hướng dẫn làm tròn các trị số. Trường hợp \nkết quả tính toán là số thập phân thì lấy đến ba số sau dấu phẩy. \n2. Trình tự triển khai công tác đo bóc khối lượng xây dựng công trình \n2.1. Nghiên cứu, kiểm tra nắm vững các thông tin trong bản vẽ thiết kế và \ntài liệu chỉ dẫn kèm theo. Trường hợp cần thiết, yêu cầu người thiết kế giải thích rõ \ncác vấn đề về thiết kế có liên quan đến việc đo bóc khối lượng xây dựng công trình. \n2.2. Lập bảng chi tiết khối lượng công tác xây dựng của công trình, hạng \nmục công trình bao gồm: \n- Liệt kê danh mục công việc cần thiết thực hiện đo bóc khối lượng; \n- Phân chia các công việc thành các công tác cụ thể để thực hiện đo bóc. \nKhi thực hiện phân chia các công tác cần ưu tiên tuân theo quy cách đã được phân \nbiệt trong hệ thống định mức, đơn giá dự toán sẵn có đã được công bố, nhóm nhân \ncông thực hiện công việc; \n- Việc lựa chọn đơn vị tính thực hiện theo hướng dẫn nêu tại điểm b khoản \n1.4 Mục này; \n- Danh mục công việc/ công tác cần đo bóc được trình bày phù hợp với bản \nvẽ thiết kế, trình tự thi công xây dựng công trình, thể hiện được đầy đủ nội dung \ncác công tác xây dựng cần xác định khối lượng, vị trí các bộ phận công trình, công \ntác xây dựng thuộc công trình; \n- Đối với những công tác đã có trong danh mục định mức hoặc đơn giá xây \ndựng được cấp có thẩm quyền ban hành thì tên gọi, đơn vị tính các công tác đó \nghi trong Bảng chi tiết khối lượng công tác xây dựng, Bảng tổng hợp khối lượng \nxây dựng, hạng mục công trình phù hợp với tên gọi, đơn vị tính công tác xây dựng \ntương ứng trong hệ thống định mức hoặc đơn giá xây dựng công trình. \n2.3 Thực hiện đo bóc khối lượng xây dựng công trình theo Bảng chi tiết \nkhối lượng công tác xây dựng. \n2.4 Tổng hợp các khối lượng xây dựng đã đo bóc vào Bảng khối lượng xây \ndựng sau khi khối lượng đo bóc đã được xử lý theo hướng dẫn làm tròn các trị số. \n2.5. Thực hiện rà soát, kiểm tra khối lượng xây dựng công trình đã được đo bóc \nKhối lượng xây dựng công trình sau khi được tổng hợp trong Bảng khối \nlượng xây dựng cần được rà soát, kiểm tra với các nội dung chủ yếu: ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-014",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.2",
+    "pdf_page": 159,
+    "work_group": "dat",
+    "summary_vi": "Đào đắp tính theo kích thước thiết kế và tiêu chuẩn; không cộng độ nở rời, co ngót hoặc hao hụt vào khối lượng hình học.",
+    "required_inputs": [
+      "kich_thuoc",
+      "cap_dat",
+      "bien_phap"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "DAO_DAT",
+      "DAP_DAT"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "6 \n \nKhối lượng đào phải được đo bóc theo nhóm, loại công tác, cấp đất, đá, độ \nsâu đào, bề rộng của hố đào, điều kiện thi công, biện pháp thi công (thủ công hay \ncơ giới). \nKhối lượng đắp phải được đo bóc theo nhóm, loại công tác, theo loại vật \nliệu đắp (đất, đá, cát...), cấp đất đá, độ dày của lớp vật liệu đắp, độ chặt yêu cầu \nkhi đắp, điều kiện thi công, biện pháp thi công (thủ công hay cơ giới). \nKhối lượng công tác đào, đắp được tính theo kích thước trong bản vẽ thiết \nkế, tiêu chuẩn thi công và nghiệm thu, không tính thêm độ nở rời, co ngót hoặc \nhao hụt.  \nTrường hợp đào đất để đắp thì khối lượng đất đào bằng khối lượng đất đắp \nnhân với hệ số chuyển đổi từ đất đào sang đất đắp. Trường hợp mua đất rời để đắp \nthì khối lượng đất rời dùng để đắp được xác định căn cứ vào khối lượng đất đo tại \nnơi đắp nhân với hệ số tơi xốp của đất (bằng khối lượng thể tích khô của đất theo \nyêu cầu thiết kế chia cho khối lượng thể tích khô xốp ngoài hiện trường).  \nKhối lượng đào, đắp khi đo bóc không bao gồm khối lượng các công trình \nngầm chiếm chỗ (đường ống kỹ thuật, cống thoát nước...). Trong khối lượng đào \nkhông tính riêng khối lượng các loại đất/đá mà khác với cấp đất/đá đang thực hiện \nđo bóc nếu khối lượng đó nhỏ hơn 1m3. \nĐối với công tác đào, đắp móng công trình nhà cao tầng, công trình thủy \ncông, trụ cầu, mố cầu, hầm, các công trình theo tuyến, nền đất yếu thì trong phần \nmô tả đào, đắp cần ghi rõ biện pháp thi công phục vụ đào, đắp như làm cừ chống \nsạt lở...(nếu có).  \nViệc tận dụng vật liệu sau khi đào (tận dụng hết, tận dụng bao nhiêu %… \nnếu có), phương án vận chuyển vật liệu đào ra khỏi công trìn h cần được ghi cụ \nthể trong phần mô tả của khoản mục công việc trong Bảng tổng hợp khối lượng \nxây dựng. \n5.3. Công tác xây \nKhối lượng công tác xây được đo bóc, phân loại riêng theo loại vật liệu xây \n(gạch, đá...), mác vữa xây, chiều dày khối xây, chiều cao công trình, theo bộ phận \ncông trình và điều kiện thi công. \nKhối lượng xây dựng được đo bóc bao gồm cả các phần nhô ra và các chi \ntiết liên kết gắn liền với khối xây thể hiện trong thiết kế, không phải trừ khối lượng \ncác khoảng trống không phải xây trong khối xây có diện tích nhỏ hơn 0,25m2. \nĐộ dày của tường khi xác định không bao gồm lớp ốp mặt, lớp phủ bề mặt \n(lớp trát). Độ dày của tường vát là độ dày trung bình của tường đó. \nXây tường độc lập có chiều dài lớn hơn không quá 4 lần chiều dày tường \nđược tính là xây cột, trụ. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-015",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.2",
+    "pdf_page": 159,
+    "work_group": "dat",
+    "summary_vi": "Đất đào dùng đắp và đất rời mua để đắp cần hệ số chuyển đổi theo trường hợp.",
+    "required_inputs": [
+      "khoi_luong_dap",
+      "nguon_dat",
+      "he_so_chuyen_doi"
+    ],
+    "conditions_vi": "Không dùng một hệ số tơi xốp cố định cho mọi loại đất.",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "DAO_DAT",
+      "DAP_DAT"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "6 \n \nKhối lượng đào phải được đo bóc theo nhóm, loại công tác, cấp đất, đá, độ \nsâu đào, bề rộng của hố đào, điều kiện thi công, biện pháp thi công (thủ công hay \ncơ giới). \nKhối lượng đắp phải được đo bóc theo nhóm, loại công tác, theo loại vật \nliệu đắp (đất, đá, cát...), cấp đất đá, độ dày của lớp vật liệu đắp, độ chặt yêu cầu \nkhi đắp, điều kiện thi công, biện pháp thi công (thủ công hay cơ giới). \nKhối lượng công tác đào, đắp được tính theo kích thước trong bản vẽ thiết \nkế, tiêu chuẩn thi công và nghiệm thu, không tính thêm độ nở rời, co ngót hoặc \nhao hụt.  \nTrường hợp đào đất để đắp thì khối lượng đất đào bằng khối lượng đất đắp \nnhân với hệ số chuyển đổi từ đất đào sang đất đắp. Trường hợp mua đất rời để đắp \nthì khối lượng đất rời dùng để đắp được xác định căn cứ vào khối lượng đất đo tại \nnơi đắp nhân với hệ số tơi xốp của đất (bằng khối lượng thể tích khô của đất theo \nyêu cầu thiết kế chia cho khối lượng thể tích khô xốp ngoài hiện trường).  \nKhối lượng đào, đắp khi đo bóc không bao gồm khối lượng các công trình \nngầm chiếm chỗ (đường ống kỹ thuật, cống thoát nước...). Trong khối lượng đào \nkhông tính riêng khối lượng các loại đất/đá mà khác với cấp đất/đá đang thực hiện \nđo bóc nếu khối lượng đó nhỏ hơn 1m3. \nĐối với công tác đào, đắp móng công trình nhà cao tầng, công trình thủy \ncông, trụ cầu, mố cầu, hầm, các công trình theo tuyến, nền đất yếu thì trong phần \nmô tả đào, đắp cần ghi rõ biện pháp thi công phục vụ đào, đắp như làm cừ chống \nsạt lở...(nếu có).  \nViệc tận dụng vật liệu sau khi đào (tận dụng hết, tận dụng bao nhiêu %… \nnếu có), phương án vận chuyển vật liệu đào ra khỏi công trìn h cần được ghi cụ \nthể trong phần mô tả của khoản mục công việc trong Bảng tổng hợp khối lượng \nxây dựng. \n5.3. Công tác xây \nKhối lượng công tác xây được đo bóc, phân loại riêng theo loại vật liệu xây \n(gạch, đá...), mác vữa xây, chiều dày khối xây, chiều cao công trình, theo bộ phận \ncông trình và điều kiện thi công. \nKhối lượng xây dựng được đo bóc bao gồm cả các phần nhô ra và các chi \ntiết liên kết gắn liền với khối xây thể hiện trong thiết kế, không phải trừ khối lượng \ncác khoảng trống không phải xây trong khối xây có diện tích nhỏ hơn 0,25m2. \nĐộ dày của tường khi xác định không bao gồm lớp ốp mặt, lớp phủ bề mặt \n(lớp trát). Độ dày của tường vát là độ dày trung bình của tường đó. \nXây tường độc lập có chiều dài lớn hơn không quá 4 lần chiều dày tường \nđược tính là xây cột, trụ. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-016",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.3",
+    "pdf_page": 159,
+    "work_group": "xay",
+    "summary_vi": "Phân loại xây theo vật liệu, mác vữa, chiều dày, chiều cao, bộ phận và điều kiện thi công.",
+    "required_inputs": [
+      "vat_lieu",
+      "mac_vua",
+      "day",
+      "cao",
+      "vi_tri"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "XAY"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "6 \n \nKhối lượng đào phải được đo bóc theo nhóm, loại công tác, cấp đất, đá, độ \nsâu đào, bề rộng của hố đào, điều kiện thi công, biện pháp thi công (thủ công hay \ncơ giới). \nKhối lượng đắp phải được đo bóc theo nhóm, loại công tác, theo loại vật \nliệu đắp (đất, đá, cát...), cấp đất đá, độ dày của lớp vật liệu đắp, độ chặt yêu cầu \nkhi đắp, điều kiện thi công, biện pháp thi công (thủ công hay cơ giới). \nKhối lượng công tác đào, đắp được tính theo kích thước trong bản vẽ thiết \nkế, tiêu chuẩn thi công và nghiệm thu, không tính thêm độ nở rời, co ngót hoặc \nhao hụt.  \nTrường hợp đào đất để đắp thì khối lượng đất đào bằng khối lượng đất đắp \nnhân với hệ số chuyển đổi từ đất đào sang đất đắp. Trường hợp mua đất rời để đắp \nthì khối lượng đất rời dùng để đắp được xác định căn cứ vào khối lượng đất đo tại \nnơi đắp nhân với hệ số tơi xốp của đất (bằng khối lượng thể tích khô của đất theo \nyêu cầu thiết kế chia cho khối lượng thể tích khô xốp ngoài hiện trường).  \nKhối lượng đào, đắp khi đo bóc không bao gồm khối lượng các công trình \nngầm chiếm chỗ (đường ống kỹ thuật, cống thoát nước...). Trong khối lượng đào \nkhông tính riêng khối lượng các loại đất/đá mà khác với cấp đất/đá đang thực hiện \nđo bóc nếu khối lượng đó nhỏ hơn 1m3. \nĐối với công tác đào, đắp móng công trình nhà cao tầng, công trình thủy \ncông, trụ cầu, mố cầu, hầm, các công trình theo tuyến, nền đất yếu thì trong phần \nmô tả đào, đắp cần ghi rõ biện pháp thi công phục vụ đào, đắp như làm cừ chống \nsạt lở...(nếu có).  \nViệc tận dụng vật liệu sau khi đào (tận dụng hết, tận dụng bao nhiêu %… \nnếu có), phương án vận chuyển vật liệu đào ra khỏi công trìn h cần được ghi cụ \nthể trong phần mô tả của khoản mục công việc trong Bảng tổng hợp khối lượng \nxây dựng. \n5.3. Công tác xây \nKhối lượng công tác xây được đo bóc, phân loại riêng theo loại vật liệu xây \n(gạch, đá...), mác vữa xây, chiều dày khối xây, chiều cao công trình, theo bộ phận \ncông trình và điều kiện thi công. \nKhối lượng xây dựng được đo bóc bao gồm cả các phần nhô ra và các chi \ntiết liên kết gắn liền với khối xây thể hiện trong thiết kế, không phải trừ khối lượng \ncác khoảng trống không phải xây trong khối xây có diện tích nhỏ hơn 0,25m2. \nĐộ dày của tường khi xác định không bao gồm lớp ốp mặt, lớp phủ bề mặt \n(lớp trát). Độ dày của tường vát là độ dày trung bình của tường đó. \nXây tường độc lập có chiều dài lớn hơn không quá 4 lần chiều dày tường \nđược tính là xây cột, trụ. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-017",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.3",
+    "pdf_page": 159,
+    "work_group": "xay",
+    "summary_vi": "Không trừ khoảng trống không xây có diện tích nhỏ hơn 0,25 m2.",
+    "required_inputs": [
+      "dien_tich_lo",
+      "day_tuong"
+    ],
+    "conditions_vi": "Chỉ áp dụng đúng nhóm công tác và phiên bản.",
+    "parameters": {
+      "non_deduct_opening_area_lt_m2": 0.25,
+      "operator": "<"
+    },
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "XAY"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": {
+      "field": "opening_area_m2",
+      "operator": "lt",
+      "value": "0.25",
+      "unit": "m2"
+    },
+    "effect": {
+      "action": "do_not_deduct_opening"
+    },
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "6 \n \nKhối lượng đào phải được đo bóc theo nhóm, loại công tác, cấp đất, đá, độ \nsâu đào, bề rộng của hố đào, điều kiện thi công, biện pháp thi công (thủ công hay \ncơ giới). \nKhối lượng đắp phải được đo bóc theo nhóm, loại công tác, theo loại vật \nliệu đắp (đất, đá, cát...), cấp đất đá, độ dày của lớp vật liệu đắp, độ chặt yêu cầu \nkhi đắp, điều kiện thi công, biện pháp thi công (thủ công hay cơ giới). \nKhối lượng công tác đào, đắp được tính theo kích thước trong bản vẽ thiết \nkế, tiêu chuẩn thi công và nghiệm thu, không tính thêm độ nở rời, co ngót hoặc \nhao hụt.  \nTrường hợp đào đất để đắp thì khối lượng đất đào bằng khối lượng đất đắp \nnhân với hệ số chuyển đổi từ đất đào sang đất đắp. Trường hợp mua đất rời để đắp \nthì khối lượng đất rời dùng để đắp được xác định căn cứ vào khối lượng đất đo tại \nnơi đắp nhân với hệ số tơi xốp của đất (bằng khối lượng thể tích khô của đất theo \nyêu cầu thiết kế chia cho khối lượng thể tích khô xốp ngoài hiện trường).  \nKhối lượng đào, đắp khi đo bóc không bao gồm khối lượng các công trình \nngầm chiếm chỗ (đường ống kỹ thuật, cống thoát nước...). Trong khối lượng đào \nkhông tính riêng khối lượng các loại đất/đá mà khác với cấp đất/đá đang thực hiện \nđo bóc nếu khối lượng đó nhỏ hơn 1m3. \nĐối với công tác đào, đắp móng công trình nhà cao tầng, công trình thủy \ncông, trụ cầu, mố cầu, hầm, các công trình theo tuyến, nền đất yếu thì trong phần \nmô tả đào, đắp cần ghi rõ biện pháp thi công phục vụ đào, đắp như làm cừ chống \nsạt lở...(nếu có).  \nViệc tận dụng vật liệu sau khi đào (tận dụng hết, tận dụng bao nhiêu %… \nnếu có), phương án vận chuyển vật liệu đào ra khỏi công trìn h cần được ghi cụ \nthể trong phần mô tả của khoản mục công việc trong Bảng tổng hợp khối lượng \nxây dựng. \n5.3. Công tác xây \nKhối lượng công tác xây được đo bóc, phân loại riêng theo loại vật liệu xây \n(gạch, đá...), mác vữa xây, chiều dày khối xây, chiều cao công trình, theo bộ phận \ncông trình và điều kiện thi công. \nKhối lượng xây dựng được đo bóc bao gồm cả các phần nhô ra và các chi \ntiết liên kết gắn liền với khối xây thể hiện trong thiết kế, không phải trừ khối lượng \ncác khoảng trống không phải xây trong khối xây có diện tích nhỏ hơn 0,25m2. \nĐộ dày của tường khi xác định không bao gồm lớp ốp mặt, lớp phủ bề mặt \n(lớp trát). Độ dày của tường vát là độ dày trung bình của tường đó. \nXây tường độc lập có chiều dài lớn hơn không quá 4 lần chiều dày tường \nđược tính là xây cột, trụ. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-018",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.3",
+    "pdf_page": 159,
+    "work_group": "xay",
+    "summary_vi": "Chiều dày tường không gồm trát, ốp; tường vát lấy chiều dày trung bình.",
+    "required_inputs": [
+      "day_tuong",
+      "lop_hoan_thien"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "XAY"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "6 \n \nKhối lượng đào phải được đo bóc theo nhóm, loại công tác, cấp đất, đá, độ \nsâu đào, bề rộng của hố đào, điều kiện thi công, biện pháp thi công (thủ công hay \ncơ giới). \nKhối lượng đắp phải được đo bóc theo nhóm, loại công tác, theo loại vật \nliệu đắp (đất, đá, cát...), cấp đất đá, độ dày của lớp vật liệu đắp, độ chặt yêu cầu \nkhi đắp, điều kiện thi công, biện pháp thi công (thủ công hay cơ giới). \nKhối lượng công tác đào, đắp được tính theo kích thước trong bản vẽ thiết \nkế, tiêu chuẩn thi công và nghiệm thu, không tính thêm độ nở rời, co ngót hoặc \nhao hụt.  \nTrường hợp đào đất để đắp thì khối lượng đất đào bằng khối lượng đất đắp \nnhân với hệ số chuyển đổi từ đất đào sang đất đắp. Trường hợp mua đất rời để đắp \nthì khối lượng đất rời dùng để đắp được xác định căn cứ vào khối lượng đất đo tại \nnơi đắp nhân với hệ số tơi xốp của đất (bằng khối lượng thể tích khô của đất theo \nyêu cầu thiết kế chia cho khối lượng thể tích khô xốp ngoài hiện trường).  \nKhối lượng đào, đắp khi đo bóc không bao gồm khối lượng các công trình \nngầm chiếm chỗ (đường ống kỹ thuật, cống thoát nước...). Trong khối lượng đào \nkhông tính riêng khối lượng các loại đất/đá mà khác với cấp đất/đá đang thực hiện \nđo bóc nếu khối lượng đó nhỏ hơn 1m3. \nĐối với công tác đào, đắp móng công trình nhà cao tầng, công trình thủy \ncông, trụ cầu, mố cầu, hầm, các công trình theo tuyến, nền đất yếu thì trong phần \nmô tả đào, đắp cần ghi rõ biện pháp thi công phục vụ đào, đắp như làm cừ chống \nsạt lở...(nếu có).  \nViệc tận dụng vật liệu sau khi đào (tận dụng hết, tận dụng bao nhiêu %… \nnếu có), phương án vận chuyển vật liệu đào ra khỏi công trìn h cần được ghi cụ \nthể trong phần mô tả của khoản mục công việc trong Bảng tổng hợp khối lượng \nxây dựng. \n5.3. Công tác xây \nKhối lượng công tác xây được đo bóc, phân loại riêng theo loại vật liệu xây \n(gạch, đá...), mác vữa xây, chiều dày khối xây, chiều cao công trình, theo bộ phận \ncông trình và điều kiện thi công. \nKhối lượng xây dựng được đo bóc bao gồm cả các phần nhô ra và các chi \ntiết liên kết gắn liền với khối xây thể hiện trong thiết kế, không phải trừ khối lượng \ncác khoảng trống không phải xây trong khối xây có diện tích nhỏ hơn 0,25m2. \nĐộ dày của tường khi xác định không bao gồm lớp ốp mặt, lớp phủ bề mặt \n(lớp trát). Độ dày của tường vát là độ dày trung bình của tường đó. \nXây tường độc lập có chiều dài lớn hơn không quá 4 lần chiều dày tường \nđược tính là xây cột, trụ. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-019",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.4 bản gốc",
+    "pdf_page": 160,
+    "work_group": "be_tong",
+    "summary_vi": "Bản gốc không trừ cốt thép có hàm lượng dưới 2%; nội dung này được sửa từ 08/03/2025.",
+    "required_inputs": [
+      "the_tich",
+      "ham_luong_thep"
+    ],
+    "conditions_vi": "Không dùng bản gốc cho giai đoạn sau sửa đổi.",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2025-03-08",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "LANH_TO",
+      "COT",
+      "DAM",
+      "SAN",
+      "CAU_THANG",
+      "GIANG_TUONG",
+      "SE_NO",
+      "MAI",
+      "MONG",
+      "BE_TONG_LOT"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "7 \n \nKhối lượng cột, trụ gắn với tường, được thiết kế cùng một loại vật liệu với \ntường, thực hiện thi công cùng với xây tường, khi đo bóc khối lượng thì được tính \nlà khối lượng của tường đó. \n5.4. Công tác bê tông \nKhối lượng bê tông được đo bóc, phân loại riêng theo phương thức sản xuất \nbê tông (bê tông trộn tại chỗ, bê tông thương phẩm), theo loại bê tông sử dụng (bê \ntông đá dăm, bê tông át phan, bê tông chịu nhiệt, bê tông bền sunfat...), kích thước \nvật liệu (đá, sỏi, cát...), mác xi măng, mác vữa bê tông, theo chi tiết bộ phận kết cấu \n(móng, tường, cột ...), theo chiều dày khối bê tông, theo chiều cao công trình, theo \ncấu kiện bê tông (bê tông đúc sẵn), theo điều kiện thi công và biện pháp thi công.  \nKhối lượng bê tông được đo bóc là toàn bộ kết cấu bê tông kể cả các phần \nnhô ra, không trừ thể tích cốt thép có hàm lượng < 2% so với thể tích cấu kiện bê \ntông, dây buộc, bản mã, các bộ phận ứng suất trước (ngoại trừ ống luồn cáp, ống \nsiêu âm), các lỗ rỗng trên bề mặt kết cấu bê tông có thể tíc h nhỏ hơn 0,1m3  nằm \ntrong bê tông. \nCột, trụ nối với tường, nếu có cùng loại cấp phối, mác bê tông với tường và \nkhông có yêu cầu phải đúc riêng thì khi đo bóc được đo như bộ phận của tường. \nPhần bê tông giao giữa cột và dầm nếu có cùng loại cấp phối, mác bê tông \nvà không có yêu cầu phải đúc riêng thì khi đo bóc được đo như bộ phận của dầm. \nPhần bê tông dầm, cột, vách nằm trong tấm sàn nếu có cùng loại cấp phối, \nmác bê tông với tấm sàn và không có yêu cầu phải đúc riêng thì khi đo bóc được \nđo như bộ phận của sàn. \nNhững yêu cầu đặc biệt về các biện pháp đầm, bảo dưỡng hoặc biện pháp \nkỹ thuật xử lý đặc biệt theo thiết kế hoặc tiêu chuẩn, quy phạm, phương án vận \nchuyển bê tông (cự ly, loại xe), tỷ lệ cấp phối bê tông cần được ghi rõ trong Bảng \nchi tiết khối lượng công tác xây dựng và Bảng tổng hợp khối lượng xây dựng. \n5.5. Công tác ván khuôn \nKhối lượng ván khuôn được đo bóc, phân loại riêng theo yêu cầu thiết kế, \nchất liệu sử dụng làm ván khuôn (thép, gỗ, gỗ dán phủ phim...). \nKhối lượng ván khuôn được đo cho bề mặt của bê tông cần phải chống đỡ \ntạm thời trong khi đúc (kể cả các phần ván khuôn nhô ra theo tiêu chuẩn kỹ thuật \nhoặc chỉ dẫn kỹ thuật), không phải trừ các lỗ rỗng trên bề mặt kết cấu bê tông có \ndiện tích nhỏ hơn 1m2. \nĐối với khối lượng ván khuôn theo tấm định hình khi thi công theo yêu cầu \nkỹ thuật có kích thước lớn hơn 3m 2 không phải trừ diện tích ván khuôn các lỗ \nrỗng trên bề mặt kết cấu bê tông. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-020",
+    "source_id": "TT01_2025_CONGBAO",
+    "source_locator": "Phụ lục VI, sửa II.5.4",
+    "pdf_page": 44,
+    "work_group": "be_tong",
+    "summary_vi": "Lập tổng mức, dự toán không trừ thể tích cốt thép, dây buộc, bản mã và bộ phận ứng suất trước; ngoại trừ ống luồn cáp, ống siêu âm; không trừ lỗ rỗng bề mặt nhỏ hơn 0,1 m3 trong cấu kiện đang tính.",
+    "required_inputs": [
+      "muc_dich",
+      "the_tich_cau_kien",
+      "lo_rong",
+      "ong_luon_cap",
+      "ong_sieu_am"
+    ],
+    "conditions_vi": "Phạm vi tổng mức/dự toán; thanh toán theo hợp đồng và pháp luật áp dụng.",
+    "parameters": {
+      "non_deduct_void_volume_lt_m3": 0.1,
+      "operator": "<"
+    },
+    "authority_type": "thong_tu",
+    "effective_from": "2025-03-08",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_amendment",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbRne_7FGv3ijVuw3Bjj6w8JO50ICgttkXASDrk11P0PTVwkx8mBzJaD-U0IAn2IYu2zbdzfFQWhBJKbfZNBPGxeg~~&file_name=2025_311+%2b+312_01-2025-TT-BXD.pdf",
+    "work_codes": [
+      "LANH_TO",
+      "COT",
+      "DAM",
+      "SAN",
+      "CAU_THANG",
+      "GIANG_TUONG",
+      "SE_NO",
+      "MAI",
+      "MONG",
+      "BE_TONG_LOT"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": " \n CÔNG BÁO/Số 311 + 312/Ngày 14-02-2025  89 \n \n \n \nPHỤ LỤC VI \nSửa đổi, bổ sung một số nội dung của Phụ lục VI “Phương pháp đo bóc khối \nlượng công trình” ban hành kèm theo Thông tư số 13/2021/TT-BXD  \nngày 31 tháng 8 năm 2021 của Bộ trưởng Bộ Xây dựng hướng dẫn phương \npháp xác định các chỉ tiêu kinh tế kỹ thuật và đo bóc khối lượng công trình \n(Kèm theo Thông tư số 01/2025/TT-BXD ngày 22/01/2025 của Bộ trưởng Bộ Xây dựng) \n \n1. Sửa đổi, bổ sung mục 5.4 Mục 5 phần II như sau: \n“5.4. Công tác bê tông \nKhối lượng bê tông được đo bóc, phân loại riêng theo phương thức sản xuất bê \ntông (bê tông trộn tại chỗ, b ê tông thương phẩm), theo l oại bê tông s ử dụng (bê \ntông đá dăm, bê tông át phan, bê tông chịu nhiệt, bê tông bền sunfat...), kích thước \nvật liệu (đá, sỏi,  cát...), mác xi măng, mác vữa bê tông  (cấp độ bền của bê tông) , \ntheo chi tiết bộ phận kết cấu (móng, tường, cột ...), theo chiều  dày khối bê tông, \ntheo chiều cao công trì nh, theo cấu ki ện bê tông (bê tông đúc sẵn), theo điều kiện \nthi công và biện pháp thi công. \nKhi đo bóc khối lượng để lập tổng mức đầu tư, dự toán xây dựng, khối lượng \nbê tông được đo bóc trên cơ sở kích thước, số lượng quy định trong bản vẽ thiết kế, \nthuyết minh thiết kế  hoặc từ yêu cầu triển khai dự án, các hồ sơ, chỉ dẫn khác có \nliên quan, không trừ thể tích cốt thép, dây buộc, bản mã, các bộ phận ứng suất \ntrước (ngoại trừ ống luồn cáp, ống siêu âm), các lỗ rỗng t rên bề mặt kế t cấu bê \ntông có thể tích nhỏ  hơn 0,1m3 nằm trong cấu kiện bê tông đang được tính khối \nlượng. Việc tính toán khối lượng trong nghiệm thu, thanh toán khối lượng hoàn \nthành thực hiện theo nội dung hợp đồng đã ký, phù hợp với hình thức lựa chọn nhà \nthầu, hồ sơ mời thầu, hồ sơ yêu cầu, hồ sơ dự thầu, hồ sơ đề xuất, loại hợp đồng và \nquy định pháp luật áp dụng cho hợp đồng. \nCột, trụ nối với tường, nếu có cùng loại cấp phối, mác bê tông  (cấp độ bền của \nbê tông) với tường và không có yêu cầu phải đúc r iêng thì khi đo bóc được đo như \nbộ phận của tường. \nPhần bê tông giao giữa cột và dầm nếu có cùng loại cấp phối, mác bê tông (cấp \nđộ bền của bê tông)  và không có yêu cầu phải đúc riêng thì kh i đo bóc được đo \nnhư bộ phận của dầm. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null,
+    "supersedes": [
+      "TT13_2021_1:Phụ lục VI II.5.4"
+    ]
+  },
+  {
+    "rule_id": "VN-QTO-021",
+    "source_id": "TT01_2025_CONGBAO",
+    "source_locator": "Phụ lục VI, sửa II.5.4",
+    "pdf_page": 44,
+    "work_group": "giao_nhau",
+    "summary_vi": "Giao cột-dầm tính cho dầm; dầm/cột/vách trong sàn tính cho sàn khi cùng cấp phối, mác/cấp độ bền và không phải đúc riêng.",
+    "required_inputs": [
+      "giao_nhau",
+      "cap_phoi",
+      "cap_do_ben",
+      "yeu_cau_duc"
+    ],
+    "conditions_vi": "Đọc tiếp trang PDF 45; không áp dụng vô điều kiện cho mọi cấu kiện.",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2025-03-08",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_amendment",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbRne_7FGv3ijVuw3Bjj6w8JO50ICgttkXASDrk11P0PTVwkx8mBzJaD-U0IAn2IYu2zbdzfFQWhBJKbfZNBPGxeg~~&file_name=2025_311+%2b+312_01-2025-TT-BXD.pdf",
+    "work_codes": [
+      "LANH_TO",
+      "COT",
+      "DAM",
+      "SAN",
+      "CAU_THANG",
+      "GIANG_TUONG",
+      "SE_NO",
+      "MAI",
+      "MONG",
+      "BE_TONG_LOT"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": " \n CÔNG BÁO/Số 311 + 312/Ngày 14-02-2025  89 \n \n \n \nPHỤ LỤC VI \nSửa đổi, bổ sung một số nội dung của Phụ lục VI “Phương pháp đo bóc khối \nlượng công trình” ban hành kèm theo Thông tư số 13/2021/TT-BXD  \nngày 31 tháng 8 năm 2021 của Bộ trưởng Bộ Xây dựng hướng dẫn phương \npháp xác định các chỉ tiêu kinh tế kỹ thuật và đo bóc khối lượng công trình \n(Kèm theo Thông tư số 01/2025/TT-BXD ngày 22/01/2025 của Bộ trưởng Bộ Xây dựng) \n \n1. Sửa đổi, bổ sung mục 5.4 Mục 5 phần II như sau: \n“5.4. Công tác bê tông \nKhối lượng bê tông được đo bóc, phân loại riêng theo phương thức sản xuất bê \ntông (bê tông trộn tại chỗ, b ê tông thương phẩm), theo l oại bê tông s ử dụng (bê \ntông đá dăm, bê tông át phan, bê tông chịu nhiệt, bê tông bền sunfat...), kích thước \nvật liệu (đá, sỏi,  cát...), mác xi măng, mác vữa bê tông  (cấp độ bền của bê tông) , \ntheo chi tiết bộ phận kết cấu (móng, tường, cột ...), theo chiều  dày khối bê tông, \ntheo chiều cao công trì nh, theo cấu ki ện bê tông (bê tông đúc sẵn), theo điều kiện \nthi công và biện pháp thi công. \nKhi đo bóc khối lượng để lập tổng mức đầu tư, dự toán xây dựng, khối lượng \nbê tông được đo bóc trên cơ sở kích thước, số lượng quy định trong bản vẽ thiết kế, \nthuyết minh thiết kế  hoặc từ yêu cầu triển khai dự án, các hồ sơ, chỉ dẫn khác có \nliên quan, không trừ thể tích cốt thép, dây buộc, bản mã, các bộ phận ứng suất \ntrước (ngoại trừ ống luồn cáp, ống siêu âm), các lỗ rỗng t rên bề mặt kế t cấu bê \ntông có thể tích nhỏ  hơn 0,1m3 nằm trong cấu kiện bê tông đang được tính khối \nlượng. Việc tính toán khối lượng trong nghiệm thu, thanh toán khối lượng hoàn \nthành thực hiện theo nội dung hợp đồng đã ký, phù hợp với hình thức lựa chọn nhà \nthầu, hồ sơ mời thầu, hồ sơ yêu cầu, hồ sơ dự thầu, hồ sơ đề xuất, loại hợp đồng và \nquy định pháp luật áp dụng cho hợp đồng. \nCột, trụ nối với tường, nếu có cùng loại cấp phối, mác bê tông  (cấp độ bền của \nbê tông) với tường và không có yêu cầu phải đúc r iêng thì khi đo bóc được đo như \nbộ phận của tường. \nPhần bê tông giao giữa cột và dầm nếu có cùng loại cấp phối, mác bê tông (cấp \nđộ bền của bê tông)  và không có yêu cầu phải đúc riêng thì kh i đo bóc được đo \nnhư bộ phận của dầm. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null,
+    "supersedes": [
+      "TT13_2021_1:Phụ lục VI II.5.4"
+    ]
+  },
+  {
+    "rule_id": "VN-QTO-022",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.5",
+    "pdf_page": 160,
+    "work_group": "van_khuon",
+    "summary_vi": "Đo bề mặt bê tông cần chống đỡ tạm khi đúc; không trừ lỗ rỗng nhỏ hơn 1 m2.",
+    "required_inputs": [
+      "be_mat_tiep_xuc",
+      "dien_tich_lo",
+      "loai_van_khuon"
+    ],
+    "conditions_vi": "Có trường hợp tấm định hình lớn hơn 3 m2; phải xử lý riêng.",
+    "parameters": {
+      "non_deduct_opening_area_lt_m2": 1,
+      "operator": "<"
+    },
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "COP_PHA"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "7 \n \nKhối lượng cột, trụ gắn với tường, được thiết kế cùng một loại vật liệu với \ntường, thực hiện thi công cùng với xây tường, khi đo bóc khối lượng thì được tính \nlà khối lượng của tường đó. \n5.4. Công tác bê tông \nKhối lượng bê tông được đo bóc, phân loại riêng theo phương thức sản xuất \nbê tông (bê tông trộn tại chỗ, bê tông thương phẩm), theo loại bê tông sử dụng (bê \ntông đá dăm, bê tông át phan, bê tông chịu nhiệt, bê tông bền sunfat...), kích thước \nvật liệu (đá, sỏi, cát...), mác xi măng, mác vữa bê tông, theo chi tiết bộ phận kết cấu \n(móng, tường, cột ...), theo chiều dày khối bê tông, theo chiều cao công trình, theo \ncấu kiện bê tông (bê tông đúc sẵn), theo điều kiện thi công và biện pháp thi công.  \nKhối lượng bê tông được đo bóc là toàn bộ kết cấu bê tông kể cả các phần \nnhô ra, không trừ thể tích cốt thép có hàm lượng < 2% so với thể tích cấu kiện bê \ntông, dây buộc, bản mã, các bộ phận ứng suất trước (ngoại trừ ống luồn cáp, ống \nsiêu âm), các lỗ rỗng trên bề mặt kết cấu bê tông có thể tíc h nhỏ hơn 0,1m3  nằm \ntrong bê tông. \nCột, trụ nối với tường, nếu có cùng loại cấp phối, mác bê tông với tường và \nkhông có yêu cầu phải đúc riêng thì khi đo bóc được đo như bộ phận của tường. \nPhần bê tông giao giữa cột và dầm nếu có cùng loại cấp phối, mác bê tông \nvà không có yêu cầu phải đúc riêng thì khi đo bóc được đo như bộ phận của dầm. \nPhần bê tông dầm, cột, vách nằm trong tấm sàn nếu có cùng loại cấp phối, \nmác bê tông với tấm sàn và không có yêu cầu phải đúc riêng thì khi đo bóc được \nđo như bộ phận của sàn. \nNhững yêu cầu đặc biệt về các biện pháp đầm, bảo dưỡng hoặc biện pháp \nkỹ thuật xử lý đặc biệt theo thiết kế hoặc tiêu chuẩn, quy phạm, phương án vận \nchuyển bê tông (cự ly, loại xe), tỷ lệ cấp phối bê tông cần được ghi rõ trong Bảng \nchi tiết khối lượng công tác xây dựng và Bảng tổng hợp khối lượng xây dựng. \n5.5. Công tác ván khuôn \nKhối lượng ván khuôn được đo bóc, phân loại riêng theo yêu cầu thiết kế, \nchất liệu sử dụng làm ván khuôn (thép, gỗ, gỗ dán phủ phim...). \nKhối lượng ván khuôn được đo cho bề mặt của bê tông cần phải chống đỡ \ntạm thời trong khi đúc (kể cả các phần ván khuôn nhô ra theo tiêu chuẩn kỹ thuật \nhoặc chỉ dẫn kỹ thuật), không phải trừ các lỗ rỗng trên bề mặt kết cấu bê tông có \ndiện tích nhỏ hơn 1m2. \nĐối với khối lượng ván khuôn theo tấm định hình khi thi công theo yêu cầu \nkỹ thuật có kích thước lớn hơn 3m 2 không phải trừ diện tích ván khuôn các lỗ \nrỗng trên bề mặt kết cấu bê tông. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-023",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.6",
+    "pdf_page": 161,
+    "work_group": "cot_thep",
+    "summary_vi": "Phân loại thép theo loại, mác, nhóm, đường kính, cấu kiện và điều kiện thi công.",
+    "required_inputs": [
+      "loai_thep",
+      "mac",
+      "duong_kinh",
+      "cau_kien"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "COT_THEP"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "8 \n \nVán khuôn để lại công trình, chất liệu sử dụng làm ván khuôn, số lần luân \nchuyển ván khuôn (nếu cần thi ết) cần được nêu rõ trong phần mô tả của khoản \nmục công việc trong Bảng tổng hợp khối lượng xây dựng. \n5.6. Công tác cốt thép \nKhối lượng cốt thép phải được đo bóc, phân loại theo loại thép (thép thường \nvà thép dự ứng lực, thép trơn, thép vằn), mác thép, nhóm thép, đường kính cốt thép \ntheo chi tiết bộ phận kết cấu (móng, cột, tường...) và điều kiện thi công.  \nKhối lượng cốt thép được đo bóc bao gồm khối lượng cốt thép, mối nối \nchồng, nối ren, nối ống, miếng đệm, con kê, bu lông liên kết và khối lượng cốt \nthép biện pháp thi công như thép chống giữa hai lớp cốt thép... (nếu có). \nKhối lượng thép được xác định theo trọng lượng riêng của thép theo đường \nkính danh nghĩa (nằm trong giới hạn tiêu chuẩn cho phép). \nCác thông tin cường độ tiêu chuẩn, hình dạng bề mặt và các đặc điểm về nhận \ndạng khác cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, Bảng  \ntổng hợp khối lượng công tác xây dựng. \n5.7. Công tác cọc \nKhối lượng cọc phải được đo bóc, phân loại theo loại vật liệu chế tạo cọc \n(cọc tre, cọc gỗ, bê t ông cốt thép, thép,…), kích thước cọc (chiều dài mỗi cọc, \nđường kính, tiết diện...), biện pháp thi công (đóng, ép,…) cọc, độ sâu cọc, cấp đất \nđá, điều kiện thi công (trên cạn, dưới nước, môi trường nước ngọt, nước lợ, nước \nmặn) và biện pháp thi công (thủ công, thi công bằng máy). \nĐộ sâu cọc được đo dọc theo trục của cọc từ điểm bắt đầu tiếp xúc với mặt \nđất tới cao độ mũi cọc.  \nCác thông tin liên quan đến các yêu cầu cần thiết khi đóng cọc, nối cọc, phá \ndỡ đầu cọc cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, Bảng \ntổng hợp khối lượng xây dựng. \nĐối với kết cấu cọc Barrette hay cọc bê tông cốt thép đúc sẵn tại hiện trường, \nviệc đo bóc khối lượng công tác bê tông, cốt thép cọc như hướng dẫn về khối lượng \ncông tác bê tông (khoản 5.4) và cốt thép (khoản 5.6) đã quy định ở trên. \nCác ống vách để lại vĩnh viễn (phục vụ công tác cọc khoan nhồi, tường cừ \ngiữ lại…) phải được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, \nBảng tổng hợp khối lượng xây dựng. \n5.8. Công tác khoan \nKhối lượng công tác khoan phải được đo bóc, phân loại theo đường kính lỗ \nkhoan, chiều sâu khoan, điều kiện khoan (khoan trên cạn hay khoan dưới nước, \nmôi trường nước ngọt, nước lợ, nước mặn), cấp đất, đá; phương pháp khoan ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-024",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.6",
+    "pdf_page": 161,
+    "work_group": "cot_thep",
+    "summary_vi": "Khối lượng gồm thép, nối chồng/nối ren/nối ống, con kê, liên kết và thép biện pháp nếu có; dùng trọng lượng theo đường kính danh nghĩa.",
+    "required_inputs": [
+      "bang_thong_ke_thep",
+      "noi",
+      "con_ke",
+      "thep_bien_phap"
+    ],
+    "conditions_vi": "Chống đếm lại phần nối đã có trong thống kê; không suy ra chiều dài neo/nối cố định từ quy tắc này.",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "COT_THEP"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "8 \n \nVán khuôn để lại công trình, chất liệu sử dụng làm ván khuôn, số lần luân \nchuyển ván khuôn (nếu cần thi ết) cần được nêu rõ trong phần mô tả của khoản \nmục công việc trong Bảng tổng hợp khối lượng xây dựng. \n5.6. Công tác cốt thép \nKhối lượng cốt thép phải được đo bóc, phân loại theo loại thép (thép thường \nvà thép dự ứng lực, thép trơn, thép vằn), mác thép, nhóm thép, đường kính cốt thép \ntheo chi tiết bộ phận kết cấu (móng, cột, tường...) và điều kiện thi công.  \nKhối lượng cốt thép được đo bóc bao gồm khối lượng cốt thép, mối nối \nchồng, nối ren, nối ống, miếng đệm, con kê, bu lông liên kết và khối lượng cốt \nthép biện pháp thi công như thép chống giữa hai lớp cốt thép... (nếu có). \nKhối lượng thép được xác định theo trọng lượng riêng của thép theo đường \nkính danh nghĩa (nằm trong giới hạn tiêu chuẩn cho phép). \nCác thông tin cường độ tiêu chuẩn, hình dạng bề mặt và các đặc điểm về nhận \ndạng khác cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, Bảng  \ntổng hợp khối lượng công tác xây dựng. \n5.7. Công tác cọc \nKhối lượng cọc phải được đo bóc, phân loại theo loại vật liệu chế tạo cọc \n(cọc tre, cọc gỗ, bê t ông cốt thép, thép,…), kích thước cọc (chiều dài mỗi cọc, \nđường kính, tiết diện...), biện pháp thi công (đóng, ép,…) cọc, độ sâu cọc, cấp đất \nđá, điều kiện thi công (trên cạn, dưới nước, môi trường nước ngọt, nước lợ, nước \nmặn) và biện pháp thi công (thủ công, thi công bằng máy). \nĐộ sâu cọc được đo dọc theo trục của cọc từ điểm bắt đầu tiếp xúc với mặt \nđất tới cao độ mũi cọc.  \nCác thông tin liên quan đến các yêu cầu cần thiết khi đóng cọc, nối cọc, phá \ndỡ đầu cọc cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, Bảng \ntổng hợp khối lượng xây dựng. \nĐối với kết cấu cọc Barrette hay cọc bê tông cốt thép đúc sẵn tại hiện trường, \nviệc đo bóc khối lượng công tác bê tông, cốt thép cọc như hướng dẫn về khối lượng \ncông tác bê tông (khoản 5.4) và cốt thép (khoản 5.6) đã quy định ở trên. \nCác ống vách để lại vĩnh viễn (phục vụ công tác cọc khoan nhồi, tường cừ \ngiữ lại…) phải được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, \nBảng tổng hợp khối lượng xây dựng. \n5.8. Công tác khoan \nKhối lượng công tác khoan phải được đo bóc, phân loại theo đường kính lỗ \nkhoan, chiều sâu khoan, điều kiện khoan (khoan trên cạn hay khoan dưới nước, \nmôi trường nước ngọt, nước lợ, nước mặn), cấp đất, đá; phương pháp khoan ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-025",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.7",
+    "pdf_page": 161,
+    "work_group": "coc",
+    "summary_vi": "Độ sâu cọc dọc trục từ tiếp xúc mặt đất đến mũi; ghi riêng yêu cầu đóng, nối, phá đầu và ống vách lưu lại.",
+    "required_inputs": [
+      "loai_coc",
+      "cao_do",
+      "truc",
+      "bien_phap"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "8 \n \nVán khuôn để lại công trình, chất liệu sử dụng làm ván khuôn, số lần luân \nchuyển ván khuôn (nếu cần thi ết) cần được nêu rõ trong phần mô tả của khoản \nmục công việc trong Bảng tổng hợp khối lượng xây dựng. \n5.6. Công tác cốt thép \nKhối lượng cốt thép phải được đo bóc, phân loại theo loại thép (thép thường \nvà thép dự ứng lực, thép trơn, thép vằn), mác thép, nhóm thép, đường kính cốt thép \ntheo chi tiết bộ phận kết cấu (móng, cột, tường...) và điều kiện thi công.  \nKhối lượng cốt thép được đo bóc bao gồm khối lượng cốt thép, mối nối \nchồng, nối ren, nối ống, miếng đệm, con kê, bu lông liên kết và khối lượng cốt \nthép biện pháp thi công như thép chống giữa hai lớp cốt thép... (nếu có). \nKhối lượng thép được xác định theo trọng lượng riêng của thép theo đường \nkính danh nghĩa (nằm trong giới hạn tiêu chuẩn cho phép). \nCác thông tin cường độ tiêu chuẩn, hình dạng bề mặt và các đặc điểm về nhận \ndạng khác cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, Bảng  \ntổng hợp khối lượng công tác xây dựng. \n5.7. Công tác cọc \nKhối lượng cọc phải được đo bóc, phân loại theo loại vật liệu chế tạo cọc \n(cọc tre, cọc gỗ, bê t ông cốt thép, thép,…), kích thước cọc (chiều dài mỗi cọc, \nđường kính, tiết diện...), biện pháp thi công (đóng, ép,…) cọc, độ sâu cọc, cấp đất \nđá, điều kiện thi công (trên cạn, dưới nước, môi trường nước ngọt, nước lợ, nước \nmặn) và biện pháp thi công (thủ công, thi công bằng máy). \nĐộ sâu cọc được đo dọc theo trục của cọc từ điểm bắt đầu tiếp xúc với mặt \nđất tới cao độ mũi cọc.  \nCác thông tin liên quan đến các yêu cầu cần thiết khi đóng cọc, nối cọc, phá \ndỡ đầu cọc cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, Bảng \ntổng hợp khối lượng xây dựng. \nĐối với kết cấu cọc Barrette hay cọc bê tông cốt thép đúc sẵn tại hiện trường, \nviệc đo bóc khối lượng công tác bê tông, cốt thép cọc như hướng dẫn về khối lượng \ncông tác bê tông (khoản 5.4) và cốt thép (khoản 5.6) đã quy định ở trên. \nCác ống vách để lại vĩnh viễn (phục vụ công tác cọc khoan nhồi, tường cừ \ngiữ lại…) phải được ghi rõ trong Bảng chi tiết khối lượng công tác xây dựng, \nBảng tổng hợp khối lượng xây dựng. \n5.8. Công tác khoan \nKhối lượng công tác khoan phải được đo bóc, phân loại theo đường kính lỗ \nkhoan, chiều sâu khoan, điều kiện khoan (khoan trên cạn hay khoan dưới nước, \nmôi trường nước ngọt, nước lợ, nước mặn), cấp đất, đá; phương pháp khoan ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-026",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.8",
+    "pdf_page": 162,
+    "work_group": "khoan",
+    "summary_vi": "Chiều sâu khoan dọc lỗ, từ tiếp xúc mặt đất đến đáy; phân loại đường kính, địa chất, điều kiện, phương pháp và bảo vệ thành.",
+    "required_inputs": [
+      "duong_kinh",
+      "chieu_sau",
+      "cap_dat_da",
+      "bien_phap"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "9 \n \n(khoan thẳng, khoan xiên) và thiết bị khoan (kh oan xoay, khoan guồng xoắn, \nkhoan lắc...), kỹ thuật sử dụng bảo vệ thành lỗ khoan (ống vách, bentonit...). \nChiều sâu khoan được đo dọc theo lỗ khoan, tính từ điểm bắt đầu tiếp xúc \nvới mặt đất đến cao độ đáy hố khoan.  \nCác thông tin về công tác khoan: Chiều sâu khoan, cấp đất đá, điều kiện khi \nkhoan (khoan trên cạn, dưới nước, độ sâu mực nước, tốc độ dòng chảy, mực nước \nthủy triều lên và xuống, chiều sâu ngàm vào đá, chiều dài ống vách phụ (nếu \ncó),...) cần được ghi rõ t rong Bảng chi tiết khối lượng công tác xây dựng, Bảng \ntổng hợp khối lượng xây dựng.  \n5.9. Công tác làm đường \nKhối lượng công tác làm đường phải được đo bóc, phân loại theo loại đường \n(bê tông xi măng, bê tông át phan, láng nhựa, cấp phối...), theo trình tự của kết cấu \n(nền, móng, mặt đường), chiều dày của từng lớp, theo biện pháp thi công.    \nKhối lượng làm đường khi đo bóc không phải trừ các khối lượng lỗ trống \ntrên mặt đường (như hố ga, hố thăm hoặc tương tự) có diện tích nhỏ hơn 1m2.  \nCác thông tin về lo ại vật liệu, chiều dày các lớp cấp phối, mặt cắt ngang \nđường, lề đường cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây \ndựng, Bảng tổng hợp khối lượng xây dựng. \nKhối lượng công tác vỉa hè, dải phân cách, lan can phòng hộ, sơn kẻ, diện \ntích trồng cỏ, hệ thống cọc tiêu, biển báo hiệu, hệ thống chiếu sáng... được đo bóc \nriêng. \nCác công tác xây, bê tông, cốt thép... thuộc công tác làm đường, khi đo bóc \nnhư hướng dẫn về đo bóc khối lượng công tác xây ( khoản 5.3), công tác bê tông \n(khoản 5.4) và công tác cốt thép (khoản 5.6) quy định ở trên.  \n5.10. Công tác đường ống \nKhối lượng công tác đường ống được đo bóc, phân loại theo loại ống, kích \nthước ống, vật liệu chế tạo (bê tông, gang, thép,…).    \nChiều dài của đường ống được đo dọc theo đường trung tâm của đường \nống. Chiều dài của đường ống cấp nước phân phối, thoát nước được đo bao gồm \nchiều dài có phụ kiện và van. Chiều dài đường ống thoát nước (mưa, bẩn) không \ntính chiều dài ở các hố ga, hố thu và hố thăm chiếm chỗ.  \nVật liệu, kiểu nối, đường kính ống và yêu cầu lót ống được nêu rõ trong \nBảng chi tiết khối lượng công tác xây dựng, Bảng tổng hợp khối lượng xây dựng. \n5.11. Công tác kết cấu thép \nKhối lượng kết cấu thép phải được đo bóc, phân loại theo chủng loại thép, \nđặc tính kỹ thuật của thép, kích thước kết cấu, các kiểu liên kết (hàn, bu lông...), ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-027",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.9",
+    "pdf_page": 162,
+    "work_group": "duong",
+    "summary_vi": "Phân lớp nền, móng, mặt đường theo vật liệu, chiều dày và biện pháp; hố trống nhỏ hơn 1 m2 không trừ.",
+    "required_inputs": [
+      "lop",
+      "vat_lieu",
+      "day",
+      "dien_tich_lo"
+    ],
+    "conditions_vi": "",
+    "parameters": {
+      "non_deduct_opening_area_lt_m2": 1,
+      "operator": "<"
+    },
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": {
+      "field": "opening_area_m2",
+      "operator": "lt",
+      "value": "1",
+      "unit": "m2"
+    },
+    "effect": {
+      "action": "do_not_deduct_opening"
+    },
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "9 \n \n(khoan thẳng, khoan xiên) và thiết bị khoan (kh oan xoay, khoan guồng xoắn, \nkhoan lắc...), kỹ thuật sử dụng bảo vệ thành lỗ khoan (ống vách, bentonit...). \nChiều sâu khoan được đo dọc theo lỗ khoan, tính từ điểm bắt đầu tiếp xúc \nvới mặt đất đến cao độ đáy hố khoan.  \nCác thông tin về công tác khoan: Chiều sâu khoan, cấp đất đá, điều kiện khi \nkhoan (khoan trên cạn, dưới nước, độ sâu mực nước, tốc độ dòng chảy, mực nước \nthủy triều lên và xuống, chiều sâu ngàm vào đá, chiều dài ống vách phụ (nếu \ncó),...) cần được ghi rõ t rong Bảng chi tiết khối lượng công tác xây dựng, Bảng \ntổng hợp khối lượng xây dựng.  \n5.9. Công tác làm đường \nKhối lượng công tác làm đường phải được đo bóc, phân loại theo loại đường \n(bê tông xi măng, bê tông át phan, láng nhựa, cấp phối...), theo trình tự của kết cấu \n(nền, móng, mặt đường), chiều dày của từng lớp, theo biện pháp thi công.    \nKhối lượng làm đường khi đo bóc không phải trừ các khối lượng lỗ trống \ntrên mặt đường (như hố ga, hố thăm hoặc tương tự) có diện tích nhỏ hơn 1m2.  \nCác thông tin về lo ại vật liệu, chiều dày các lớp cấp phối, mặt cắt ngang \nđường, lề đường cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây \ndựng, Bảng tổng hợp khối lượng xây dựng. \nKhối lượng công tác vỉa hè, dải phân cách, lan can phòng hộ, sơn kẻ, diện \ntích trồng cỏ, hệ thống cọc tiêu, biển báo hiệu, hệ thống chiếu sáng... được đo bóc \nriêng. \nCác công tác xây, bê tông, cốt thép... thuộc công tác làm đường, khi đo bóc \nnhư hướng dẫn về đo bóc khối lượng công tác xây ( khoản 5.3), công tác bê tông \n(khoản 5.4) và công tác cốt thép (khoản 5.6) quy định ở trên.  \n5.10. Công tác đường ống \nKhối lượng công tác đường ống được đo bóc, phân loại theo loại ống, kích \nthước ống, vật liệu chế tạo (bê tông, gang, thép,…).    \nChiều dài của đường ống được đo dọc theo đường trung tâm của đường \nống. Chiều dài của đường ống cấp nước phân phối, thoát nước được đo bao gồm \nchiều dài có phụ kiện và van. Chiều dài đường ống thoát nước (mưa, bẩn) không \ntính chiều dài ở các hố ga, hố thu và hố thăm chiếm chỗ.  \nVật liệu, kiểu nối, đường kính ống và yêu cầu lót ống được nêu rõ trong \nBảng chi tiết khối lượng công tác xây dựng, Bảng tổng hợp khối lượng xây dựng. \n5.11. Công tác kết cấu thép \nKhối lượng kết cấu thép phải được đo bóc, phân loại theo chủng loại thép, \nđặc tính kỹ thuật của thép, kích thước kết cấu, các kiểu liên kết (hàn, bu lông...), ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-028",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.10",
+    "pdf_page": 162,
+    "work_group": "duong_ong",
+    "summary_vi": "Đo theo tim ống; cấp nước phân phối/thoát nước gồm chiều dài phụ kiện và van; thoát nước không gồm phần hố ga, hố thu, hố thăm chiếm chỗ.",
+    "required_inputs": [
+      "tim_ong",
+      "loai_he",
+      "van_phu_kien",
+      "ho_ga"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "9 \n \n(khoan thẳng, khoan xiên) và thiết bị khoan (kh oan xoay, khoan guồng xoắn, \nkhoan lắc...), kỹ thuật sử dụng bảo vệ thành lỗ khoan (ống vách, bentonit...). \nChiều sâu khoan được đo dọc theo lỗ khoan, tính từ điểm bắt đầu tiếp xúc \nvới mặt đất đến cao độ đáy hố khoan.  \nCác thông tin về công tác khoan: Chiều sâu khoan, cấp đất đá, điều kiện khi \nkhoan (khoan trên cạn, dưới nước, độ sâu mực nước, tốc độ dòng chảy, mực nước \nthủy triều lên và xuống, chiều sâu ngàm vào đá, chiều dài ống vách phụ (nếu \ncó),...) cần được ghi rõ t rong Bảng chi tiết khối lượng công tác xây dựng, Bảng \ntổng hợp khối lượng xây dựng.  \n5.9. Công tác làm đường \nKhối lượng công tác làm đường phải được đo bóc, phân loại theo loại đường \n(bê tông xi măng, bê tông át phan, láng nhựa, cấp phối...), theo trình tự của kết cấu \n(nền, móng, mặt đường), chiều dày của từng lớp, theo biện pháp thi công.    \nKhối lượng làm đường khi đo bóc không phải trừ các khối lượng lỗ trống \ntrên mặt đường (như hố ga, hố thăm hoặc tương tự) có diện tích nhỏ hơn 1m2.  \nCác thông tin về lo ại vật liệu, chiều dày các lớp cấp phối, mặt cắt ngang \nđường, lề đường cần được ghi rõ trong Bảng chi tiết khối lượng công tác xây \ndựng, Bảng tổng hợp khối lượng xây dựng. \nKhối lượng công tác vỉa hè, dải phân cách, lan can phòng hộ, sơn kẻ, diện \ntích trồng cỏ, hệ thống cọc tiêu, biển báo hiệu, hệ thống chiếu sáng... được đo bóc \nriêng. \nCác công tác xây, bê tông, cốt thép... thuộc công tác làm đường, khi đo bóc \nnhư hướng dẫn về đo bóc khối lượng công tác xây ( khoản 5.3), công tác bê tông \n(khoản 5.4) và công tác cốt thép (khoản 5.6) quy định ở trên.  \n5.10. Công tác đường ống \nKhối lượng công tác đường ống được đo bóc, phân loại theo loại ống, kích \nthước ống, vật liệu chế tạo (bê tông, gang, thép,…).    \nChiều dài của đường ống được đo dọc theo đường trung tâm của đường \nống. Chiều dài của đường ống cấp nước phân phối, thoát nước được đo bao gồm \nchiều dài có phụ kiện và van. Chiều dài đường ống thoát nước (mưa, bẩn) không \ntính chiều dài ở các hố ga, hố thu và hố thăm chiếm chỗ.  \nVật liệu, kiểu nối, đường kính ống và yêu cầu lót ống được nêu rõ trong \nBảng chi tiết khối lượng công tác xây dựng, Bảng tổng hợp khối lượng xây dựng. \n5.11. Công tác kết cấu thép \nKhối lượng kết cấu thép phải được đo bóc, phân loại theo chủng loại thép, \nđặc tính kỹ thuật của thép, kích thước kết cấu, các kiểu liên kết (hàn, bu lông...), ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-029",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.11",
+    "pdf_page": 163,
+    "work_group": "ket_cau_thep",
+    "summary_vi": "Đo theo thanh, tấm; xét nối chồng, lỗ nhỏ, bu lông, đai ốc theo hướng dẫn; loại chi tiết gá lắp tạm.",
+    "required_inputs": [
+      "bang_thep",
+      "lien_ket",
+      "lo",
+      "chi_tiet_tam"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "10 \n \ncác yêu cầu kỹ thuật cần thiết khi gia công, lắp dựng, biện pháp gia công, lắp dựng \n(thủ công, cơ giới, trụ chống tạm khi lắp dựng kết cấu thép...). \nKhối lượng kết cấu thép được đo bóc theo khối lượng của các thanh thép, \ncác tấm thép tạo thành. Khối lượng kết cấu thép bao gồm cả mối nối chồng theo \nquy định của tiêu chuẩn kỹ thuật, khối lượng cắt xiên, cắt vát các đầu hoặc các khối \nlượng khoét bỏ để tạo ra các rãnh, lỗ hoặc khắc hình trên bề mặt kết cấu thép mà \nmỗi lỗ có diện tích nhỏ hơn 0,1m 2 cũng như khối lượng bu lông, đai ố c, con kê \nnhưng không bao gồm khối lượng các bu lông, chi tiết gá lắp, lắp ráp tạm thời.  \nĐối với kết cấu thép phục vụ thi công cần nêu rõ thời gian sử dụng, số lần \nluân chuyển, thanh lý thu hồi... trong Bảng chi tiết khối lượng công tác xây dựng, \nBảng tổng hợp khối lượng xây dựng. \n5.12. Công tác kết cấu gỗ \nKhối lượng kết cấu gỗ phải được đo bóc, phân loại theo nhóm gỗ, theo chi \ntiết bộ phận kết cấu (vì kèo gỗ, xà gồ gỗ, cầu phong gỗ, dầm gỗ, kết cấu gỗ mặt \ncầu…), kích thước cấu kiện, chi tiết liên kết, mối  nối trong kết cấu không gian, \ntheo điều kiện thi công và biện pháp thi công. \nKhối lượng bao gồm cả mối nối, mối ghép bằng gỗ. Đối với sàn, vách, trần \ngỗ không trừ khối lượng khoảng trống, lỗ rỗng có diện tích nhỏ hơn 0,25m 2. \nKhông tính các vật liệu dùng đ ể chống đỡ khi lắp dựng kết cấu gỗ như đà giáo, \nthanh chống… \nChiều dài của các bộ phận gỗ được đo là tổng chiều dài không trừ mối nối \nvà mối ghép. \nKhối lượng các vật liệu kim khí để tăng cường độ cứng cho kết cấu gỗ và \nmối nối bằng sắt thép, bu lông, neo, tăng đơ, đinh… và các lớp hoàn thiện bề mặt \nđược đo bóc riêng. \nVật liệu, loại và kích thước của đồ gá lắp được nêu rõ trong Bảng chi tiết \nkhối lượng công tác xây dựng, Bảng tổng hợp khối lượng xây dựng. \n5.13. Công tác hoàn thiện \na) Yêu cầu chung của công tác hoàn thiện \nKhối lượng công tác hoàn thiện được đo bóc, phân loại theo công việc cần \nhoàn thiện (trát, láng, ốp, lát, sơn,  mạ, làm cửa, làm trần, làm mái...), theo chiều \ndày bề mặt cần hoàn thiện (trát, láng, sơn,  mạ…), theo chủng loại đặc tính kỹ \nthuật vật liệu sử dụng hoàn thiện (loại vữa, mác vữa, loại gỗ, loại đá, loại tấm trần, \nloại mái...), theo chi tiết bộ phận kết cấu (dầm, cột, tường, trụ, trần, mái...), theo \nđiều kiện thi công và biện pháp thi công. \nKhối lượng công tác hoàn thiện khi đo bóc khôn g phải trừ đi khối lượng \ncác lỗ rỗng, khoảng trống không phải hoàn thiện có diện tích nhỏ hơn 0,25m2.  ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-030",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.12",
+    "pdf_page": 163,
+    "work_group": "go",
+    "summary_vi": "Sàn, vách, trần gỗ không trừ lỗ rỗng nhỏ hơn 0,25 m2; không gộp vật liệu chống đỡ lắp dựng.",
+    "required_inputs": [
+      "cau_kien",
+      "lo",
+      "vat_lieu_chong_do"
+    ],
+    "conditions_vi": "",
+    "parameters": {
+      "non_deduct_opening_area_lt_m2": 0.25,
+      "operator": "<"
+    },
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": {
+      "field": "opening_area_m2",
+      "operator": "lt",
+      "value": "0.25",
+      "unit": "m2"
+    },
+    "effect": {
+      "action": "do_not_deduct_opening"
+    },
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "10 \n \ncác yêu cầu kỹ thuật cần thiết khi gia công, lắp dựng, biện pháp gia công, lắp dựng \n(thủ công, cơ giới, trụ chống tạm khi lắp dựng kết cấu thép...). \nKhối lượng kết cấu thép được đo bóc theo khối lượng của các thanh thép, \ncác tấm thép tạo thành. Khối lượng kết cấu thép bao gồm cả mối nối chồng theo \nquy định của tiêu chuẩn kỹ thuật, khối lượng cắt xiên, cắt vát các đầu hoặc các khối \nlượng khoét bỏ để tạo ra các rãnh, lỗ hoặc khắc hình trên bề mặt kết cấu thép mà \nmỗi lỗ có diện tích nhỏ hơn 0,1m 2 cũng như khối lượng bu lông, đai ố c, con kê \nnhưng không bao gồm khối lượng các bu lông, chi tiết gá lắp, lắp ráp tạm thời.  \nĐối với kết cấu thép phục vụ thi công cần nêu rõ thời gian sử dụng, số lần \nluân chuyển, thanh lý thu hồi... trong Bảng chi tiết khối lượng công tác xây dựng, \nBảng tổng hợp khối lượng xây dựng. \n5.12. Công tác kết cấu gỗ \nKhối lượng kết cấu gỗ phải được đo bóc, phân loại theo nhóm gỗ, theo chi \ntiết bộ phận kết cấu (vì kèo gỗ, xà gồ gỗ, cầu phong gỗ, dầm gỗ, kết cấu gỗ mặt \ncầu…), kích thước cấu kiện, chi tiết liên kết, mối  nối trong kết cấu không gian, \ntheo điều kiện thi công và biện pháp thi công. \nKhối lượng bao gồm cả mối nối, mối ghép bằng gỗ. Đối với sàn, vách, trần \ngỗ không trừ khối lượng khoảng trống, lỗ rỗng có diện tích nhỏ hơn 0,25m 2. \nKhông tính các vật liệu dùng đ ể chống đỡ khi lắp dựng kết cấu gỗ như đà giáo, \nthanh chống… \nChiều dài của các bộ phận gỗ được đo là tổng chiều dài không trừ mối nối \nvà mối ghép. \nKhối lượng các vật liệu kim khí để tăng cường độ cứng cho kết cấu gỗ và \nmối nối bằng sắt thép, bu lông, neo, tăng đơ, đinh… và các lớp hoàn thiện bề mặt \nđược đo bóc riêng. \nVật liệu, loại và kích thước của đồ gá lắp được nêu rõ trong Bảng chi tiết \nkhối lượng công tác xây dựng, Bảng tổng hợp khối lượng xây dựng. \n5.13. Công tác hoàn thiện \na) Yêu cầu chung của công tác hoàn thiện \nKhối lượng công tác hoàn thiện được đo bóc, phân loại theo công việc cần \nhoàn thiện (trát, láng, ốp, lát, sơn,  mạ, làm cửa, làm trần, làm mái...), theo chiều \ndày bề mặt cần hoàn thiện (trát, láng, sơn,  mạ…), theo chủng loại đặc tính kỹ \nthuật vật liệu sử dụng hoàn thiện (loại vữa, mác vữa, loại gỗ, loại đá, loại tấm trần, \nloại mái...), theo chi tiết bộ phận kết cấu (dầm, cột, tường, trụ, trần, mái...), theo \nđiều kiện thi công và biện pháp thi công. \nKhối lượng công tác hoàn thiện khi đo bóc khôn g phải trừ đi khối lượng \ncác lỗ rỗng, khoảng trống không phải hoàn thiện có diện tích nhỏ hơn 0,25m2.  ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-031",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.13.a",
+    "pdf_page": 163,
+    "work_group": "hoan_thien",
+    "summary_vi": "Không trừ lỗ rỗng, khoảng trống không hoàn thiện nhỏ hơn 0,25 m2.",
+    "required_inputs": [
+      "dien_tich_be_mat",
+      "lo",
+      "loai_hoan_thien"
+    ],
+    "conditions_vi": "",
+    "parameters": {
+      "non_deduct_opening_area_lt_m2": 0.25,
+      "operator": "<"
+    },
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "TRAT",
+      "CAN_NEN"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": {
+      "field": "opening_area_m2",
+      "operator": "lt",
+      "value": "0.25",
+      "unit": "m2"
+    },
+    "effect": {
+      "action": "do_not_deduct_opening"
+    },
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "10 \n \ncác yêu cầu kỹ thuật cần thiết khi gia công, lắp dựng, biện pháp gia công, lắp dựng \n(thủ công, cơ giới, trụ chống tạm khi lắp dựng kết cấu thép...). \nKhối lượng kết cấu thép được đo bóc theo khối lượng của các thanh thép, \ncác tấm thép tạo thành. Khối lượng kết cấu thép bao gồm cả mối nối chồng theo \nquy định của tiêu chuẩn kỹ thuật, khối lượng cắt xiên, cắt vát các đầu hoặc các khối \nlượng khoét bỏ để tạo ra các rãnh, lỗ hoặc khắc hình trên bề mặt kết cấu thép mà \nmỗi lỗ có diện tích nhỏ hơn 0,1m 2 cũng như khối lượng bu lông, đai ố c, con kê \nnhưng không bao gồm khối lượng các bu lông, chi tiết gá lắp, lắp ráp tạm thời.  \nĐối với kết cấu thép phục vụ thi công cần nêu rõ thời gian sử dụng, số lần \nluân chuyển, thanh lý thu hồi... trong Bảng chi tiết khối lượng công tác xây dựng, \nBảng tổng hợp khối lượng xây dựng. \n5.12. Công tác kết cấu gỗ \nKhối lượng kết cấu gỗ phải được đo bóc, phân loại theo nhóm gỗ, theo chi \ntiết bộ phận kết cấu (vì kèo gỗ, xà gồ gỗ, cầu phong gỗ, dầm gỗ, kết cấu gỗ mặt \ncầu…), kích thước cấu kiện, chi tiết liên kết, mối  nối trong kết cấu không gian, \ntheo điều kiện thi công và biện pháp thi công. \nKhối lượng bao gồm cả mối nối, mối ghép bằng gỗ. Đối với sàn, vách, trần \ngỗ không trừ khối lượng khoảng trống, lỗ rỗng có diện tích nhỏ hơn 0,25m 2. \nKhông tính các vật liệu dùng đ ể chống đỡ khi lắp dựng kết cấu gỗ như đà giáo, \nthanh chống… \nChiều dài của các bộ phận gỗ được đo là tổng chiều dài không trừ mối nối \nvà mối ghép. \nKhối lượng các vật liệu kim khí để tăng cường độ cứng cho kết cấu gỗ và \nmối nối bằng sắt thép, bu lông, neo, tăng đơ, đinh… và các lớp hoàn thiện bề mặt \nđược đo bóc riêng. \nVật liệu, loại và kích thước của đồ gá lắp được nêu rõ trong Bảng chi tiết \nkhối lượng công tác xây dựng, Bảng tổng hợp khối lượng xây dựng. \n5.13. Công tác hoàn thiện \na) Yêu cầu chung của công tác hoàn thiện \nKhối lượng công tác hoàn thiện được đo bóc, phân loại theo công việc cần \nhoàn thiện (trát, láng, ốp, lát, sơn,  mạ, làm cửa, làm trần, làm mái...), theo chiều \ndày bề mặt cần hoàn thiện (trát, láng, sơn,  mạ…), theo chủng loại đặc tính kỹ \nthuật vật liệu sử dụng hoàn thiện (loại vữa, mác vữa, loại gỗ, loại đá, loại tấm trần, \nloại mái...), theo chi tiết bộ phận kết cấu (dầm, cột, tường, trụ, trần, mái...), theo \nđiều kiện thi công và biện pháp thi công. \nKhối lượng công tác hoàn thiện khi đo bóc khôn g phải trừ đi khối lượng \ncác lỗ rỗng, khoảng trống không phải hoàn thiện có diện tích nhỏ hơn 0,25m2.  ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-032",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.13.b-c",
+    "pdf_page": 164,
+    "work_group": "trat_op_lat",
+    "summary_vi": "Trát, láng, ốp, lát đo theo bề mặt cần hoàn thiện; các gờ chỉ, phào hoặc chi tiết trang trí thuộc trường hợp hướng dẫn phải tính riêng.",
+    "required_inputs": [
+      "be_mat",
+      "go_chi",
+      "phao",
+      "chi_tiet"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "TRAT",
+      "CAN_NEN"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "11 \n \nCác thông tin về đặc tính kỹ thuật của vật liệu cần được ghi rõ trong Bảng \nchi tiết khối lượng công tác xây dựng và Bảng tổng hợp khối lượng xây dựng. \nb) Đo bóc công tác trát, láng \nKhối lượng được đo bóc là khối lượng bề mặt cần hoàn thiện được xác định \ntiếp xúc với nền của kết cấu bao gồm cả khe nối trơn, các bờ, các góc, chỗ giao \ncắt phẳng, các phần lõm vào, lồi ra... Khối lượng các gờ chỉ, các phào và các vật \nliệu dùng để liên kết phục vụ công tác trát, láng như các miếng giữ góc, các sợi, \ncác lưới thép được tính riêng. \nc) Đo bóc công tác lát, ốp \nKhối lượng được đo bóc là khối lượng bề mặt cần ốp, lát của kết cấu bao \ngồm cả chỗ nối, các gờ, các góc, lát tạo đường máng và rãnh, lát trên đường ống \ndẫn ngầm và nắp hố thăm, lát vào các khung và lát xung quanh các đường ống, \ndầm chìa và tương tự... \nKhối lượng các chi tiết trang trí ở gờ, ở các góc và chỗ giao nhau được \ntính riêng.  \nd) Đo bóc công tác cửa  \nKhối lượng được đo bóc theo loại cửa và theo bộ phận của cửa như khung \ncửa, cánh cửa, các thanh nẹp, các tấm nẹp trang trí, hộp cửa, vật liệu chèn khe \n(nếu có), các loại khóa, các loại phụ kiện tự đóng, mở… \nCác thông tin như chất liệu cửa (cửa gỗ, cửa kính, cửa kim loại, cửa nhựa, \ncửa cuốn…), tính chất loại vật liệu (nhóm gỗ, chất liệu kim loại,…), phương pháp \nliên kết, đặc điểm vị trí lắp dựng (tường gạch, tường bê tông, kết cấu gỗ…), xử lý \nbề mặt và hoàn thiện trước khi lắp dựng cần được ghi rõ trong Bảng chi tiết khối \nlượng công tác xây dựng. \nđ) Đo bóc công tác trần \nKhối lượng được đo bóc theo loại trần (bao gồm tấm trần, hệ dầm trần, \nkhung treo, các thanh giằng, miếng đệm, thanh viền,...) thuộc hệ thống kỹ thuật \ncông trình được gắn vào trần. \nKhối lượng đo bóc có thể tính riêng theo tấm trần và hệ dầm trần, khung treo… \ne) Đo bóc công tác mái \nKhối lượng được đo bóc theo loại mái, bề mặt cần lợp mái ứng với từng \nkhối lượng theo bộ phận của mái như vì kèo, giằng vì kèo, xà gồ, cầu phong, lớp \nmái theo vật liệu sử dụng (gồm cả làm úp nóc, bờ chảy). \ng) Công tác sơn  \nKhối lượng sơn tường được đo bóc là khối lượng bề mặt cần hoàn thiện. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-033",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.13.d-đ-e",
+    "pdf_page": 164,
+    "work_group": "cua_tran_mai",
+    "summary_vi": "Phân loại cửa, trần, mái và các bộ phận kèm theo; xác định phạm vi hệ thống để tránh cộng lại phụ kiện đã nằm trong công tác.",
+    "required_inputs": [
+      "loai",
+      "bo_phan",
+      "vat_lieu",
+      "pham_vi"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "MAI"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "11 \n \nCác thông tin về đặc tính kỹ thuật của vật liệu cần được ghi rõ trong Bảng \nchi tiết khối lượng công tác xây dựng và Bảng tổng hợp khối lượng xây dựng. \nb) Đo bóc công tác trát, láng \nKhối lượng được đo bóc là khối lượng bề mặt cần hoàn thiện được xác định \ntiếp xúc với nền của kết cấu bao gồm cả khe nối trơn, các bờ, các góc, chỗ giao \ncắt phẳng, các phần lõm vào, lồi ra... Khối lượng các gờ chỉ, các phào và các vật \nliệu dùng để liên kết phục vụ công tác trát, láng như các miếng giữ góc, các sợi, \ncác lưới thép được tính riêng. \nc) Đo bóc công tác lát, ốp \nKhối lượng được đo bóc là khối lượng bề mặt cần ốp, lát của kết cấu bao \ngồm cả chỗ nối, các gờ, các góc, lát tạo đường máng và rãnh, lát trên đường ống \ndẫn ngầm và nắp hố thăm, lát vào các khung và lát xung quanh các đường ống, \ndầm chìa và tương tự... \nKhối lượng các chi tiết trang trí ở gờ, ở các góc và chỗ giao nhau được \ntính riêng.  \nd) Đo bóc công tác cửa  \nKhối lượng được đo bóc theo loại cửa và theo bộ phận của cửa như khung \ncửa, cánh cửa, các thanh nẹp, các tấm nẹp trang trí, hộp cửa, vật liệu chèn khe \n(nếu có), các loại khóa, các loại phụ kiện tự đóng, mở… \nCác thông tin như chất liệu cửa (cửa gỗ, cửa kính, cửa kim loại, cửa nhựa, \ncửa cuốn…), tính chất loại vật liệu (nhóm gỗ, chất liệu kim loại,…), phương pháp \nliên kết, đặc điểm vị trí lắp dựng (tường gạch, tường bê tông, kết cấu gỗ…), xử lý \nbề mặt và hoàn thiện trước khi lắp dựng cần được ghi rõ trong Bảng chi tiết khối \nlượng công tác xây dựng. \nđ) Đo bóc công tác trần \nKhối lượng được đo bóc theo loại trần (bao gồm tấm trần, hệ dầm trần, \nkhung treo, các thanh giằng, miếng đệm, thanh viền,...) thuộc hệ thống kỹ thuật \ncông trình được gắn vào trần. \nKhối lượng đo bóc có thể tính riêng theo tấm trần và hệ dầm trần, khung treo… \ne) Đo bóc công tác mái \nKhối lượng được đo bóc theo loại mái, bề mặt cần lợp mái ứng với từng \nkhối lượng theo bộ phận của mái như vì kèo, giằng vì kèo, xà gồ, cầu phong, lớp \nmái theo vật liệu sử dụng (gồm cả làm úp nóc, bờ chảy). \ng) Công tác sơn  \nKhối lượng sơn tường được đo bóc là khối lượng bề mặt cần hoàn thiện. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-034",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.13.g",
+    "pdf_page": 165,
+    "work_group": "son",
+    "summary_vi": "Sơn ống lấy chiều dài nhân chu vi, không thêm/trừ mặt bích, van, giá treo và phụ kiện nhô khác.",
+    "required_inputs": [
+      "chieu_dai",
+      "chu_vi_ong"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "12 \n \nDiện tích được đo cho công tác sơn đường ống là chiều dài nhân với chu vi \ncủa đoạn ống được sơn không trừ hoặc thêm cá c mặt bích, van, giá treo và các \nphụ kiện nhô lên khác. \nKhi tính toán diện tích sơn các bộ phận kết cấu kim loại, không tính toán \nchi tiết cho từng tấm nối, đinh tán, bu lông, đai ốc và các chi tiết tương tự. \nĐối với kết cấu thép có yêu cầu sơn bảo vệ trước khi lắp đặt thì khối lượng \nsơn được bổ sung thêm khối lượng sơn vá, dặm hoàn thiện sau khi lắp đặt. \n5.14. Công tác lắp đặt hệ thống kỹ thuật công trình \nKhối lượng lắp đặt hệ thống kỹ thuật công trình như cấp điện, nước, thông \ngió, cấp nhiệt, điện nhẹ, báo cháy, chữa cháy... được đo bóc, phân loại theo từng \nloại vật tư, phụ kiện và theo các thông số kỹ thuật (tiết diện, chủng loại,…) của \nhệ thống kỹ thuật công trình theo thiết kế sơ đồ của hệ thống, có tính đến các điểm \ncong, gấp khúc theo chi tiết bộ phận  kết cấu, theo các modul lắp đặt, theo kiểu \nliên kết, theo biện pháp thi công và điều kiện thi công (chiều cao, độ sâu lắp đặt). \n5.15. Công tác lắp đặt thiết bị công trình \nKhối lượng lắp đặt thiết bị công trình được đo bóc, phân loại theo loại thiết \nbị, tổ hợp, hệ thống thiết bị cần lắp đặt, theo các modul lắp đặt, theo kiểu liên kết, \ntheo biện pháp thi công và điều kiện thi công (chiều cao, độ sâu lắp đặt),... \nKhối lượng lắp đặt thiết bị công trình bao gồm tất cả các phụ kiện để hoàn \nthiện tại chỗ, các thiết bị, tổ hợp, hệ thống thiết bị theo thiết kế và phục vụ công \ntác kiểm tra, chạy thử, vận hành tạm. \n5.16. Công tác dàn giáo phục vụ thi công \nKhối lượng công tác dàn giáo phục vụ thi công bao gồm cả công tác lắp \ndựng và tháo dỡ được đo bóc theo chủng loại dàn giáo (dàn giáo tre, gỗ, thép và \ndàn giáo công cụ), theo mục đích sử dụng (dàn giáo trong, dàn giáo ngoài, dàn \ngiáo hoàn thiện trụ, cột độc lập...), thời gian sử dụng dàn giáo, số lần luân chuyển, \nthanh lý thu hồi... \nChiều cao dàn giáo là chiều cao từ cốt mặt nền, sàn hiện tại của công trình \nđến độ cao lớn nhất bảo đảm đủ điều kiện thuận lợi để thi công. \nĐo bóc khối lượng dàn giáo thép công cụ phục vụ  thi công thì ngoài các \nhướng dẫn nói trên cần lưu ý một số quy định cụ thể như sau: \n- Dàn giáo ngoài được tính theo diện tính hình chiếu đứng trên mặt ngoài \ncủa kết cấu. \n- Dàn giáo trong được tính theo diện tích hình chiếu bằng của kết cấu và chỉ \nđược tính đối với các công tác có chiều cao lớn hơn 3,6m theo nguyên tắc lấy chiều \ncao dàn giáo 3,6m làm gốc và cứ mỗi khoảng tăng thêm 1,2m tính thêm một lớp để \ncộng dồn, khoảng tăng chưa đủ 0,6m không được tính khối lượng. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-035",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.14",
+    "pdf_page": 165,
+    "work_group": "mep",
+    "summary_vi": "Phân loại hệ thống kỹ thuật theo vật tư, phụ kiện, thông số, các chỗ cong/gấp khúc, module, liên kết và điều kiện lắp đặt.",
+    "required_inputs": [
+      "he_thong",
+      "vat_tu",
+      "thong_so",
+      "tuven",
+      "cao_do"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "12 \n \nDiện tích được đo cho công tác sơn đường ống là chiều dài nhân với chu vi \ncủa đoạn ống được sơn không trừ hoặc thêm cá c mặt bích, van, giá treo và các \nphụ kiện nhô lên khác. \nKhi tính toán diện tích sơn các bộ phận kết cấu kim loại, không tính toán \nchi tiết cho từng tấm nối, đinh tán, bu lông, đai ốc và các chi tiết tương tự. \nĐối với kết cấu thép có yêu cầu sơn bảo vệ trước khi lắp đặt thì khối lượng \nsơn được bổ sung thêm khối lượng sơn vá, dặm hoàn thiện sau khi lắp đặt. \n5.14. Công tác lắp đặt hệ thống kỹ thuật công trình \nKhối lượng lắp đặt hệ thống kỹ thuật công trình như cấp điện, nước, thông \ngió, cấp nhiệt, điện nhẹ, báo cháy, chữa cháy... được đo bóc, phân loại theo từng \nloại vật tư, phụ kiện và theo các thông số kỹ thuật (tiết diện, chủng loại,…) của \nhệ thống kỹ thuật công trình theo thiết kế sơ đồ của hệ thống, có tính đến các điểm \ncong, gấp khúc theo chi tiết bộ phận  kết cấu, theo các modul lắp đặt, theo kiểu \nliên kết, theo biện pháp thi công và điều kiện thi công (chiều cao, độ sâu lắp đặt). \n5.15. Công tác lắp đặt thiết bị công trình \nKhối lượng lắp đặt thiết bị công trình được đo bóc, phân loại theo loại thiết \nbị, tổ hợp, hệ thống thiết bị cần lắp đặt, theo các modul lắp đặt, theo kiểu liên kết, \ntheo biện pháp thi công và điều kiện thi công (chiều cao, độ sâu lắp đặt),... \nKhối lượng lắp đặt thiết bị công trình bao gồm tất cả các phụ kiện để hoàn \nthiện tại chỗ, các thiết bị, tổ hợp, hệ thống thiết bị theo thiết kế và phục vụ công \ntác kiểm tra, chạy thử, vận hành tạm. \n5.16. Công tác dàn giáo phục vụ thi công \nKhối lượng công tác dàn giáo phục vụ thi công bao gồm cả công tác lắp \ndựng và tháo dỡ được đo bóc theo chủng loại dàn giáo (dàn giáo tre, gỗ, thép và \ndàn giáo công cụ), theo mục đích sử dụng (dàn giáo trong, dàn giáo ngoài, dàn \ngiáo hoàn thiện trụ, cột độc lập...), thời gian sử dụng dàn giáo, số lần luân chuyển, \nthanh lý thu hồi... \nChiều cao dàn giáo là chiều cao từ cốt mặt nền, sàn hiện tại của công trình \nđến độ cao lớn nhất bảo đảm đủ điều kiện thuận lợi để thi công. \nĐo bóc khối lượng dàn giáo thép công cụ phục vụ  thi công thì ngoài các \nhướng dẫn nói trên cần lưu ý một số quy định cụ thể như sau: \n- Dàn giáo ngoài được tính theo diện tính hình chiếu đứng trên mặt ngoài \ncủa kết cấu. \n- Dàn giáo trong được tính theo diện tích hình chiếu bằng của kết cấu và chỉ \nđược tính đối với các công tác có chiều cao lớn hơn 3,6m theo nguyên tắc lấy chiều \ncao dàn giáo 3,6m làm gốc và cứ mỗi khoảng tăng thêm 1,2m tính thêm một lớp để \ncộng dồn, khoảng tăng chưa đủ 0,6m không được tính khối lượng. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-036",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.15",
+    "pdf_page": 165,
+    "work_group": "thiet_bi",
+    "summary_vi": "Phạm vi lắp thiết bị gồm phụ kiện hoàn thiện tại chỗ theo thiết kế, kiểm tra, chạy thử và vận hành tạm.",
+    "required_inputs": [
+      "thiet_bi",
+      "to_hop",
+      "phu_kien",
+      "kiem_tra"
+    ],
+    "conditions_vi": "",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "outside_current_rough_module",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "12 \n \nDiện tích được đo cho công tác sơn đường ống là chiều dài nhân với chu vi \ncủa đoạn ống được sơn không trừ hoặc thêm cá c mặt bích, van, giá treo và các \nphụ kiện nhô lên khác. \nKhi tính toán diện tích sơn các bộ phận kết cấu kim loại, không tính toán \nchi tiết cho từng tấm nối, đinh tán, bu lông, đai ốc và các chi tiết tương tự. \nĐối với kết cấu thép có yêu cầu sơn bảo vệ trước khi lắp đặt thì khối lượng \nsơn được bổ sung thêm khối lượng sơn vá, dặm hoàn thiện sau khi lắp đặt. \n5.14. Công tác lắp đặt hệ thống kỹ thuật công trình \nKhối lượng lắp đặt hệ thống kỹ thuật công trình như cấp điện, nước, thông \ngió, cấp nhiệt, điện nhẹ, báo cháy, chữa cháy... được đo bóc, phân loại theo từng \nloại vật tư, phụ kiện và theo các thông số kỹ thuật (tiết diện, chủng loại,…) của \nhệ thống kỹ thuật công trình theo thiết kế sơ đồ của hệ thống, có tính đến các điểm \ncong, gấp khúc theo chi tiết bộ phận  kết cấu, theo các modul lắp đặt, theo kiểu \nliên kết, theo biện pháp thi công và điều kiện thi công (chiều cao, độ sâu lắp đặt). \n5.15. Công tác lắp đặt thiết bị công trình \nKhối lượng lắp đặt thiết bị công trình được đo bóc, phân loại theo loại thiết \nbị, tổ hợp, hệ thống thiết bị cần lắp đặt, theo các modul lắp đặt, theo kiểu liên kết, \ntheo biện pháp thi công và điều kiện thi công (chiều cao, độ sâu lắp đặt),... \nKhối lượng lắp đặt thiết bị công trình bao gồm tất cả các phụ kiện để hoàn \nthiện tại chỗ, các thiết bị, tổ hợp, hệ thống thiết bị theo thiết kế và phục vụ công \ntác kiểm tra, chạy thử, vận hành tạm. \n5.16. Công tác dàn giáo phục vụ thi công \nKhối lượng công tác dàn giáo phục vụ thi công bao gồm cả công tác lắp \ndựng và tháo dỡ được đo bóc theo chủng loại dàn giáo (dàn giáo tre, gỗ, thép và \ndàn giáo công cụ), theo mục đích sử dụng (dàn giáo trong, dàn giáo ngoài, dàn \ngiáo hoàn thiện trụ, cột độc lập...), thời gian sử dụng dàn giáo, số lần luân chuyển, \nthanh lý thu hồi... \nChiều cao dàn giáo là chiều cao từ cốt mặt nền, sàn hiện tại của công trình \nđến độ cao lớn nhất bảo đảm đủ điều kiện thuận lợi để thi công. \nĐo bóc khối lượng dàn giáo thép công cụ phục vụ  thi công thì ngoài các \nhướng dẫn nói trên cần lưu ý một số quy định cụ thể như sau: \n- Dàn giáo ngoài được tính theo diện tính hình chiếu đứng trên mặt ngoài \ncủa kết cấu. \n- Dàn giáo trong được tính theo diện tích hình chiếu bằng của kết cấu và chỉ \nđược tính đối với các công tác có chiều cao lớn hơn 3,6m theo nguyên tắc lấy chiều \ncao dàn giáo 3,6m làm gốc và cứ mỗi khoảng tăng thêm 1,2m tính thêm một lớp để \ncộng dồn, khoảng tăng chưa đủ 0,6m không được tính khối lượng. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-037",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.5.16",
+    "pdf_page": 165,
+    "work_group": "gian_giao",
+    "summary_vi": "Giàn giáo ngoài theo hình chiếu đứng; giàn giáo trong theo hình chiếu bằng và điều kiện chiều cao, lớp tăng.",
+    "required_inputs": [
+      "loai_giao",
+      "hinh_chieu",
+      "chieu_cao",
+      "thoi_gian"
+    ],
+    "conditions_vi": "Đọc đầy đủ trang 165-166; không tự động dùng diện tích sàn cho mọi loại giáo.",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [
+      "COP_PHA"
+    ],
+    "work_scope": "selected",
+    "purposes": [
+      "estimate"
+    ],
+    "rule_type": "measurement",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "12 \n \nDiện tích được đo cho công tác sơn đường ống là chiều dài nhân với chu vi \ncủa đoạn ống được sơn không trừ hoặc thêm cá c mặt bích, van, giá treo và các \nphụ kiện nhô lên khác. \nKhi tính toán diện tích sơn các bộ phận kết cấu kim loại, không tính toán \nchi tiết cho từng tấm nối, đinh tán, bu lông, đai ốc và các chi tiết tương tự. \nĐối với kết cấu thép có yêu cầu sơn bảo vệ trước khi lắp đặt thì khối lượng \nsơn được bổ sung thêm khối lượng sơn vá, dặm hoàn thiện sau khi lắp đặt. \n5.14. Công tác lắp đặt hệ thống kỹ thuật công trình \nKhối lượng lắp đặt hệ thống kỹ thuật công trình như cấp điện, nước, thông \ngió, cấp nhiệt, điện nhẹ, báo cháy, chữa cháy... được đo bóc, phân loại theo từng \nloại vật tư, phụ kiện và theo các thông số kỹ thuật (tiết diện, chủng loại,…) của \nhệ thống kỹ thuật công trình theo thiết kế sơ đồ của hệ thống, có tính đến các điểm \ncong, gấp khúc theo chi tiết bộ phận  kết cấu, theo các modul lắp đặt, theo kiểu \nliên kết, theo biện pháp thi công và điều kiện thi công (chiều cao, độ sâu lắp đặt). \n5.15. Công tác lắp đặt thiết bị công trình \nKhối lượng lắp đặt thiết bị công trình được đo bóc, phân loại theo loại thiết \nbị, tổ hợp, hệ thống thiết bị cần lắp đặt, theo các modul lắp đặt, theo kiểu liên kết, \ntheo biện pháp thi công và điều kiện thi công (chiều cao, độ sâu lắp đặt),... \nKhối lượng lắp đặt thiết bị công trình bao gồm tất cả các phụ kiện để hoàn \nthiện tại chỗ, các thiết bị, tổ hợp, hệ thống thiết bị theo thiết kế và phục vụ công \ntác kiểm tra, chạy thử, vận hành tạm. \n5.16. Công tác dàn giáo phục vụ thi công \nKhối lượng công tác dàn giáo phục vụ thi công bao gồm cả công tác lắp \ndựng và tháo dỡ được đo bóc theo chủng loại dàn giáo (dàn giáo tre, gỗ, thép và \ndàn giáo công cụ), theo mục đích sử dụng (dàn giáo trong, dàn giáo ngoài, dàn \ngiáo hoàn thiện trụ, cột độc lập...), thời gian sử dụng dàn giáo, số lần luân chuyển, \nthanh lý thu hồi... \nChiều cao dàn giáo là chiều cao từ cốt mặt nền, sàn hiện tại của công trình \nđến độ cao lớn nhất bảo đảm đủ điều kiện thuận lợi để thi công. \nĐo bóc khối lượng dàn giáo thép công cụ phục vụ  thi công thì ngoài các \nhướng dẫn nói trên cần lưu ý một số quy định cụ thể như sau: \n- Dàn giáo ngoài được tính theo diện tính hình chiếu đứng trên mặt ngoài \ncủa kết cấu. \n- Dàn giáo trong được tính theo diện tích hình chiếu bằng của kết cấu và chỉ \nđược tính đối với các công tác có chiều cao lớn hơn 3,6m theo nguyên tắc lấy chiều \ncao dàn giáo 3,6m làm gốc và cứ mỗi khoảng tăng thêm 1,2m tính thêm một lớp để \ncộng dồn, khoảng tăng chưa đủ 0,6m không được tính khối lượng. ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  },
+  {
+    "rule_id": "VN-QTO-038",
+    "source_id": "TT13_2021_1",
+    "source_locator": "Phụ lục VI, II.6",
+    "pdf_page": 166,
+    "work_group": "thanh_toan",
+    "summary_vi": "Phương pháp nghiệm thu/thanh toán phải đọc cùng điều khoản hợp đồng; không đồng nhất khối lượng dự toán và khối lượng thanh toán.",
+    "required_inputs": [
+      "hop_dong",
+      "muc_dich",
+      "ho_so_duyet"
+    ],
+    "conditions_vi": "Đây là hướng dẫn lịch sử, hồ sơ mới tra NĐ210/2026 và hợp đồng cụ thể.",
+    "parameters": {},
+    "authority_type": "thong_tu",
+    "effective_from": "2021-10-15",
+    "effective_to_exclusive": "2026-07-01",
+    "usage": "historical_requires_amendments",
+    "review_status": "candidate_requires_QS_review",
+    "enabled": false,
+    "source_url": "https://kinhtexaydung.gov.vn/wp-content/uploads/2023/02/Thong_tu__637666061125323514.pdf",
+    "work_codes": [],
+    "work_scope": "all",
+    "purposes": [
+      "payment"
+    ],
+    "rule_type": "reference",
+    "predicate": null,
+    "effect": null,
+    "missing_data_behavior": "needs_review",
+    "source_text_raw": "13 \n \n- Dàn giáo hoàn thiện trụ và cột độc lập được tính theo chu vi mặt cắt cột, \ntrụ cộng thêm 3,6m nhân với chiều cao cột, trụ. \n6. Xác định khối lượng trong nghiệm thu, thanh toán và quyết toán \nhợp đồng thi công xây dựng \n6.1. Khi lập hồ sơ mời thầu, chủ đầu tư phải quy định rõ nguyên tắc, phương \npháp đo bóc khối lượng khi nghiệm thu, thanh toán và quyết toán hợp đồng. \n6.2. Nếu trong hợp đồng không có thỏa thuận khác thì nguyên tắc đo bóc \nkhối lượng các công tác xây dựng chủ yếu theo hướng dẫn tại khoản 5 và các quy \nđịnh khác có liên quan. \n6.3. Khối lượng thi công xây dựng hoàn thành được kiểm tra, tính toán, đo \nđạc, xác nhận giữa chủ đầu tư, nhà thầu thi công, tư vấn giám sát theo thời gian \nhoặc giai đoạn thi công đã được quy đ ịnh trong đi ều khoản của Hợp đồng xây \ndựng và phải được đối chiếu với khối lượng trong thiết kế được duyệt để làm cơ \nsở nghiệm thu, thanh toán. Đối với hợp đồng trọn gói không cần đo bóc khối \nlượng hoàn thành chi tiết. Khối lượng phát sinh ngoài thiết kế, dự toán được duyệt \nphải được chủ đầu tư hoặc người quyết định đầu tư chấp thuận, phê duyệt làm cơ \nsở nghiệm thu, thanh toán và quyết toán hợp đồng. \n  ",
+    "legal_selection_note": "Kiểm tra chuyển tiếp, hồ sơ dự án và hợp đồng; thời gian không đủ để kết luận áp dụng.",
+    "approved_by": null,
+    "approved_on": null
+  }
+]

@@ -1,0 +1,1 @@
+N03 SOURCE-READY: đúng ba file được giao; chưa chạy test. Snapshot/hash/diff tại reports/n03. Fixture cùng cao độ thêm z tường minh; decorator xfail N03 vẫn giữ. Tiếp theo chỉ chạy focused secondary/compute SYNTHETIC không DB/CAD/API; --runxfail chỉ đúng test_overlapping_ties_deduct_masonry_once trước khi bỏ decorator nếu đã chứng minh đạt. Không full suite/restart worker.

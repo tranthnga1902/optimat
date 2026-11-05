@@ -19,6 +19,7 @@ import math
 
 from .materials import _fmt
 from .models import FootingTier, FoundationItem, ProjectParams, WorkItem
+from .quantity_details import lean_foundation_row, summarize
 from .walls import _work
 
 SLICES = 200                 # số lát cắt theo độ sâu khi tính phần hố chồng lấn
@@ -116,22 +117,46 @@ def pit_overlap_m3(pits: list[tuple[float, float, dict]]) -> float:
 
 def _neg(code: str, q: float, **kw) -> WorkItem:
     """Dòng trừ (số âm): _work không nhận số âm."""
+    kw.setdefault("dimensions", [dict(label=kw.get("element", "khoản trừ"), basis="deduction",
+        source="Hình học khoản trừ, xem evidence của công tác",
+        note="Khoản trừ không có dài/rộng/cao độc lập; không phải cấu kiện mới")])
     w = _work(code, 0.0, **kw)
     return w.model_copy(update={"quantity": round(-q, 3)})
 
 
+def _footing_rows(foundations: list[FoundationItem]):
+    """Một ký hiệu có thể xuất hiện ở nhiều vị trí hoặc trong hai chi tiết mâu thuẫn."""
+    groups: dict[str, list[FoundationItem]] = {}
+    warnings = []
+    for f in foundations:
+        key = f.name.strip().upper()
+        group = groups.setdefault(key, [])
+        if any(f.model_copy(update={"name": prev.name}) == prev for prev in group):
+            warnings.append(f"Móng {f.name} nhập hai lần với cùng dữ liệu và nguồn: chỉ giữ một dòng.")
+        else:
+            group.append(f)
+
+    rows = []
+    for key, group in groups.items():
+        issue = ""
+        if len(group) > 1:
+            located = all(f.plan and f.plan == group[0].plan and len(f.positions) == f.count and f.count > 0 for f in group)
+            if not located or any(math.dist(p, q) < SAME_SPOT_MM for i, f in enumerate(group)
+                                  for other in group[:i] for p in f.positions for q in other.positions):
+                issue = f"Móng {key} có nhiều dòng cùng ký hiệu: cần đối chiếu vị trí từng khối trên cùng mặt bằng."
+                warnings.append(issue)
+        for i, f in enumerate(group, 1):
+            rows.append((f, key if len(group) == 1 else f"{key}:{i}", issue))
+    return rows, warnings
+
+
 def foundation_works(params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
-    out, warnings = [], []
-    seen: set[str] = set()
+    rows, warnings = _footing_rows(params.foundations)
+    out = []
     earth = any(v is not None for v in (params.natural_ground_level_mm, params.excavation_margin_mm, params.excavation_slope))
     pits: list[tuple[float, float, dict]] = []
     no_pos = []
-    for f in params.foundations:
-        key = f.name.strip().upper()
-        if key in seen:
-            warnings.append(f"Móng {f.name} nhập hai lần: bỏ dòng sau để không đếm trùng (gộp số khối vào một dòng).")
-            continue
-        seen.add(key)
+    for f, key, issue in rows:
         label = f"{f.count} móng {f.name}"
         src = f" [{f.source}]" if f.source else ""
         tiers = tiers_of(f)
@@ -140,18 +165,52 @@ def foundation_works(params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
             formula = f"{f.count} × {_fmt(one) if one is not None else 'thể tích một khối'} m³"
         else:
             formula = f"{f.count} × (" + " + ".join(_tier_text(t) for t in tiers) + ") m"
-        out.append(_work("MONG", f.count * one if one is not None else None, element=label, source="manual",
-                         missing=[] if one is not None else [f"kích thước móng {f.name} (chưa có chi tiết móng)"],
+        dimensions = [dict(label=f"{f.name} lớp {i+1}", count=f.count, length_m=t.length_mm/1000,
+                           width_m=t.width_mm/1000, height_m=t.height_mm/1000,
+                           top_length_m=(t.top_length_mm if t.top_length_mm is not None else t.length_mm)/1000,
+                           top_width_m=(t.top_width_mm if t.top_width_mm is not None else t.width_mm)/1000,
+                           basis="reference" if f.volume_m3 is not None else "input", source=f.source or "Thông số móng người dùng nhập",
+                           note=(f"Đỉnh lớp vát: {t.top_length_mm if t.top_length_mm is not None else t.length_mm:g} × {t.top_width_mm if t.top_width_mm is not None else t.width_mm:g} mm" if t.top_length_mm is not None or t.top_width_mm is not None else "Lớp hộp") + ("; thể tích nhập trực tiếp được ưu tiên, kích thước chỉ tham khảo" if f.volume_m3 is not None else "")) for i,t in enumerate(tiers or [])]
+        if not dimensions:
+            dimensions = [dict(label=f.name, count=f.count, basis="reference" if f.volume_m3 is not None else "input", length_m=None if f.length_mm is None else f.length_mm/1000,
+                width_m=None if f.width_mm is None else f.width_mm/1000, height_m=None if f.height_mm is None else f.height_mm/1000,
+                source=f.source or "Thông số móng người dùng nhập", note="Nhập thể tích không suy ra dài/rộng/cao" if f.volume_m3 is not None else "Thiếu kích thước móng")]
+        if f.gross_length_mm is not None:
+            dimensions.append(dict(label=f"{f.name} toàn băng", count=f.count, length_m=f.gross_length_mm / 1000,
+                                   basis="reference", source=f.source or "Chi tiết móng băng",
+                                   note="Chiều dài gộp trên bản vẽ, chưa trừ phần giao"))
+        if issue:
+            codes = ["MONG", "COP_PHA"]
+            if f.lean_thickness_mm is not None:
+                codes.append("BE_TONG_LOT")
+            if earth:
+                codes.extend(["DAO_DAT", "DAP_DAT"])
+            for code in codes:
+                out.append(_work(code, None, element=f"{label} ({key})", missing=[issue],
+                                 evidence=[f.source] if f.source else [], formwork_of="MONG" if code == "COP_PHA" else None,
+                                 dimensions=[{**dim, "basis": "reference"} for dim in dimensions]))
+            continue
+        out.append(_work("MONG", f.count * one if one is not None else None, dimensions=dimensions, element=label, source="manual",
+                         missing=[] if one is not None else [
+                             f"móng băng {f.name}: cần tiết diện và chiều dài sau khi xử lý phần giao"
+                             if f.kind == "bang" else f"kích thước móng {f.name} (chưa có chi tiết móng)"],
                          formula=formula + src))
         base = tiers[0] if tiers else None
         if f.lean_thickness_mm is not None:
-            out.append(_work("BE_TONG_LOT", f.count * base.length_mm * base.width_mm * f.lean_thickness_mm / 1e9 if base else None,
-                             element=f"lót {label}", source="manual", missing=[] if base else ["dài, rộng móng"],
+            lean_q = f.count * base.length_mm * base.width_mm * f.lean_thickness_mm / 1e9 if base else None
+            lean = _work("BE_TONG_LOT", lean_q,
+                             dimensions=[dict(label=f"lót {f.name}", count=f.count, length_m=base.length_mm/1000 if base else None,
+                                width_m=base.width_mm/1000 if base else None, thickness_m=f.lean_thickness_mm/1000,
+                                source=f.source or "Thông số móng người dùng nhập")], element=f"lót {label}", source="manual", missing=[] if base else ["dài, rộng móng"],
                              formula=(f"{f.count} × {_fmt(base.length_mm / 1000)} × {_fmt(base.width_mm / 1000)} × "
-                                      if base else f"{f.count} × dài × rộng × ") + f"{_fmt(f.lean_thickness_mm / 1000)} m" + src))
+                                      if base else f"{f.count} × dài × rộng × ") + f"{_fmt(f.lean_thickness_mm / 1000)} m" + src)
+            row = lean_foundation_row(f, base, row_id=f"lean:{key}", raw_quantity=lean_q)
+            detail = summarize([row], lean.unit, lean.quantity, scope_complete=not lean.missing,
+                               detail_level="unavailable" if row.role == "reference" else "components")
+            out.append(WorkItem.model_validate({**lean.model_dump(), "quantity_detail": detail.model_dump()}))
         if tiers:
             form = sum(tier_formwork_m2(t) for t in tiers)
-            out.append(_work("COP_PHA", f.count * form, element=f"cốp pha {label}", formwork_of="MONG", source="manual",
+            out.append(_work("COP_PHA", f.count * form, dimensions=dimensions, element=f"cốp pha {label}", formwork_of="MONG", source="manual",
                              formula=f"{f.count} × Σ 2 × (dài + rộng) × cao các lớp thẳng đứng = {f.count} × {_fmt(form)} m²"
                                      + (" (mặt vát không tính)" if any(tier_formwork_m2(t) == 0 for t in tiers) else "") + src))
         elif f.volume_m3 is None:
@@ -166,14 +225,19 @@ def foundation_works(params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
             out.append(_work("DAO_DAT", None, element=f"hố {label}", missing=miss))
             out.append(_work("DAP_DAT", None, element=f"hố {label}", missing=miss))
             continue
+        pit_dimensions = [dict(label=f"hố {f.name}", count=f.count, basis="reference", length_m=p['l']/1000, width_m=p['w']/1000,
+                               height_m=p['d']/1000, slope_ratio=p['m'],
+                               top_level_m=params.natural_ground_level_mm/1000,
+                               bottom_level_m=(params.natural_ground_level_mm-p['d'])/1000, source=f.source or "Thông số móng và hố đào người dùng nhập",
+                               note=f"Dài/rộng đáy hố; cao là sâu đào; taluy {p['m']:g}; không phải kích thước khối đất đắp")]
         v_pit = pit_volume_m3(p)
-        out.append(_work("DAO_DAT", f.count * v_pit, element=f"hố {label}", source="manual",
+        out.append(_work("DAO_DAT", f.count * v_pit, dimensions=pit_dimensions, element=f"hố {label}", source="manual",
                          formula=f"{f.count} × H/6 × (A đáy + 4 A giữa + A đỉnh): đáy {_fmt(p['l'] / 1000)}×{_fmt(p['w'] / 1000)} m, "
                                  f"sâu H {_fmt(p['d'] / 1000)} m, mái m {_fmt(p['m'])}" + src))
         buried = 0.0 if p["top"] >= params.natural_ground_level_mm else params.natural_ground_level_mm - p["top"]
         neck_ok = buried == 0 or None not in (f.neck_b_mm, f.neck_h_mm)
         if one is None or not neck_ok:
-            out.append(_work("DAP_DAT", None, element=f"hố {label}",
+            out.append(_work("DAP_DAT", None, dimensions=pit_dimensions, element=f"hố {label}",
                              missing=([] if one is not None else [f"thể tích móng {f.name}"]) +
                                      ([] if neck_ok else [f"tiết diện cổ móng {f.name}"])))
         else:
@@ -183,9 +247,9 @@ def foundation_works(params: ProjectParams) -> tuple[list[WorkItem], list[str]]:
             if fill < 0:
                 warnings.append(f"Móng {f.name}: khối lượng đắp âm ({_fmt(fill)} m³/khối): hố đào nhỏ hơn khối móng, "
                                 "kiểm tra mở rộng đáy hố, cao độ và kích thước móng.")
-                out.append(_work("DAP_DAT", None, element=f"hố {label}", missing=["khối lượng đắp âm (xem cảnh báo)"]))
+                out.append(_work("DAP_DAT", None, dimensions=pit_dimensions, element=f"hố {label}", missing=["khối lượng đắp âm (xem cảnh báo)"]))
             else:
-                out.append(_work("DAP_DAT", f.count * fill, element=f"hố {label}", source="manual",
+                out.append(_work("DAP_DAT", f.count * fill, dimensions=pit_dimensions, element=f"hố {label}", source="manual",
                                  formula=f"{f.count} × ({_fmt(v_pit)} hố − {_fmt(lean)} lót − {_fmt(one)} móng − {_fmt(neck)} cổ móng) m³"))
         if f.positions:
             if len(f.positions) != f.count:
@@ -215,9 +279,10 @@ def footing_rects(foundations: list[FoundationItem], plan: str) -> list[tuple[st
     """Khung mặt bằng (lớp trên cùng, nơi giằng gối vào) của từng khối móng có vị trí trên mặt bằng móng `plan`.
     shortcut: coi cạnh dài theo trục x như pit_overlap_m3; móng xoay 90° cần thêm hướng vào positions."""
     out = []
-    for f in foundations:
+    rows, _ = _footing_rows(foundations)
+    for f, _, issue in rows:
         tiers = tiers_of(f)
-        if f.plan != plan or not tiers:
+        if issue or f.plan != plan or not tiers:
             continue
         t = tiers[-1]
         hl, hw = (t.top_length_mm or t.length_mm) / 2, (t.top_width_mm or t.width_mm) / 2

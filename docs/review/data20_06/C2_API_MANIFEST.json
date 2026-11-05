@@ -1,0 +1,11 @@
+{
+  "api_source": {"path": "src/optimat/api/project_analysis.py", "sha256": "ecf631350200ce1050ffbb774ff1a0aca1a5c300da1ad84ba7dc3ec6e574948e"},
+  "tests": {"path": "tests/test_project_analysis.py", "sha256": "cd3c8f706489abc994b655822ab52829089eb33d9576aab07ef4143a3b933da9", "result": "6 passed; 1 deselected; test route bị treo trong lần chạy trước"},
+  "source_kc": {"path": "data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf", "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"},
+  "cad_facts": {"path": "docs/review/data20_07/C2_A4_CAD_SOURCE.json", "sha256": "ef19c2c01f62d41ac0f81c5bb8bba6d2205d41c118e3de2799a2b2066e3b779"},
+  "cad_block_facts": {"path": "docs/review/data20_07/C2_A4_CAD_BLOCK_SOURCE.json", "sha256": "9a388082d25b8a59f422c24a6cc91af629c198ec0307e0468204f0745c5bc48c"},
+  "candidate_runtime_verified": false,
+  "baseline_post_sent_by_06": false,
+  "baseline_detail": "Lần của 06 bị chặn trước khi gửi; POST độc lập của 01 trả 200. Không suy trạng thái server từ netstat sandbox.",
+  "baseline_other_operator": {"status": 200, "seconds": 76.0175357, "response_sha256": "bf2082f99470fa63c8f7f17083803c08c1a595c61e4f9a7c1a46ef16fbd1acf3", "structural_columns_present": false, "column_schedule_rows": 0, "runtime": "baseline trước reader mới", "no_database_save": "theo receipt, chưa kiểm DB"}
+}

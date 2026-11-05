@@ -1,0 +1,23 @@
+{
+  "files_frozen_before_test": {
+    "src/optimat/rough/boq.py": "573d5cbfe2591c643dbc379952dbff0a7a4f02fb318018805a27463ec10a273a",
+    "tests/test_rough_boq_detail.py": "b29242ef36dce919e524e5f848b285b0337dfa7614a8e39ac95d796101d381b6",
+    "tests/test_rough_rebar.py": "b536485c37017ea34db0f0a9730e5c6f7c7d3b74d7631f717c986e5e4b56f930"
+  },
+  "files_after_test": {
+    "src/optimat/rough/boq.py": "573d5cbfe2591c643dbc379952dbff0a7a4f02fb318018805a27463ec10a273a",
+    "tests/test_rough_boq_detail.py": "b29242ef36dce919e524e5f848b285b0337dfa7614a8e39ac95d796101d381b6",
+    "tests/test_rough_rebar.py": "b536485c37017ea34db0f0a9730e5c6f7c7d3b74d7631f717c986e5e4b56f930"
+  },
+  "hash_drift": false,
+  "rebar_pre_edit_sha256": "57cfad28befdadec3e9ddeb62cf38578b7846802c5101ede1d56f2339caa5dc0",
+  "rebar_only_sheetnames_assert_changed": true,
+  "legacy_assertions_retained": true,
+  "test_command": ".venv\\Scripts\\python.exe -B -m pytest tests/test_rough_boq_detail.py tests/test_rough_partial.py tests/test_export_boq_cli.py tests/test_rough_rebar.py::test_boq_excel_sheets -q -p no:cacheprovider",
+  "focused_passed": 61,
+  "test_exit_code": 0,
+  "excel_native_checked": false,
+  "ui_checked": false,
+  "raw_group_backend_field": false,
+  "prototype_sha256": "75641444766379ada63ef584d608304be4bde4a1d33ee96f71c1e2653ba9a981"
+}

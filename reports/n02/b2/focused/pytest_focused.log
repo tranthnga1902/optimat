@@ -1,0 +1,17 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 166 items
+
+tests\test_rebar_scope_api.py ..........................                 [ 15%]
+tests\test_takeoff_structural_concurrency.py ........                    [ 20%]
+tests\test_takeoff_view_concurrency.py .....                             [ 23%]
+tests\test_rough_rebar.py .............................................. [ 51%]
+................................                                         [ 70%]
+tests\test_rough_steel.py ...                                            [ 72%]
+tests\test_rough_materials.py ..................................         [ 92%]
+tests\test_rough_formwork_materials.py ............                      [100%]
+
+============================ 166 passed in 10.47s =============================

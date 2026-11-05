@@ -61,7 +61,7 @@ def _column_layers(drawing) -> set[str]:
 
 def signal_columns(drawing) -> list[Column]:
     """Cột theo ký hiệu: nét (không tính nét hatch bị phá) trên layer cột hoặc trong block cột; nét nối đầu nhau gộp
-    thành một hình, giữ hình có hai cạnh khung bao trong config.COLUMN_SIDE_MM."""
+    thành một hình, chỉ giữ khung bao có đủ bốn cạnh chữ nhật trong config.COLUMN_SIDE_MM."""
     lo, hi = config.COLUMN_SIDE_MM
     layers, blocks = _column_layers(drawing), {}
     def is_col(seg) -> bool:
@@ -79,16 +79,54 @@ def signal_columns(drawing) -> list[Column]:
         return k
     key = lambda x, y: (round(x), round(y))
     for s in segs:
+        if getattr(s, "contour_id", None) is not None:
+            continue
         parent[find(key(s.x1, s.y1))] = find(key(s.x2, s.y2))
-    boxes: dict = {}
+    groups: dict = {}
     for s in segs:
-        b = boxes.setdefault(find(key(s.x1, s.y1)), [s.x1, s.y1, s.x1, s.y1])
-        b[:] = [min(b[0], s.x1, s.x2), min(b[1], s.y1, s.y2), max(b[2], s.x1, s.x2), max(b[3], s.y1, s.y2)]
+        contour = getattr(s, "contour_id", None)
+        group_key = ("contour", contour) if contour is not None else ("endpoints", find(key(s.x1, s.y1)))
+        groups.setdefault(group_key, []).append(s)
     out = []
-    for x0, y0, x1, y1 in boxes.values():
-        if lo <= min(x1 - x0, y1 - y0) and max(x1 - x0, y1 - y0) <= hi:
+    for group in groups.values():
+        x0 = min(min(s.x1, s.x2) for s in group)
+        y0 = min(min(s.y1, s.y2) for s in group)
+        x1 = max(max(s.x1, s.x2) for s in group)
+        y1 = max(max(s.y1, s.y2) for s in group)
+        if not (lo <= min(x1 - x0, y1 - y0) and max(x1 - x0, y1 - y0) <= hi):
+            continue
+        # Kiểm phủ từng cạnh bằng tọa độ thật; khóa làm tròn nối cụm không chứng minh đường bao kín.
+        sides = [[], [], [], []]
+        eps = 1e-6
+        for s in group:
+            for i, edge in enumerate((y0, y1)):
+                if abs(s.y1 - edge) <= eps and abs(s.y2 - edge) <= eps:
+                    sides[i].append(sorted((s.x1, s.x2)))
+            for i, edge in enumerate((x0, x1), start=2):
+                if abs(s.x1 - edge) <= eps and abs(s.x2 - edge) <= eps:
+                    sides[i].append(sorted((s.y1, s.y2)))
+        closed = True
+        # Nét rời có đường chia xuyên khung: chưa rõ một hình chia ô hay nhiều cột chung cạnh.
+        if getattr(group[0], "contour_id", None) is None and any(
+            (x0 < s.x1 < x1 and abs(s.x1-s.x2) <= eps
+             and min(s.y1, s.y2) <= y0+eps and max(s.y1, s.y2) >= y1-eps)
+            or (y0 < s.y1 < y1 and abs(s.y1-s.y2) <= eps
+                and min(s.x1, s.x2) <= x0+eps and max(s.x1, s.x2) >= x1-eps)
+            for s in group
+        ):
+            continue
+        for spans, start, end in zip(sides, (x0, x0, y0, y0), (x1, x1, y1, y1)):
+            covered = start
+            for a, b in sorted(spans):
+                if a > covered + eps:
+                    break
+                covered = max(covered, b)
+            if covered < end - eps:
+                closed = False
+                break
+        if closed:
             out.append(Column(id="", x=round((x0 + x1) / 2, 1), y=round((y0 + y1) / 2, 1),
-                              b_mm=round((x1 - x0) / 10) * 10, h_mm=round((y1 - y0) / 10) * 10, source="signal"))
+                              b_mm=x1 - x0, h_mm=y1 - y0, source="signal"))
     return out
 
 
@@ -114,8 +152,43 @@ def _fill_columns(drawing, cell: float) -> list[Column]:
                 polys.append(p)
     if not polys:
         return []
-    x0 = min(q[0] for p in polys for q in p) - 2 * cell
-    y0 = min(q[1] for p in polys for q in p) - 2 * cell
+    # mỗi cụm vùng tô gần nhau dựng lưới riêng: một lưới chung cho cả file nhiều khung vẽ cách nhau hàng km cần hàng trăm GiB
+    origin = (min(q[0] for p in polys for q in p) - 2 * cell, min(q[1] for p in polys for q in p) - 2 * cell)
+    found = [c for group in _near_groups(polys, 2 * cell) for c in _raster_columns(group, cell, lo, hi, origin)]
+    found.sort(key=lambda c: (round(c.y - c.h_mm / 2), round(c.x - c.b_mm / 2)))   # thứ tự quét lưới như trước
+    return [c.model_copy(update={"id": f"C{i}"}) for i, c in enumerate(found, start=1)]
+
+
+def _near_groups(polys, gap: float) -> list[list]:
+    """Gom đa giác có hộp bao chạm nhau (nới gap) thành cụm; tra lân cận qua lưới thô ô 1 m."""
+    boxes = [(min(q[0] for q in p) - gap, min(q[1] for q in p) - gap, max(q[0] for q in p) + gap, max(q[1] for q in p) + gap)
+             for p in polys]
+    parent = list(range(len(polys)))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+    size, buckets = 1000.0, {}
+    for i, (ax0, ay0, ax1, ay1) in enumerate(boxes):
+        keys = [(gx, gy) for gx in range(int(ax0 // size), int(ax1 // size) + 1) for gy in range(int(ay0 // size), int(ay1 // size) + 1)]
+        for k in keys:
+            for j in buckets.get(k, ()):
+                bx0, by0, bx1, by1 = boxes[j]
+                if ax0 <= bx1 and bx0 <= ax1 and ay0 <= by1 and by0 <= ay1:
+                    parent[find(i)] = find(j)
+            buckets.setdefault(k, []).append(i)
+    groups: dict[int, list] = {}
+    for i, p in enumerate(polys):
+        groups.setdefault(find(i), []).append(p)
+    return list(groups.values())
+
+
+def _raster_columns(polys, cell: float, lo: float, hi: float, origin: tuple[float, float]) -> list[Column]:
+    # gốc lưới cụm nằm trên cùng mạng ô với gốc chung: kết quả trùng với một lưới phủ cả bản vẽ
+    x0 = origin[0] + ((min(q[0] for p in polys for q in p) - 2 * cell - origin[0]) // cell) * cell
+    y0 = origin[1] + ((min(q[1] for p in polys for q in p) - 2 * cell - origin[1]) // cell) * cell
     nx = int((max(q[0] for p in polys for q in p) - x0) / cell) + 3
     ny = int((max(q[1] for p in polys for q in p) - y0) / cell) + 3
     grid = np.zeros((ny, nx), dtype=bool)
@@ -141,8 +214,7 @@ def _fill_columns(drawing, cell: float) -> list[Column]:
             continue
         cx = x0 + (sl[1].start + (cols.min() + cols.max() + 1) / 2) * cell
         cy = y0 + (sl[0].start + (rows.min() + rows.max() + 1) / 2) * cell
-        out.append(Column(id=f"C{len(out) + 1}", x=round(cx, 1), y=round(cy, 1),
-                          b_mm=round(b / 10) * 10, h_mm=round(h / 10) * 10))
+        out.append(Column(id="", x=round(cx, 1), y=round(cy, 1), b_mm=round(b / 10) * 10, h_mm=round(h / 10) * 10))
     return out
 
 
@@ -215,12 +287,38 @@ def column_works(plan: str, columns: list[Column], height_mm: float,
         n = len(group)
         hole = sum(_beam_end_area(c, beams, params) for c in group)
         label = f"{n} cột {b:.0f}×{h:.0f}"
-        works.append(_work("COT", n * b * h / 1e6 * hc, plan=plan, element=label,
+        dimensions = [dict(label=c.id, count=1, length_m=h/1000, width_m=b/1000, height_m=hc, floor_height_m=height_mm/1000,
+                           thickness_m=slab/1000 if slab is not None else None,
+                           source=f"{plan}: {c.id} ({c.source}); chiều cao tầng và dày sàn",
+                           field_sources={"length_m": f"Column.{c.id}.h_mm ({c.source})", "width_m": f"Column.{c.id}.b_mm ({c.source})",
+                                          "height_m": "PlanInput.height_mm − dày sàn" if slab is not None else "PlanInput.height_mm (chưa có dày sàn)"},
+                           note="Cao tính bê tông = cao tầng − dày sàn" + ("; chưa có dày sàn, đang lấy cao tầng" if slab is None else "") + "; CP còn trừ đầu dầm riêng") for c in group]
+        works.append(_work("COT", n * b * h / 1e6 * hc, dimensions=dimensions, plan=plan, element=label,
                            formula=f"{n} × {_fmt(b / 1000)} m × {_fmt(h / 1000)} m × {_fmt(hc)} m"))
-        works.append(_work("COP_PHA", n * 2 * (b + h) / 1000 * hc - hole, plan=plan, element=f"cốp pha {label}", formwork_of="COT",
+        works.append(_work("COP_PHA", n * 2 * (b + h) / 1000 * hc - hole, dimensions=dimensions, plan=plan, element=f"cốp pha {label}", formwork_of="COT",
                            formula=f"{n} × 2 × ({_fmt(b / 1000)} + {_fmt(h / 1000)}) m × {_fmt(hc)} m"
                                    + (f" − {_fmt(hole)} m² đầu dầm gác vào" if hole else "")))
     return works, warnings
+
+
+def schedule_column_works(spans) -> list[WorkItem]:
+    """Bê tông, cốp pha cột theo bảng thống kê cột (rough/structural.py read_column_schedule): mỗi ô = count × b × h ×
+    (z_to − z_from). Cốp pha chu vi đủ, chưa trừ đầu dầm gác vào (bảng không cho vị trí dầm)."""
+    works = []
+    for s in spans:
+        hc = (s.z_to_mm - s.z_from_mm) / 1000
+        label = f"{s.count} cột {s.code} {s.b_mm:.0f}×{s.h_mm:.0f}, {s.z_from_mm / 1000:+.3f} → {s.z_to_mm / 1000:+.3f}"
+        dimensions = [dict(label=s.code, count=s.count, length_m=s.h_mm/1000, width_m=s.b_mm/1000, height_m=hc,
+                           bottom_level_m=s.z_from_mm/1000, top_level_m=s.z_to_mm/1000,
+                           source=f"Bảng thống kê cột {s.code}: {s.z_from_mm:g} → {s.z_to_mm:g} mm",
+                           note="Chiều cao đoạn cột theo hai cao độ; chưa trừ đầu dầm khỏi cốp pha")]
+        works.append(_work("COT", s.count * s.b_mm * s.h_mm / 1e6 * hc, dimensions=dimensions, plan="bảng thống kê cột", element=label,
+                           formula=f"{s.count} × {_fmt(s.b_mm / 1000)} m × {_fmt(s.h_mm / 1000)} m × {_fmt(hc)} m"))
+        works.append(_work("COP_PHA", s.count * 2 * (s.b_mm + s.h_mm) / 1000 * hc, dimensions=dimensions, plan="bảng thống kê cột",
+                           element=f"cốp pha {label}", formwork_of="COT",
+                           formula=f"{s.count} × 2 × ({_fmt(s.b_mm / 1000)} + {_fmt(s.h_mm / 1000)}) m × {_fmt(hc)} m "
+                                   "(chưa trừ đầu dầm)"))
+    return works
 
 
 def columns_from_dicts(rows: Optional[list[dict]]) -> list[Column]:

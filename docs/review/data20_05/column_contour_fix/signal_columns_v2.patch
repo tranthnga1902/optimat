@@ -1,0 +1,69 @@
+--- signal_columns before
++++ signal_columns v2
+@@ -1,6 +1,6 @@
+ def signal_columns(drawing) -> list[Column]:
+     """Cột theo ký hiệu: nét (không tính nét hatch bị phá) trên layer cột hoặc trong block cột; nét nối đầu nhau gộp
+-    thành một hình, giữ hình có hai cạnh khung bao trong config.COLUMN_SIDE_MM."""
++    thành một hình, chỉ giữ khung bao có đủ bốn cạnh chữ nhật trong config.COLUMN_SIDE_MM."""
+     lo, hi = config.COLUMN_SIDE_MM
+     layers, blocks = _column_layers(drawing), {}
+     def is_col(seg) -> bool:
+@@ -18,14 +18,52 @@
+         return k
+     key = lambda x, y: (round(x), round(y))
+     for s in segs:
++        if getattr(s, "contour_id", None) is not None:
++            continue
+         parent[find(key(s.x1, s.y1))] = find(key(s.x2, s.y2))
+-    boxes: dict = {}
++    groups: dict = {}
+     for s in segs:
+-        b = boxes.setdefault(find(key(s.x1, s.y1)), [s.x1, s.y1, s.x1, s.y1])
+-        b[:] = [min(b[0], s.x1, s.x2), min(b[1], s.y1, s.y2), max(b[2], s.x1, s.x2), max(b[3], s.y1, s.y2)]
++        contour = getattr(s, "contour_id", None)
++        group_key = ("contour", contour) if contour is not None else ("endpoints", find(key(s.x1, s.y1)))
++        groups.setdefault(group_key, []).append(s)
+     out = []
+-    for x0, y0, x1, y1 in boxes.values():
+-        if lo <= min(x1 - x0, y1 - y0) and max(x1 - x0, y1 - y0) <= hi:
++    for group in groups.values():
++        x0 = min(min(s.x1, s.x2) for s in group)
++        y0 = min(min(s.y1, s.y2) for s in group)
++        x1 = max(max(s.x1, s.x2) for s in group)
++        y1 = max(max(s.y1, s.y2) for s in group)
++        if not (lo <= min(x1 - x0, y1 - y0) and max(x1 - x0, y1 - y0) <= hi):
++            continue
++        # Kiểm phủ từng cạnh bằng tọa độ thật; khóa làm tròn nối cụm không chứng minh đường bao kín.
++        sides = [[], [], [], []]
++        eps = 1e-6
++        for s in group:
++            for i, edge in enumerate((y0, y1)):
++                if abs(s.y1 - edge) <= eps and abs(s.y2 - edge) <= eps:
++                    sides[i].append(sorted((s.x1, s.x2)))
++            for i, edge in enumerate((x0, x1), start=2):
++                if abs(s.x1 - edge) <= eps and abs(s.x2 - edge) <= eps:
++                    sides[i].append(sorted((s.y1, s.y2)))
++        closed = True
++        # Nét rời có đường chia xuyên khung: chưa rõ một hình chia ô hay nhiều cột chung cạnh.
++        if getattr(group[0], "contour_id", None) is None and any(
++            (x0 < s.x1 < x1 and abs(s.x1-s.x2) <= eps
++             and min(s.y1, s.y2) <= y0+eps and max(s.y1, s.y2) >= y1-eps)
++            or (y0 < s.y1 < y1 and abs(s.y1-s.y2) <= eps
++                and min(s.x1, s.x2) <= x0+eps and max(s.x1, s.x2) >= x1-eps)
++            for s in group
++        ):
++            continue
++        for spans, start, end in zip(sides, (x0, x0, y0, y0), (x1, x1, y1, y1)):
++            covered = start
++            for a, b in sorted(spans):
++                if a > covered + eps:
++                    break
++                covered = max(covered, b)
++            if covered < end - eps:
++                closed = False
++                break
++        if closed:
+             out.append(Column(id="", x=round((x0 + x1) / 2, 1), y=round((y0 + y1) / 2, 1),
+-                              b_mm=round((x1 - x0) / 10) * 10, h_mm=round((y1 - y0) / 10) * 10, source="signal"))
++                              b_mm=x1 - x0, h_mm=y1 - y0, source="signal"))
+     return out

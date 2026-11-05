@@ -1,0 +1,43 @@
+{
+  "status": "source_checked_not_built",
+  "files": {
+    "frontend/src/app/(user)/dieu-chinh/advice-scope.ts": {
+      "before": "43F864851636141CFAEDACD1916B4D1C3DEC4AA708D6A15F3CF6152992958734",
+      "after": "3522DF96EF415B5DEFF420B217709A1626B06E8035FD36FC270B0E517A3DCAB8"
+    },
+    "frontend/scripts/check-advice-scope.cjs": {
+      "before": null,
+      "after": "FDEF8C5B3616AACF92EC650D91C4342586D79DE928C0DA46A030A8B0D1E6C0C1"
+    }
+  },
+  "unchangedDependenciesSha256": {
+    "frontend/src/app/(user)/dieu-chinh/AdviceSheet.tsx": "5565EEED0B435F131100068635D164E2ABB71DB4C0F02BC34776819050E489FE",
+    "frontend/src/components/MaterialAdvisor.tsx": "02B29C730581E92631C82F2F195767073013B958053E16C763A7D4F385E7C5A3",
+    "frontend/src/app/(user)/do-boc/model.ts": "F34763FA040DB229F8F3DDB5CCC090A5CD0DDC2ADB06C85968E55C4BD73F5558",
+    "frontend/src/lib/review-session.ts": "1DB96FC93D21492F52AA0D721D645DA8B7976E7A79ACEB7634A3432620B6BB6C",
+    "frontend/src/lib/work-review.ts": "D1D9F724A9949A8426D9102DA8CFD005014C18E5CB67F02AF40C9AB3B3655B29",
+    "frontend/.next-404-stage/BUILD_ID": "DB9455BEAA055B032B88C1BABA60B0728185FB76C7AB2536FCE7A20CEC31B956",
+    "frontend/src/app/(user)/toi-uu/Proposal.tsx": "C8BF841B7699C431BB356F6C5EAD18DA2FD6A8BE0D6287DD783290A3CE1CD7AA",
+    "src/optimat/agent/material_advisor.py": "463E8F88B2C92958B6217CDE60EA419ECDBB345EF2569E912094D2ADB300210E"
+  },
+  "patch": "advice_scope_f01.patch",
+  "checks": {
+    "beforeFix": {
+      "exit": 1,
+      "assertion": "null !== 3",
+      "log": "advice_scope_f01_before.log"
+    },
+    "harness": {
+      "exit": 0,
+      "log": "advice_scope_f01_regression_final.log"
+    },
+    "eslintBothFiles": {
+      "exit": 0,
+      "log": "advice_scope_f01_eslint_final.log"
+    },
+    "typescriptNoEmit": {
+      "exit": 0,
+      "log": "advice_scope_f01_typescript.log"
+    }
+  }
+}

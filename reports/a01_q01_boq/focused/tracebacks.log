@@ -1,0 +1,29 @@
+================================== FAILURES ===================================
+_______________ test_reference_factor_downgrades_material_to_c ________________
+
+    def test_reference_factor_downgrades_material_to_c():
+        """Hệ số tham khảo (có số, nguồn ngoài TT 38, norm_code trống): vật liệu ra số nhưng tạm tính C, mức xác nhận hạ xuống
+        'tinh', có cảnh báo nêu nguồn; hệ số có khoảng min–max cho khoảng giá trị. Hệ số có norm_code: giữ trạng thái công tác."""
+        from optimat.rough.materials import materials_for_works
+        from optimat.rough.norms import Norm
+        cat = Catalog.from_csv(None)
+        w = WorkItem(code="SAN", name="s", unit="m³", quantity=10.0, status="B")
+        ref = Norm("BE_TONG_TRON", "M250", "XM02", "", 415.125, "kg / m³", "", "cem.gov.vn", "", confirmation="nguon", checked_on="2026-10-30")
+        rng = Norm("BE_TONG_TRON", "M250", "CA01", "", None, "m³ / m³", "", "kinh nghiệm", "", qty_min=0.4, qty_max=0.5, confirmation="kinh_nghiem")
+        official = Norm("BE_TONG_TRON", "M250", "DA01", "", 0.887, "m³ / m³", "BẢNG-THỬ", "TT 38", "")
+        bill = materials_for_works([w], ProjectParams(concrete_supply="site_mix", concrete_grade="M250"), cat, (ref, rng, official))
+        xm = next(m for m in bill.materials if m.material_id == "XM02")
+>       assert xm.quantity == pytest.approx(4.151, abs=1e-3) and xm.status == "C" and xm.confirmation == "tinh"
+E       AssertionError: assert (4.151 == 4.151 ± 0.001
+E         
+E         comparison failed
+E         Obtained: 4.151
+E         Expected: 4.151 ± 0.001 and 'D' == 'C'
+E         
+E         - C
+E         + D)
+
+tests\test_rough_status.py:104: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rough_status.py::test_reference_factor_downgrades_material_to_c
+======================== 1 failed, 87 passed in 37.31s ========================

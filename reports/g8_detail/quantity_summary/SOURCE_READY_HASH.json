@@ -1,0 +1,8 @@
+{
+  "src/optimat/rough/models.py": "69f12ffb9ee6e4250d8569f80281d076f461e1252e353cbb8e8a297ac9a06ac2",
+  "src/optimat/rough/quantity_summary.py": "2ba36d8a4a9ede72e239856f94ffe7e9bb98462cba0a252ead90f847de16bb6f",
+  "src/optimat/rough/takeoff.py": "96677ab2bcf42331911a2c486f3ecbe1cc00b2d58a152e1dfa8509f6886d42e4",
+  "tests/test_rough_quantity_summary.py": "3b97941d2eaddb20c9951f27fb2782665b8fdcdfc475ec6e2c2b45494d23de53",
+  "tests/test_rough_quantity_details.py": "012eefaffc397763ddbfa97137552428f34157557491b1c334e82e603ee3810d",
+  "tests/test_rough_area_details.py": "615017f0d4e2e083b0c3d33e200e1c8c867cd5a647deeaf2eb05f4ae488e0946"
+}

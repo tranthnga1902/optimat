@@ -1,0 +1,11 @@
+{
+  "exit_code": 0,
+  "method": "exact target source copied after normalized patch equivalence; patch byte reproduction NOT_PASS",
+  "patch_result_sha256": "a4eb6c9608ea9dc6985f6f306d310a1c0faf798077c35fd50d8980163e843f64",
+  "review_after": "c106399d612dc40c9687956b879a8edd09902c5b94cedc2d59215609c03a67a5",
+  "review_stable": true,
+  "test_after": "4f85177ce0601160b9c1455c76e4e8b7e0694c269dc0bd0a15183b9392f208cf",
+  "test_stable": true,
+  "base_review_stable": true,
+  "scope": "Isolated src/data snapshot; no conftest/DB/runtime"
+}

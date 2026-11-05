@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_rebar.py",
+    "tests/test_rough_steel.py",
+    "tests/test_rough_agent.py",
+    "-k",
+    "not test_agent_api_rough_params",
+    "-q",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=reports/n01/temp_focused"
+  ],
+  "exit_code": 0,
+  "seconds": 15.820218563079834,
+  "database_env_removed": true,
+  "excluded": "test_agent_api_rough_params: TestClient socketpair sandbox issue documented in reports/c01_regression/HANDOFF.md"
+}

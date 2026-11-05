@@ -1,0 +1,3 @@
+ma,mau,loai,ghi_chu
+MA01,\b(vi keo|keo thep|keo go|xa go|li to|ton|ngoi)\b,khung,"Mái khung: Not supported (S08-03). Xét trước mái bê tông: mái ngói trên sàn BTCT vẫn báo phần khung"
+MA02,\b(mai btct|san mai|mai bang|mai be tong|be tong mai|ket cau mai)\b,be_tong,"Mái bê tông: nhập diện tích, dày trong thông số roofs"

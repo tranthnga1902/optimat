@@ -50,7 +50,7 @@ export function Projects() {
         {err ? <Note>{err}</Note> : !d ? <Loading /> : !d.rows.length ? <Empty>Chưa có dự án nào{q.q ? " khớp" : ""}.</Empty> : <>
           <div className="tw max-h-[55vh] overflow-y-auto">
             <table className="nonum">
-              <thead className="sticky top-0 bg-card"><tr><th>Dự án</th><th>Chủ dự án</th><th className="n">Hồ sơ CAD</th><th className="n">Bóc tách</th>
+              <thead className="sticky top-0 bg-card"><tr><th>Dự án</th><th>Chủ dự án</th><th className="n">Tệp dự án</th><th className="n">Bóc tách</th>
                 <th className="n">Tối ưu</th><th>Cập nhật</th><th /></tr></thead>
               <tbody>
                 {d.rows.map((r) => (
@@ -75,6 +75,22 @@ export function Projects() {
 
 function ProjectDetail({ d, onClose }: { d: Detail; onClose: () => void }) {
   const p = d.project;
+  const [downloadError, setDownloadError] = useState("");
+  const download = async (f: Detail["files"][number]) => {
+    setDownloadError("");
+    try {
+      const response = await fetch(`/api/admin/projects/${String(p.project_id)}/files/${f.file_id}`);
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(typeof body?.detail === "string" ? body.detail : `Không tải được tệp (${response.status}).`);
+      }
+      const url = URL.createObjectURL(await response.blob());
+      try {
+        const link = document.createElement("a"); link.href = url; link.download = f.filename;
+        document.body.appendChild(link); link.click(); link.remove();
+      } finally { setTimeout(() => URL.revokeObjectURL(url), 1000); }
+    } catch (e) { setDownloadError(e instanceof Error ? e.message : "Không tải được tệp."); }
+  };
   return (
     <Card title={<span className="flex flex-wrap items-center gap-2">{p.name}<span className="text-[13px] font-normal text-muted">#{String(p.project_id)} · {p.email}</span>
       <button className="btn ml-auto" type="button" onClick={onClose}>Đóng</button></span>}>
@@ -87,13 +103,14 @@ function ProjectDetail({ d, onClose }: { d: Detail; onClose: () => void }) {
           </div>
         ))}
       </dl>
-      <h3 className="m-0 text-[15px] font-bold">Hồ sơ CAD ({d.files.length})</h3>
-      {d.files.length ? <div className="tw"><table className="nonum"><thead><tr><th>File</th><th>Loại</th><th>Tải lên</th></tr></thead><tbody>
-        {d.files.map((f) => <tr key={f.file_id}><td>{f.filename}</td><td>{f.file_type.toUpperCase()}</td><td>{when(f.uploaded_at)}</td></tr>)}
+      <h3 className="m-0 text-[15px] font-bold">Tệp dự án ({d.files.length})</h3>
+      {d.files.length ? <div className="tw"><table className="nonum"><thead><tr><th>File</th><th>Loại</th><th>Tải lên</th><th /></tr></thead><tbody>
+        {d.files.map((f) => <tr key={f.file_id}><td>{f.filename}</td><td>{f.file_type.toUpperCase()}</td><td>{when(f.uploaded_at)}</td><td><button className="btn" type="button" onClick={() => download(f)}>Tải {f.filename}</button></td></tr>)}
       </tbody></table></div> : <Empty>Chưa có file nào.</Empty>}
+      {downloadError && <Note>{downloadError}</Note>}
       <h3 className="m-0 text-[15px] font-bold">Kết quả bóc tách ({d.takeoffs.length})</h3>
       {d.takeoffs.length ? <div className="tw"><table className="nonum"><thead><tr><th>Mã</th><th>Loại</th><th>File</th><th>Trạng thái</th><th>Tạo lúc</th></tr></thead><tbody>
-        {d.takeoffs.map((t) => <tr key={t.takeoff_id}><td>#{t.takeoff_id}</td><td>{t.kind === "rough" ? "Phần thô" : "Tường"}</td>
+        {d.takeoffs.map((t) => <tr key={t.takeoff_id}><td>#{t.takeoff_id}</td><td>{t.kind === "rough" ? "Phần thô" : t.kind === "synthetic_housing" ? "Nhà giả lập" : "Tường"}</td>
           <td>{d.files.find((f) => f.file_id === t.file_id)?.filename || "—"}</td>
           <td>{t.confirmed_at ? <Pill level="ok">Đã xác nhận {when(t.confirmed_at)}</Pill> : <Pill level="warn">Chưa xác nhận</Pill>}</td>
           <td>{when(t.created_at)}</td></tr>)}

@@ -1,0 +1,38 @@
+{
+  "actual_ui_helper": true,
+  "browser_run": false,
+  "checked": [
+    {
+      "axis": "4/A",
+      "work_key": "w:22",
+      "before_rows": 0,
+      "after_rows": 1,
+      "quantity": null,
+      "checked": false
+    },
+    {
+      "axis": "4/A",
+      "work_key": "w:50",
+      "before_rows": 0,
+      "after_rows": 1,
+      "quantity": null,
+      "checked": false
+    },
+    {
+      "axis": "4/B",
+      "work_key": "w:19",
+      "before_rows": 0,
+      "after_rows": 1,
+      "quantity": null,
+      "checked": false
+    },
+    {
+      "axis": "4/B",
+      "work_key": "w:47",
+      "before_rows": 0,
+      "after_rows": 1,
+      "quantity": null,
+      "checked": false
+    }
+  ]
+}

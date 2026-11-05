@@ -1,0 +1,80 @@
+.window {
+  position: fixed;
+  inset: 16px 16px 16px auto;
+  width: min(480px, calc(100vw - 32px));
+  height: min(800px, calc(100dvh - 32px));
+  max-width: none;
+  max-height: none;
+  margin: auto 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 16px 48px #10261f26;
+}
+
+.window::backdrop {
+  background: #10261f26;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px;
+  border-bottom: 1px solid var(--rule2);
+}
+
+.heading {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.heading h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.context {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  padding: 18px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .window {
+    inset: 12px;
+    width: calc(100vw - 24px);
+    height: calc(100dvh - 24px);
+    margin: 0;
+    border-radius: 12px;
+  }
+
+  .header,
+  .body {
+    padding: 14px;
+  }
+}

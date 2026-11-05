@@ -1,0 +1,212 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [
+      {
+        "source": "/api/:path*",
+        "destination": "http://127.0.0.1:8000/api/:path*",
+        "regex": "^/api(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+      },
+      {
+        "source": "/docs",
+        "destination": "http://127.0.0.1:8000/docs",
+        "regex": "^/docs(?:/)?$"
+      },
+      {
+        "source": "/openapi.json",
+        "destination": "http://127.0.0.1:8000/openapi.json",
+        "regex": "^/openapi\\.json(?:/)?$"
+      }
+    ],
+    "fallback": []
+  },
+  "dynamicRoutes": [],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/co-so-du-lieu",
+      "regex": "^/co\\-so\\-du\\-lieu(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/co\\-so\\-du\\-lieu(?:/)?$"
+    },
+    {
+      "page": "/dai-ly",
+      "regex": "^/dai\\-ly(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dai\\-ly(?:/)?$"
+    },
+    {
+      "page": "/dang-nhap",
+      "regex": "^/dang\\-nhap(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dang\\-nhap(?:/)?$"
+    },
+    {
+      "page": "/danh-muc",
+      "regex": "^/danh\\-muc(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/danh\\-muc(?:/)?$"
+    },
+    {
+      "page": "/dieu-chinh",
+      "regex": "^/dieu\\-chinh(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dieu\\-chinh(?:/)?$"
+    },
+    {
+      "page": "/do-boc",
+      "regex": "^/do\\-boc(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/do\\-boc(?:/)?$"
+    },
+    {
+      "page": "/du-an",
+      "regex": "^/du\\-an(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/du\\-an(?:/)?$"
+    },
+    {
+      "page": "/du-an-cua-toi",
+      "regex": "^/du\\-an\\-cua\\-toi(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/du\\-an\\-cua\\-toi(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/gia",
+      "regex": "^/gia(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/gia(?:/)?$"
+    },
+    {
+      "page": "/kiem-soat",
+      "regex": "^/kiem\\-soat(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/kiem\\-soat(?:/)?$"
+    },
+    {
+      "page": "/mapping",
+      "regex": "^/mapping(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mapping(?:/)?$"
+    },
+    {
+      "page": "/mo-hinh",
+      "regex": "^/mo\\-hinh(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mo\\-hinh(?:/)?$"
+    },
+    {
+      "page": "/nguoi-dung",
+      "regex": "^/nguoi\\-dung(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/nguoi\\-dung(?:/)?$"
+    },
+    {
+      "page": "/nhan-dien",
+      "regex": "^/nhan\\-dien(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/nhan\\-dien(?:/)?$"
+    },
+    {
+      "page": "/phan-tho",
+      "regex": "^/phan\\-tho(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/phan\\-tho(?:/)?$"
+    },
+    {
+      "page": "/quy-tac",
+      "regex": "^/quy\\-tac(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/quy\\-tac(?:/)?$"
+    },
+    {
+      "page": "/tiep-nhan",
+      "regex": "^/tiep\\-nhan(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tiep\\-nhan(?:/)?$"
+    },
+    {
+      "page": "/toi-uu",
+      "regex": "^/toi\\-uu(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/toi\\-uu(?:/)?$"
+    },
+    {
+      "page": "/tong-quan",
+      "regex": "^/tong\\-quan(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tong\\-quan(?:/)?$"
+    },
+    {
+      "page": "/vat-lieu",
+      "regex": "^/vat\\-lieu(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/vat\\-lieu(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": true,
+    "dynamicRSCPrerender": true
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  },
+  "ppr": {
+    "chain": {
+      "headers": {
+        "next-resume": "1"
+      }
+    }
+  }
+}

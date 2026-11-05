@@ -1,0 +1,20 @@
+[
+  {
+    "case": "nha_huong_hai_duong_7x12",
+    "works": 215,
+    "schedule_labels": 5,
+    "steel_cells": 19,
+    "eligible_schedule_labels": 4,
+    "quarantined": 211,
+    "database_updated": false
+  },
+  {
+    "case": "nha_sang_hai_duong_4x15",
+    "works": 249,
+    "schedule_labels": 6,
+    "steel_cells": 27,
+    "eligible_schedule_labels": 5,
+    "quarantined": 244,
+    "database_updated": false
+  }
+]

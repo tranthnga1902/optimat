@@ -1,0 +1,61 @@
+{
+  "schema_version": "optimat.quantity-knowledge.v1",
+  "dataset_version": "2026-11-04.complete2",
+  "production_ready": false,
+  "default_enabled": false,
+  "source_bundle": "bo-quy-tac-boc-tach-vn-2026-11-04",
+  "files": {
+    "sources.json": {
+      "sha256": "f935433487d51ead39d392cb8c518dbdb3021bfce75c2ba84fc47f3c42fb35b5",
+      "bytes": 27392
+    },
+    "page_text.jsonl": {
+      "sha256": "78b298d0a8a00e38672dd27859baba49abe55d8f7385da8ec4e18684199cef27",
+      "bytes": 4906785
+    },
+    "measurement_rules.json": {
+      "sha256": "7020c69c6490114509199091b2b586cf4b8d2941ba646af290065549c01741ba",
+      "bytes": 176090
+    },
+    "applicability.json": {
+      "sha256": "3af2f290481b9998ec0d27daaba6682a5e1220a2cfacb8430a4cd4da32a1c51f",
+      "bytes": 2281
+    },
+    "tables.jsonl": {
+      "sha256": "07dcd273e031c324e57ea4492f787a68eee96056eb99a14aab51f950b621d388",
+      "bytes": 26084118
+    },
+    "norms.jsonl": {
+      "sha256": "89f0b779c56887e74b1e8d30abfa28abba424231e18ee2d0b99bf1f8adc060bd",
+      "bytes": 71329846
+    },
+    "quality_report.json": {
+      "sha256": "9565ef2947eb479e36875fa49ebfe2fd65a2205bcb4c92e95f0b7ef32854e12a",
+      "bytes": 5386
+    },
+    "schema.json": {
+      "sha256": "177f2fda56b19117b6fb725ad16005a872ae4f50fbfa7e05598a9c9aaec46a99",
+      "bytes": 14802
+    },
+    "reference_tables.jsonl": {
+      "sha256": "d19fce338638b4067a7a593daf491f7a82c7d26a1e140ddf6c26caf2d7d13117",
+      "bytes": 13398632
+    },
+    "basis_evidence.json": {
+      "sha256": "17afdf3298776c7b691963ee52c1053172429140b5a25e90f8728a2e8214a024",
+      "bytes": 1701479
+    }
+  },
+  "counts": {
+    "sources": 30,
+    "pdf_pages": 2603,
+    "ocr_pages": 197,
+    "rules": 38,
+    "tables": 2898,
+    "resource_records": 59050,
+    "norm_codes": 9286
+  },
+  "decimal_policy": "Decimal strings; dấu phẩy đổi sang dấu chấm; dấu gạch và ô trống không đổi thành 0.",
+  "legal_selection": "Phải xét mục đích, thời gian, chuyển tiếp, hồ sơ được duyệt và hợp đồng.",
+  "runtime_integration": "optimat.rough.quantity_knowledge.QuantityKnowledge"
+}

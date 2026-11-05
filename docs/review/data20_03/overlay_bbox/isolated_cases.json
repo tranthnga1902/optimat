@@ -1,0 +1,136 @@
+[
+  {
+    "case": "arc",
+    "bbox_mm": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ],
+    "origin": [
+      0.0,
+      1000.0
+    ],
+    "size": [
+      1000.0,
+      1000.0
+    ],
+    "arcs": [
+      [
+        6000.0,
+        1000.0,
+        600.0,
+        0.0,
+        90.0
+      ]
+    ],
+    "texts": [],
+    "segments": 1,
+    "plan_paths": 1,
+    "overview_paths": 2,
+    "overview_size": [
+      1000.0,
+      1000.0
+    ]
+  },
+  {
+    "case": "text",
+    "bbox_mm": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ],
+    "origin": [
+      0.0,
+      1000.0
+    ],
+    "size": [
+      1000.0,
+      1000.0
+    ],
+    "arcs": [],
+    "texts": [
+      {
+        "t": "REMOTE",
+        "x": 6000.0,
+        "y": 1000.0,
+        "enc": "unicode"
+      }
+    ],
+    "segments": 1,
+    "plan_paths": 1,
+    "overview_paths": 2,
+    "overview_size": [
+      1000.0,
+      1000.0
+    ]
+  },
+  {
+    "case": "circle",
+    "bbox_mm": [
+      0.0,
+      -397.8,
+      6400.0,
+      1000.0
+    ],
+    "origin": [
+      0.0,
+      1000.0
+    ],
+    "size": [
+      6400.0,
+      1397.8
+    ],
+    "arcs": [],
+    "texts": [],
+    "segments": 16,
+    "plan_paths": 2,
+    "overview_paths": 2,
+    "overview_size": [
+      6400.0,
+      1397.8
+    ]
+  },
+  {
+    "case": "insert_text_arc",
+    "bbox_mm": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ],
+    "origin": [
+      0.0,
+      1000.0
+    ],
+    "size": [
+      1000.0,
+      1000.0
+    ],
+    "arcs": [
+      [
+        6000.0,
+        1000.0,
+        600.0,
+        0.0,
+        90.0
+      ]
+    ],
+    "texts": [
+      {
+        "t": "REMOTE",
+        "x": 6000.0,
+        "y": 1000.0,
+        "enc": "unicode"
+      }
+    ],
+    "segments": 1,
+    "plan_paths": 1,
+    "overview_paths": 3,
+    "overview_size": [
+      1000.0,
+      1000.0
+    ]
+  }
+]

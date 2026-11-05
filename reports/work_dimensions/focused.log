@@ -1,0 +1,43 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 228 items
+
+tests\test_work_dimensions.py .......................F............       [ 15%]
+tests\test_rough_secondary.py .......................................... [ 34%]
+............................                                             [ 46%]
+tests\test_rough_status.py .................                             [ 53%]
+tests\test_rough_partial.py .........................................    [ 71%]
+tests\test_rough_materials.py ..................................         [ 86%]
+tests\test_rough_columns.py ......                                       [ 89%]
+tests\test_rough_stairs.py ..                                            [ 90%]
+tests\test_rough_formwork_materials.py ............                      [ 95%]
+tests\test_rough_foundations.py ..........                               [100%]
+
+================================== FAILURES ===================================
+__________ test_pit_and_fill_dimensions_are_references_not_fill_box ___________
+
+    def test_pit_and_fill_dimensions_are_references_not_fill_box():
+        f = FoundationItem(name="M1", length_mm=1000, width_mm=1000, height_mm=500,
+                           bottom_level_mm=-1000, lean_thickness_mm=100, neck_b_mm=200, neck_h_mm=200)
+        params = ProjectParams(foundations=[f], natural_ground_level_mm=0, excavation_margin_mm=100, excavation_slope=0)
+        works, _ = foundation_works(params)
+        pit, fill = one(works, "DAO_DAT"), one(works, "DAP_DAT")
+        assert pit.quantity == pytest.approx(1.584) and fill.quantity == pytest.approx(0.964)
+        d = fill.dimensions[0]
+        assert (d.length_m, d.width_m, d.height_m, d.slope_ratio) == (1.2, 1.2, 1.1, 0)
+        assert d.basis == "reference" and "không phải kích thước khối đất đắp" in d.note
+        assert d.bottom_level_m == -1.1 and d.top_level_m == 0
+        deduction = _neg("DAO_DAT", 0.3, element="trừ giao", source="auto")
+>       assert deduction.quantity == -0.3 and deduction.dimensions[0].basis == "deduction"
+                                              ^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_work_dimensions.py:114: IndexError
+=========================== short test summary info ===========================
+FAILED tests/test_work_dimensions.py::test_pit_and_fill_dimensions_are_references_not_fill_box
+======================= 1 failed, 227 passed in 22.27s ========================
+
+EXIT=1

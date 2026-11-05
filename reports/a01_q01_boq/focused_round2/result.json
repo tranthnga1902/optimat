@@ -1,0 +1,24 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 44.54,
+  "finished_utc": "2026-11-03T10:17:29.854431+00:00",
+  "collected": 108,
+  "summary_lines": [
+    "======================= 107 passed, 1 xfailed in 39.66s ======================="
+  ],
+  "counts": {
+    "passed": 107,
+    "skipped": 0,
+    "xfailed": 1,
+    "xpassed": 0,
+    "failed": 0,
+    "errors": 0
+  },
+  "hash_before_count": 205,
+  "hash_after_count": 205,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  }
+}

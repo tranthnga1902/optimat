@@ -1,0 +1,97 @@
+[
+  {
+    "manual_total": false,
+    "rows": [
+      {
+        "kg": 31.6,
+        "missing": [
+          "phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+        ]
+      },
+      {
+        "kg": 31.6,
+        "missing": [
+          "phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+        ]
+      }
+    ],
+    "works": [
+      {
+        "quantity": 0.063,
+        "status": "A",
+        "missing": [
+          "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận",
+          "dòng 1 (1): phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+        ]
+      }
+    ],
+    "totals": [
+      {
+        "code": "COT_THEP",
+        "name": "Cốt thép",
+        "unit": "tấn",
+        "quantity": 0.063,
+        "complete": true,
+        "items": 1,
+        "status": "A"
+      }
+    ],
+    "wire": [
+      {
+        "quantity": 0.753,
+        "complete": false,
+        "status": "D",
+        "missing": [
+          "hao hụt thi công (%)"
+        ],
+        "est_cost": null
+      }
+    ]
+  },
+  {
+    "manual_total": true,
+    "rows": [
+      {
+        "kg": 31.6,
+        "missing": [
+          "phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+        ]
+      },
+      {
+        "kg": 31.6,
+        "missing": [
+          "phạm vi/nghĩa số lượng bảng thép chưa xác nhận hoặc nghi lặp/chồng: chờ xác nhận"
+        ]
+      }
+    ],
+    "works": [
+      {
+        "quantity": 0.063,
+        "status": "C",
+        "missing": []
+      }
+    ],
+    "totals": [
+      {
+        "code": "COT_THEP",
+        "name": "Cốt thép",
+        "unit": "tấn",
+        "quantity": 0.063,
+        "complete": true,
+        "items": 1,
+        "status": "C"
+      }
+    ],
+    "wire": [
+      {
+        "quantity": 0.753,
+        "complete": false,
+        "status": "D",
+        "missing": [
+          "hao hụt thi công (%)"
+        ],
+        "est_cost": null
+      }
+    ]
+  }
+]

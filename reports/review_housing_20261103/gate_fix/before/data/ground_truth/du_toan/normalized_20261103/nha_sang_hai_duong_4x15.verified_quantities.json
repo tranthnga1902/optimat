@@ -1,0 +1,564 @@
+{
+  "schema_version": 1,
+  "cong_trinh_id": "nha_sang_hai_duong_4x15",
+  "reviewer": "Codex",
+  "human_approval": false,
+  "verification_status": "chua_kiem",
+  "is_complete_ground_truth": false,
+  "kind": "verified_quantity_dataset",
+  "labels": [
+    {
+      "id": "nha_sang_hai_duong_4x15-W007-drawing-steel",
+      "source_work_id": "nha_sang_hai_duong_4x15-W007",
+      "scope": "steel_schedule_mass",
+      "quantity": 2.9012,
+      "unit": "t",
+      "components": [
+        {
+          "group": "móng",
+          "diameter_mm": 6,
+          "quantity": 44.3,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F2E7",
+            "text": "%%c6 : 44.3",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1503604.0,
+              -1077869.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "móng",
+          "diameter_mm": 8,
+          "quantity": 209.0,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F2E8",
+            "text": "%%c8 : 209.0",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1501844.0,
+              -1077869.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "móng",
+          "diameter_mm": 10,
+          "quantity": 51.1,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F2E9",
+            "text": "%%c10: 51.1",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1500084.0,
+              -1077869.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "móng",
+          "diameter_mm": 12,
+          "quantity": 97.2,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F2EA",
+            "text": "%%c12: 97.2",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1498324.0,
+              -1077869.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "móng",
+          "diameter_mm": 16,
+          "quantity": 985.6,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F2EB",
+            "text": "%%c16: 985.6",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1496564.0,
+              -1077869.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "móng",
+          "diameter_mm": 20,
+          "quantity": 1103.8,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F2EC",
+            "text": "%%c20 : 1103.8",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1503604.0,
+              -1078189.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "bể phốt",
+          "diameter_mm": 6,
+          "quantity": 13.7,
+          "unit": "kg",
+          "evidence": {
+            "handle": "11735D6",
+            "text": "%%c6 : 13.7",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1356321.517029786,
+              -1077357.042400159,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "bể phốt",
+          "diameter_mm": 8,
+          "quantity": 23.1,
+          "unit": "kg",
+          "evidence": {
+            "handle": "11735D7",
+            "text": "%%c8 : 23.1",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1354561.517029786,
+              -1077357.042400159,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "bể phốt",
+          "diameter_mm": 10,
+          "quantity": 116.8,
+          "unit": "kg",
+          "evidence": {
+            "handle": "11735D8",
+            "text": "%%c10: 116.8",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1352801.517029786,
+              -1077357.042400159,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "bể phốt",
+          "diameter_mm": 12,
+          "quantity": 37.6,
+          "unit": "kg",
+          "evidence": {
+            "handle": "11735D9",
+            "text": "%%c12: 37.6",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1351041.517029786,
+              -1077357.042400159,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "bể nước",
+          "diameter_mm": 6,
+          "quantity": 13.7,
+          "unit": "kg",
+          "evidence": {
+            "handle": "11735DE",
+            "text": "%%c6 : 13.7",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1339612.465824637,
+              -1073761.280097337,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "bể nước",
+          "diameter_mm": 10,
+          "quantity": 168.4,
+          "unit": "kg",
+          "evidence": {
+            "handle": "11735DF",
+            "text": "%%c10: 168.4",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1337852.465824637,
+              -1073761.280097337,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "bể nước",
+          "diameter_mm": 12,
+          "quantity": 36.9,
+          "unit": "kg",
+          "evidence": {
+            "handle": "11735E0",
+            "text": "%%c12: 36.9",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1336092.465824637,
+              -1073761.280097337,
+              0.0
+            ]
+          }
+        }
+      ],
+      "aggregation": "parent_equals_sum_components; do_not_sum_parent_with_children",
+      "source_quantity": 2.952,
+      "source_unit": "tấn",
+      "source_estimate_location": {
+        "page": 5,
+        "table": 1,
+        "row": 9
+      },
+      "quantity_basis": "net_design_schedule; no estimate coefficient applied",
+      "drawing": "data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "drawing_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    },
+    {
+      "id": "nha_sang_hai_duong_4x15-W012-drawing-steel",
+      "source_work_id": "nha_sang_hai_duong_4x15-W012",
+      "scope": "steel_schedule_mass",
+      "quantity": 1.1633,
+      "unit": "t",
+      "components": [
+        {
+          "group": "cột",
+          "diameter_mm": 6,
+          "quantity": 145.3,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F894",
+            "text": "%%c6 : 145.3",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1725456.458390178,
+              -1120446.0974399,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "cột",
+          "diameter_mm": 18,
+          "quantity": 330.4,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F895",
+            "text": "%%c18: 330.4",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1723696.458390178,
+              -1120446.0974399,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "cột",
+          "diameter_mm": 20,
+          "quantity": 687.6,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118F896",
+            "text": "%%c20: 687.6",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1721936.458390178,
+              -1120446.0974399,
+              0.0
+            ]
+          }
+        }
+      ],
+      "aggregation": "parent_equals_sum_components; do_not_sum_parent_with_children",
+      "source_quantity": 1.163,
+      "source_unit": "tấn",
+      "source_estimate_location": {
+        "page": 8,
+        "table": 1,
+        "row": 20
+      },
+      "quantity_basis": "net_design_schedule; no estimate coefficient applied",
+      "drawing": "data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "drawing_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    },
+    {
+      "id": "nha_sang_hai_duong_4x15-W014-drawing-steel",
+      "source_work_id": "nha_sang_hai_duong_4x15-W014",
+      "scope": "steel_schedule_mass",
+      "quantity": 3.1657,
+      "unit": "t",
+      "components": [
+        {
+          "group": "dầm",
+          "diameter_mm": 6,
+          "quantity": 337.9,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118FE3E",
+            "text": "%%c6 : 337.9",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1619685.172675838,
+              -1202643.296043656,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "dầm",
+          "diameter_mm": 16,
+          "quantity": 299.1,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118FE3F",
+            "text": "%%c16: 299.1",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1617925.172675838,
+              -1202643.296043656,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "dầm",
+          "diameter_mm": 18,
+          "quantity": 650.7,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118FE40",
+            "text": "%%c18: 650.7",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1616165.172675838,
+              -1202643.296043656,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "dầm",
+          "diameter_mm": 20,
+          "quantity": 1878.0,
+          "unit": "kg",
+          "evidence": {
+            "handle": "118FE41",
+            "text": "%%c20: 1878.0",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1614405.172675838,
+              -1202643.296043656,
+              0.0
+            ]
+          }
+        }
+      ],
+      "aggregation": "parent_equals_sum_components; do_not_sum_parent_with_children",
+      "source_quantity": 3.166,
+      "source_unit": "tấn",
+      "source_estimate_location": {
+        "page": 9,
+        "table": 1,
+        "row": 11
+      },
+      "quantity_basis": "net_design_schedule; no estimate coefficient applied",
+      "drawing": "data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "drawing_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    },
+    {
+      "id": "nha_sang_hai_duong_4x15-W016-drawing-steel",
+      "source_work_id": "nha_sang_hai_duong_4x15-W016",
+      "scope": "steel_schedule_mass",
+      "quantity": 2.3451,
+      "unit": "t",
+      "components": [
+        {
+          "group": "sàn",
+          "diameter_mm": 10,
+          "quantity": 2345.1,
+          "unit": "kg",
+          "evidence": {
+            "handle": "11903E9",
+            "text": "%%c10: 2345.1",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1701292.038178868,
+              -1251785.932216528,
+              0.0
+            ]
+          }
+        }
+      ],
+      "aggregation": "parent_equals_sum_components; do_not_sum_parent_with_children",
+      "source_quantity": 2.345,
+      "source_unit": "tấn",
+      "source_estimate_location": {
+        "page": 10,
+        "table": 1,
+        "row": 11
+      },
+      "quantity_basis": "net_design_schedule; no estimate coefficient applied",
+      "drawing": "data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "drawing_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    },
+    {
+      "id": "nha_sang_hai_duong_4x15-W018-drawing-steel",
+      "source_work_id": "nha_sang_hai_duong_4x15-W018",
+      "scope": "steel_schedule_mass",
+      "quantity": 0.6492,
+      "unit": "t",
+      "components": [
+        {
+          "group": "cầu thang",
+          "diameter_mm": 8,
+          "quantity": 64.2,
+          "unit": "kg",
+          "evidence": {
+            "handle": "1190991",
+            "text": "%%c8 : 64.2",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1734148.436931411,
+              -1289804.097439904,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "cầu thang",
+          "diameter_mm": 10,
+          "quantity": 585.0,
+          "unit": "kg",
+          "evidence": {
+            "handle": "1190992",
+            "text": "%%c10: 585.0",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1732388.436931411,
+              -1289804.097439904,
+              0.0
+            ]
+          }
+        }
+      ],
+      "aggregation": "parent_equals_sum_components; do_not_sum_parent_with_children",
+      "source_quantity": 0.649,
+      "source_unit": "tấn",
+      "source_estimate_location": {
+        "page": 11,
+        "table": 1,
+        "row": 10
+      },
+      "quantity_basis": "net_design_schedule; no estimate coefficient applied",
+      "drawing": "data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "drawing_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    },
+    {
+      "id": "nha_sang_hai_duong_4x15-W020-drawing-steel",
+      "source_work_id": "nha_sang_hai_duong_4x15-W020",
+      "scope": "steel_schedule_mass",
+      "quantity": 0.1161,
+      "unit": "t",
+      "components": [
+        {
+          "group": "lanh tô",
+          "diameter_mm": 6,
+          "quantity": 24.1,
+          "unit": "kg",
+          "evidence": {
+            "handle": "1190F3A",
+            "text": "%%c6 : 24.1",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1548117.0,
+              -1289509.097439905,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "lanh tô",
+          "diameter_mm": 10,
+          "quantity": 41.8,
+          "unit": "kg",
+          "evidence": {
+            "handle": "1190F3B",
+            "text": "%%c10: 41.8",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1546357.0,
+              -1289509.097439905,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "lanh tô",
+          "diameter_mm": 12,
+          "quantity": 21.9,
+          "unit": "kg",
+          "evidence": {
+            "handle": "1190F3C",
+            "text": "%%c12: 21.9",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1544597.0,
+              -1289509.097439905,
+              0.0
+            ]
+          }
+        },
+        {
+          "group": "lanh tô",
+          "diameter_mm": 16,
+          "quantity": 28.3,
+          "unit": "kg",
+          "evidence": {
+            "handle": "1190F3D",
+            "text": "%%c16: 28.3",
+            "layer": "TEXT_THCT",
+            "position": [
+              -1542837.0,
+              -1289509.097439905,
+              0.0
+            ]
+          }
+        }
+      ],
+      "aggregation": "parent_equals_sum_components; do_not_sum_parent_with_children",
+      "source_quantity": 0.116,
+      "source_unit": "tấn",
+      "source_estimate_location": {
+        "page": 11,
+        "table": 1,
+        "row": 22
+      },
+      "quantity_basis": "net_design_schedule; no estimate coefficient applied",
+      "drawing": "data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "drawing_sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c"
+    }
+  ],
+  "limitation": "Đối chứng bảng thống kê thép thiết kế, chưa tính lại từng thanh từ hình học; cần QS duyệt trước nghiệm thu."
+}

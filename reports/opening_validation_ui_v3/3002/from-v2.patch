@@ -1,0 +1,13 @@
+--- a/src/app/(user)/do-boc/model.ts
++++ b/src/app/(user)/do-boc/model.ts
+@@ -92,7 +92,9 @@
+   const len = S.length_rule === "thong_thuy" ? netLengths(S.walls.filter((w) => w.keep))
+     : Object.fromEntries(S.walls.map((w) => [w.id, wallLen(w)]));
+   const pending = S.openings.filter(o => o.keep && (o.w == null || o.h == null || !ids.has(o.wall)));
+-  const pendingWalls = new Set(pending.map(o => o.wall));
++  // Khi chưa biết tường cha, chưa thể loại trừ ảnh hưởng đến bất kỳ nhóm nào của mặt bằng này.
++  const unassigned = pending.some(o => !ids.has(o.wall));
++  const pendingWalls = unassigned ? ids : new Set(pending.map(o => o.wall));
+   const pendingGroups = new Set(kept.filter(w => pendingWalls.has(w.id)).map(w => w.cls + "|" + w.role + "|" + (w.mat || "")));
+   const openArea: Record<string, number> = {};
+   for (const o of S.openings) if (o.keep && ids.has(o.wall) && o.w != null && o.h != null) openArea[o.wall] = (openArea[o.wall] || 0) + o.w * Math.min(o.h, H) / 1e6;

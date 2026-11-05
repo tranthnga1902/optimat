@@ -1,0 +1,22 @@
+{
+  "data_kind": "SYNTHETIC",
+  "fixture": "docs/review/data20_00/column_accuracy_probe/column_outline_sample.dxf",
+  "fixture_sha256": "af4efc2420327ae2a4f8a032cce0ffcd291a5b6ee4dff35bf1ffebd39558ff52",
+  "source_sha256": "c0146428bd3f348a553b310cbe5f7813ca2b91eac38f622c6d0663c14f74e748",
+  "test_sha256": "cea7c3df770af4efd7c498685a08e8f5a702b77eb18c666824af8cf1527df6b4",
+  "actual": [
+    {
+      "x": 2112.5,
+      "y": 3167.5,
+      "b_mm": 225.0,
+      "h_mm": 335.0
+    }
+  ],
+  "height_mm": 3500,
+  "slab_thickness_mm": 20,
+  "raw_m3": 0.262305,
+  "actual_works": [
+    0.262
+  ],
+  "focused": "56 passed in 12.41s; exit 0; session 8252"
+}

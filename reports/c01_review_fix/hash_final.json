@@ -1,0 +1,10 @@
+[
+  {
+    "file": "scripts/c01_duong_co_so.py",
+    "sha256": "f523205a0c8844256cae80e01686c4515bc3c401ea0fae8474f9ed5449fd41f1"
+  },
+  {
+    "file": "tests/test_c01_duong_co_so.py",
+    "sha256": "202c6fb25ad502d5b59e6bd6cf44562f4ce6c45b2c05f317d1e57f1b683e82a6"
+  }
+]

@@ -33,6 +33,7 @@ from ..drawing.encoding import normalize
 from .materials import _fmt
 from .models import ProjectParams, WorkItem
 from .walls import _work
+from .quantity_details import area_detail, area_quantity_row
 
 CELL_MM = 10.0
 ROOM_RULES_PATH = config.DATA_DIR / "rules" / "room_rules.csv"
@@ -209,44 +210,87 @@ def area_works(geom: PlanGeometry, params: ProjectParams, plan: PlanParams) -> t
     no_outline = [] if outline is not None else ["diện tích trong tim tường bao (tường bao chưa khép kín)"]
     no_usable = [] if usable is not None else ["diện tích sử dụng (tường bao chưa khép kín)"]
     works: list[WorkItem] = []
+    def emit(code, raw_quantity, *, detail_rows=None, detail_scope=True, **kwargs):
+        work = _work(code, raw_quantity, **kwargs)
+        return area_detail(work, raw_quantity, rows=detail_rows, scope_complete=detail_scope)
     if not plan.is_ground:
         void = plan.void_area_m2
         if void is None:
             warnings.append(f"{name}: chưa nhập diện tích ô trống (lỗ cầu thang, giếng trời), sàn chưa trừ ô trống.")
         t = params.slab_thickness_mm
         area = None if outline is None else max(0.0, outline - (void or 0.0))
-        works.append(_work("SAN", area * t / 1000 if t and area is not None else None, plan=name, element="sàn",
+        outline_detail_source = f"{name}: " + ("PlanParams.outline_area_m2" if plan.outline_area_m2 is not None else "PlanGeometry.outline_area_m2")
+        void_detail_source = f"{name}: PlanParams.void_area_m2"
+        void_errors = (["chưa có diện tích ô trống; không coi là 0"] if void is None else
+                       ["diện tích ô trống âm hoặc vượt diện tích gộp"] if void < 0 or (outline is not None and void > outline) else [])
+        thickness_errors = [] if t else ["chiều dày sàn: chưa tính theo nhánh legacy" if t is None else "chiều dày sàn bằng0: nhánh legacy chưa tính lượng"]
+        slab_detail_rows = [
+            area_quantity_row("slab:gross", "Bê tông theo diện tích gộp", outline * t / 1000 if t and outline is not None else None,
+                "m³", [outline_detail_source, "ProjectParams.slab_thickness_mm"], missing=no_outline + thickness_errors,
+                dimensions=dict(label="diện tích gộp sàn", count=1, area_m2=outline,
+                    thickness_m=t/1000 if t is not None else None, source=outline_detail_source + "; ProjectParams.slab_thickness_mm"),
+                expression="outline × slab_thickness_mm / 1000"),
+            area_quantity_row("slab:void", "Trừ bê tông ô trống", void * t / 1000 if t and void is not None else None,
+                "m³", [void_detail_source, "ProjectParams.slab_thickness_mm"], sign=-1, missing=void_errors + thickness_errors,
+                dimensions=dict(label="ô trống sàn", count=1, area_m2=void,
+                    thickness_m=t/1000 if t is not None else None, source=void_detail_source + "; ProjectParams.slab_thickness_mm"),
+                expression="− void × slab_thickness_mm / 1000")]
+        form_detail_rows = [
+            area_quantity_row("slab-form:gross", "Diện tích gộp đáy sàn", outline, "m²", [outline_detail_source], missing=no_outline,
+                dimensions=dict(label="diện tích gộp đáy sàn", area_m2=outline, source=outline_detail_source)),
+            area_quantity_row("slab-form:void", "Trừ ô trống đáy sàn", void, "m²", [void_detail_source], sign=-1, missing=void_errors,
+                dimensions=dict(label="ô trống đáy sàn", area_m2=void, source=void_detail_source))]
+        area_detail_scope = outline is not None and outline >= 0 and not void_errors
+        works.append(emit("SAN", area * t / 1000 if t and area is not None else None, detail_rows=slab_detail_rows, detail_scope=area_detail_scope and bool(t and t > 0), plan=name, dimensions=[dict(label="sàn", count=1, area_m2=outline, opening_area_m2=void,
+                               net_area_m2=area if void is not None else None,
+                               thickness_m=t/1000 if t is not None else None, source=f"{name}: diện tích {src_outline}; dày sàn từ thông số",
+                               note="Diện tích gộp trước trừ ô trống; chưa có diện tích ô trống" if void is None else "Diện tích gộp trước trừ ô trống")], element="sàn",
                            source=src_outline,
                            formula=f"({_fmt(outline) if outline is not None else '?'} m² trong tim tường bao − "
                                    f"{_fmt(void or 0)} m² ô trống) × " + (f"{_fmt(t / 1000)} m" if t else "dày sàn"),
                            missing=no_outline + ([] if t else ["chiều dày sàn"])))
         # cốp pha đáy sàn = diện tích sàn; chưa trừ phần đáy dầm (đặc tả 3.6 còn để ngỏ)
-        works.append(_work("COP_PHA", area, plan=name, element="cốp pha đáy sàn", source=src_outline, formwork_of="SAN",
+        works.append(emit("COP_PHA", area, detail_rows=form_detail_rows, detail_scope=area_detail_scope, plan=name, dimensions=[dict(label="đáy sàn", area_m2=outline, opening_area_m2=void, net_area_m2=area if void is not None else None, source=f"{name}: diện tích {src_outline}",
+                                note="Diện tích trước trừ ô trống và giao dầm/cột")], element="cốp pha đáy sàn", source=src_outline, formwork_of="SAN",
                            formula=f"{_fmt(area) if area is not None else '?'} m² sàn (chưa trừ đáy dầm)", missing=no_outline))
     u = _fmt(usable) if usable is not None else "?"
-    works.append(_work("CAN_NEN", usable, plan=name, element="nền các phòng", source=src_usable,
+    works.append(emit("CAN_NEN", usable, plan=name, dimensions=[dict(label="nền các phòng", area_m2=usable,
+                           thickness_m=params.screed_thickness_mm/1000 if params.screed_thickness_mm is not None else None,
+                           source=f"{name}: diện tích {src_usable}; dày cán nền từ thông số")], element="nền các phòng", source=src_usable,
                        variant=None if params.screed_thickness_mm is None else f"{params.screed_thickness_mm:g}",
                        formula=f"{u} m² diện tích sử dụng",
                        missing=no_usable + ([] if params.screed_thickness_mm is not None else ["chiều dày cán nền"])))
     if plan.is_ground:
         if not params.ground_layers:
             for code in ("NEN_DEM_CAT", "BE_TONG_LOT"):
-                works.append(_work(code, None, plan=name, element="nền tầng trệt", missing=["cấu tạo nền (lớp và chiều dày)"]))
-        for layer in params.ground_layers:
-            works.append(_work(layer.kind, usable * layer.thickness_mm / 1000 if usable is not None else None, plan=name,
+                works.append(emit(code, None, plan=name, element="nền tầng trệt", missing=["cấu tạo nền (lớp và chiều dày)"]))
+        for layer_index, layer in enumerate(params.ground_layers, start=1):
+            works.append(emit(layer.kind, usable * layer.thickness_mm / 1000 if usable is not None else None, plan=name, dimensions=[dict(label=f"nền tầng trệt lớp {layer_index}: {layer.kind}", count=1, area_m2=usable, thickness_m=layer.thickness_mm/1000,
+                               source=f"{name}: diện tích {src_usable}; cấu tạo nền từ thông số")],
                                element="nền tầng trệt", source=src_usable, missing=no_usable,
                                formula=f"{u} m² × {_fmt(layer.thickness_mm / 1000)} m"))
     wet = [r for r in geom.rooms if r.kind == "WET"]
     up = params.waterproof_upturn_mm
     variant = params.waterproof_material_id
     for r in wet:
-        q = r.area_m2 + (up / 1000 * r.perimeter_m if up is not None else 0.0)
-        works.append(_work("CHONG_THAM", q if up is not None else None, plan=name, element=f"phòng {r.label}", variant=variant,
+        q = r.area_m2 + (upturn_q := (up / 1000 * r.perimeter_m if up is not None else 0.0))
+        wet_detail_rows = [
+            area_quantity_row("wet:floor", f"Đáy phòng {r.label}", r.area_m2, "m²", [f"{name}: PlanGeometry.rooms/{r.label}.area_m2"],
+                dimensions=dict(label=f"đáy phòng {r.label}", area_m2=r.area_m2, source=f"{name}: hình học phòng {r.label}")),
+            area_quantity_row("wet:upturn", f"Cổ tường phòng {r.label}", upturn_q if up is not None else None, "m²",
+                [f"{name}: PlanGeometry.rooms/{r.label}.perimeter_m", "ProjectParams.waterproof_upturn_mm"],
+                missing=[] if up is not None else ["chiều cao cổ tường chống thấm"],
+                dimensions=dict(label=f"cổ tường {r.label}", length_m=r.perimeter_m, height_m=up/1000 if up is not None else None,
+                    source=f"{name}: chu vi phòng {r.label}; ProjectParams.waterproof_upturn_mm"),
+                expression="perimeter_m × waterproof_upturn_mm / 1000")]
+        works.append(emit("CHONG_THAM", q if up is not None else None, detail_rows=wet_detail_rows, plan=name, dimensions=[dict(label=f"phòng {r.label}", area_m2=r.area_m2, length_m=r.perimeter_m,
+                            height_m=up/1000 if up is not None else None, source=f"{name}: hình học phòng và thông số cổ tường",
+                            note="Dài là chu vi; cao là cổ tường chống thấm")], element=f"phòng {r.label}", variant=variant,
                            formula=f"{_fmt(r.area_m2)} m² + " + (f"{_fmt(up / 1000)} m" if up is not None else "cao cổ tường")
                                    + f" × {_fmt(r.perimeter_m)} m chu vi",
                            missing=[] if up is not None else ["chiều cao cổ tường chống thấm"]))
     if plan.balcony_area_m2:
-        works.append(_work("CHONG_THAM", plan.balcony_area_m2, plan=name, element="ban công", variant=variant, source="manual",
+        works.append(emit("CHONG_THAM", plan.balcony_area_m2, plan=name, dimensions=[dict(label="ban công", area_m2=plan.balcony_area_m2, source="Diện tích ban công nhập tay")], element="ban công", variant=variant, source="manual",
                            formula=f"{_fmt(plan.balcony_area_m2)} m² nhập tay"))
     elif any(room_kind(t) == "BALCONY" for t in geom.labels_outside) or any(r.kind == "BALCONY" for r in geom.rooms):
         warnings.append(f"{name}: bản vẽ có ban công/lô gia nhưng chưa nhập diện tích, chưa tính chống thấm ban công.")

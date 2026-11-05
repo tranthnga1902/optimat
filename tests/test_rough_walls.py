@@ -16,7 +16,7 @@ WALLS = [ReviewWall(id="W1", cls="220", role="envelope", x1=0, y1=0, x2=10000, y
          ReviewWall(id="W2", cls="110", role="partition", x1=0, y1=2000, x2=5000, y2=2000),
          ReviewWall(id="W3", cls="110", role="partition", x1=0, y1=4000, x2=3000, y2=4000, keep=False)]
 OPENINGS = [ReviewOpening(id="O1", wall="W1", kind="door", w=1000, h=2200),
-            ReviewOpening(id="O2", wall="W3", kind="door", w=800, h=2200)]      # gắn tường đã loại: bỏ qua
+            ReviewOpening(id="O2", wall="W3", kind="door", w=800, h=2200, keep=False)]  # lỗ đã loại cùng tường
 
 
 def by(works, code, element_start):
@@ -68,6 +68,8 @@ def test_from_auto_takeoff(sample_dxf, cat):
     result = takeoff_from_file(sample_dxf, 3300)
     walls, openings, systems = review_input_from_takeoff(result)
     works, _ = wall_works("Mẫu", 3300, walls, openings, ProjectParams(), cat, systems)
-    area = sum(w.quantity for w in works if w.code == "TRAT")
-    net = sum(2 * g.net_area_m2 for g in result.groups)            # mọi tường trát hai mặt
-    assert area == pytest.approx(net, rel=0.01)          # cùng công thức diện tích với bước đo bóc
+    incomplete = [o for o in openings if o.keep and o.wall and (o.w is None or o.h is None)]
+    assert incomplete
+    plaster = [w for w in works if w.code == "TRAT"]
+    assert any(w.quantity is None and any(o.id in reason for o in incomplete for reason in w.missing) for w in plaster)
+    assert all(w.quantity is not None or w.missing for w in plaster)

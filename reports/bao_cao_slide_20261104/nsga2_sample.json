@@ -1,0 +1,91 @@
+{
+ "input": "data/sample/sample_floor.dxf; catalog CSV + overlay data/sample/catalog (SAMPLE, không DB)",
+ "brute": {
+  "n_eval": 1024,
+  "pareto": 7,
+  "sec": 0.9
+ },
+ "nsga2": {
+  "n_eval": 4799,
+  "pareto": 7,
+  "subset_of_exact": true,
+  "recall": 1.0,
+  "sec": 8.64
+ },
+ "solutions": [
+  {
+   "cost_vnd": 29165787,
+   "days": 4.0,
+   "u": 2.918,
+   "materials": [
+    "GK03",
+    "GK02"
+   ]
+  },
+  {
+   "cost_vnd": 29520302,
+   "days": 2.0,
+   "u": 2.918,
+   "materials": [
+    "GK03",
+    "GK02"
+   ]
+  },
+  {
+   "cost_vnd": 38577845,
+   "days": 4.0,
+   "u": 2.264,
+   "materials": [
+    "GK03",
+    "GN01"
+   ]
+  },
+  {
+   "cost_vnd": 41096081,
+   "days": 3.0,
+   "u": 2.264,
+   "materials": [
+    "GK03",
+    "GN01"
+   ]
+  },
+  {
+   "cost_vnd": 49750821,
+   "days": 4.0,
+   "u": 0.677,
+   "materials": [
+    "GK03",
+    "AAC03"
+   ]
+  },
+  {
+   "cost_vnd": 49775982,
+   "days": 3.0,
+   "u": 0.677,
+   "materials": [
+    "GK03",
+    "AAC03"
+   ]
+  },
+  {
+   "cost_vnd": 51589031,
+   "days": 2.0,
+   "u": 0.677,
+   "materials": [
+    "GK03",
+    "AAC03"
+   ]
+  }
+ ],
+ "notes": [
+  "KỊCH BẢN THAM KHẢO: có thể dùng SAMPLE/giá mô hình; chưa gồm giá vữa và chưa đủ căn cứ mua hàng. Cự ly, phí xe và thời gian vận chuyển là ước tính.",
+  "Đơn giá nhân công 350,000 đồng/công (Hà Nội, bậc 3,5/7, SAMPLE).",
+  "Tường 110: chưa đưa vào tối ưu W-GN02-110 (thiếu khối lượng tường kg/m²); W-ALC01-100 (thiếu số lượng vật liệu / m² tường, công / m² tường, khối lượng tường kg/m²); W-GO01-100 (thiếu hệ số dẫn nhiệt λ).",
+  "Tường 110: có phương án dùng SỐ MẪU, không dùng để báo cáo.",
+  "Tường 110: AAC01, GK03, GN01 chưa có hao hụt (waste_pct), khối lượng chưa cộng hao hụt.",
+  "Tường 220: chưa đưa vào tối ưu W-GN02-220 (thiếu khối lượng tường kg/m²); W-GK01-220 (thiếu số lượng vật liệu / m² tường, công / m² tường, khối lượng tường kg/m²); W-GO01-200 (thiếu hệ số dẫn nhiệt λ).",
+  "Tường 220: có phương án dùng SỐ MẪU, không dùng để báo cáo.",
+  "Tường 220: AAC03, GK02, GN01 chưa có hao hụt (waste_pct), khối lượng chưa cộng hao hụt.",
+  "Chưa có mô hình giá trong thư mục models/, đang dùng giá trong danh mục."
+ ]
+}

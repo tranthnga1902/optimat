@@ -1,0 +1,32 @@
+{
+  "3001": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\c2-frontend-candidate",
+    "build_id": "H6w7Rhgb_8Aew79ERRLSc",
+    "files": {
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base_sha256": "c46b536399982374a746dc3d1eed98de49b92d475a5452611cff1f955eae958b",
+        "new_sha256": "6e80addbe29197127c9ec49d0d156edc1836bff3496b78b850186eb79f8fd1c1"
+      },
+      "src/app/(user)/do-boc/Dialogs.tsx": {
+        "base_sha256": "454944040b1b03e70c3d17e98f3a2dabf9e228623fc7f65099e95b5d6dec8cd1",
+        "new_sha256": "a07e4038d9e401626d6c61c2daa8c533fdc49071aa435bc7a9eb6f21e700522a"
+      }
+    },
+    "patch_sha256": "c187b2c081c82cb24f74dc898a567204d2a85fd612032636d3811a186b786cc5"
+  },
+  "3002": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\rules-demo-stage",
+    "build_id": "XAER9r8guzcs7heKavA8s",
+    "files": {
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base_sha256": "6a1fc5abf0ba63497b337c01b185163d7b2439d332743a4cfba6d066c625ecaf",
+        "new_sha256": "4480d52ef1bc21b6ecc2540ae4d99820c3f1889612b6464bce87228601e1e010"
+      },
+      "src/app/(user)/do-boc/Dialogs.tsx": {
+        "base_sha256": "454944040b1b03e70c3d17e98f3a2dabf9e228623fc7f65099e95b5d6dec8cd1",
+        "new_sha256": "a07e4038d9e401626d6c61c2daa8c533fdc49071aa435bc7a9eb6f21e700522a"
+      }
+    },
+    "patch_sha256": "ff4f1fe152b99a9cb6235622b041d89c857ce845763df5e6aaca06afad3ef959"
+  }
+}

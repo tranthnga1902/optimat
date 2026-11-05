@@ -1,0 +1,7 @@
+duong_dan,vai_tro,sha256,so_byte,trong_kho,ngay_khoa,ghi_chu
+data/ground_truth/du_toan/46_nha_tan_binh.csv,du_toan_cong_tac,89877eb850c1c9aa1c50d2e8eacd2af8295a2056bc41b326e6361f81f3f48654,10847,co,2026-11-03,"Hash chỉ chứng minh nội dung file, không chứng minh nguồn đúng hay quyền dùng"
+data/ground_truth/du_toan/46_vat_tu.csv,du_toan_vat_tu,ff21ee393835069a682ba6cbecf9e04e78a994635f05256f27326467a28e9b1d,8391,co,2026-11-03,"Hash chỉ chứng minh nội dung file, không chứng minh nguồn đúng hay quyền dùng"
+data/ground_truth/du_toan/46_thong_so.json,thong_so,edd61750f8856dbafeb3b5b5b5865e9d3b24a3eb476b4203a5da396923d72266,991,co,2026-11-03,"Hash chỉ chứng minh nội dung file, không chứng minh nguồn đúng hay quyền dùng"
+data/drawings/build/tan_binh_kien_truc.dxf,ban_ve_kien_truc,271201b51226c2dd0e9b16f2b09d44f5c10cc99d8737d79c1b62f1b69aeed8f6,13067970,khong,2026-11-03,"Hash chỉ chứng minh nội dung file, không chứng minh nguồn đúng hay quyền dùng"
+data/drawings/build/tan_binh_ket_cau.dxf,ban_ve_ket_cau,b68e6545214dd1630a8022638f7be8e647addc3b1097529d69b691bcb3deacb5,7878010,khong,2026-11-03,"Hash chỉ chứng minh nội dung file, không chứng minh nguồn đúng hay quyền dùng"
+data/drawings/raw_20261102/banve/Du Toan Nha Tan Binh/Nha Tan Binh.xls,du_toan_goc_xls,b35185afc64093bcc7edb59954f00b8850615015e5ba46dcdcee11bb31e32f27,1082880,khong,2026-11-03,"Hash chỉ chứng minh nội dung file, không chứng minh nguồn đúng hay quyền dùng"

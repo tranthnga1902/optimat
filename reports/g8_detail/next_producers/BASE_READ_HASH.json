@@ -1,0 +1,13 @@
+{
+  "src/optimat/rough/models.py": "5cfb8b6344775a17a02f9b50b11c07fb6927bb19e583a1d06266356a2c3142ad",
+  "src/optimat/rough/quantity_details.py": "2b026826413c388c70e5ee4645cad7b9a18da29d83ebc88f8d65cd9936104af2",
+  "src/optimat/rough/walls.py": "b3388b48e972043403a58c5e15d6f9683aa7ca2bb95b8846131e8c17463e7c66",
+  "src/optimat/rough/foundations.py": "18660eabb927549a12c7ae52e85321a37b0f6b41a2e8a297ae77c4859b47848a",
+  "src/optimat/rough/columns.py": "344fa74a3b1df43d0e4f7317527773eaaa63388d71c1040c6933b2cfe2bf86fc",
+  "src/optimat/rough/beams.py": "985ef5097f9a5b31a447a6cf8749cf8e69f79026f083d8cd0b844aa85ff6818e",
+  "src/optimat/rough/areas.py": "7f12940fc150444e00b3a65c2c0d4140d41442d1deb03f436dfee923d58646c4",
+  "src/optimat/rough/stairs.py": "4fa680b591f1f6d05ef2d7fa21098c34e40b638ce346b2a9fbfb453af3fd40ff",
+  "src/optimat/rough/secondary.py": "e6b1e8717d4885ebeb412f1ce3a741606edd0660da5aa8988d73816cb5e30ad1",
+  "src/optimat/rough/steel.py": "ac1e5d268bf6eea263838261e278b287125619e865cddb4ffe80c53081122af9",
+  "src/optimat/rough/takeoff.py": "2ede81021e619e7ff152e3fc2edc0231613d141ff390066b8314e5a3c9c61d0d"
+}

@@ -1,0 +1,547 @@
+--- a/data/ground_truth/du_toan/cases.csv
++++ b/data/ground_truth/du_toan/cases.csv
+@@ -1,3 +1,3 @@
+-ten,split,du_toan,kien_truc,ket_cau,thong_so
+-46_nha_tan_binh,build,data/ground_truth/du_toan/46_nha_tan_binh.csv,data/drawings/build/tan_binh_kien_truc.dxf,data/drawings/build/tan_binh_ket_cau.dxf,data/ground_truth/du_toan/46_thong_so.json
+-banve1_nha_pho_di_an,test,data/ground_truth/du_toan/banve1_nha_pho_di_an.csv,data/drawings/test/banve1_kien_truc.dxf,data/drawings/test/banve1_ket_cau.dxf,
++ten,cong_trinh_id,phien_ban,data_kind,split,du_toan,kien_truc,ket_cau,thong_so,nguon,quyen_dung,dap_an_trang_thai,nguoi_kiem,ghi_chu
++46_nha_tan_binh,tan_binh_46,chua_ro,ACTUAL,build,data/ground_truth/du_toan/46_nha_tan_binh.csv,data/drawings/build/tan_binh_kien_truc.dxf,data/drawings/build/tan_binh_ket_cau.dxf,data/ground_truth/du_toan/46_thong_so.json,"kenhxaydung.vn, bộ 46-Nha Dan 5 Tang (KT+KC+DN+BPTC+DuToan), Nha Tan Binh.xls sheet Công trình (lập 2016)",chua_ro,chua_kiem,,"Dự toán của người lập, không phải đáp án đo tay; dùng sửa tách mặt bằng 28/10/2026"
++banve1_nha_pho_di_an,di_an_banve1,chua_ro,ACTUAL,test,data/ground_truth/du_toan/banve1_nha_pho_di_an.csv,data/drawings/test/banve1_kien_truc.dxf,data/drawings/test/banve1_ket_cau.dxf,,"Người dùng gửi bộ banve1 (02/11/2026), du_toan_23-4.xls sheet Bang khoi luong (lập 04/2011)",chua_ro,chua_kiem,,"ma_cong_tac gắn tự động theo tên, cần xem lại; chưa có file thông số"
+--- a/data/ground_truth/du_toan/README.md
++++ b/data/ground_truth/du_toan/README.md
+@@ -1,5 +1,37 @@
+ # Dự toán thật làm đáp án phần thô
+ 
++## Manifest hồ sơ `cases.csv` (D01, 03/11/2026)
++
++Một dòng một hồ sơ đánh giá. Kiểm bằng `optimat.data_check.check_cases` (chạy trong `scripts/check_data.py`, mục `ho_so`);
++`scripts/evaluate_rough.py` chọn hồ sơ ở lối vào bằng `select_cases`.
++
++| Cột | Bắt buộc | Giá trị | Ghi chú |
++|---|---|---|---|
++| `ten` | có | duy nhất | mã hồ sơ, tên sheet báo cáo |
++| `cong_trinh_id` | có | duy nhất theo công trình | mọi phiên bản/tên khác của cùng công trình dùng chung mã; một công trình chỉ ở một split |
++| `phien_ban` | không | chữ; `chua_ro` khi chưa biết | không tự đặt phiên bản/hash |
++| `data_kind` | có | ACTUAL, SAMPLE, SYNTHETIC | chỉ ACTUAL vào chỉ tiêu chính |
++| `split` | có | build, test | không đổi split âm thầm |
++| `du_toan` | có | đường dẫn từ gốc dự án | thiếu file là lỗi |
++| `kien_truc`, `ket_cau` | không | đường dẫn | bản vẽ không vào Git: thiếu trên máy là cảnh báo, hồ sơ đó không chạy |
++| `thong_so` | không | đường dẫn JSON | khai báo mà thiếu file là lỗi |
++| `nguon` | không | chữ | nơi lấy tài liệu |
++| `quyen_dung` | không | duoc_phep, noi_bo, chua_ro | trống/`chua_ro` = cảnh báo; tải công khai không có nghĩa được phân phối lại |
++| `dap_an_trang_thai` | không | chua_kiem, da_kiem | `da_kiem` phải có `nguoi_kiem` |
++| `nguoi_kiem` | không | chữ | không tự điền |
++| `ghi_chu` | không | chữ | |
++
++Chặn: thiếu cột/giá trị bắt buộc, giá trị ngoài danh sách, tên trùng, file đáp án/thông số khai báo mà không có,
++cùng `cong_trinh_id` hoặc cùng file đáp án/bản vẽ (đường dẫn thật, không theo tên file) nằm ở cả build và test.
++
++Lối vào đánh giá: `--muc-dich phat_trien` (mặc định) chỉ chạy build, mọi `data_kind`, ghi nhãn phát triển;
++`--muc-dich bao_cao` chỉ chạy ACTUAL + test + đáp án đã kiểm có người kiểm. Hồ sơ bị loại được in và ghi sheet `Bo_qua`.
++
++Giá trị hiện có (chỉ ghi điều có căn cứ trong thư mục này): hai hồ sơ ACTUAL; `46_nha_tan_binh` build,
++`banve1_nha_pho_di_an` test (giữ nguyên). `phien_ban`, `quyen_dung` = `chua_ro`; `dap_an_trang_thai` = `chua_kiem`
++(đây là dự toán của người lập, chưa có người kiểm độc lập), nên chưa hồ sơ nào đủ điều kiện chỉ tiêu chính.
++D01 không khóa mẫu số, không ánh xạ lại dòng đáp án (D02).
++
+ `46_nha_tan_binh.csv`: sheet "Công trình" của `Nha Tan Binh.xls` (bộ "46-Nha Dan 5 Tang (KT+KC+DN+BPTC+DuToan)",
+ kenhxaydung.vn, lập 2016 theo định mức 1776, đơn giá HCM). Nhà 4 × 22,6–25,6 m: trệt, lầu 1–4, sân thượng, mái.
+ 
+@@ -7,7 +39,9 @@
+ - `split`: build. Bộ bản vẽ này đã dùng để sửa tách mặt bằng (28/10/2026), không dùng làm số báo cáo độ chính xác.
+ - `khoi_luong` đã đổi về đơn vị của hệ thống (100 m² → m², 100 m → m); `khoi_luong_goc`, `don_vi_goc` giữ nguyên bản.
+ - `ma_cong_tac`, `cau_kien`: gắn theo tên công tác (mã định mức không đủ: AF.11212 lót và AF.11213 móng chung nhóm);
+-  trống = ngoài phạm vi phần thô (hoàn thiện, cửa, điện nước) hoặc không phải bộ phận nhà (dòng "BNN" bể nước ngầm).
++  trống = **chưa ánh xạ/chưa phân loại**, không tự đồng nghĩa ngoài phạm vi (sửa 03/11/2026, D01). Ghi chú cũ coi dòng
++  "BNN" (bể nước ngầm) là không phải bộ phận nhà: không còn đúng, bể nước ngầm/bể phốt phần kết cấu, xây, trát, chống thấm
++  là IN theo M01 QĐ-03/04. Phân loại IN/OUT từng dòng làm ở D02 theo `docs/M01_PHAM_VI_PHAN_THO.md` mục 5A.
+ - `dien_giai`: các dòng diễn giải khối lượng theo trục, tầng, nối bằng " | ".
+ 
+ So sánh: `python scripts/compare_estimate.py data/ground_truth/du_toan/46_nha_tan_binh.csv <Kien_truc.dxf> --structural <Ket cau.dwg>`.
+--- a/src/optimat/data_check.py
++++ b/src/optimat/data_check.py
+@@ -16,6 +16,7 @@
+ from collections import Counter, defaultdict
+ from dataclasses import asdict, dataclass
+ from datetime import date
++from pathlib import Path
+ 
+ import pandas as pd
+ 
+@@ -32,7 +33,7 @@
+ @dataclass
+ class Finding:
+     level: str          # error | warning | info
+-    area: str           # vat_lieu | phuong_an_tuong | ten_goi_khac | quy_tac | dinh_muc_phan_tho | nguon_cung | gia | dap_an
++    area: str           # vat_lieu | phuong_an_tuong | ten_goi_khac | quy_tac | dinh_muc_phan_tho | nguon_cung | gia | dap_an | ho_so
+     item: str
+     message: str
+ 
+@@ -283,6 +284,136 @@
+     return {"ban_ve": len(index), "theo_nhom": dict(splits), "dong_dap_an": len(walls)}
+ 
+ 
++# Manifest hồ sơ đánh giá phần thô (D01): data/ground_truth/du_toan/cases.csv, mô tả trong README cùng thư mục
++CASES_FILE = config.DATA_DIR / "ground_truth" / "du_toan" / "cases.csv"
++CASE_REQUIRED = ("ten", "cong_trinh_id", "data_kind", "split", "du_toan")
++CASE_COLUMNS = CASE_REQUIRED + ("phien_ban", "kien_truc", "ket_cau", "thong_so", "nguon", "quyen_dung",
++                                "dap_an_trang_thai", "nguoi_kiem")
++CASE_SPLITS = ("build", "test")
++CASE_RIGHTS = ("duoc_phep", "noi_bo", "chua_ro")          # được phép phân phối | chỉ dùng nội bộ | chưa rõ
++CASE_KEYS = ("chua_kiem", "da_kiem")                       # đáp án đã được người kiểm xác nhận hay chưa
++CASE_PURPOSES = ("phat_trien", "bao_cao")
++
++
++def check_cases(path=None, root=None) -> tuple[list[Finding], dict[str, list[str]]]:
++    """Kiểm manifest hồ sơ đánh giá. Trả (phát hiện, {tên hồ sơ: lý do không chạy được}).
++    Lỗi cấu trúc/định danh/tham chiếu và file CAD khai báo nhưng thiếu trên máy đều chặn hồ sơ đó; quyền dùng chưa rõ
++    chỉ cảnh báo. Không sửa, không điền giá trị thay người dùng."""
++    import csv
++    path, root = Path(path or CASES_FILE), Path(root or config.ROOT)
++    out: list[Finding] = []
++    blocked: dict[str, list[str]] = defaultdict(list)
++    if not path.exists():
++        out.append(Finding("error", "ho_so", path.name, "Chưa có manifest hồ sơ đánh giá."))
++        return out, dict(blocked)
++    with path.open(encoding="utf-8-sig", newline="") as f:
++        reader = csv.DictReader(f)
++        rows = list(reader)
++        cols = reader.fieldnames or []
++    missing_cols = [c for c in CASE_COLUMNS if c not in cols]
++    if missing_cols:
++        out.append(Finding("error", "ho_so", path.name, f"Thiếu cột: {', '.join(missing_cols)}."))
++    seen: dict[str, int] = {}
++    by_project: dict[str, list[tuple[str, str]]] = defaultdict(list)
++    by_file: dict[str, list[tuple[str, str]]] = defaultdict(list)
++
++    def bad(level: str, line: int, ten: str, msg: str) -> None:
++        out.append(Finding(level, "ho_so", f"{path.name} dòng {line} ({ten or 'không tên'})", msg))
++        if level == "error":
++            blocked[ten or f"dòng {line}"].append(msg)
++
++    for i, r in enumerate(rows, start=2):                  # dòng 1 là tiêu đề
++        r = {k: (v or "").strip() for k, v in r.items() if k}
++        ten = r.get("ten", "")
++        for c in CASE_REQUIRED:
++            if c in cols and not r.get(c):
++                bad("error", i, ten, f"Thiếu {c} (bắt buộc).")
++        if ten:
++            if ten in seen:
++                bad("error", i, ten, f"Tên hồ sơ trùng dòng {seen[ten]}.")
++            seen.setdefault(ten, i)
++        for c, allowed in (("split", CASE_SPLITS), ("data_kind", DATA_KINDS), ("quyen_dung", CASE_RIGHTS),
++                           ("dap_an_trang_thai", CASE_KEYS)):
++            if r.get(c) and r[c] not in allowed:
++                bad("error", i, ten, f"{c} = \"{r[c]}\" không hợp lệ (chọn: {', '.join(allowed)}).")
++        if r.get("quyen_dung") in ("", "chua_ro") and "quyen_dung" in cols:
++            bad("warning", i, ten, "Quyền dùng chưa rõ: chỉ dùng nội bộ để đánh giá, không phân phối lại hồ sơ.")
++        if r.get("dap_an_trang_thai") == "da_kiem" and not r.get("nguoi_kiem"):
++            bad("error", i, ten, "Đáp án ghi đã kiểm nhưng chưa có người kiểm.")
++        if r.get("cong_trinh_id") and r.get("split") in CASE_SPLITS:
++            by_project[r["cong_trinh_id"]].append((ten, r["split"]))
++        for c in ("du_toan", "thong_so", "kien_truc", "ket_cau"):
++            if not r.get(c):
++                continue
++            p = (root / r[c]).resolve()
++            if c != "thong_so" and r.get("split") in CASE_SPLITS:      # cùng file đáp án/bản vẽ = cùng nguồn
++                by_file[str(p).lower()].append((ten, r["split"]))
++            if p.is_file():
++                continue
++            if p.exists():                             # có đường dẫn nhưng là thư mục: không đọc được như file
++                bad("error", i, ten, f"{c}: {r[c]} không phải file.")
++            elif c in ("du_toan", "thong_so"):         # đáp án, thông số nằm trong kho: thiếu là tham chiếu hỏng
++                bad("error", i, ten, f"{c}: không có file {r[c]}.")
++            else:                                      # bản vẽ không vào Git: thiếu trên máy này thì chưa chạy được
++                bad("warning", i, ten, f"{c}: thiếu file cục bộ {r[c]} (bản vẽ không phân phối cùng kho).")
++                blocked[ten].append(f"thiếu file cục bộ {r[c]}")
++    # cùng công trình (kể cả khác phiên bản, tên) hoặc cùng file nguồn ở cả build và test: chặn cả hai phía
++    groups = [(f"Công trình {k}", v) for k, v in by_project.items()] + \
++             [(f"File {Path(k).name}", v) for k, v in by_file.items()]
++    for label, items in groups:
++        if len({s for _, s in items}) > 1:
++            names = sorted({t for t, _ in items})
++            msg = f"{label} nằm ở cả build và test ({', '.join(names)})."
++            out.append(Finding("error", "ho_so", ", ".join(names), msg))
++            for t in names:
++                blocked[t].append(msg)
++    return out, dict(blocked)
++
++
++def select_cases(purpose: str, path=None, root=None) -> tuple[list[dict], list[tuple[str, str]]]:
++    """Lối vào đánh giá: chọn hồ sơ được chạy theo mục đích.
++        phat_trien  chỉ split build (mọi data_kind, kết quả ghi nhãn phát triển); không chạy test
++        bao_cao     chỉ ACTUAL + test + đáp án đã kiểm có người kiểm (chỉ tiêu chính)
++    Hồ sơ có lỗi manifest, chưa khai báo bản vẽ kiến trúc, đường dẫn không phải file hoặc thiếu bản vẽ cục bộ bị loại kèm lý do. Trả (hồ sơ chạy, [(tên, lý do loại)])."""
++    import csv
++    if purpose not in CASE_PURPOSES:
++        raise ValueError(f"Mục đích đánh giá không hợp lệ: {purpose} (chọn: {', '.join(CASE_PURPOSES)}).")
++    path = Path(path or CASES_FILE)
++    findings, blocked = check_cases(path, root)
++    fatal = [f.message for f in findings if f.level == "error" and f.item == path.name]
++    if fatal:
++        raise ValueError(f"Manifest {path.name} lỗi: {' '.join(fatal)}")
++    with path.open(encoding="utf-8-sig", newline="") as f:
++        rows = [{k: (v or "").strip() for k, v in r.items() if k} for r in csv.DictReader(f)]
++    run, skipped = [], []
++    for i, r in enumerate(rows, start=2):
++        ten = r["ten"] or f"dòng {i}"
++        if purpose == "phat_trien" and r["split"] != "build":
++            why = "không phải split build (phát triển không chạy bộ test)"
++        elif purpose == "bao_cao" and r["data_kind"] != "ACTUAL":
++            why = f"data_kind {r['data_kind'] or 'trống'}: không vào chỉ tiêu chính"
++        elif purpose == "bao_cao" and r["split"] != "test":
++            why = f"split {r['split'] or 'trống'}: chỉ tiêu chính chỉ dùng test"
++        elif purpose == "bao_cao" and (r["dap_an_trang_thai"] != "da_kiem" or not r["nguoi_kiem"]):
++            why = "đáp án chưa được người kiểm xác nhận"
++        elif blocked.get(ten):
++            why = "; ".join(blocked[ten])
++        elif not r["kien_truc"]:                    # manifest cho phép để trống, nhưng evaluator cần bản vẽ kiến trúc
++            why = "chưa khai báo bản vẽ kiến trúc (kien_truc): evaluator không chạy được"
++        else:
++            run.append(r)
++            continue
++        skipped.append((ten, why))
++    return run, skipped
++
++
++def _check_cases_manifest(out: list[Finding]) -> dict:
++    findings, blocked = check_cases()
++    out += findings
++    n = len(pd.read_csv(CASES_FILE, dtype=str)) if CASES_FILE.exists() else 0
++    return {"ho_so": n, "bi_chan": sorted(blocked)}
++
++
+ def run_checks(catalog: Catalog | None = None, today: date | None = None) -> dict:
+     if catalog is None and not get_database_url():
+         raise RuntimeError("Kiểm soát dữ liệu cần kết nối PostgreSQL (DATABASE_URL).")
+@@ -299,6 +430,7 @@
+     supply = _check_supply(cat, out, today)
+     prices = _price_records_summary(out)
+     truth = _check_ground_truth(cat, out)
++    cases = _check_cases_manifest(out)
+     fam = cat.materials.get("family", pd.Series(dtype=object))
+     view = cat.wall_view()
+     summary = {
+@@ -308,6 +440,7 @@
+         "phuong_an_tuong": len(view), "phuong_an_du_so_lieu": int(view.ready.sum()) if len(view) else 0,
+         "theo_lop_tuong": classes, "ten_goi_khac": len(cat.aliases), "quy_tac": len(load_rules()),
+         "nguon_cung": supply, "lich_su_gia": prices, "dap_an_do_tay": truth, "dinh_muc_phan_tho": rough,
++        "ho_so_danh_gia": cases,
+     }
+     levels = Counter(f.level for f in out)
+     return {"ok": levels.get("error", 0) == 0, "counts": {k: levels.get(k, 0) for k in ("error", "warning", "info")},
+@@ -326,7 +459,8 @@
+              f"| Nhà cung cấp, dòng giá đại lý (có giá) | {s['nguon_cung']['nha_cung_cap']}, {s['nguon_cung']['dong_gia_dai_ly']} ({s['nguon_cung']['co_gia']}) |",
+              f"| Vật liệu tường đã có giá | {s['nguon_cung']['vat_lieu_tuong_co_gia']}/{s['nguon_cung']['vat_lieu_tuong']} |",
+              f"| Lịch sử giá ({s['lich_su_gia']['nguon']}): tổng / thật | {s['lich_su_gia']['dong']} / {s['lich_su_gia']['that']} |",
+-             f"| Đáp án đo tay: bản vẽ, theo nhóm | {s['dap_an_do_tay']['ban_ve']}, {s['dap_an_do_tay']['theo_nhom']} |", ""]
++             f"| Đáp án đo tay: bản vẽ, theo nhóm | {s['dap_an_do_tay']['ban_ve']}, {s['dap_an_do_tay']['theo_nhom']} |",
++             f"| Hồ sơ đánh giá phần thô (cases.csv): tổng, bị chặn | {s['ho_so_danh_gia']['ho_so']}, {len(s['ho_so_danh_gia']['bi_chan'])} |", ""]
+     names = {"error": "Lỗi (phải sửa)", "warning": "Cảnh báo", "info": "Ghi chú"}
+     for level in ("error", "warning", "info"):
+         items = [f for f in report["findings"] if f["level"] == level]
+--- a/scripts/evaluate_rough.py
++++ b/scripts/evaluate_rough.py
+@@ -1,8 +1,13 @@
+ """Báo cáo sai số phần thô theo cấu kiện × trạng thái dữ liệu (đặc tả 30/10/2026 mục 7, 11) trên mọi bộ có đáp án.
+ 
+-    python scripts/evaluate_rough.py [--cases data/ground_truth/du_toan/cases.csv] [--out reports/danh_gia_phan_tho.xlsx]
++    python scripts/evaluate_rough.py [--muc-dich phat_trien | bao_cao] [--cases data/ground_truth/du_toan/cases.csv]
++                                     [--out reports/danh_gia_phan_tho.xlsx]
+ 
+-cases.csv: ten, split (build | test), du_toan (CSV đáp án), kien_truc, ket_cau, thong_so (JSON, trống = không thông số).
++cases.csv: manifest hồ sơ (cột và quy ước: data/ground_truth/du_toan/README.md). Hồ sơ được chọn ở lối vào bằng
++optimat.data_check.select_cases (D01): phat_trien (mặc định) chỉ chạy split build, mọi data_kind, kết quả ghi nhãn
++phát triển; bao_cao chỉ chạy ACTUAL + test + đáp án đã có người kiểm. Hồ sơ lỗi manifest, thiếu bản vẽ cục bộ hoặc
++không đủ điều kiện bị loại kèm lý do (sheet Bo_qua), không âm thầm đổi split/data_kind. File --out luôn bị
++ghi đè bởi lần chạy mới (sheet Trang_thai), kể cả khi không có hồ sơ đủ điều kiện.
+ Mỗi bộ chạy compute_rough rồi so với đáp án bằng compare() của compare_estimate.py. Chỉ tiêu "< 10%" chỉ tính trên dòng
+ trạng thái A, B (mục 3, quy tắc 4); dòng C, D báo riêng. Đáp án hiện là dự toán thật (không phải đo tay): phạm vi, quy
+ tắc bóc của người lập có thể khác, nên con số là đối chứng, chưa phải sai số đo tay. Sheet: Tong_hop, Theo_trang_thai, mỗi bộ.
+@@ -10,6 +15,7 @@
+ import argparse
+ import json
+ import sys
++from datetime import datetime
+ from pathlib import Path
+ 
+ import pandas as pd
+@@ -20,6 +26,7 @@
+ 
+ from compare_estimate import compare  # noqa: E402
+ from optimat.catalog.repository import Catalog  # noqa: E402
++from optimat.data_check import CASE_PURPOSES, select_cases  # noqa: E402
+ from optimat.drawing.dxf_reader import read_drawing  # noqa: E402
+ from optimat.rough.models import ProjectParams  # noqa: E402
+ from optimat.rough.takeoff import compute_rough, rough_from_drawing  # noqa: E402
+@@ -36,7 +43,7 @@
+     req = rough_from_drawing(read_drawing(str(ROOT / case["kien_truc"])), ProjectParams(**raw), None, catalog, case["ten"],
+                              openings=openings, structural=structural)
+     table = compare(pd.read_csv(ROOT / case["du_toan"], encoding="utf-8-sig"), compute_rough(req, catalog).works)
+-    return table.assign(bo=case["ten"], split=case["split"])
++    return table.assign(bo=case["ten"], split=case["split"], data_kind=case.get("data_kind", ""))
+ 
+ 
+ def summarize(rows: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+@@ -59,21 +66,38 @@
+ 
+ def main() -> None:
+     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
++    ap.add_argument("--muc-dich", choices=CASE_PURPOSES, default="phat_trien",
++                    help="phat_trien: chỉ build, ghi nhãn phát triển; bao_cao: chỉ ACTUAL-test có đáp án đã kiểm")
+     ap.add_argument("--cases", default=str(ROOT / "data/ground_truth/du_toan/cases.csv"))
+     ap.add_argument("--out", default=str(ROOT / "reports/danh_gia_phan_tho.xlsx"))
+     a = ap.parse_args()
+-    cases = pd.read_csv(a.cases, dtype=str, keep_default_na=False).to_dict("records")
+-    catalog = Catalog.load()
+-    per = {c["ten"]: run_case(c, catalog) for c in cases}
+-    rows = pd.concat(per.values(), ignore_index=True)
+-    summary, by_status = summarize(rows)
+-    print(summary.to_string(index=False))
+-    print()
+-    print(by_status.to_string(index=False))
++    cases, skipped = select_cases(a.muc_dich, a.cases, ROOT)
++    label = "PHÁT TRIỂN (không phải chỉ tiêu nghiệm thu)" if a.muc_dich == "phat_trien" else "BÁO CÁO CHỈ TIÊU CHÍNH (ACTUAL–test)"
++    print(f"Mục đích: {label}; chạy {len(cases)} hồ sơ, loại {len(skipped)}.")
++    for ten, why in skipped:
++        print(f"  bỏ qua {ten}: {why}")
++    per = {}
++    if cases:
++        catalog = Catalog.load()
++        per = {c["ten"]: run_case(c, catalog) for c in cases}
++    else:
++        print("Không có hồ sơ đủ điều kiện: chưa có số để báo cáo.")
++    # luôn ghi đè --out bằng lần chạy này (kể cả khi không có hồ sơ) để không còn số của lần trước
++    state = pd.DataFrame([{"muc_dich": a.muc_dich, "thoi_diem": datetime.now().isoformat(timespec="seconds"),
++                           "ho_so_chay": len(per), "ho_so_loai": len(skipped),
++                           "ket_qua": "có số" if per else "không có hồ sơ đủ điều kiện"}])
+     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+     with pd.ExcelWriter(a.out) as xw:
+-        summary.to_excel(xw, sheet_name="Tong_hop", index=False)
+-        by_status.to_excel(xw, sheet_name="Theo_trang_thai", index=False)
++        state.to_excel(xw, sheet_name="Trang_thai", index=False)
++        if per:
++            rows = pd.concat(per.values(), ignore_index=True)
++            summary, by_status = (t.assign(muc_dich=a.muc_dich) for t in summarize(rows))   # nhãn mục đích trên sheet tổng
++            print(summary.to_string(index=False))
++            print()
++            print(by_status.to_string(index=False))
++            summary.to_excel(xw, sheet_name="Tong_hop", index=False)
++            by_status.to_excel(xw, sheet_name="Theo_trang_thai", index=False)
++        pd.DataFrame(skipped, columns=["bo", "ly_do"]).assign(muc_dich=a.muc_dich).to_excel(xw, sheet_name="Bo_qua", index=False)
+         for name, t in per.items():
+             t.to_excel(xw, sheet_name=name[:31], index=False)
+     print(f"Đã ghi {a.out}")
+--- /dev/null
++++ b/tests/test_ground_truth_manifest.py
+@@ -0,0 +1,210 @@
++"""D01: manifest hồ sơ đánh giá (data/ground_truth/du_toan/cases.csv), kiểm metadata và cổng chọn hồ sơ ở lối vào evaluator."""
++import csv
++import sys
++from pathlib import Path
++
++import pandas as pd
++import pytest
++
++from optimat.data_check import CASE_COLUMNS, CASES_FILE, check_cases, select_cases
++
++ROOT = Path(__file__).resolve().parents[1]
++COLS = list(CASE_COLUMNS) + ["ghi_chu"]
++
++
++def _case(ten, **kw):
++    row = {"ten": ten, "cong_trinh_id": f"ct_{ten}", "phien_ban": "chua_ro", "data_kind": "ACTUAL", "split": "build",
++           "du_toan": f"gt/{ten}.csv", "kien_truc": f"kt/{ten}.dxf", "ket_cau": "", "thong_so": "", "nguon": "x",
++           "quyen_dung": "noi_bo", "dap_an_trang_thai": "chua_kiem", "nguoi_kiem": "", "ghi_chu": ""}
++    row.update(kw)
++    return row
++
++
++def _manifest(tmp_path, rows, cols=COLS, files=True):
++    """Ghi manifest tạm; files=True tạo file đáp án gt/… và bản vẽ giả kt/… đã khai báo để chỉ kiểm điều đang test."""
++    if files:
++        for r in rows:
++            for c in ("du_toan", "kien_truc"):
++                if r.get(c, "").startswith(("gt/", "kt/")):
++                    p = tmp_path / r[c]
++                    p.parent.mkdir(parents=True, exist_ok=True)
++                    p.write_text("stt\n", encoding="utf-8")
++    path = tmp_path / "cases.csv"
++    with path.open("w", encoding="utf-8", newline="") as f:
++        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
++        w.writeheader()
++        w.writerows(rows)
++    return path
++
++
++def _errors(findings):
++    return [f for f in findings if f.level == "error"]
++
++
++def test_real_manifest_keeps_splits_and_has_no_errors():
++    findings, _ = check_cases()
++    assert not _errors(findings), _errors(findings)
++    rows = {r["ten"]: r for r in csv.DictReader(CASES_FILE.open(encoding="utf-8-sig"))}
++    assert rows["46_nha_tan_binh"]["split"] == "build" and rows["banve1_nha_pho_di_an"]["split"] == "test"
++    assert {r["data_kind"] for r in rows.values()} == {"ACTUAL"}
++    # quyền dùng chưa rõ: cảnh báo, không tự ghi được phép phân phối
++    assert all(r["quyen_dung"] == "chua_ro" for r in rows.values())
++    assert sum("Quyền dùng chưa rõ" in f.message for f in findings) == 2
++    # chưa hồ sơ nào có đáp án được người kiểm xác nhận: chỉ tiêu chính chưa chạy hồ sơ nào
++    run, skipped = select_cases("bao_cao")
++    assert run == [] and {t for t, _ in skipped} == set(rows)
++
++
++def test_missing_column_is_fatal(tmp_path):
++    path = _manifest(tmp_path, [_case("a")], cols=[c for c in COLS if c != "cong_trinh_id"])
++    findings, _ = check_cases(path, tmp_path)
++    assert any("Thiếu cột: cong_trinh_id" in f.message for f in _errors(findings))
++    with pytest.raises(ValueError, match="cong_trinh_id"):
++        select_cases("phat_trien", path, tmp_path)
++
++
++def test_bad_values_reported_with_line_and_not_fixed(tmp_path):
++    rows = [_case("a"), _case("b", cong_trinh_id=""), _case("c", split="train"), _case("d", data_kind="REAL"),
++            _case("a", cong_trinh_id="ct_khac")]
++    path = _manifest(tmp_path, rows)
++    findings, blocked = check_cases(path, tmp_path)
++    msgs = {(f.item, f.message) for f in _errors(findings)}
++    assert ("cases.csv dòng 3 (b)", "Thiếu cong_trinh_id (bắt buộc).") in msgs
++    assert any(i == "cases.csv dòng 4 (c)" and "split = \"train\"" in m for i, m in msgs)
++    assert any(i == "cases.csv dòng 5 (d)" and "data_kind = \"REAL\"" in m for i, m in msgs)
++    assert any(i == "cases.csv dòng 6 (a)" and "trùng dòng 2" in m for i, m in msgs)
++    assert {"b", "c", "d", "a"} <= set(blocked)
++    run, skipped = select_cases("phat_trien", path, tmp_path)
++    assert run == []                                           # không hồ sơ lỗi nào được chạy
++    assert path.read_text(encoding="utf-8").count("train") == 1   # manifest giữ nguyên, không tự sửa
++
++
++def test_same_project_in_build_and_test_blocked(tmp_path):
++    rows = [_case("v1", cong_trinh_id="nha_x", split="build"),
++            _case("v2", cong_trinh_id="nha_x", split="test", phien_ban="v2")]
++    findings, blocked = check_cases(_manifest(tmp_path, rows), tmp_path)
++    assert any("Công trình nha_x nằm ở cả build và test" in f.message for f in _errors(findings))
++    assert set(blocked) == {"v1", "v2"}
++
++
++def test_same_answer_file_across_splits_blocked_but_same_basename_is_not(tmp_path):
++    rows = [_case("p", split="build", du_toan="gt/chung.csv"), _case("q", split="test", du_toan="gt/chung.csv"),
++            _case("r", split="build", du_toan="gt/build/dap_an.csv"), _case("s", split="test", du_toan="gt/test/dap_an.csv")]
++    findings, blocked = check_cases(_manifest(tmp_path, rows), tmp_path)
++    assert any("File chung.csv nằm ở cả build và test" in f.message for f in _errors(findings))
++    assert {"p", "q"} <= set(blocked) and "r" not in blocked and "s" not in blocked
++
++
++def test_missing_referenced_answer_is_error(tmp_path):
++    rows = [_case("a", thong_so="gt/khong_co.json")]
++    path = _manifest(tmp_path, rows)
++    (tmp_path / "gt/a.csv").unlink()
++    findings, blocked = check_cases(path, tmp_path)
++    msgs = [f.message for f in _errors(findings)]
++    assert "du_toan: không có file gt/a.csv." in msgs and "thong_so: không có file gt/khong_co.json." in msgs
++    assert "a" in blocked
++
++
++def test_rights_unknown_warns_and_checked_key_needs_reviewer(tmp_path):
++    rows = [_case("a", quyen_dung="chua_ro"), _case("b", quyen_dung=""), _case("c", dap_an_trang_thai="da_kiem")]
++    findings, blocked = check_cases(_manifest(tmp_path, rows), tmp_path)
++    warns = [f.item for f in findings if f.level == "warning" and "Quyền dùng chưa rõ" in f.message]
++    assert len(warns) == 2 and "a" not in blocked and "b" not in blocked     # chỉ cảnh báo, không chặn
++    assert blocked["c"] == ["Đáp án ghi đã kiểm nhưng chưa có người kiểm."]
++
++
++def test_missing_local_drawing_skips_case_with_reason(tmp_path):
++    rows = [_case("a", kien_truc="data/drawings/build/khong_co.dxf")]
++    path = _manifest(tmp_path, rows)
++    findings, blocked = check_cases(path, tmp_path)
++    assert not _errors(findings)                               # không làm CI thất bại vô điều kiện
++    assert any(f.level == "warning" and "thiếu file cục bộ" in f.message for f in findings)
++    run, skipped = select_cases("phat_trien", path, tmp_path)
++    assert run == [] and skipped == [("a", "thiếu file cục bộ data/drawings/build/khong_co.dxf")]
++
++
++def test_report_entry_rejects_sample_synthetic_and_unchecked(tmp_path):
++    ok = dict(split="test", dap_an_trang_thai="da_kiem", nguoi_kiem="KS. A")
++    rows = [_case("that", **ok), _case("mau", data_kind="SAMPLE", **ok), _case("mo_phong", data_kind="SYNTHETIC", **ok),
++            _case("chua_kiem", split="test"), _case("build_kiem", split="build", dap_an_trang_thai="da_kiem", nguoi_kiem="B"),
++            _case("loi", data_kind="BAD", **ok)]
++    path = _manifest(tmp_path, rows)
++    run, skipped = select_cases("bao_cao", path, tmp_path)
++    assert [r["ten"] for r in run] == ["that"]
++    why = dict(skipped)
++    assert "không vào chỉ tiêu chính" in why["mau"] and "không vào chỉ tiêu chính" in why["mo_phong"]
++    assert why["chua_kiem"] == "đáp án chưa được người kiểm xác nhận" and "chỉ dùng test" in why["build_kiem"]
++    assert "không vào chỉ tiêu chính" in why["loi"]
++    # phát triển: fixture SAMPLE ở build vẫn chạy, giữ nguyên data_kind; không chạy bộ test
++    dev = _manifest(tmp_path, [_case("fx", data_kind="SAMPLE"), _case("t", split="test")])
++    run, skipped = select_cases("phat_trien", dev, tmp_path)
++    assert [(r["ten"], r["data_kind"], r["split"]) for r in run] == [("fx", "SAMPLE", "build")]
++    assert skipped == [("t", "không phải split build (phát triển không chạy bộ test)")]
++
++
++def test_evaluator_entry_uses_gate(tmp_path, monkeypatch, capsys):
++    """Đường báo cáo của evaluate_rough không gọi run_case cho hồ sơ bị loại; số tổng hợp cũ không đổi."""
++    sys.path.insert(0, str(ROOT / "scripts"))
++    import evaluate_rough
++    path = _manifest(tmp_path, [_case("mau", data_kind="SAMPLE", split="test", dap_an_trang_thai="da_kiem", nguoi_kiem="A")])
++    monkeypatch.setattr(evaluate_rough, "run_case", lambda *a: pytest.fail("không được chạy hồ sơ bị loại"))
++    monkeypatch.setattr(evaluate_rough.Catalog, "load", classmethod(lambda cls: pytest.fail("không cần nạp danh mục")))
++    monkeypatch.setattr(sys, "argv", ["evaluate_rough.py", "--muc-dich", "bao_cao", "--cases", str(path),
++                                      "--out", str(tmp_path / "out.xlsx")])
++    evaluate_rough.ROOT = tmp_path
++    try:
++        evaluate_rough.main()
++    finally:
++        evaluate_rough.ROOT = ROOT
++    out = capsys.readouterr().out
++    assert "chạy 0 hồ sơ, loại 1" in out and "bỏ qua mau: data_kind SAMPLE" in out
++    sheets = pd.read_excel(tmp_path / "out.xlsx", sheet_name=None)
++    assert set(sheets) == {"Trang_thai", "Bo_qua"}
++    assert sheets["Trang_thai"].iloc[0].ket_qua == "không có hồ sơ đủ điều kiện"
++
++
++def test_gate_blocks_missing_architecture_drawing_and_directory_paths(tmp_path):
++    """Hồ sơ ACTUAL–test đã kiểm nhưng chưa khai báo kien_truc, hoặc khai báo thư mục thay file, không được chạy."""
++    ok = dict(split="test", dap_an_trang_thai="da_kiem", nguoi_kiem="KS. A")
++    (tmp_path / "data/drawings/test").mkdir(parents=True)
++    (tmp_path / "data/drawings/test/kt.dxf").write_text("bản vẽ giả: cổng chỉ kiểm là file", encoding="utf-8")
++    rows = [_case("khong_kt", kien_truc="", **ok), _case("thu_muc", kien_truc="data/drawings/test", **ok),
++            _case("du_toan_thu_muc", du_toan="gt", **ok), _case("du", kien_truc="data/drawings/test/kt.dxf", **ok)]
++    path = _manifest(tmp_path, rows, files=False)
++    for t in ("khong_kt", "thu_muc", "du"):
++        (tmp_path / f"gt/{t}.csv").parent.mkdir(exist_ok=True)
++        (tmp_path / f"gt/{t}.csv").write_text("stt\n", encoding="utf-8")
++    findings, blocked = check_cases(path, tmp_path)
++    msgs = {(f.item, f.message) for f in _errors(findings)}
++    assert ("cases.csv dòng 3 (thu_muc)", "kien_truc: data/drawings/test không phải file.") in msgs
++    assert ("cases.csv dòng 4 (du_toan_thu_muc)", "du_toan: gt không phải file.") in msgs
++    assert "khong_kt" not in blocked                         # manifest cho phép chưa khai báo bản vẽ
++    run, skipped = select_cases("bao_cao", path, tmp_path)
++    assert [r["ten"] for r in run] == ["du"]
++    why = dict(skipped)
++    assert why["khong_kt"] == "chưa khai báo bản vẽ kiến trúc (kien_truc): evaluator không chạy được"
++    assert "không phải file" in why["thu_muc"] and "không phải file" in why["du_toan_thu_muc"]
++
++
++def test_stale_report_replaced_when_new_run_has_no_case(tmp_path, monkeypatch):
++    """Đã có báo cáo cũ có số; lần chạy mới loại toàn bộ hồ sơ: file đầu ra là của lần mới, không còn số cũ."""
++    sys.path.insert(0, str(ROOT / "scripts"))
++    import evaluate_rough
++    out = tmp_path / "out.xlsx"
++    with pd.ExcelWriter(out) as xw:
++        pd.DataFrame([{"bo": "cu", "cong_tac": 9, "lech_tb_pct": 4.2}]).to_excel(xw, sheet_name="Tong_hop", index=False)
++        pd.DataFrame([{"x": 1}]).to_excel(xw, sheet_name="cu", index=False)
++    path = _manifest(tmp_path, [_case("t", split="test")])
++    monkeypatch.setattr(evaluate_rough, "run_case", lambda *a: pytest.fail("không được chạy hồ sơ bị loại"))
++    monkeypatch.setattr(sys, "argv", ["evaluate_rough.py", "--muc-dich", "phat_trien", "--cases", str(path), "--out", str(out)])
++    evaluate_rough.ROOT = tmp_path
++    try:
++        evaluate_rough.main()
++    finally:
++        evaluate_rough.ROOT = ROOT
++    sheets = pd.read_excel(out, sheet_name=None)
++    assert set(sheets) == {"Trang_thai", "Bo_qua"}
++    st = sheets["Trang_thai"].iloc[0]
++    assert st.muc_dich == "phat_trien" and st.ho_so_chay == 0 and st.ho_so_loai == 1
++    assert st.ket_qua == "không có hồ sơ đủ điều kiện"
++    assert sheets["Bo_qua"].bo.tolist() == ["t"]

@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "checked": 3271,
+  "matched": 3271,
+  "methods": {
+    "explicit_unit_caption": 751,
+    "explicit_work_column": 45,
+    "same_code_continuation": 2380,
+    "heading_caption_before_page_break": 6,
+    "explicit_table_header": 89
+  },
+  "failures": [],
+  "source_hashes_checked": 30,
+  "verification": "So câu trích với trang hoặc ô bảng gốc sau chuẩn hóa NFC và khoảng trắng; không xác nhận toàn bộ hệ số bằng đọc tay."
+}

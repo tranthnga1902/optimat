@@ -1,0 +1,108 @@
+[1/38] ket_cau.dxf: 0 mặt bằng, 0 tường, 0/132 công tác trống, 76.7 s 
+[2/38] nha_dan.dxf: 3 mặt bằng, 55 tường, 0/47 công tác trống, 33.8 s 
+[3/38] nha_pho.dxf: 4 mặt bằng, 32 tường, 0/78 công tác trống, 69.7 s 
+[4/38] tan_binh_ket_cau.dxf: 0 mặt bằng, 0 tường, 5/126 công tác trống, 55.1 s 
+Traceback (most recent call last):
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dxf_reader.py", line 515, in read_dxf
+    doc = ezdxf.readfile(path)
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\ezdxf\filemanagement.py", line 154, in readfile
+    doc = read(fp)
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\ezdxf\filemanagement.py", line 95, in read
+    return Drawing.read(stream)
+           ~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\ezdxf\document.py", line 350, in read
+    return cls.load(tag_loader)
+           ~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\ezdxf\document.py", line 365, in load
+    doc._load(tag_loader)
+    ~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\ezdxf\document.py", line 378, in _load
+    sections = loader.load_dxf_structure(tagger)
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\ezdxf\lldxf\loader.py", line 128, in load_dxf_structure
+    raise DXFStructureError("DXFStructureError: missing ENDSEC tag.")
+ezdxf.lldxf.const.DXFStructureError: DXFStructureError: missing ENDSEC tag.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\batch_takeoff.py", line 58, in _run_safe
+    row, works, notes = run_one(path, height, _catalog(), params)
+                        ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\batch_takeoff.py", line 68, in run_one
+    drawing = read_drawing(str(path))
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dxf_reader.py", line 578, in read_drawing
+    return read_dxf(path, layer_overrides)
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dxf_reader.py", line 517, in read_dxf
+    raise DrawingError(f"Không mở được file DXF: {exc}") from exc
+optimat.drawing.dwg_convert.DrawingError: Không mở được file DXF: DXFStructureError: missing ENDSEC tag.
+Traceback (most recent call last):
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\batch_takeoff.py", line 58, in _run_safe
+    row, works, notes = run_one(path, height, _catalog(), params)
+                        ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\batch_takeoff.py", line 68, in run_one
+    drawing = read_drawing(str(path))
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dxf_reader.py", line 581, in read_drawing
+    return read_dxf(convert_dwg_to_dxf(path, out_dir), layer_overrides)
+                    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dwg_convert.py", line 95, in convert_dwg_to_dxf
+    raise DwgConversionError(
+        "ODA File Converter đã chạy nhưng không tạo ra file .dxf. File DWG có thể bị hỏng "
+        "hoặc thuộc phiên bản không được hỗ trợ.")
+optimat.drawing.dwg_convert.DwgConversionError: ODA File Converter đã chạy nhưng không tạo ra file .dxf. File DWG có thể bị hỏng hoặc thuộc phiên bản không được hỗ trợ.
+Traceback (most recent call last):
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dxf_reader.py", line 515, in read_dxf
+    doc = ezdxf.readfile(path)
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\ezdxf\filemanagement.py", line 147, in readfile
+    raise IOError(f"File '{filename}' is not a DXF file.")
+OSError: File 'data\sample\ingest\12_pdf_doi_ten.dxf' is not a DXF file.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\batch_takeoff.py", line 58, in _run_safe
+    row, works, notes = run_one(path, height, _catalog(), params)
+                        ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\scripts\batch_takeoff.py", line 68, in run_one
+    drawing = read_drawing(str(path))
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dxf_reader.py", line 578, in read_drawing
+    return read_dxf(path, layer_overrides)
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\src\optimat\drawing\dxf_reader.py", line 517, in read_dxf
+    raise DrawingError(f"Không mở được file DXF: {exc}") from exc
+optimat.drawing.dwg_convert.DrawingError: Không mở được file DXF: File 'data\sample\ingest\12_pdf_doi_ten.dxf' is not a DXF file.
+[5/38] tan_binh_kien_truc.dxf: 11 mặt bằng, 187 tường, 0/153 công tác trống, 74.8 s 
+[6/38] banve1_ket_cau.dxf: 0 mặt bằng, 0 tường, 4/4 công tác trống, 63.8 s 
+[7/38] banve1_kien_truc.dxf: 10 mặt bằng, 0 tường, 0/24 công tác trống, 364.2 s 
+[8/38] c01_tiet_dien_ghi_chu.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[9/38] c02_thieu_chi_tiet.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[10/38] c03_xung_dot_chu.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[11/38] c04_net_lech_tiet_dien.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[12/38] c05_khong_co_net.dxf: 0 mặt bằng, 0 tường, 0/0 công tác trống, 0.1 s 
+[13/38] c06_mong_dem.dxf: 0 mặt bằng, 0 tường, 3/3 công tác trống, 0.1 s 
+[14/38] c07_chi_tiet_thua.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[15/38] c08_da_tang.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[16/38] c09_lech_phien_ban.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[17/38] c10_ky_hieu_la.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[18/38] c11_gan_ky_hieu.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[19/38] c12_cot_dien_hinh.dxf: 0 mặt bằng, 0 tường, 0/0 công tác trống, 0.1 s 
+[20/38] c13_truc.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[21/38] c14_trung_tang.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[22/38] c15_tieu_de_la.dxf: 0 mặt bằng, 0 tường, 0/3 công tác trống, 0.1 s 
+[23/38] sample_floor.dxf: 0 mặt bằng, 5 tường, 0/0 công tác trống, 0.1 s 
+[24/38] 01_hop_le_mm.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.1 s 
+[25/38] 02_thieu_don_vi.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.1 s 
+[26/38] 03_don_vi_met.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.1 s 
+[27/38] 04_sai_ty_le.dxf: 0 mặt bằng, 0 tường, 0/0 công tác trống, 0.1 s 
+[28/38] 05_dimlfac_ghi_de.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.1 s 
+[29/38] 06_xref.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.1 s 
+[30/38] 07_nhieu_layout.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.2 s 
+[31/38] 08_font_vni_spline.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.1 s 
+[32/38] 09_modelspace_rong.dxf: 0 mặt bằng, 0 tường, 0/0 công tác trống, 0.0 s 
+[33/38] 10_dxf_hong.dxf: - mặt bằng, - tường, -/- công tác trống, - s DrawingError: Không mở được file DXF: DXFStructureError: missing ENDSEC tag.
+[34/38] 11_dwg_hong.dwg: - mặt bằng, - tường, -/- công tác trống, - s DwgConversionError: ODA File Converter đã chạy nhưng không tạo ra file .dxf. File DWG có thể bị hỏng hoặc thuộc phiên bản không được hỗ trợ.
+[35/38] 12_pdf_doi_ten.dxf: - mặt bằng, - tường, -/- công tác trống, - s DrawingError: Không mở được file DXF: File 'data\sample\ingest\12_pdf_doi_ten.dxf' is not a DXF file.
+[36/38] 13_nhi_phan.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.1 s 
+[37/38] 14_block_long_sau.dxf: 0 mặt bằng, 3 tường, 0/0 công tác trống, 0.1 s 
+[38/38] 15_khong_header_chu_insunits.dxf: 0 mặt bằng, 0 tường, 0/0 công tác trống, 0.0 s 
+Tổng 440.6 s với --jobs 4.
+
+Đã ghi reports\batch_mau\tong_hop.xlsx: 38 bản vẽ, 3 lỗi.

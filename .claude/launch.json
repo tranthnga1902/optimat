@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "optimat-api",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "optimat.api.main:app",
+        "--app-dir",
+        "src",
+        "--port",
+        "8765"
+      ],
+      "port": 8765
+    }
+  ]
+}

@@ -78,10 +78,10 @@ def test_train_from_db(seeded_db, tmp_path):
 
 def test_all_tables_created(seeded_db):
     from sqlalchemy import inspect
-    from optimat.db.models import Base
+    from optimat.db.schema20 import metadata
     from optimat.db.session import get_engine
     existing = set(inspect(get_engine(seeded_db)).get_table_names())
-    assert set(Base.metadata.tables) <= existing and len(Base.metadata.tables) == 26
+    assert set(metadata.tables) == existing and len(metadata.tables) == 20
 
 
 def test_rules_and_families_from_db(seeded_db, monkeypatch):
@@ -96,6 +96,9 @@ def test_rules_and_families_from_db(seeded_db, monkeypatch):
         f.cache_clear()
     try:
         assert (material_rules.load_rules(), areas.load_room_rules(), norms.load_norms()) == csv
+        # J05c: khóa trát theo dày/họ nền đi qua PostgreSQL nguyên vẹn (không còn khóa cũ "15", "20")
+        assert {(n.variant, n.qty) for n in norms.load_norms() if n.work_code == "TRAT"} == {
+            ("15/CLAY_SOLID", 0.017), ("15/CLAY_HOLLOW", 0.0187), ("20/CLAY_SOLID", 0.023), ("20/CLAY_HOLLOW", 0.0253)}
     finally:
         for f in (material_rules.load_rules, areas.load_room_rules, norms.load_norms):
             f.cache_clear()
@@ -140,7 +143,7 @@ def test_project_flow_roundtrip(seeded_db, sample_dxf):
 
 
 def test_materials_sql_script_loads_and_reruns(seeded_db):
-    """sql/03_materials.sql nạp 93 vật liệu, chạy lại không sinh dòng trùng."""
+    """sql/03_materials.sql nạp 98 vật liệu, chạy lại không sinh dòng trùng."""
     from pathlib import Path
 
     from sqlalchemy import text
@@ -157,11 +160,11 @@ def test_materials_sql_script_loads_and_reruns(seeded_db):
             raw.close()
     with engine.connect() as conn:
         count = lambda sql: conn.execute(text(sql)).scalar()
-        assert count("SELECT count(*) FROM materials WHERE tier IS NOT NULL") == 93
-        assert count("SELECT count(*) FROM materials WHERE tier = 1") == 16
+        assert count("SELECT count(*) FROM materials WHERE tier IS NOT NULL") == 98
+        assert count("SELECT count(*) FROM materials WHERE tier = 1") == 17
         assert count("SELECT count(DISTINCT \"group\") FROM materials WHERE tier IS NOT NULL") == 5
-        assert count("SELECT count(*) FROM wall_systems") == 20
-        assert count("SELECT count(*) FROM material_relations") == 13
+        assert count("SELECT count(*) FROM wall_systems") == 22
+        assert count("SELECT count(*) FROM material_relations") == 15
         assert count("SELECT round(qty_per_m2::numeric, 1) FROM v_wall_systems WHERE wall_system_id = 'W-GN01-220'") == 121
 
 
@@ -314,7 +317,9 @@ def test_takeoff_reads_project_params(seeded_db, tmp_path, monkeypatch):
     assert body["groups"][0]["opening_area_m2"] == pytest.approx(0.8 * 2.1, abs=0.01)
     assert post(project_id=str(pid), floor_height_mm="3300").json()["floor_height_mm"] == 3300
     plain = post(floor_height_mm="3300").json()                # không gắn dự án: không trừ, có cảnh báo
-    assert plain["openings"] == [] and any("chưa có kích thước" in w for w in plain["warnings"])
+    assert len(plain['openings']) == 1 and plain['openings'][0]['width_mm'] is None
+    assert plain['groups'][0]['opening_area_m2'] == 0
+    assert any("chưa có kích thước" in w for w in plain["warnings"])
     assert post(project_id="999999").status_code == 404
 
 

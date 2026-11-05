@@ -1,0 +1,193 @@
+{
+  "works": [
+    {
+      "code": "COT_THEP",
+      "name": "Cốt thép",
+      "unit": "tấn",
+      "quantity": 0.063,
+      "plan": null,
+      "element": "thép dầm D1",
+      "variant": null,
+      "wall_system_id": null,
+      "steel_element": "DAM",
+      "formwork_of": null,
+      "formula": "Σ 2 dòng bảng thép: 10 thanh × 2 m × 1.58 kg/m (Ø16) + 10 thanh × 2 m × 1.58 kg/m (Ø16) = 63,2 kg",
+      "source": "auto",
+      "basis": "bang_thong_ke",
+      "evidence": [
+        "SYNTHETIC source table 0",
+        "SYNTHETIC source table 1"
+      ],
+      "missing": [],
+      "status": "A",
+      "inputs": [
+        "thép: A (bảng thống kê trên bản vẽ)"
+      ],
+      "stage": "khung"
+    }
+  ],
+  "intermediates": [],
+  "materials": [
+    {
+      "material_id": null,
+      "name": "Cốt thép (chưa chia nhóm đường kính)",
+      "unit": "tấn",
+      "quantity": 0.063,
+      "complete": false,
+      "waste_pct": null,
+      "quantity_with_waste": null,
+      "uses": [
+        {
+          "work": "COT_THEP",
+          "plan": null,
+          "quantity": 0.063,
+          "via": "COT_THEP 0,063 tấn",
+          "status": "A",
+          "stage": "khung",
+          "waste_included": false
+        }
+      ],
+      "missing": [
+        "hao hụt thi công (%)"
+      ],
+      "status": "D",
+      "group_id": null,
+      "raw_class": "thep",
+      "weight_kg": 63.0,
+      "transport_volume_m3": null,
+      "quantity_min": null,
+      "quantity_max": null,
+      "confirmation": null,
+      "best_price": null,
+      "price_source": null,
+      "est_cost": null
+    },
+    {
+      "material_id": "TH10",
+      "name": "Dây thép buộc 1 ly",
+      "unit": "kg",
+      "quantity": 0.753,
+      "complete": true,
+      "waste_pct": 0.0,
+      "quantity_with_waste": 0.753,
+      "uses": [
+        {
+          "work": "COT_THEP",
+          "plan": null,
+          "quantity": 0.7535,
+          "via": "COT_THEP 0,063 tấn × 7,85–16,07 kg / tấn",
+          "status": "C",
+          "stage": "khung",
+          "waste_included": false
+        }
+      ],
+      "missing": [],
+      "status": "C",
+      "group_id": "be_tong_cot_thep",
+      "raw_class": "thep",
+      "weight_kg": 0.8,
+      "transport_volume_m3": null,
+      "quantity_min": 0.495,
+      "quantity_max": 1.012,
+      "confirmation": "tinh",
+      "best_price": 100.0,
+      "price_source": "QUOTE, SYNTHETIC, SYNTHETIC",
+      "est_cost": 75.0
+    }
+  ],
+  "warnings": [
+    "Không tìm thấy mặt bằng tầng kiến trúc trong bản vẽ: chưa tính xây, trát, sàn, cột.",
+    "Ca máy chưa tính: chưa có định mức hao phí máy theo TT 38/2026/TT-BXD.",
+    "Định mức định mức COT_THEP → Dây thép buộc: hệ số tham khảo (tinh; TT 38/2026/TT-BXD Phụ lục II (datafiles.chinhphu.vn)), chưa có số hiệu bảng TT 38/2026/TT-BXD: vật liệu từ dòng này là tạm tính (C)."
+  ],
+  "totals": [
+    {
+      "code": "COT_THEP",
+      "name": "Cốt thép",
+      "unit": "tấn",
+      "quantity": 0.063,
+      "complete": true,
+      "items": 1,
+      "status": "A"
+    }
+  ],
+  "beams": {},
+  "takeoff_id": null,
+  "formwork": [],
+  "by_group": [
+    {
+      "group_id": "be_tong_cot_thep",
+      "name": "Vật liệu bê tông cốt thép",
+      "in_scope": true,
+      "materials": [
+        "TH10"
+      ],
+      "weight_kg": 0.8,
+      "weight_complete": true,
+      "status": "C"
+    },
+    {
+      "group_id": "phan_tho",
+      "name": "Vật liệu thi công phần thô",
+      "in_scope": true,
+      "materials": [],
+      "weight_kg": null,
+      "weight_complete": true,
+      "status": null
+    },
+    {
+      "group_id": "hoan_thien",
+      "name": "Vật liệu hoàn thiện",
+      "in_scope": false,
+      "materials": [],
+      "weight_kg": null,
+      "weight_complete": true,
+      "status": null
+    },
+    {
+      "group_id": "khac_phap_ly",
+      "name": "Vật liệu khác và khung pháp lý",
+      "in_scope": false,
+      "materials": [],
+      "weight_kg": null,
+      "weight_complete": true,
+      "status": null
+    },
+    {
+      "group_id": "ket_cau_thep_bao_che",
+      "name": "Vật liệu kết cấu thép và bao che",
+      "in_scope": false,
+      "materials": [],
+      "weight_kg": null,
+      "weight_complete": true,
+      "status": null
+    },
+    {
+      "group_id": "chua_ro",
+      "name": "Chưa xếp nhóm (danh mục chưa có mã)",
+      "in_scope": true,
+      "materials": [
+        "Cốt thép (chưa chia nhóm đường kính)"
+      ],
+      "weight_kg": 63.0,
+      "weight_complete": false,
+      "status": "D"
+    }
+  ],
+  "by_class": [
+    {
+      "group_id": "thep",
+      "name": "Thép cốt, dây buộc",
+      "in_scope": true,
+      "materials": [
+        "Cốt thép (chưa chia nhóm đường kính)",
+        "TH10"
+      ],
+      "weight_kg": 63.8,
+      "weight_complete": false,
+      "status": "D"
+    }
+  ],
+  "status": "D",
+  "envelope_by_orientation": {}
+}

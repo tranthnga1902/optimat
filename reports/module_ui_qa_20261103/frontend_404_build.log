@@ -1,0 +1,40 @@
+
+> frontend@0.1.0 build
+> next build
+
+▲ Next.js 16.4.2 (Turbopack)
+✓ Running next.config.ts took 359ms
+- Cache Components enabled
+- Partial Prefetching enabled
+- Experiments (use with caution):
+  · proxyClientMaxBodySize: "1000mb"
+  · proxyTimeout: 300000
+
+  Creating an optimized production build ...
+Turbopack build encountered 2 warnings:
+[next]/internal/font/google/be_vietnam_pro_183aa0ec.module.css
+Warning: Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap
+
+
+[next]/internal/font/google/jetbrains_mono_529a84ab.module.css
+Warning: Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap
+
+
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+[next]/internal/font/google/be_vietnam_pro_183aa0ec.module.css
+Error: next/font: error:
+Failed to fetch Be Vietnam Pro from Google Fonts.
+If you are offline or behind a proxy, self-host the font with next/font/local, or set HTTP_PROXY/HTTPS_PROXY so Next.js can reach fonts.googleapis.com.
+
+
+[next]/internal/font/google/jetbrains_mono_529a84ab.module.css
+Error: next/font: error:
+Failed to fetch JetBrains Mono from Google Fonts.
+If you are offline or behind a proxy, self-host the font with next/font/local, or set HTTP_PROXY/HTTPS_PROXY so Next.js can reach fonts.googleapis.com.
+
+
+    at ignore-listed frames

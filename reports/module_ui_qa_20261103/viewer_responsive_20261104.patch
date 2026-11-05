@@ -1,0 +1,39 @@
+--- a/frontend/src/app/(user)/do-boc/review.module.css
++++ b/frontend/src/app/(user)/do-boc/review.module.css
+@@ -30,7 +30,7 @@
+   --concrete: #8e9895; --open: #ff7a6e; --accent: #5cb6d6; --accent-ink: #0f1514; --sel: #ffd23f; --ok: #5cc98a; --warn: #f0b85a;
+   color-scheme: dark;
+ }
+-.app { display: grid; grid-template-rows: auto 1fr; height: 100%; min-height: 0; background: var(--panel); color: var(--ink); font: 14px/1.45 var(--f-ui); }
++.app { container: takeoff / inline-size; display: grid; grid-template-rows: auto 1fr; height: 100%; min-height: 0; background: var(--panel); color: var(--ink); font: 14px/1.45 var(--f-ui); }
+ :where(.app) button, :where(.app) select, :where(.app) input { font: inherit; color: inherit; }   /* độ ưu tiên thấp như bản cũ để .btn, .rmain… thắng */
+ .head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
+ .head h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+@@ -130,10 +130,24 @@
+ .overviewRow { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
+ @media (max-width: 900px) {
+   .app { height: auto; }
+-  .main { grid-template-columns: 1fr; }
+-  .board { height: 60vh; }
++}
++/* Đo phần còn lại sau menu: hai cột cần ít nhất 480px cho CAD và 470px cho danh sách. */
++@container takeoff (max-width: 950px) {
++  .main { grid-template-columns: minmax(0, 1fr); grid-auto-rows: max-content; align-content: start; overflow-y: auto; }
++  .board {
++    display: grid;
++    grid-template: "tools" auto "drawing" clamp(260px, 46dvh, 520px) "help" auto / minmax(0, 1fr);
++    touch-action: auto;
++  }
++  /* Cả SVG chính và lớp xem nét trong lúc đọc dùng chung một vùng. */
++  .board > svg, .board > div:has(> svg), .board > .scale { grid-area: drawing; }
++  .board svg { touch-action: none; }
++  .toolbar { grid-area: tools; position: static; padding: 8px; background: var(--sunk); }
++  .seg button, .chipset label { white-space: nowrap; }
++  .chipset, .toolbar .field { flex-wrap: wrap; max-width: 100%; }
++  .hint, .hint:has(button) { grid-area: help; position: static; max-width: none; border-radius: 0; overflow-wrap: anywhere; }
+   .aside { border-left: 0; border-top: 1px solid var(--rule); }
+-  .list { max-height: 70vh; }
++  .aside .list { flex: none; }
+ }
+ @media (prefers-reduced-motion: no-preference) { .tab, .row { transition: background .12s, color .12s; } }
+ /* cột # tự đánh số cho mọi bảng có dòng tiêu đề */

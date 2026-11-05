@@ -1,0 +1,19 @@
+{
+  "status": "INCOMPLETE",
+  "reason": "No log or CPU progress across observations; soft interrupt via session 10603; all four process IDs confirmed absent before diagnostic.",
+  "session_exit_code": 1,
+  "pytest_exit_code": null,
+  "collected": 417,
+  "passed": null,
+  "skipped": null,
+  "xfailed": null,
+  "failed": null,
+  "finished_observation_utc": "2026-11-03T09:38:44.835493+00:00",
+  "hash_before_count": 173,
+  "hash_after_count": 173,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  }
+}

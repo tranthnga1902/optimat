@@ -1,0 +1,62 @@
+{
+  "3002": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3002-candidate",
+    "files": {
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base": "c079ab6a84c94999c53de054dfcc1ddaa7d0e81326b2435dfd92770c16eb637a",
+        "new": "5459645c258e28bceb9eef61ff24ed6fa9829a5c118dd9028daac198e4ea69e7"
+      },
+      "src/app/(user)/du-an-cua-toi/ProjectWorkspace.tsx": {
+        "base": "df36c84e8e09c651ea9e5a7aea094e8af6e1481d8f9070799f63402e48fe88f6",
+        "new": "c1590e33d2a2ac78fe2dc8df74f398b8d04e72152c1ab1ad2114f5d55d46b0bb"
+      },
+      "src/components/DrawingDraftHistory.tsx": {
+        "base": null,
+        "new": "8888e01557c87ece3fdb60b28e16791da0b3f172346cc99fc41da259b5eb4f9a"
+      },
+      "src/lib/drawing-drafts.ts": {
+        "base": null,
+        "new": "b4012ef9b9c12d2b2c6bf333cbe2cce781233297c53f1ececa50ba125b53d559"
+      },
+      "src/lib/projects.ts": {
+        "base": "205612cb75636fcfa41b373a3a54bafcdaf2f6d28ba3ab96e3e8037346f7ba7e",
+        "new": "d1c5643b81679ba0c648e44254e442d5fd952e2bc5fedb79e81215c6d15a07f3"
+      },
+      "src/lib/review-session.ts": {
+        "base": "2d3730e30edc119b89175a6de3cb649de4243afe989beae65c8c48a3b8aa2631",
+        "new": "0ce86f2137d12ebbb5ef4fd121e497b5fc64c27d274e97820d9e7f13e706afbf"
+      }
+    },
+    "patch_sha256": "1e6dfc3c823434408c35f2833b7571839142b58673bf61a2f9e603928ca169cf"
+  },
+  "3001": {
+    "base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3001-candidate",
+    "files": {
+      "src/app/(user)/do-boc/Review.tsx": {
+        "base": "ef6411ae331ee9725f686488a00d2426c1d4688cde81bfb605175f0c93fb266b",
+        "new": "3464220dd6a317661e9ee60a319dd498af2b081b49ff310ddf95a9994782f1d8"
+      },
+      "src/app/(user)/du-an-cua-toi/ProjectWorkspace.tsx": {
+        "base": "40082243eb325d203826cd61cbbda2ed10ec938e5a0ad99fad37438c45ddcd63",
+        "new": "66458ac3c84b8888c1be16cda901212ab924978763bf37eb5ac9ffc914074283"
+      },
+      "src/components/DrawingDraftHistory.tsx": {
+        "base": null,
+        "new": "8888e01557c87ece3fdb60b28e16791da0b3f172346cc99fc41da259b5eb4f9a"
+      },
+      "src/lib/drawing-drafts.ts": {
+        "base": null,
+        "new": "b4012ef9b9c12d2b2c6bf333cbe2cce781233297c53f1ececa50ba125b53d559"
+      },
+      "src/lib/projects.ts": {
+        "base": "205612cb75636fcfa41b373a3a54bafcdaf2f6d28ba3ab96e3e8037346f7ba7e",
+        "new": "d1c5643b81679ba0c648e44254e442d5fd952e2bc5fedb79e81215c6d15a07f3"
+      },
+      "src/lib/review-session.ts": {
+        "base": "1db96fc93d21492f52aa0d721d645da8b7976e7a79aceb7634a3432620b6bb6c",
+        "new": "501a86a569ff139e19a89cf5043b8ecb96b2e8f89222bf97ce7260232795d92b"
+      }
+    },
+    "patch_sha256": "cc694d820c7d3e252418e5b49bc0191e6bf42658a233bdae832f9eb036dddfd6"
+  }
+}

@@ -45,7 +45,17 @@ export function Sheet<R extends object>({ cols, rows, file = "bang.csv", control
   }, [rows, cols, q, sort, keep]);
 
   const at = cur && cur.r < shown.length ? cur : null;
+  const [copyNote, setCopyNote] = useState("");
+  const copyTable = async () => {
+    const cell = (value: string) => /[\t\r\n"]/.test(value) ? '"' + value.replace(/"/g, '""') + '"' : value;
+    const values = [cols.map(c => c.title), ...shown.map(row => cols.map(c => val(row,c)))];
+    try {
+      await navigator.clipboard.writeText(values.map(row => row.map(cell).join("\t")).join("\r\n"));
+      setCopyNote(`Đã sao chép ${shown.length} dòng.`);
+    } catch { setCopyNote("Không thể sao chép. Bạn có thể dùng Tải CSV (Excel)."); }
+  };
   const onKey = (e: KeyboardEvent) => {
+    if (e.target !== e.currentTarget) return;
     const d = ({ ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] } as Record<string, number[]>)[e.key];
     if (!d) return;
     e.preventDefault();
@@ -67,16 +77,21 @@ export function Sheet<R extends object>({ cols, rows, file = "bang.csv", control
       <div className="flex flex-wrap items-center gap-2">
         <input className="field" type="search" placeholder="Lọc mọi cột…" aria-label="Lọc" value={q} onChange={(e) => { setQ(e.target.value); setCur(null); }} />
         {controls}
-        <button className="btn ml-auto" type="button" onClick={csv}>Tải CSV (Excel)</button>
+        <button className="btn ml-auto" type="button" disabled={!shown.length} onClick={copyTable}>Sao chép bảng</button>
+        <button className="btn" type="button" onClick={csv}>Tải CSV (Excel)</button>
       </div>
+      {copyNote && <small role="status">{copyNote}</small>}
       <div className="overflow-hidden rounded-lg border border-rule bg-card text-[13px]">
         <div className="xl">
-          <table tabIndex={0} onKeyDown={onKey}>
+          <table tabIndex={0} onKeyDown={onKey} onCopy={e => {
+            if (!at || e.target !== e.currentTarget || window.getSelection()?.toString()) return;
+            e.clipboardData.setData("text/plain",val(shown[at.r],cols[at.c])); e.preventDefault();
+          }}>
             <thead>
               <tr>
-                <th className="rn">#</th>
+                <th className="rn" scope="col">STT</th>
                 {cols.map((c) => (
-                  <th key={c.key} className={c.num ? "n" : ""}>
+                  <th key={c.key} scope="col" aria-sort={sort?.key === c.key ? (sort.dir > 0 ? "ascending" : "descending") : undefined} className={c.num ? "n" : ""}>
                     <button type="button" onClick={() => { setSort((s) => ({ key: c.key, dir: s?.key === c.key ? (-s.dir as 1 | -1) : 1 })); setCur(null); }}>
                       {c.title}{sort?.key === c.key ? (sort.dir > 0 ? " ▲" : " ▼") : ""}
                     </button>
@@ -93,7 +108,12 @@ export function Sheet<R extends object>({ cols, rows, file = "bang.csv", control
                     const v = val(r, c);
                     return (
                       <td key={c.key} className={`${c.num ? "n" : ""} ${at?.r === i && at.c === j ? "on" : ""}`} title={v.length > 40 ? v : undefined}
-                        onClick={() => setCur({ r: i, c: j })}>{c.render ? c.render(r) : v}</td>
+                        onClick={e => {
+                          setCur({ r: i, c: j });
+                          if (!(e.target as Element).closest("button,input,select,a,textarea,[contenteditable]")) {
+                            e.currentTarget.closest("table")?.focus({preventScroll:true});
+                          }
+                        }}>{c.render ? c.render(r) : v}</td>
                     );
                   })}
                   {actions && <td>{actions(r)}</td>}

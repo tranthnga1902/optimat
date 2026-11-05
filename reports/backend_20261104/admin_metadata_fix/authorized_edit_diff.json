@@ -1,0 +1,6 @@
+{
+  "changed": [
+    "tests/test_admin_db.py"
+  ],
+  "expected_only": "tests/test_admin_db.py"
+}

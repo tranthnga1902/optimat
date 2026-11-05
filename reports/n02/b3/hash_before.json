@@ -1,0 +1,7 @@
+{
+  "src/optimat/rough/steel.py": "9857ac224c5289333a107edb65280f94858feea8121eafe1ba1e66f918b421a5",
+  "src/optimat/rough/status.py": "f35df97de208e3cd9c9e7c67be82197fb94819d291403695bc1df1870652a812",
+  "src/optimat/rough/takeoff.py": "03ddde818229db9b4a1abc8174890a289b53bb17884eb94baed88cd1b7ffd56b",
+  "src/optimat/rough/materials.py": "86b32863e9a8907eb0bf8fd44e420e3279036b22fe7c44ca365776e0e2b064a1",
+  "tests/test_rough_partial.py": null
+}

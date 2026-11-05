@@ -1,0 +1,65 @@
+--- a/src/optimat/rough/rebar.py
++++ b/src/optimat/rough/rebar.py
+@@ -236,13 +236,57 @@
+     h = title.height or median([t.height for t in below if t.height] or [0]) or 1.0
+     tol = 0.6 * h
+     rows = _rows(below, tol)
++    name = title.text.strip()
+     header, hy = None, None
+-    for r in rows[:HEADER_ROWS_MAX * 3]:
+-        cols = _header(r)
++    # Tách cụm cột theo X trước: tên cột lặp ở X khác thuộc header khác, không lấy lần khớp đầu toàn hàng.
++    for index, r in enumerate(rows[:HEADER_ROWS_MAX * 3]):
++        chunks, chunk, keys = [], [], set()
++        ordered = sorted(r, key=lambda t: t.x)
++        gaps = [b.x-a.x for a, b in zip(ordered, ordered[1:]) if b.x > a.x]
++        gap = median(gaps) if gaps else 10*h
++        for t in ordered:
++            names = set(_header([t]))
++            if chunk and (keys & names or t.x-chunk[-1].x > 2*gap):
++                chunks.append(chunk)
++                chunk, keys = [], set()
++            chunk.append(t)
++            keys.update(names)
++        if chunk:
++            chunks.append(chunk)
++        local = []
++        for chunk in chunks:
++            if len(_header(chunk)) < 2:
++                continue
++            xs = sorted({t.x for t in chunk})
++            pad = median([b-a for a, b in zip(xs, xs[1:])])/2 if len(xs) > 1 else 5*h
++            if xs[0]-pad <= title.x <= xs[-1]+pad:
++                local.append((chunk, xs[0]-pad, xs[-1]+pad))
++        if len(local) > 1:
++            return [], [f"Bảng '{name}': miền tiêu đề cột mơ hồ giữa các bảng, bỏ qua bảng."]
++        if not local:
++            continue
++        chunk, left, right = local[0]
++        cols = _header(chunk)
++        hy = min(t.y for t in chunk)
++        for extra in rows[index+1:index+HEADER_ROWS_MAX]:
++            if "duong_kinh" in cols and "chieu_dai" in cols:
++                break
++            cells = [t for t in extra if left <= t.x <= right]
++            if not cells:
++                break
++            more = _header(cells)
++            if any(TITLE_RE.search(normalize(t.text)) for t in cells) or (
++                not more and any(_num(t.text) is not None for t in cells)
++            ):
++                break
++            if any(k in cols and abs(cols[k][0]-value[0]) > tol for k, value in more.items()):
++                return [], [f"Bảng '{name}': miền tiêu đề cột mơ hồ, bỏ qua bảng."]
++            cols.update(more)
++            if more:
++                hy = min(hy, min(t.y for t in cells))
+         if "duong_kinh" in cols and "chieu_dai" in cols:
+-            header, hy = cols, r[0].y
+-            break
+-    name = title.text.strip()
++            header = cols
++        break
+     if header is None:
+         return [], [f"Bảng '{name}': không thấy dòng tiêu đề cột (cần cột đường kính và chiều dài cắt), bỏ qua bảng."]
+     xs = sorted(x for x, _ in header.values())

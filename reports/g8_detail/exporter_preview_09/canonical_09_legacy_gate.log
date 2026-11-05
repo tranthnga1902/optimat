@@ -1,0 +1,5 @@
+.venv\Scripts\python.exe -B -m pytest tests/test_rough_boq_detail.py tests/test_rough_partial.py tests/test_export_boq_cli.py tests/test_rough_rebar.py::test_boq_excel_sheets -q -p no:cacheprovider
+............................................................. [100%]
+61 passed in 7.96s
+pytest_exit_code=0
+Captured successful focused tool stdout. No HTTP/DB/real CAD/full suite.

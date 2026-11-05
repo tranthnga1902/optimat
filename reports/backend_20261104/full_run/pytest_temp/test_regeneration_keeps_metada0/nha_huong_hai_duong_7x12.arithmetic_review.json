@@ -1,0 +1,41 @@
+[
+  {
+    "work_id": "nha_huong_hai_duong_7x12-W023",
+    "source": {
+      "page": 14,
+      "table": 1,
+      "row": 15
+    },
+    "formula": "(3,54+2,84)*0,11*3,4*1,1",
+    "source_quantity": 2.63,
+    "calculated": 2.6247320000000003,
+    "difference": -0.005268,
+    "review_status": "needs_review"
+  },
+  {
+    "work_id": "nha_huong_hai_duong_7x12-W023",
+    "source": {
+      "page": 15,
+      "table": 1,
+      "row": 6
+    },
+    "formula": "(3,54+2,84)*0,11*3,4*1,1",
+    "source_quantity": 2.63,
+    "calculated": 2.6247320000000003,
+    "difference": -0.005268,
+    "review_status": "needs_review"
+  },
+  {
+    "work_id": "nha_huong_hai_duong_7x12-W024",
+    "source": {
+      "page": 19,
+      "table": 1,
+      "row": 4
+    },
+    "formula": "2,84*0,22*0,4*1,1",
+    "source_quantity": 0.28,
+    "calculated": 0.27491200000000005,
+    "difference": -0.005088,
+    "review_status": "needs_review"
+  }
+]

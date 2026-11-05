@@ -1,0 +1,79 @@
+def deduct_ties(works: list[WorkItem], plan: str, walls, systems: dict, members: list[LinearMember], catalog, *,
+                tie_groups: list[_TieGroup] | None = None, wall_height_mm: float | None = None,
+                openings: list[ReviewOpening] | None = None,
+                column_len_in_walls: dict[str, float] | None = None) -> list[str]:
+    """Trừ dải giằng đã xác nhận; thiếu cơ sở giao thì giữ raw và treo net đúng nhóm XAY."""
+    warnings = []
+    view = catalog.wall_view().set_index("wall_system_id") if not catalog.wall_systems.empty else pd.DataFrame()
+    ties = normalize_ties(members) if tie_groups is None else tie_groups
+    affected = {}
+    for group in ties:
+        first = group.members[0]
+        segments = group.segments or tuple((m.x1, m.y1, m.x2, m.y2) for m in group.members)
+        for wall in walls:
+            if not (wall.keep and wall.masonry):
+                continue
+            laps, off_axis = [], False
+            for x1, y1, x2, y2 in segments:
+                if not all(math.isfinite(v) for v in (x1, y1, x2, y2)):
+                    laps.append(1.0)  # vị trí chưa biết: mọi tường có thể bị ảnh hưởng, không dùng làm lượng
+                    off_axis = True
+                    continue
+                horizontal = abs(y2 - y1) < abs(x2 - x1)
+                tx, ty = (0, AXIS_TOL_MM) if horizontal else (AXIS_TOL_MM, 0)
+                rect = (min(x1, x2) - tx, min(y1, y2) - ty, max(x1, x2) + tx, max(y1, y2) + ty)
+                lap = _clip(wall.x1, wall.y1, wall.x2, wall.y2, rect)
+                if lap <= 0:
+                    continue
+                laps.append(lap)
+                if not (wall.y1 == wall.y2 == y1 == y2 or wall.x1 == wall.x2 == x1 == x2):
+                    off_axis = True
+            xay = _xay_of(works, plan, wall, systems.get(wall.id))
+            if not laps or xay is None:
+                continue
+            target = affected.setdefault(id(xay), {"work": xay, "raw": xay.quantity, "volume": 0.0, "missing": [], "evidence": []})
+            reasons = list(group.missing)
+            if off_axis:
+                reasons.append("trục giằng/tường chưa cùng trục thực hoặc chưa xác định: chưa thể trừ chính xác")
+            if wall_height_mm is None or not math.isfinite(wall_height_mm) or wall_height_mm <= 0:
+                reasons.append("chiều cao khối xây thực để kiểm vị trí đứng giằng")
+            elif first.z_bottom_mm is not None and first.d_mm is not None:
+                if first.z_bottom_mm < 0 or first.z_bottom_mm + first.d_mm > wall_height_mm:
+                    reasons.append("giằng vượt đáy/đỉnh khối xây: chưa hỗ trợ cắt giao đứng")
+            if openings is None:
+                reasons.append("chưa có danh sách lỗ mở để kiểm giao giằng")
+            elif any(o.keep and o.wall == wall.id for o in openings):
+                reasons.append("tường có lỗ mở/lanh tô nhưng thiếu vị trí giao giằng (cần kiểm, chưa khẳng định giao)")
+            if column_len_in_walls is None:
+                reasons.append("chưa có phần cột đã trừ khỏi tường để kiểm giao giằng")
+            elif column_len_in_walls.get(wall.id, 0) > 0:
+                reasons.append("tường đã trừ cột nhưng chưa có khoảng giao giằng (cần kiểm)")
+            ids = ", ".join(m.id for m in group.members)
+            target["evidence"] += [f"tường {wall.id}; giằng {ids}; cao xây thực={wall_height_mm} mm", *_tie_evidence(group)]
+            target["missing"] += [f"tường {wall.id}: {r}" for r in reasons]
+            if not reasons:
+                thick, _ = _thickness_m(systems.get(wall.id), wall.cls, view)
+                volume = sum(laps) / 1000 * first.d_mm / 1000 * thick
+                target["volume"] += volume
+                target["evidence"].append(f"phần trừ giằng đã hợp {ids}: {_fmt(volume)} m³")
+    for target in affected.values():
+        xay, raw, volume = target["work"], target["raw"], target["volume"]
+        evidence = [f"XAY trước trừ giằng của nhóm '{xay.element}': {raw} m³", *target["evidence"]]
+        xay.evidence = list(dict.fromkeys([*xay.evidence, *evidence]))
+        if raw is not None and volume > raw:
+            target["missing"].append("tổng dải giằng vượt lượng xây trước trừ: cần kiểm giao, không ép về 0")
+        reasons = list(dict.fromkeys(target["missing"]))
+        if reasons:
+            xay.quantity = None
+            xay.status = "D"
+            xay.missing = list(dict.fromkeys([*xay.missing, *reasons]))
+            xay.formula += f"; trước trừ giằng={raw} m³; net chưa xác định (xem evidence/missing)"
+            warnings += [f"{plan}, {xay.element}: {r}." for r in reasons]
+        elif raw is not None:
+            xay.quantity = round(raw - volume, 3)
+            xay.status = worst_status(xay.status, "C")
+            xay.inputs = list(dict.fromkeys([*xay.inputs, "cao độ giằng dùng trừ xây: C (người dùng xác nhận)"]))
+            xay.formula += f" − {_fmt(volume)} m³ giằng đã hợp theo cao độ"
+    return warnings
+
+

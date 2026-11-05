@@ -1,0 +1,1 @@
+{"exit_code": 0, "four_sources_stable": true, "command": [".venv/Scripts/python.exe", "-B", "-m", "pytest", "tests/test_incomplete_openings.py", "docs/review/data20_15/test_opening_invalid_dimensions.py", "-q", "-p", "no:cacheprovider"], "scope": "SYNTHETIC pure CSV/noDB/noHTTP/noCAD/noOpenAI"}

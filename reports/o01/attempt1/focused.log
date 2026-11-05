@@ -1,0 +1,76 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 274 items / 1 deselected / 273 selected
+
+tests\test_rough_beam_sources.py ..............F.........                [  8%]
+tests\test_rough_takeoff.py ..........                                   [ 12%]
+tests\test_rough_structural.py ...........................               [ 22%]
+tests\test_work_dimensions.py .................................Timeout (0:02:00)!
+Thread 0x0000a4d8 (most recent call first):
+  File "D:\laragon\bin\python\python-3.13\Lib\socket.py", line 295 in accept
+  File "D:\laragon\bin\python\python-3.13\Lib\socket.py", line 627 in _fallback_socketpair
+  File "D:\laragon\bin\python\python-3.13\Lib\asyncio\proactor_events.py", line 784 in _make_self_pipe
+  File "D:\laragon\bin\python\python-3.13\Lib\asyncio\proactor_events.py", line 637 in __init__
+  File "D:\laragon\bin\python\python-3.13\Lib\asyncio\windows_events.py", line 316 in __init__
+  File "D:\laragon\bin\python\python-3.13\Lib\asyncio\events.py", line 734 in new_event_loop
+  File "D:\laragon\bin\python\python-3.13\Lib\asyncio\events.py", line 837 in new_event_loop
+  File "D:\laragon\bin\python\python-3.13\Lib\asyncio\runners.py", line 137 in _lazy_init
+  File "D:\laragon\bin\python\python-3.13\Lib\asyncio\runners.py", line 58 in __enter__
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2547 in run
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\anyio\_core\_eventloop.py", line 83 in run
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\anyio\from_thread.py", line 538 in run_blocking_portal
+  File "D:\laragon\bin\python\python-3.13\Lib\threading.py", line 992 in run
+  File "D:\laragon\bin\python\python-3.13\Lib\threading.py", line 1041 in _bootstrap_inner
+  File "D:\laragon\bin\python\python-3.13\Lib\threading.py", line 1012 in _bootstrap
+
+Thread 0x00006f5c (most recent call first):
+  File "D:\laragon\bin\python\python-3.13\Lib\threading.py", line 359 in wait
+  File "D:\laragon\bin\python\python-3.13\Lib\concurrent\futures\_base.py", line 451 in result
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\anyio\from_thread.py", line 554 in start_blocking_portal
+  File "D:\laragon\bin\python\python-3.13\Lib\contextlib.py", line 141 in __enter__
+  File "D:\laragon\bin\python\python-3.13\Lib\contextlib.py", line 530 in enter_context
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\starlette\testclient.py", line 498 in __enter__
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_work_dimensions.py", line 218 in client
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\fixtures.py", line 998 in call_fixture_func
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\fixtures.py", line 1328 in pytest_fixture_setup
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\fixtures.py", line 1232 in execute
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\fixtures.py", line 726 in _get_active_fixturedef
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\fixtures.py", line 630 in getfixturevalue
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\fixtures.py", line 806 in _fillfixtures
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\python.py", line 1710 in setup
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\runner.py", line 536 in setup
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\runner.py", line 170 in pytest_runtest_setup
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\runner.py", line 250 in <lambda>
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\runner.py", line 361 in from_call
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\runner.py", line 249 in call_and_report
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\runner.py", line 132 in runtestprotocol
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\runner.py", line 118 in pytest_runtest_protocol
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\main.py", line 408 in pytest_runtestloop
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\main.py", line 384 in _main
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\main.py", line 330 in wrap_session
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\main.py", line 377 in pytest_cmdline_main
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\config\__init__.py", line 229 in _main
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\_pytest\config\__init__.py", line 253 in _console_main
+  File "C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Lib\site-packages\pytest\__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+
+EXIT=4294967295

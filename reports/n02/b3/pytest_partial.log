@@ -1,0 +1,34 @@
+......................F..............                                    [100%]
+================================== FAILURES ===================================
+__________ test_pending_scope_survives_compute_and_manual_total[0.2] __________
+
+catalog = Catalog(materials=   material_id             group  ...    raw_class data_kind
+0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...
+
+[5 rows x 4 columns], price_records=None)
+manual = 0.2
+
+    @pytest.mark.parametrize("manual", [None, 0.0632, 0.2])
+    def test_pending_scope_survives_compute_and_manual_total(catalog, manual):
+        rows = rows_for()
+        params = ProjectParams(steel_schedule_t={} if manual is None else {"DAM": manual})
+        result = compute_rough(RoughRequest(plans=[], rebar=rows, params=params), catalog)
+        steel = next(w for w in result.works if w.code == "COT_THEP")
+        expected = round(0.0632 if manual is None else manual, 3)
+        assert steel.quantity == expected and steel.status == "D" and steel.missing
+        assert all("chờ xác nhận" in m for m in steel.missing) and len(steel.evidence) == 2
+        assert any("chờ xác nhận" in i for i in steel.inputs)
+        total = next(t for t in result.totals if t.code == "COT_THEP")
+        assert total.quantity == expected and not total.complete and total.status == "D"
+        wire = next(m for m in result.materials if m.material_id == "TH10")
+>       assert wire.quantity == pytest.approx(round(expected * 11.95, 3)) and wire.waste_pct == 0
+E       assert (2.392 == 2.39 ± 2.4e-06
+E         
+E         comparison failed
+E         Obtained: 2.392
+E         Expected: 2.39 ± 2.4e-06)
+
+tests\test_rough_partial.py:79: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rough_partial.py::test_pending_scope_survives_compute_and_manual_total[0.2]
+1 failed, 36 passed in 6.08s

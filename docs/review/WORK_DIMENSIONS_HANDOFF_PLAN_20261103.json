@@ -1,0 +1,109 @@
+{
+  "captured_at_utc": "2026-11-03T15:27:22.409756+00:00",
+  "writer_thread": "01a1a1ee-cbe0-7ce3-a0de-22f89aab7fbd",
+  "source_ready": false,
+  "scope": "current observed files, NOT isolated writer diff; prior edits and concurrent changes may exist",
+  "before_hash_available": false,
+  "files": [
+    {
+      "path": "src/optimat/rough/models.py",
+      "sha256": "b497c7f8e84fcb33feb7ddba59f418f90d02afc798a8c46ba6deb387d847d1b3",
+      "bytes": 18377
+    },
+    {
+      "path": "src/optimat/rough/walls.py",
+      "sha256": "89471e0d34af2e7f311b93cc51bed43a3c3827940ae65204bbcb7aa97fb649ad",
+      "bytes": 11175
+    },
+    {
+      "path": "src/optimat/rough/columns.py",
+      "sha256": "ba17eb75bc08c636156f2fbd95abe0ce6829fb8433de7534b37190229008361f",
+      "bytes": 14975
+    },
+    {
+      "path": "src/optimat/rough/beams.py",
+      "sha256": "e74b0a48564cae5fcfb941a96c9b610a1d709a11406ce983a735872cdc4f1150",
+      "bytes": 11730
+    },
+    {
+      "path": "src/optimat/rough/foundations.py",
+      "sha256": "d7103fd501d2825c96a951791c476dfec84ffa86df91431eff70eb81ca0bc0f5",
+      "bytes": 15954
+    },
+    {
+      "path": "src/optimat/rough/areas.py",
+      "sha256": "344f49cf59befdf706763cc4814b5ae41a8732c1abf996661a5bf30f8aff46a0",
+      "bytes": 16700
+    },
+    {
+      "path": "src/optimat/rough/stairs.py",
+      "sha256": "45fb3271a2e01d12eed0e520772a356cc260ee3b52c9620a062dbe3149f30628",
+      "bytes": 12585
+    },
+    {
+      "path": "src/optimat/rough/secondary.py",
+      "sha256": "45352c7daca1fac9c7d55cb026dfb4fa3c0114e89d5ad3781f29fc293684348a",
+      "bytes": 28728
+    },
+    {
+      "path": "src/optimat/rough/steel.py",
+      "sha256": "0b93103956e8970433758072903613ff64fe5d02c6a2c5b15daef9557e644abf",
+      "bytes": 5633
+    },
+    {
+      "path": "src/optimat/rough/takeoff.py",
+      "sha256": "432ca047c0e362e0b464dd59786c9bfc7133fe14af75408cee71ca4e83835797",
+      "bytes": 36769
+    },
+    {
+      "path": "frontend/src/app/(user)/do-boc/WorkReview.tsx",
+      "sha256": "671df0820047dd72514f075b28221f2f574b3e6e130cde150a91ea31ccfcd3f9",
+      "bytes": 5454
+    },
+    {
+      "path": "frontend/src/app/(user)/do-boc/model.ts",
+      "sha256": "8e80fce75d9f36c7dc64d9c3c69ea1f3463469af37197d47460d274acc895655",
+      "bytes": 24710
+    },
+    {
+      "path": "frontend/src/app/(user)/do-boc/Review.tsx",
+      "sha256": "c932a261a9721c1d5934c9cca2922308fbe46117b7d898baeea2e280ba8104ba",
+      "bytes": 40445
+    },
+    {
+      "path": "frontend/src/app/(user)/do-boc/Rough.tsx",
+      "sha256": "6a90c2a016b0bc339304aaa9ff5b3ad393b102855edc41fd3e2c8e325f082079",
+      "bytes": 10742
+    },
+    {
+      "path": "frontend/src/app/(user)/dieu-chinh/materials.tsx",
+      "sha256": "35cf2dfc5964592c82c434463ee28c3449b4ee80a75ad24e766bf116fd6d3e07",
+      "bytes": 10451
+    },
+    {
+      "path": "frontend/src/app/(user)/phan-tho/page.tsx",
+      "sha256": "1d7231abad409cfabf75616a15858fd4513ca91368a7d8f393748ac24bd0da38",
+      "bytes": 190
+    },
+    {
+      "path": "frontend/src/components/ui.tsx",
+      "sha256": "c8e1228189aa84700e41de16533db46bd94db3a395f8e1ab3f26dc4d90de8073",
+      "bytes": 5471
+    },
+    {
+      "path": "frontend/src/components/Shell.tsx",
+      "sha256": "df7fccc2215f48ddd1509536913f3706d8a7fbd81c1ca1a9fff5086e44659e22",
+      "bytes": 8397
+    },
+    {
+      "path": "frontend/src/lib/projects.ts",
+      "sha256": "84e6cc18dd1f5de30c063f8ac0d273810d4c0a3aeeef77fad0c00deb43d94bb3",
+      "bytes": 1740
+    },
+    {
+      "path": "frontend/scripts/check-work-review.cjs",
+      "sha256": "d911bca394ea570249dded60f6cdd31103787d83528b8a7c0b8f26fd6f772f8f",
+      "bytes": 1384
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "utc": "2026-11-03T10:27:14.599711+00:00",
+  "apply": true,
+  "sql_sha256": "ce9b7eea9f287dee2239c78b204c64f70fc74e56106569e07901c0b2a7224e09",
+  "inserted": {
+    "suppliers": [
+      {
+        "supplier_id": "CBG-991233626E"
+      }
+    ],
+    "price_records": [
+      {
+        "id": 1426,
+        "material_id": "XM01",
+        "supplier_id": "CBG-991233626E",
+        "date": "2026-03-17",
+        "quantity": 1.0,
+        "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=13; STT 1; 1228/XMTĐ-XNTT; Xi măng Vicem cao cấp PCB30; bao KPK 50 kg; giá đã VAT"
+      },
+      {
+        "id": 1427,
+        "material_id": "XM02",
+        "supplier_id": "CBG-991233626E",
+        "date": "2026-03-17",
+        "quantity": 1.0,
+        "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=13; STT 2; 1228/XMTĐ-XNTT; Xi măng Vicem cao cấp PCB40; bao KPK 50 kg; giá đã VAT"
+      },
+      {
+        "id": 1428,
+        "material_id": "XM01",
+        "supplier_id": "CBG-991233626E",
+        "date": "2026-03-17",
+        "quantity": 1.0,
+        "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=14; STT 3; 1228/XMTĐ-XNTT; Xi măng đa dụng PCB30; bao KPK 50 kg; giá đã VAT"
+      },
+      {
+        "id": 1429,
+        "material_id": "XM02",
+        "supplier_id": "CBG-991233626E",
+        "date": "2026-03-17",
+        "quantity": 1.0,
+        "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=14; STT 4; 1228/XMTĐ-XNTT; Xi măng đa dụng PCB40; bao KPK 50 kg; giá đã VAT"
+      }
+    ]
+  },
+  "database": "optimat",
+  "before": {
+    "suppliers": 2866,
+    "price_records": 59
+  },
+  "after": {
+    "suppliers": 2867,
+    "price_records": 63
+  },
+  "committed": true
+}

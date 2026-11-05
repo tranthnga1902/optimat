@@ -235,9 +235,12 @@ function Sym({ ss, d, bad, samples, sampleOf, level, reload, onEdit, onDel, onCo
   );
 }
 
+type InventoryRow = { name: string; types: Record<string, number>; count: number; rule: string | null; pattern: string | null; role: string | null };
+
 function TryDrawing({ editable, onLayer }: { editable: boolean; onLayer: (layer: string, file: string) => void }) {
   const fileRef = useRef<HTMLInputElement>(null);
-  const [st, setSt] = useState<{ note?: string; busy?: string; r?: { rows: Obj[]; unknown_layers: string[] }; file?: string }>({});
+  const [st, setSt] = useState<{ note?: string; busy?: string; r?: { rows: Obj[]; unknown_layers: string[]; layers?: InventoryRow[] }; file?: string }>({});
+  const [layerQuery, setLayerQuery] = useState("");
   const [tk, setTk] = useState("");
   const run = async () => {
     const file = fileRef.current?.files?.[0];
@@ -253,11 +256,17 @@ function TryDrawing({ editable, onLayer }: { editable: boolean; onLayer: (layer:
   return (
     <Card title="Thử trên bản vẽ">
       <p className="my-[1em] text-[12.5px] text-muted">Chạy nhận diện với bảng ký hiệu hiện hành, liệt kê từng đối tượng và các layer chưa có ký hiệu.</p>
-      <div className="flex flex-wrap items-center gap-2"><input ref={fileRef} type="file" accept=".dxf,.dwg" aria-label="Chọn bản vẽ" /><button className="btn primary" type="button" onClick={run}>Nhận diện</button></div>
+      <div className="flex flex-wrap items-center gap-2"><input ref={fileRef} type="file" accept=".dxf,.dwg" aria-label="Chọn bản vẽ" /><button className="btn primary" type="button" disabled={!!st.busy} onClick={run}>Nhận diện</button></div>
       <div>
         {st.note && <Note>{st.note}</Note>}
         {st.busy && <p className="my-[1em] text-muted">{st.busy}</p>}
         {st.r && <>
+          <h3>Danh mục layer của bản vẽ</h3>
+          <p>Nguồn: {st.file}. Số lượng tính theo đối tượng trực tiếp trong Model Space, mỗi block chèn tính một lần.</p>
+          <label>Tìm layer, kiểu đối tượng, quy tắc hoặc vai trò <input className="field" type="search" value={layerQuery} onChange={e=>setLayerQuery(e.target.value)} /></label>
+          {st.r.layers ? <div className="tw"><table><thead><tr>{["Layer","Số đối tượng","Kiểu đối tượng","Quy tắc ưu tiên thắng","Vai trò",""].map(h=><th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{st.r.layers.filter(l=>[l.name,l.rule,l.pattern,l.role,...Object.keys(l.types),l.rule ? "đã khớp" : "chưa khớp"].join(" ").toLocaleLowerCase().includes(layerQuery.trim().toLocaleLowerCase())).map(l=><tr key={l.name}><td>{l.name}</td><td>{l.count}</td><td>{Object.entries(l.types).map(([k,n])=>k+" × "+n).join(", ") || "—"}</td><td>{l.rule ? l.rule+" · "+l.pattern : "Chưa khớp"}</td><td>{l.role || "—"}</td><td>{editable && <button type="button" className="btn" onClick={()=>onLayer(l.name,st.file!)}>Điền mẫu</button>}</td></tr>)}</tbody></table></div> : <Note>Máy chủ chưa trả danh mục layer.</Note>}
+          <h3>Kết quả nhận diện theo ký hiệu</h3>
           <p className="my-[1em]">{Object.keys(count).length ? Object.entries(count).map(([k, v], i) => <Fragment key={k}>{i > 0 && " "}<Pill level="info">{`${v} ${k}`}</Pill></Fragment>)
             : <Pill level="warn">không nhận được đối tượng nào</Pill>}</p>
           {st.r.unknown_layers.length > 0 && <p className="my-[1em] text-[12.5px]"><b>{st.r.unknown_layers.length} layer chưa có ký hiệu{editable ? " (bấm để thêm)" : ""}:</b>{" "}

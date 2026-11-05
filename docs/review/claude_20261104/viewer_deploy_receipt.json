@@ -1,0 +1,13 @@
+{
+  "status": "verified",
+  "oldPid": 39400,
+  "newPid": 5916,
+  "build": "oWnM3ZoBlYORzZeEWnOtz",
+  "dist": ".next-viewer-20261104",
+  "api": "http://127.0.0.1:8001",
+  "paths": 58,
+  "servedHtmlHash": "F27F0AE16A8E2897F9C301798605B449A3A6B95868AD0D3775041370B4B47F24",
+  "servedCssHash": "5A731EEC698C8DB97778D583A9863093D21482793CE1F86433F7A9B3850BCE7B",
+  "logs": "C:\\Users\\Admin\\AppData\\Local\\Temp\\optimat_viewer_deploy_20261104_144237",
+  "time": "2026-11-04T14:42:39.5591548+07:00"
+}

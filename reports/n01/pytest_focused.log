@@ -1,0 +1,4 @@
+............................x............                                [100%]
+=========================== short test summary info ===========================
+XFAIL tests/test_rough_rebar.py::test_duplicate_table_without_mark_counted_once - Bảng lặp không có số hiệu đang được cộng hai lần
+40 passed, 1 deselected, 1 xfailed in 13.45s

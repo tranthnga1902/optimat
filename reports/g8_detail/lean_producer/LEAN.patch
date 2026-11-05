@@ -1,0 +1,231 @@
+--- a/src/optimat/rough/foundations.py
++++ b/src/optimat/rough/foundations.py
+@@ -19,6 +19,7 @@
+ 
+ from .materials import _fmt
+ from .models import FootingTier, FoundationItem, ProjectParams, WorkItem
++from .quantity_details import lean_foundation_row, summarize
+ from .walls import _work
+ 
+ SLICES = 200                 # số lát cắt theo độ sâu khi tính phần hố chồng lấn
+@@ -158,12 +159,17 @@
+                          formula=formula + src))
+         base = tiers[0] if tiers else None
+         if f.lean_thickness_mm is not None:
+-            out.append(_work("BE_TONG_LOT", f.count * base.length_mm * base.width_mm * f.lean_thickness_mm / 1e9 if base else None,
++            lean_q = f.count * base.length_mm * base.width_mm * f.lean_thickness_mm / 1e9 if base else None
++            lean = _work("BE_TONG_LOT", lean_q,
+                              dimensions=[dict(label=f"lót {f.name}", count=f.count, length_m=base.length_mm/1000 if base else None,
+                                 width_m=base.width_mm/1000 if base else None, thickness_m=f.lean_thickness_mm/1000,
+                                 source=f.source or "Thông số móng người dùng nhập")], element=f"lót {label}", source="manual", missing=[] if base else ["dài, rộng móng"],
+                              formula=(f"{f.count} × {_fmt(base.length_mm / 1000)} × {_fmt(base.width_mm / 1000)} × "
+-                                      if base else f"{f.count} × dài × rộng × ") + f"{_fmt(f.lean_thickness_mm / 1000)} m" + src))
++                                      if base else f"{f.count} × dài × rộng × ") + f"{_fmt(f.lean_thickness_mm / 1000)} m" + src)
++            row = lean_foundation_row(f, base, row_id=f"lean:{key}", raw_quantity=lean_q)
++            detail = summarize([row], lean.unit, lean.quantity, scope_complete=not lean.missing,
++                               detail_level="unavailable" if row.role == "reference" else "components")
++            out.append(WorkItem.model_validate({**lean.model_dump(), "quantity_detail": detail.model_dump()}))
+         if tiers:
+             form = sum(tier_formwork_m2(t) for t in tiers)
+             out.append(_work("COP_PHA", f.count * form, dimensions=dimensions, element=f"cốp pha {label}", formwork_of="MONG", source="manual",
+--- a/src/optimat/rough/quantity_details.py
++++ b/src/optimat/rough/quantity_details.py
+@@ -1,7 +1,7 @@
+ """Tạo diễn giải từ lượng producer đã tính; không tính lại engine hoặc sửa quantity legacy."""
+ from decimal import Decimal
+ 
+-from .models import (FoundationItem, FootingTier, QuantityDetailRow, WorkQuantityDetail,
++from .models import (FoundationItem, FootingTier, QuantityDetailRow, WorkItem, WorkQuantityDetail,
+                      _quantity_decimal_text, _quantity_detail_amounts)
+ 
+ 
+@@ -23,14 +23,41 @@
+ 
+ 
+ def lean_foundation_row(f: FoundationItem, base: FootingTier | None, *, row_id: str, raw_quantity) -> QuantityDetailRow:
+-    """Nhận chính q trước _work round3; chưa được gọi từ emitter trong gói DTO."""
+-    source = f"FoundationItem {f.name}: count; lớp đáy; lean_thickness_mm"
++    """Nhận chính q trước _work round3, không phục hồi từ lượng đã làm tròn."""
++    source = f"{f.source or 'Thông số móng người dùng nhập'}; FoundationItem {f.name}: count; lớp đáy; lean_thickness_mm"
+     missing = [] if raw_quantity is not None else ["kích thước lớp đáy hoặc dày lót móng"]
++    raw = None if raw_quantity is None else Decimal(_quantity_decimal_text(raw_quantity))
++    negative = raw is not None and raw < 0
++    if negative:
++        missing.append("lượng thô âm; legacy đã chặn về 0, chưa có diễn giải đóng góp hợp lệ")
+     return QuantityDetailRow(row_id=row_id, label=f"lót {f.name}", group="Móng", unit="m³", method="box",
+-        raw_quantity=None if raw_quantity is None else _quantity_decimal_text(raw_quantity),
++        role="reference" if negative else "contribution", sign=-1 if negative else 1,
++        raw_quantity=None if raw is None else _quantity_decimal_text(raw.copy_abs()),
+         dimensions={"label": f"lót {f.name}", "source": source, "count": f.count, "repetitions": 1,
+                     "length_m": base.length_mm / 1000 if base else None,
+                     "width_m": base.width_mm / 1000 if base else None,
+                     "height_m": f.lean_thickness_mm / 1000 if f.lean_thickness_mm is not None else None},
+         expression="count × dài đáy × rộng đáy × dày lót; mm³ → m³",
+         sources=[source], missing=missing)
++
++
++def finalize_quantity_details(works: list[WorkItem]) -> list[WorkItem]:
++    """Kiểm lại từ dump sau net/status/scope; không dùng model_copy để bỏ qua validator."""
++    result = []
++    for work in works:
++        if work.quantity_detail is None:
++            result.append(work)
++            continue
++        detail = WorkQuantityDetail.model_validate(work.quantity_detail.model_dump())
++        legacy = None if work.quantity is None else _quantity_decimal_text(work.quantity)
++        same_quantity = ((legacy is None and detail.legacy_quantity is None) or
++                         (legacy is not None and detail.legacy_quantity is not None
++                          and Decimal(legacy) == Decimal(detail.legacy_quantity)))
++        if work.unit != detail.unit or not same_quantity:
++            raise ValueError(f"{work.element or work.name}: lượng/đơn vị đã đổi sau capture detail; "
++                             "cần producer dựng lại diễn giải net, không dùng gross hoặc tự bù lượng.")
++        final = summarize(detail.rows, work.unit, work.quantity,
++                          scope_complete=detail.scope_complete and not work.missing and work.status != "D",
++                          detail_level=detail.detail_level)
++        result.append(WorkItem.model_validate({**work.model_dump(), "quantity_detail": final.model_dump()}))
++    return result
+--- a/src/optimat/rough/takeoff.py
++++ b/src/optimat/rough/takeoff.py
+@@ -25,6 +25,7 @@
+ from .models import RAW_CLASSES, WORKS, MaterialLine, ProjectParams, RoughBill, WorkItem, worst_status
+ from .stairs import Stair, building_stairs, stair_works
+ from .status import assign_status
++from .quantity_details import finalize_quantity_details
+ from .foundations import _neg, foundation_works, footing_rects
+ from .rebar import (RebarRow, RebarScopeAssignment, RebarSourceRef, RebarTableManifest,
+                     read_rebar_schedules)
+@@ -522,6 +523,7 @@
+     assign_status(works, params,
+                   {p.name: p.height_source or ("nhập tay" if p.height_mm else "chưa có") for p in req.plans},
+                   beam_sources)
++    works = finalize_quantity_details(works)
+     for collision in sorted(set(plan_beams) & set(req.structural_beams)):
+         used_beams.pop(collision, None)
+         warnings.append(f"O01: tên plan/view KC trùng '{collision}': bỏ khóa khỏi beams legacy để tránh ghi đè nguồn; "
+--- a/tests/test_rough_quantity_details.py
++++ b/tests/test_rough_quantity_details.py
+@@ -7,8 +7,9 @@
+ import pytest
+ from pydantic import ValidationError
+ 
+-from optimat.rough.models import (DetailConversion, DetailFactor, QuantityDetailRow, WorkQuantityDetail, WorkItem)
+-from optimat.rough.quantity_details import lean_foundation_row, summarize
++from optimat.rough.models import (DetailConversion, DetailFactor, FoundationItem, ProjectParams,
++    QuantityDetailRow, WorkQuantityDetail, WorkItem)
++from optimat.rough.quantity_details import finalize_quantity_details, lean_foundation_row, summarize
+ 
+ 
+ def row(**kw):
+@@ -116,7 +117,7 @@
+ 
+ 
+ def test_lean_hook_receives_pre_round_quantity():
+-    f = SimpleNamespace(name="DC-1", count=2, lean_thickness_mm=100)
++    f = FoundationItem(name="DC-1", count=2, lean_thickness_mm=100)
+     base = SimpleNamespace(length_mm=750, width_mm=2150)
+     q = f.count * base.length_mm * base.width_mm * f.lean_thickness_mm / 1e9
+     r = lean_foundation_row(f, base, row_id="lean-1", raw_quantity=q)
+@@ -181,3 +182,103 @@
+     assert w.quantity_detail.known_part_raw == "1" and w.quantity_detail.total_raw is None
+     assert not w.quantity_detail.complete
+     assert WorkItem.model_validate_json(w.model_dump_json()) == w
++
++
++def lean_params(**kw):
++    f = FoundationItem(**(dict(name="DC-1", count=2, length_mm=750, width_mm=2150, height_mm=500,
++        lean_thickness_mm=100, source="SYNTHETIC/chi tiết móng DC-1") | kw))
++    return ProjectParams(foundations=[f], concrete_supply="ready_mix", lean_concrete_grade="M100")
++
++
++@pytest.mark.parametrize("count,raw,legacy", [(2, "0.3225", .323), (0, "0.0", 0)])
++def test_lean_emitter_captures_pre_round_once_with_actual_source(count, raw, legacy):
++    from optimat.rough.foundations import foundation_works
++    works, _ = foundation_works(lean_params(count=count))
++    w = next(w for w in works if w.code == "BE_TONG_LOT")
++    assert w.quantity == legacy and w.quantity_detail.total_raw == raw
++    r = w.quantity_detail.rows[0]
++    assert r.dimensions.count == count and r.dimensions.repetitions == 1
++    assert "SYNTHETIC/chi tiết móng DC-1" in r.sources[0]
++    assert all(x.quantity_detail is None for x in works if x.code != "BE_TONG_LOT")
++
++
++def test_lean_missing_geometry_stays_unknown_not_zero():
++    from optimat.rough.foundations import foundation_works
++    works, _ = foundation_works(lean_params(length_mm=None))
++    w = next(w for w in works if w.code == "BE_TONG_LOT")
++    assert w.quantity is None and w.missing == ["dài, rộng móng"]
++    assert w.quantity_detail.known_part_raw is None and w.quantity_detail.total_raw is None
++    assert w.quantity_detail.rows[0].raw_quantity is None and w.quantity_detail.rows[0].missing
++
++
++def test_negative_raw_does_not_change_legacy_clamp_or_fake_contribution():
++    from optimat.rough.foundations import foundation_works
++    works, _ = foundation_works(lean_params(count=-2))
++    w = next(w for w in works if w.code == "BE_TONG_LOT")
++    assert w.quantity == 0
++    assert w.quantity_detail.detail_level == "unavailable" and w.quantity_detail.total_raw is None
++    assert w.quantity_detail.rows[0].role == "reference" and w.quantity_detail.rows[0].sign == -1
++    assert w.quantity_detail.rows[0].raw_quantity == "0.3225"
++
++
++@pytest.mark.parametrize("status,missing", [("D", []), ("C", ["Chưa chốt phạm vi"]), ("C", [])])
++def test_finalize_after_parent_status_mutation_preserves_legacy(status, missing):
++    detail = summarize([row(raw_quantity="0")], "m³", "0", scope_complete=True)
++    w = WorkItem(code="DAM", name="Dầm", unit="m³", quantity=0, status="C", quantity_detail=detail)
++    # Mô phỏng assign_status/net pipeline: assignment/model_copy không tự chạy validator.
++    w.status, w.missing = status, missing
++    final = finalize_quantity_details([w])[0]
++    assert final.quantity == 0 and final.status == status and final.missing == missing
++    assert final.quantity_detail.known_part_raw == "0"
++    if status == "D" or missing:
++        assert not final.quantity_detail.complete and final.quantity_detail.total_raw is None
++    else:
++        assert final.quantity_detail.complete and final.quantity_detail.total_raw == "0"
++    assert WorkItem.model_validate_json(final.model_dump_json()) == final
++
++
++@pytest.mark.parametrize("mutation", [{"quantity": 2}, {"quantity": None}, {"unit": "m²"}])
++def test_finalize_rejects_changed_quantity_or_unit_instead_of_relabeling_gross(mutation):
++    w = WorkItem(code="DAM", name="Dầm", unit="m³", quantity=1,
++                 quantity_detail=summarize([row()], "m³", "1", scope_complete=True))
++    mutated = w.model_copy(update=mutation)
++    with pytest.raises(ValueError, match="đã đổi sau capture"):
++        finalize_quantity_details([mutated])
++    assert mutated.quantity == mutation.get("quantity", 1) and mutated.unit == mutation.get("unit", "m³")
++
++
++def test_finalize_revalidates_nested_dump_not_model_instance():
++    w = WorkItem(code="DAM", name="Dầm", unit="m³", quantity=1,
++                 quantity_detail=summarize([row()], "m³", "1", scope_complete=True))
++    w.quantity_detail.rows[0].raw_quantity = "2"  # cache total cũ không được tự bù theo raw mới
++    with pytest.raises(ValueError):
++        finalize_quantity_details([w])
++
++
++def test_finalize_does_not_upgrade_unconfirmed_scope_and_skips_uncovered_works():
++    w = WorkItem(code="DAM", name="Dầm", unit="m³", quantity=1, status="C",
++                 quantity_detail=summarize([row()], "m³", "1", scope_complete=False))
++    other = WorkItem(code="COT", name="Cột", unit="m³", quantity=2, status="C")
++    final = finalize_quantity_details([w, other])
++    assert not final[0].quantity_detail.complete and final[0].quantity_detail.total_raw is None
++    assert final[1] is other and other.quantity_detail is None
++
++
++def test_lean_pipeline_totals_status_materials_match_without_detail(monkeypatch):
++    from optimat.catalog.repository import Catalog
++    from optimat.rough import takeoff
++    req = takeoff.RoughRequest(plans=[], params=lean_params())
++    cat = Catalog.from_csv(None)
++    with_detail = takeoff.compute_rough(req, cat)
++    producer = takeoff.foundation_works
++    def without_details(params):
++        works, warnings = producer(params)
++        return [w.model_copy(update={"quantity_detail": None}) for w in works], warnings
++    monkeypatch.setattr(takeoff, "foundation_works", without_details)
++    baseline = takeoff.compute_rough(req, cat)
++    actual = with_detail.model_dump()
++    for item in actual["works"]:
++        item["quantity_detail"] = None
++    assert actual == baseline.model_dump()  # toàn payload legacy, gồm totals/materials/status/giá
++    lean = next(w for w in with_detail.works if w.code == "BE_TONG_LOT")
++    assert lean.quantity == .323 and lean.quantity_detail.total_raw == "0.3225"

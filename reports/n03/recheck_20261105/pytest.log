@@ -1,0 +1,35 @@
+................FF....................................................   [100%]
+================================== FAILURES ===================================
+________________________ test_stair_with_landing_beam _________________________
+
+    def test_stair_with_landing_beam():
+        s = Stair(steps=22, flight_width_mm=1000, tread_mm=250, landing_area_m2=2.0, beam_length_mm=2400,
+                  beam_width_mm=220, beam_depth_mm=300)
+        works, _ = stair_works("T1", [s], 3300, ProjectParams(stair_slab_thickness_mm=120))
+        riser, slope = 3.3 / 22, math.hypot(22 * 0.25, 3.3)
+>       assert works[0].quantity == pytest.approx(slope * 0.12 + 22 * 0.25 * riser / 2 + 0.24 + 2.4 * 0.22 * 0.3, abs=1e-3)
+E       assert None == 1.5805856501195796 ± 0.001
+E         
+E         comparison failed
+E         Obtained: None
+E         Expected: 1.5805856501195796 ± 0.001
+
+tests\test_rough_secondary.py:148: AssertionError
+________________________ test_stair_con_not_supported _________________________
+
+    def test_stair_con_not_supported():
+        works, _ = stair_works("T1", [Stair(kind="con", steps=20, flight_width_mm=1000, tread_mm=250)], 3300,
+                               ProjectParams(stair_slab_thickness_mm=120))
+        assert len(works) == 1 and works[0].quantity is None and works[0].basis == "not_supported"
+        works, _ = stair_works("T1", [Stair(steps=20, flight_width_mm=1000, tread_mm=250, beam_length_mm=2000)], 3300,
+                               ProjectParams(stair_slab_thickness_mm=120))
+>       assert works[0].quantity is None and "tiết diện dầm thang" in works[0].missing
+E       AssertionError: assert (None is None and 'tiết diện dầm thang' in ['cấu tạo và nguồn vật liệu bậc chưa xác định', 'chưa có run/rise/width và nguồn từng vế; không lấy tổng cao tầng hoặc...không cộng từ kích thước legacy', 'chưa xác nhận phạm vi từng thang/vế/chiếu', 'chưa xác nhận tầng đầu/cuối của thang'])
+E        +  where None = WorkItem(code='CAU_THANG', name='Bê tông cầu thang', unit='m³', quantity=None, plan='T1', element='thang T1', variant=...hưa xác nhận phạm vi từng thang/vế/chiếu', 'chưa xác nhận tầng đầu/cuối của thang'], status='D', inputs=[], stage=None).quantity
+E        +  and   ['cấu tạo và nguồn vật liệu bậc chưa xác định', 'chưa có run/rise/width và nguồn từng vế; không lấy tổng cao tầng hoặc...không cộng từ kích thước legacy', 'chưa xác nhận phạm vi từng thang/vế/chiếu', 'chưa xác nhận tầng đầu/cuối của thang'] = WorkItem(code='CAU_THANG', name='Bê tông cầu thang', unit='m³', quantity=None, plan='T1', element='thang T1', variant=...hưa xác nhận phạm vi từng thang/vế/chiếu', 'chưa xác nhận tầng đầu/cuối của thang'], status='D', inputs=[], stage=None).missing
+
+tests\test_rough_secondary.py:158: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rough_secondary.py::test_stair_with_landing_beam - assert N...
+FAILED tests/test_rough_secondary.py::test_stair_con_not_supported - Assertio...
+2 failed, 68 passed in 21.39s

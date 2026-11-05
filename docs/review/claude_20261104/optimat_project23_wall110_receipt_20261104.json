@@ -1,0 +1,37 @@
+{
+  "project_id": 23,
+  "analysis_token_client": "88307123-58b0-4fb6-a7d3-ba7c11935c2c",
+  "browser": "Claude in-app browser pane, viewport CSS 849x833, DPR 1.5",
+  "web": "http://127.0.0.1:3001, CSS 240zypd2h7pof.css (build oWnM3ZoBlYORzZeEWnOtz)",
+  "request": {
+    "method": "POST",
+    "route": "/api/projects/23/analysis",
+    "status": 200,
+    "body": "{\"files\":[{\"file_id\":127,\"revision_id\":1,\"sha256\":\"f88d3808a2db5241ee24420f4d689c61f8e1736c6d834f6435db82ffece721a0\",\"role\":\"KT\"}],\"profile_version\":3,\"progressive\":true}",
+    "body_sha256": "6169f4821498e2436303d87a52b9615846754ec3bd1ffee00e73b9c22abb039c",
+    "client_analysis_id_sent": false
+  },
+  "response": {
+    "ndjson_types": ["status", "preview", "status", "recognized", "status", "complete"],
+    "receipt_line_present": false,
+    "bytes": 71828,
+    "sha256": "a28f1fb940fa1ec3fc36ab05370e1c74043394a5316dccfe9f03f2f16b9640d4",
+    "provenance": {"project_id": 23, "profile_version": 3, "files": [{"file_id": 127, "revision_id": 1, "role": "KT"}]},
+    "height_mm": null,
+    "groups": [],
+    "openings": [],
+    "wall_W5": {"t": 110, "len": 4.56, "mat": "AAC01", "sys": "W-AAC01-100", "role": "partition", "conf": 1},
+    "warnings": [
+      "Chưa có chiều cao tầng (nhập tay, cao độ sàn trên bản vẽ hay thông số dự án): chưa tính diện tích tường.",
+      "2 lỗ mở chưa có kích thước (block không ghi, dự án chưa nhập kích thước cửa), chưa được trừ; cửa nhận từ khe tường vẫn có trong danh sách để nhập chiều cao: D1, S1."
+    ]
+  },
+  "screen": {
+    "before_height": {"height_field": "0.00", "W5": "4,56 m · 0,00 m²", "openings_tab": 0},
+    "after_temp_height_3_30": {"W5": "4,56 m · 15,05 m²", "total_net_m2": 124.34},
+    "confirmed": false,
+    "screenshot": "optimat-project23-wall110-h330-20261104.jpg"
+  },
+  "no_server_writes": "Không bấm Xác nhận, không đổi hồ sơ/tệp; chiều cao 3,30 chỉ tính tạm trên trang",
+  "recorded_at": "2026-11-04"
+}

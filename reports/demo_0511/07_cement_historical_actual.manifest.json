@@ -1,0 +1,104 @@
+{
+  "sources": {
+    "reports\\demo_0511\\cemia_ximang_thang3_2026.pdf": {
+      "path": "reports/demo_0511/cemia_ximang_thang3_2026.pdf",
+      "sha256": "6ebfe2d3e432cb08f5319878e65463583350a96238b0ff62a6d17f02b1342c8d"
+    },
+    "reports\\demo_0511\\cement_historical_proposed.json": {
+      "path": "reports/demo_0511/cement_historical_proposed.json",
+      "sha256": "d558f7e3a58658502f4a8e9ba5651a6762229fe634e25ae6cae24a599835308e"
+    },
+    "reports\\demo_0511\\07_cement_review.md": {
+      "path": "reports/demo_0511/07_cement_review.md",
+      "sha256": "513610a405dbe23b556a9ffb7b9bb64c6d19a32e765f5432c2962b35425da998"
+    },
+    "reports\\demo_0511\\build_demo_actual_sql.py": {
+      "path": "reports/demo_0511/build_demo_actual_sql.py",
+      "sha256": "3f45da4a49eccb1ddc0d031351deda9ab824ecffb23d0910e314df058db3e8e5"
+    },
+    "reports\\demo_0511\\build_cement_historical_sql.py": {
+      "path": "reports/demo_0511/build_cement_historical_sql.py",
+      "sha256": "7f7175593e90a4cbaa0d7e7f6e249b1f34a80fb83d27fd80bd68acf3a11a9b23"
+    },
+    "data\\catalog\\materials.csv": {
+      "path": "data/catalog/materials.csv",
+      "sha256": "9b644f3d83f4f525a3ddd9d62de7bda8761367ae4998bc7b809821e6a12a2bf6"
+    }
+  },
+  "suppliers": [
+    {
+      "supplier_id": "CBG-991233626E",
+      "name": "Công ty Xi măng Vicem Tam Điệp",
+      "province": "Hà Nội",
+      "data_kind": "ACTUAL",
+      "lat": null,
+      "lon": null,
+      "lead_time_days": null,
+      "verified": false,
+      "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf",
+      "note": "Đơn vị kê khai trong bảng chính thức; chưa xác minh giao hàng/công trình"
+    }
+  ],
+  "price_records": [
+    {
+      "date": "2026-03-17",
+      "material_id": "XM01",
+      "supplier_id": "CBG-991233626E",
+      "province": "Hà Nội",
+      "quantity": 1.0,
+      "unit": "tấn",
+      "unit_price": 1150000,
+      "vat_included": "YES",
+      "transport_included": "UNKNOWN",
+      "data_kind": "ACTUAL",
+      "price_level": "BULLETIN",
+      "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=13; STT 1; 1228/XMTĐ-XNTT; Xi măng Vicem cao cấp PCB30; bao KPK 50 kg; giá đã VAT"
+    },
+    {
+      "date": "2026-03-17",
+      "material_id": "XM02",
+      "supplier_id": "CBG-991233626E",
+      "province": "Hà Nội",
+      "quantity": 1.0,
+      "unit": "tấn",
+      "unit_price": 1200000,
+      "vat_included": "YES",
+      "transport_included": "UNKNOWN",
+      "data_kind": "ACTUAL",
+      "price_level": "BULLETIN",
+      "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=13; STT 2; 1228/XMTĐ-XNTT; Xi măng Vicem cao cấp PCB40; bao KPK 50 kg; giá đã VAT"
+    },
+    {
+      "date": "2026-03-17",
+      "material_id": "XM01",
+      "supplier_id": "CBG-991233626E",
+      "province": "Hà Nội",
+      "quantity": 1.0,
+      "unit": "tấn",
+      "unit_price": 1070000,
+      "vat_included": "YES",
+      "transport_included": "UNKNOWN",
+      "data_kind": "ACTUAL",
+      "price_level": "BULLETIN",
+      "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=14; STT 3; 1228/XMTĐ-XNTT; Xi măng đa dụng PCB30; bao KPK 50 kg; giá đã VAT"
+    },
+    {
+      "date": "2026-03-17",
+      "material_id": "XM02",
+      "supplier_id": "CBG-991233626E",
+      "province": "Hà Nội",
+      "quantity": 1.0,
+      "unit": "tấn",
+      "unit_price": 1130000,
+      "vat_included": "YES",
+      "transport_included": "UNKNOWN",
+      "data_kind": "ACTUAL",
+      "price_level": "BULLETIN",
+      "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=14; STT 4; 1228/XMTĐ-XNTT; Xi măng đa dụng PCB40; bao KPK 50 kg; giá đã VAT"
+    }
+  ],
+  "sql_sha256": "ce9b7eea9f287dee2239c78b204c64f70fc74e56106569e07901c0b2a7224e09",
+  "executed": false,
+  "review": "Parent reviewed both page images; see07_cement_review.md",
+  "rollback": "Only IDs actually INSERT RETURNING in the apply receipt; never all candidate keys."
+}

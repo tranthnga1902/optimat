@@ -1,0 +1,1 @@
+PASS: CAD mới chưa có vai trò, chọn tệp chưa POST, cả UI và handler chặn vai trò trống, POST giữ đúng vai trò từng tệp, tệp tiếp theo chờ chọn lại.

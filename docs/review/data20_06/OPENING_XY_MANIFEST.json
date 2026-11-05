@@ -1,0 +1,9 @@
+{
+  "base_sha256": "c106399d612dc40c9687956b879a8edd09902c5b94cedc2d59215609c03a67a5",
+  "patched_sha256": "d00762ab4a5d448998e074f1706033de108ec6a2a3ecf3363dc85a0f73ab4358",
+  "patch_sha256": "15e6e1f6374e4bceba2c672bcc6ef6451a38ab1d34ba01579568cd26294b5868",
+  "tests_file": "tests/test_opening_coordinates.py",
+  "tests_sha256": "7db4f4322aaff4c7d824080a7987f4838c2f3cb5f31826d0295084a86cd0932a",
+  "result": "34 passed (coordinates and incomplete openings)",
+  "scope": "ReviewOpening x/y optional finite; no DB or runtime"
+}

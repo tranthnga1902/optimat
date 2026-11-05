@@ -1,0 +1,12 @@
+# WL04 browser fixture 3004
+
+Labeldelta sau browser:manifest4d2c96f55d56624d182c3d460879b93b087bfbe4ddb9a2b6f0937209e5ea168d,component3841e44c03b88d57342d154d4038d0dc9f7afb8f44d25258da13309a1b23d60c khớp/stable. QA15đọccomponent-onlypatch vàchạycheck-labels.cjs exit0,logslabels.log/labels_receipt.json:globalsignalsdướinhãn“toànbộhồsơ,chưagánmặtbằng”,stairs“từnhậndiệnbanđầu”,mởtầng/tổngquan/KConly/no-signalsđúngSSR. Scope-labelfinding CLOSED_SOURCE_HARNESS,khôngre-runwholeUI. Ảnhbrowserbêndướivẫnhash751b83cũ,chưalivereload/deltabrowserpass.
+
+ĐãkiểmIAB/qa-work-list theo01slot,actualDrawingWorkList trênSYNfixture02,componenthash751b83...cũ(global-scope-labeldelta chưaáp). Khôngauth/API/projectstorage/inject/upload/3002reload/ACTUALCAD/newbackend.
+
+1280×800:previewhiệnTrệt2tường/Lầu1mộttường;keyboardDown/Return/Escape chuyểngroundchỉTrệt,upperchỉLầu1,KCchỉsignalsmóng/thép+filekếtcấuvàchờgántầng,emptyhiệnchưacóbằngchứng. Cảnămstates hiểnthịđúngfixture,chưakhẳngđịnhdatareaderthực.
+
+390×844:KCtextwrapđọcđược,DOMread-onlydocumentWidth390/clientviewport390,sectionclient335/scroll335 nênkhôngoverflowngang. Sectionheight223/scrollHeight263cócuộndọc;Tabtừselectfocussection,PageDownscrollTop40 vàảnhchođọcnốtphầncuối. Nativeselectkeyboardđãchuyểnstates;khôngmouse-only. Emptyhiệnlýdo,khônggiả0. Viewportđãresetcuối;CUAcompletionđãgửi.
+
+Ảnhthực:desktop-upper.png,desktop-kc.png,mobile-kc.png,mobile-empty.png trongthưmụcnày. PASS **WL04_FIXTURE_BROWSER** cho5state/layout/keyboard/scroll;khôngBoardintegrationlayout(P0canvasroutekháckhôngkiểm),khôngconfirmation/P0E2E/ACTUALVN002. Componentlàsignalskhôngworkkey/computedquantity;global-scope-labelgapđãgiao02giữriêng. SelectorfixturekhôngDOMlabelmatchquaPlaywrightgetByLabel nhưngAXnameTrạngtháivàkeyboardhoạtđộng;khôngkếtluậnproductlabelbugtừfixture.
+

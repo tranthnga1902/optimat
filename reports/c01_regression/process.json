@@ -1,0 +1,13 @@
+{
+  "pid": 20984,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\c01_regression\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T09:34:13.463517+00:00"
+}

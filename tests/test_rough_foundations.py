@@ -82,6 +82,40 @@ def test_duplicate_footing_counted_once():
     assert len([w for w in out if w.code == "MONG"]) == 1 and any("nhập hai lần" in w for w in warnings)
 
 
+def test_repeated_mark_needs_positions_before_measuring():
+    # Hai chiều dài lấy từ hai dòng BM-5 của VN001. Các số khác là dữ liệu thử.
+    a = _m1(name="BM-5", count=1, length_mm=10480, source="trang 3")
+    b = _m1(name="BM-5", count=1, length_mm=10990, source="trang 4")
+    params = ProjectParams(foundations=[a, b], **EARTH)
+    result = compute_rough(RoughRequest(plans=[], params=params), Catalog.from_csv(None))
+    pending = [w for w in result.works if "BM-5" in w.element]
+    assert {w.code for w in pending} == {"MONG", "COP_PHA", "BE_TONG_LOT", "DAO_DAT", "DAP_DAT"}
+    assert all(w.quantity is None and w.missing for w in pending)
+    assert {(w.dimensions[0].length_m, w.dimensions[0].source) for w in pending if w.code == "MONG"} == {
+        (10.48, "trang 3"), (10.99, "trang 4")}
+
+    a.plan = b.plan = "MB móng"
+    a.positions, b.positions = [(0, 0)], [(20000, 0)]
+    works, _ = foundation_works(params)
+    assert [w.quantity for w in works if w.code == "MONG"] == [5.03, 5.275]
+    b.positions = [(2, 0)]
+    works, _ = foundation_works(params)
+    assert all(w.quantity is None for w in works)
+
+
+def test_conflicting_cad_details_do_not_overwrite_by_mark():
+    from optimat.drawing.dimensions import Dim
+    from optimat.drawing.sheets import View
+    from optimat.rough.structural import footing_detail_sizes
+
+    views = [View("MÓNG M1", "BV05", "", "", x, 0, (x-500, 0, x+500, 2000)) for x in (0, 20000)]
+    dims = [Dim(0, 100, 10480, 10480, False), Dim(20000, 100, 10990, 10990, False)]
+    for order in (views, views[::-1]):
+        size = footing_detail_sizes(order, {}, dims)["m1"]
+        assert size["length_mm"] is None and size["conflict"]
+        assert "10480" in size["nguon"] and "10990" in size["nguon"]
+
+
 def test_overlapping_pits_counted_once():
     f = _m1(positions=[(0, 0), (1500, 0)])                         # hố 1,8 m, tâm cách 1,5 m: chồng 0,3 m
     out, warnings = foundation_works(ProjectParams(foundations=[f], **{**EARTH, "excavation_slope": 0}))

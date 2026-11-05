@@ -6,7 +6,7 @@ Dầm,Suy từ tường + cột,conditional,Dầm suy luôn cần người dùng
 Móng đơn,Ký hiệu M… + chi tiết móng,conditional,Móng coi là khối hộp; móng bậc/vát sửa tay,
 "Móng băng, móng cọc",Bất kỳ,not_supported,Chưa có quy ước,
 Sàn,Đường bao phòng kín trên mặt bằng kiến trúc (hở thì bao lồi tường bao + cảnh báo kiểm tra),supported,Dày sàn,tests/test_rough_areas.py::test_upper_floor_works; tests/test_rough_areas.py::test_open_outline_closed_by_hull_with_warning
-Cầu thang bản,"Nhập tay theo quy ước Stair (số bậc, rộng vế, rộng bậc, chiếu nghỉ, dầm thang)",supported,Dày bản thang,tests/test_rough_secondary.py::test_stair_with_landing_beam; tests/test_rough_secondary.py::test_stair_con_not_supported
+Cầu thang bản,"Nhập theo từng vế/chiếu có nguồn (run, rise, rộng, số bậc; chiếu nghỉ có quyền sở hữu); kích thước kiểu cũ không tự cộng",supported,Dày bản thang + nguồn từng vế,tests/test_rough_stairs.py::test_two_flight_stair; tests/test_rough_secondary.py::test_stair_legacy_dimensions_not_summed; tests/test_rough_secondary.py::test_stair_con_not_supported
 "Cầu thang cốn, xoắn",Bất kỳ,not_supported,Ghi Not supported,
 Cầu thang,Tự nhận trên bản vẽ,not_supported,Chưa đọc mặt bằng thang,
 Lanh tô,Theo lỗ cửa trên tường xây,supported,"Cao lanh tô, gối; lỗ sát đáy dầm không tính lanh tô",tests/test_rough_secondary.py::test_lintel_not_double_counted_with_beam; tests/test_rough_secondary.py::test_lintel_kept_when_below_beam

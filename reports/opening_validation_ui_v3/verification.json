@@ -1,0 +1,31 @@
+{
+  "status": "source_frozen_tests_pass",
+  "backend_contract": "docs/review/data20_06/OPENING_MISSING_BACKEND.md",
+  "ports": {
+    "3002": {
+      "base": "XLGfOY4MIuGt8ZUp-wppq",
+      "logs": [
+        "before.log",
+        "partial.log",
+        "confirm.log",
+        "consumers.log",
+        "types.json"
+      ],
+      "files": 7,
+      "patch_sha256": "88f133de154249a2ff62259dd0d16ce87a8d1f72ab042952342f9df016f80fd1"
+    },
+    "3001": {
+      "base": "LKTDjEOitNSiJBETPtyW8",
+      "logs": [
+        "before.log",
+        "partial.log",
+        "confirm.log",
+        "consumers.log",
+        "types.json"
+      ],
+      "files": 7,
+      "patch_sha256": "55724124bda5bac6a58f67f1c7da929562e37a5b42f568e93a703799d40ab93a"
+    }
+  },
+  "manifest_sha256": "5c1d7dc4268dbeb6852840d80af0447602b75b3a3cdfd43db63cb294650a352e"
+}

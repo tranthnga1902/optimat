@@ -1,0 +1,41 @@
+{
+  "manifest_sha256": "4d2c96f55d56624d182c3d460879b93b087bfbe4ddb9a2b6f0937209e5ea168d",
+  "ports": {
+    "3002": {
+      "apply_check": true,
+      "review_model_hashes_preserved": true,
+      "tests": {
+        "before": {
+          "exit": 1,
+          "result": "Tái hiện thiếu nhãn phạm vi trên gói nền."
+        },
+        "labels": {
+          "exit": 0,
+          "result": "PASS: nhãn đúng phạm vi ở mặt bằng, tổng quan, hồ sơ chỉ có KC và không có dấu hiệu; thang mang nguồn nhận diện ban đầu."
+        },
+        "existing": {
+          "exit": 0,
+          "result": "PASS: dưới Board, preview nhận diện, đúng mặt bằng và bản tham khảo, tường đã loại, nguồn KT/KC, hồ sơ không có mặt bằng."
+        }
+      }
+    },
+    "3001": {
+      "apply_check": true,
+      "review_model_hashes_preserved": true,
+      "tests": {
+        "before": {
+          "exit": 1,
+          "result": "Tái hiện thiếu nhãn phạm vi trên gói nền."
+        },
+        "labels": {
+          "exit": 0,
+          "result": "PASS: nhãn đúng phạm vi ở mặt bằng, tổng quan, hồ sơ chỉ có KC và không có dấu hiệu; thang mang nguồn nhận diện ban đầu."
+        },
+        "existing": {
+          "exit": 0,
+          "result": "PASS: dưới Board, preview nhận diện, đúng mặt bằng và bản tham khảo, tường đã loại, nguồn KT/KC, hồ sơ không có mặt bằng."
+        }
+      }
+    }
+  }
+}

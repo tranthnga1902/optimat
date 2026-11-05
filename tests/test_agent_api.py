@@ -59,8 +59,8 @@ def test_pipeline_includes_design_bill(sample_dxf):
 def test_api_catalog_bill_and_keep_design(sample_dxf):
     mats = client.get("/api/catalog/wall-materials").json()
     systems = {s["wall_system_id"]: s for s in mats["wall_systems"]}
-    assert systems["W-GN01-220"]["ready"] and not systems["W-GN02-110"]["ready"]
-    assert "số lượng vật liệu / m² tường" in systems["W-GN02-110"]["missing"]
+    assert systems["W-GN01-220"]["ready"] and not systems["W-GK01-220"]["ready"]   # GK01-220: TT 38 chưa có cột dày 220
+    assert "số lượng vật liệu / m² tường" in systems["W-GK01-220"]["missing"]
     assert {m["id"] for m in mats["materials"]} >= {"GN01", "AAC01", "GK02"}
     with open(sample_dxf, "rb") as f:
         groups = client.post("/api/takeoff", files={"file": ("nha.dxf", f, "application/dxf")},

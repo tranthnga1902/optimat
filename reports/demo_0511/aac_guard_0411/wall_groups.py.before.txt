@@ -1,0 +1,53 @@
+"""Nhóm tường để lập vật tư từ dòng xây cuối cùng của bảng phần thô."""
+from __future__ import annotations
+
+import math
+
+from ..catalog.repository import Catalog
+from ..schemas import WallGroup
+from .materials import mortar_material
+from .models import ProjectParams, WorkItem
+
+
+def final_wall_groups(works: list[WorkItem], params: ProjectParams, catalog: Catalog) -> tuple[list[WallGroup], list[str]]:
+    groups: dict[tuple, WallGroup] = {}
+    issues: list[str] = []
+    systems = catalog.wall_systems.set_index("wall_system_id")
+    units = dict(zip(catalog.materials.material_id, catalog.materials.unit))
+    for work in works:
+        if work.code != "XAY":
+            continue
+        geometry = work.masonry_geometry
+        missing = list(work.missing)
+        if geometry:
+            missing.extend(geometry.issues)
+            if not math.isfinite(geometry.thickness_m) or geometry.thickness_m <= 0:
+                missing.append("bề dày khối xây không hợp lệ")
+        if not geometry or work.wall_system_id not in systems.index:
+            missing.append("chưa xác định cấu tạo tường")
+        if work.quantity is None or not math.isfinite(work.quantity) or work.quantity < 0 or work.status == "D":
+            missing.append("khối xây chưa đủ căn cứ")
+        if missing:
+            issues.append(f"{work.plan}, {work.element}: {', '.join(dict.fromkeys(missing))}")
+            continue
+        if work.quantity == 0:
+            continue
+        system = systems.loc[work.wall_system_id]
+        mortar_id = None
+        if params.masonry_mortar_grade and units.get(system.get("mortar_material_id")) == "m³":
+            mortar_id = mortar_material(catalog, params.masonry_mortar_grade)
+            if not mortar_id:
+                issues.append(f"{work.plan}, {work.element}: thiếu vữa xây mác {params.masonry_mortar_grade} trong danh mục")
+                continue
+        key = (geometry.wall_type, geometry.role, work.wall_system_id)
+        if key not in groups:
+            groups[key] = WallGroup(wall_type=geometry.wall_type, role=geometry.role, length_m=0,
+                                    gross_area_m2=0, opening_area_m2=0, net_area_m2=0, min_confidence=None,
+                                    design_wall_system_id=work.wall_system_id, design_material_id=system.material_id,
+                                    design_mortar_material_id=mortar_id, design_material_share=1)
+        g = groups[key]
+        g.length_m += geometry.length_m
+        g.gross_area_m2 += geometry.gross_area_m2
+        g.opening_area_m2 += geometry.opening_area_m2
+        g.net_area_m2 += work.quantity / geometry.thickness_m
+    return list(groups.values()), issues

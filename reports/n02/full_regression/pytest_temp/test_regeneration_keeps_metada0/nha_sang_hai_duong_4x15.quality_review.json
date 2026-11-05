@@ -1,0 +1,4341 @@
+{
+  "schema_version": 1,
+  "cong_trinh_id": "nha_sang_hai_duong_4x15",
+  "reviewer": "Codex",
+  "human_approval": false,
+  "verification_status": "chua_kiem",
+  "is_complete_ground_truth": false,
+  "kind": "estimate_quality_review",
+  "rows": [
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W001",
+      "source": {
+        "page": 3,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 1.0,
+      "source_unit": "TG",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W002",
+      "source": {
+        "page": 3,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 340.0,
+      "source_unit": "md",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [
+        {
+          "id": "SANG-PILE-TEMPORARY-LENGTH",
+          "work": "W002",
+          "status": "design_provisional_not_as_built",
+          "explanation": "34 cọc × 10 m = 340 m khớp ghi chú thiết kế. Chiều dài là tạm tính, không phải số nghiệm thu sau ép thử.",
+          "sheets": [
+            "KC-01-01",
+            "KC-01-02"
+          ]
+        }
+      ],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W003",
+      "source": {
+        "page": 4,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 34.0,
+      "source_unit": "đầu cọc",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W004",
+      "source": {
+        "page": 4,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 81.0,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W005",
+      "source": {
+        "page": 4,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 18.3,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W006",
+      "source": {
+        "page": 4,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 6.293,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W007",
+      "source": {
+        "page": 5,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 2.952,
+      "source_unit": "tấn",
+      "status": "quarantined_inconsistent_schedule",
+      "eligible_label_id": null,
+      "issues": [
+        {
+          "id": "SANG-TANK-STEEL",
+          "work": "W007",
+          "status": "source_schedule_mismatch",
+          "explanation": "Bể phốt: nguồn Phi10=133,5 kg, Phi12=39,4 kg; CAD tương ứng 116,8 và 37,6 kg. Bể nước: nguồn Phi10=200 kg, CAD=168,4 kg. Phần móng 2491 kg khớp; tổng đúng theo các tổng hợp CAD là 2491+191,2+219=2901,2 kg (2,9012 tấn), khác nguồn 2,952 tấn.",
+          "sheets": [
+            "KC-01-08",
+            "KC-01-09",
+            "KC-02-03"
+          ]
+        },
+        {
+          "id": "SANG-WATER-TANK-INTERNAL-SUM",
+          "work": "W007",
+          "issue_type": "internal_schedule_arithmetic_conflict",
+          "status": "reviewed_unresolved",
+          "explanation": "Bể nước KLCT Ø12 DM1=20.6 và DM2=17.0 cộng37.6 kg khác tổng36.9 kg. Không chọn số thay thế.",
+          "handles": [
+            "11735D2",
+            "11735B6",
+            "11735E0"
+          ],
+          "pdf_page": 18,
+          "sheet": "KC-01-12",
+          "report": "reports/review_housing_20261103/KIEM_TONG_BANG_THEP.md"
+        }
+      ],
+      "arithmetic_status": "inconsistent_schedule",
+      "blocking_issue_ids": [
+        "SANG-WATER-TANK-INTERNAL-SUM"
+      ],
+      "arithmetic_alerts": [],
+      "reason": "Mâu thuẫn nội bộ bảng thống kê; giữ nhãn làm bằng chứng, không dùng làm đáp án."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W008",
+      "source": {
+        "page": 6,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 25.272,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W009",
+      "source": {
+        "page": 7,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 8.954,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W010",
+      "source": {
+        "page": 8,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 30.633,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W011",
+      "source": {
+        "page": 8,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 1.0,
+      "source_unit": "TT",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W012",
+      "source": {
+        "page": 8,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 1.163,
+      "source_unit": "tấn",
+      "status": "drawing_schedule_label_available",
+      "eligible_label_id": "nha_sang_hai_duong_4x15-W012-drawing-steel",
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Có nhãn thép thiết kế tách riêng hệ số nguồn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W013",
+      "source": {
+        "page": 9,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 7.117,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W014",
+      "source": {
+        "page": 9,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 3.166,
+      "source_unit": "tấn",
+      "status": "drawing_schedule_label_available",
+      "eligible_label_id": "nha_sang_hai_duong_4x15-W014-drawing-steel",
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Có nhãn thép thiết kế tách riêng hệ số nguồn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W015",
+      "source": {
+        "page": 9,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 13.045,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W016",
+      "source": {
+        "page": 10,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 2.345,
+      "source_unit": "tấn",
+      "status": "drawing_schedule_label_available",
+      "eligible_label_id": "nha_sang_hai_duong_4x15-W016-drawing-steel",
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Có nhãn thép thiết kế tách riêng hệ số nguồn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W017",
+      "source": {
+        "page": 10,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 23.763,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W018",
+      "source": {
+        "page": 11,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 0.649,
+      "source_unit": "tấn",
+      "status": "drawing_schedule_label_available",
+      "eligible_label_id": "nha_sang_hai_duong_4x15-W018-drawing-steel",
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Có nhãn thép thiết kế tách riêng hệ số nguồn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W019",
+      "source": {
+        "page": 11,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 4.884,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W020",
+      "source": {
+        "page": 11,
+        "table": 1,
+        "row": 22
+      },
+      "source_quantity": 0.116,
+      "source_unit": "tấn",
+      "status": "drawing_schedule_label_available",
+      "eligible_label_id": "nha_sang_hai_duong_4x15-W020-drawing-steel",
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Có nhãn thép thiết kế tách riêng hệ số nguồn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W021",
+      "source": {
+        "page": 12,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 1.127,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W022",
+      "source": {
+        "page": 12,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 205.114,
+      "source_unit": "m2",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W023",
+      "source": {
+        "page": 12,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 40.754,
+      "source_unit": "Kg",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W024",
+      "source": {
+        "page": 12,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 72.737,
+      "source_unit": "Kg",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W025",
+      "source": {
+        "page": 13,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 3.0,
+      "source_unit": "TT",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W026",
+      "source": {
+        "page": 13,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 11.81,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W027",
+      "source": {
+        "page": 14,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 0.72,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W028",
+      "source": {
+        "page": 14,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 80.92,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [
+        {
+          "text": "D : -3,56*3*0,22*1,1",
+          "text_goc": "D : -3,56*3*0,22*1,1",
+          "quantity": -2.59,
+          "quantity_goc": "-2.59",
+          "source": {
+            "page": 14,
+            "table": 1,
+            "row": 21
+          },
+          "formula_result": -2.58456,
+          "arithmetic_difference": 0.00544,
+          "rounding_tolerance": 0.0050000010000000004,
+          "arithmetic_match": false
+        }
+      ],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W029",
+      "source": {
+        "page": 16,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 3.0,
+      "source_unit": "Chuyến",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W030",
+      "source": {
+        "page": 16,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 1514.27,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W031",
+      "source": {
+        "page": 18,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 477.66,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W032",
+      "source": {
+        "page": 19,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 905.52,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W033",
+      "source": {
+        "page": 19,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 19.3,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W034",
+      "source": {
+        "page": 20,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 70.84,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W035",
+      "source": {
+        "page": 20,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 8.62,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W036",
+      "source": {
+        "page": 20,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 4.1,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W037",
+      "source": {
+        "page": 20,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 295.74,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W038",
+      "source": {
+        "page": 21,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 129.76,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W039",
+      "source": {
+        "page": 21,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 14.85,
+      "source_unit": "m2",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W040",
+      "source": {
+        "page": 21,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 55.99,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W041",
+      "source": {
+        "page": 22,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 11.0,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W042",
+      "source": {
+        "page": 22,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 57.39,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W043",
+      "source": {
+        "page": 22,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 1.97,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W044",
+      "source": {
+        "page": 23,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 129.76,
+      "source_unit": "m2",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W045",
+      "source": {
+        "page": 23,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 6.93,
+      "source_unit": "m2",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W046",
+      "source": {
+        "page": 23,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 53.21,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W047",
+      "source": {
+        "page": 23,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 1.86,
+      "source_unit": "m³",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W048",
+      "source": {
+        "page": 24,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 45.47,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W049",
+      "source": {
+        "page": 24,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 18.44,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W050",
+      "source": {
+        "page": 25,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 17.34,
+      "source_unit": "md",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W051",
+      "source": {
+        "page": 25,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 44.55,
+      "source_unit": "md",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W052",
+      "source": {
+        "page": 25,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 11.748,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W053",
+      "source": {
+        "page": 25,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W054",
+      "source": {
+        "page": 25,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W055",
+      "source": {
+        "page": 27,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 14.47,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W056",
+      "source": {
+        "page": 27,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 6.864,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W057",
+      "source": {
+        "page": 27,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 3.0,
+      "source_unit": "Chuyến",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W058",
+      "source": {
+        "page": 27,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 205.114,
+      "source_unit": "m²",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W059",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W060",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W061",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W062",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W063",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W064",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W065",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W066",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W067",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W068",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 5.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W069",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W070",
+      "source": {
+        "page": 28,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W071",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 1
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W072",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 2
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W073",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W074",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W075",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W076",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W077",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W078",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W079",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 4.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W080",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 4.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W081",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 10.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W082",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 8.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W083",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 1.0,
+      "source_unit": "c¸i",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W084",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W085",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W086",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W087",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W088",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W089",
+      "source": {
+        "page": 29,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W090",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 8.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W091",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 23.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W092",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 36.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W093",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 16.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W094",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 12.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W095",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 4.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W096",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 7.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W097",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 25.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W098",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 16.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W099",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 17.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W100",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W101",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W102",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W103",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W104",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W105",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 6.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W106",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W107",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W108",
+      "source": {
+        "page": 30,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W109",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 1
+      },
+      "source_quantity": 7.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W110",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 2
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W111",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W112",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W113",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 4.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W114",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 6.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W115",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 8.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W116",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 5.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W117",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 17.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W118",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 1.0,
+      "source_unit": "lô",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W119",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 44.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W120",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 64.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W121",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 40.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W122",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 4.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W123",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 8.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W124",
+      "source": {
+        "page": 31,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 14.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W125",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 1
+      },
+      "source_quantity": 2.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W126",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 2
+      },
+      "source_quantity": 30.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W127",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 40.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W128",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 5.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W129",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W130",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 5.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W131",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W132",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 2.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W133",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W134",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 4.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W135",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W136",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W137",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 4.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W138",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 9.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W139",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 6.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W140",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 3.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W141",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 10.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W142",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 15.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W143",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 9.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W144",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 1.0,
+      "source_unit": "tuýp",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W145",
+      "source": {
+        "page": 32,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 1.0,
+      "source_unit": "lô",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W146",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 66.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W147",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 2.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W148",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 3.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W149",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 6.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W150",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W151",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 2.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W152",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 6.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W153",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 35.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W154",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 2.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W155",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W156",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W157",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W158",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W159",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 12.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W160",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W161",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 3.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W162",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W163",
+      "source": {
+        "page": 33,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 6.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W164",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 1
+      },
+      "source_quantity": 7.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W165",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 2
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W166",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 3.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W167",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 50.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W168",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 84.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W169",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W170",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 2.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W171",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 4.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W172",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W173",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W174",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 9.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W175",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 8.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W176",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 6.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W177",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 2.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W178",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 40.0,
+      "source_unit": "Cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W179",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 30.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W180",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 8.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W181",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 15.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W182",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 15.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W183",
+      "source": {
+        "page": 34,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 15.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W184",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 1
+      },
+      "source_quantity": 20.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W185",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 2
+      },
+      "source_quantity": 20.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W186",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 250.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W187",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 250.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W188",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 350.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W189",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 300.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W190",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 5.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W191",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 2.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W192",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 30.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W193",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 30.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W194",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 250.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W195",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 30.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W196",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 20.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W197",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 250.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W198",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 300.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W199",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 100.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W200",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 30.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W201",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W202",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W203",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 1.0,
+      "source_unit": "tủ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W204",
+      "source": {
+        "page": 35,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 3.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W205",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 1
+      },
+      "source_quantity": 1.0,
+      "source_unit": "tủ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W206",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 2
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W207",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W208",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 2.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W209",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 25.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W210",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 20.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W211",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 3.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W212",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W213",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 1.0,
+      "source_unit": "Bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W214",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 1.0,
+      "source_unit": "lô",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W215",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W216",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W217",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 7.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W218",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W219",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 100.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W220",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 18
+      },
+      "source_quantity": 100.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W221",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 19
+      },
+      "source_quantity": 50.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W222",
+      "source": {
+        "page": 36,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W223",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 1
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W224",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 2
+      },
+      "source_quantity": 5.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W225",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 5.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W226",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 85.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W227",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 85.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W228",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 50.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W229",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 1.0,
+      "source_unit": "lô",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W230",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W231",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 10
+      },
+      "source_quantity": 1.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W232",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 11
+      },
+      "source_quantity": 1.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W233",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 12
+      },
+      "source_quantity": 2.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W234",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 13
+      },
+      "source_quantity": 10.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W235",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 14
+      },
+      "source_quantity": 10.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W236",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 15
+      },
+      "source_quantity": 30.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W237",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 16
+      },
+      "source_quantity": 30.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W238",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 17
+      },
+      "source_quantity": 1.0,
+      "source_unit": "lô",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W239",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 20
+      },
+      "source_quantity": 4.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W240",
+      "source": {
+        "page": 37,
+        "table": 1,
+        "row": 21
+      },
+      "source_quantity": 6.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W241",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 1
+      },
+      "source_quantity": 43.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W242",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 2
+      },
+      "source_quantity": 43.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W243",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 3
+      },
+      "source_quantity": 15.0,
+      "source_unit": "m",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W244",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 4
+      },
+      "source_quantity": 30.0,
+      "source_unit": "cái",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W245",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 5
+      },
+      "source_quantity": 2.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W246",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 6
+      },
+      "source_quantity": 10.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W247",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 7
+      },
+      "source_quantity": 10.0,
+      "source_unit": "bộ",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W248",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 8
+      },
+      "source_quantity": 1.0,
+      "source_unit": "gói",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    },
+    {
+      "work_id": "nha_sang_hai_duong_4x15-W249",
+      "source": {
+        "page": 38,
+        "table": 1,
+        "row": 9
+      },
+      "source_quantity": 1.0,
+      "source_unit": "gói",
+      "status": "quarantined_pending_drawing_takeoff",
+      "eligible_label_id": null,
+      "issues": [],
+      "arithmetic_status": "not_independently_certified",
+      "blocking_issue_ids": [],
+      "arithmetic_alerts": [],
+      "reason": "Chưa đủ đối chứng hình học/số lượng theo phạm vi công tác; không dùng làm đáp án chuẩn."
+    }
+  ],
+  "issues": [
+    {
+      "id": "SANG-TANK-STEEL",
+      "work": "W007",
+      "status": "source_schedule_mismatch",
+      "explanation": "Bể phốt: nguồn Phi10=133,5 kg, Phi12=39,4 kg; CAD tương ứng 116,8 và 37,6 kg. Bể nước: nguồn Phi10=200 kg, CAD=168,4 kg. Phần móng 2491 kg khớp; tổng đúng theo các tổng hợp CAD là 2491+191,2+219=2901,2 kg (2,9012 tấn), khác nguồn 2,952 tấn.",
+      "sheets": [
+        "KC-01-08",
+        "KC-01-09",
+        "KC-02-03"
+      ]
+    },
+    {
+      "id": "SANG-PILE-TEMPORARY-LENGTH",
+      "work": "W002",
+      "status": "design_provisional_not_as_built",
+      "explanation": "34 cọc × 10 m = 340 m khớp ghi chú thiết kế. Chiều dài là tạm tính, không phải số nghiệm thu sau ép thử.",
+      "sheets": [
+        "KC-01-01",
+        "KC-01-02"
+      ]
+    },
+    {
+      "id": "SANG-WATER-TANK-INTERNAL-SUM",
+      "work": "W007",
+      "issue_type": "internal_schedule_arithmetic_conflict",
+      "status": "reviewed_unresolved",
+      "explanation": "Bể nước KLCT Ø12 DM1=20.6 và DM2=17.0 cộng37.6 kg khác tổng36.9 kg. Không chọn số thay thế.",
+      "handles": [
+        "11735D2",
+        "11735B6",
+        "11735E0"
+      ],
+      "pdf_page": 18,
+      "sheet": "KC-01-12",
+      "report": "reports/review_housing_20261103/KIEM_TONG_BANG_THEP.md"
+    }
+  ],
+  "checked_work_count": 249,
+  "eligible_schedule_work_count": 5,
+  "quarantined_work_count": 244
+}

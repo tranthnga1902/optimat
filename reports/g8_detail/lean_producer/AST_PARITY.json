@@ -1,0 +1,6 @@
+{
+  "foundation_raw_expression_unchanged": true,
+  "legacy_work_call_unchanged_except_precomputed_q": true,
+  "foundation_body_outside_lean_emitter_unchanged": true,
+  "manifest4_matches_runtime_snapshot": true
+}

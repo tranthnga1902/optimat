@@ -1,0 +1,10 @@
+--- source-ready/tests/test_rough_rebar.py
++++ stable/tests/test_rough_rebar.py
+@@ -101,7 +101,6 @@
+     assert length in rows[0].evidence
+ 
+ 
+-@pytest.mark.xfail(strict=True, reason="Bảng lặp không có số hiệu đang được cộng hai lần")
+ def test_duplicate_table_without_mark_counted_once():
+     title = "BẢNG THỐNG KÊ CỐT THÉP TOÀN BỘ CẤU KIỆN TẦNG 1 (TỔNG TOÀN TẦNG)"
+     texts = _table(0, 1000, title) + _table(0, -5000, title)

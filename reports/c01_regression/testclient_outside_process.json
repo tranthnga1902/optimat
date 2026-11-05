@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_admin_db.py::test_overview_and_rows_from_csv",
+    "-vv",
+    "--full-trace",
+    "-o",
+    "faulthandler_timeout=60",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\c01_regression\\outside_test_temp"
+  ],
+  "started_utc": "2026-11-03T09:41:55.363811+00:00",
+  "DATABASE_URL_present": false,
+  "OPTIMAT_TEST_DATABASE_URL_present": false,
+  "OPTIMAT_NO_DOTENV": "1",
+  "outside_sandbox": true,
+  "pid": 17468
+}

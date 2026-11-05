@@ -1,0 +1,11 @@
+--- a/src/optimat/drawing/review.py
++++ b/src/optimat/drawing/review.py
+@@ -43,6 +43,8 @@
+     kind: str = "door"                        # door | window | block
+     w: Optional[float] = Field(default=None, gt=0, allow_inf_nan=False, strict=True)
+     h: Optional[float] = Field(default=None, gt=0, allow_inf_nan=False, strict=True)
++    x: Optional[float] = Field(default=None, allow_inf_nan=False, strict=True)
++    y: Optional[float] = Field(default=None, allow_inf_nan=False, strict=True)
+     keep: bool = True
+     src: str = "auto"
+     ev: Optional[str] = None                  # truy vết: dấu hiệu nhận ra cửa (block D1, cung cánh cửa, nét kính)

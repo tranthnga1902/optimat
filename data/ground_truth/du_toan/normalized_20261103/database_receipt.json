@@ -1,0 +1,22 @@
+[
+  {
+    "cong_trinh_id": "nha_huong_hai_duong_7x12",
+    "project_id": 1,
+    "result_ids": [
+      1,
+      2
+    ],
+    "works": 215,
+    "files": 13
+  },
+  {
+    "cong_trinh_id": "nha_sang_hai_duong_4x15",
+    "project_id": 2,
+    "result_ids": [
+      3,
+      4
+    ],
+    "works": 249,
+    "files": 13
+  }
+]

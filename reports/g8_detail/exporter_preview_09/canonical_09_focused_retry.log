@@ -1,0 +1,5 @@
+.venv\Scripts\python.exe -B -m pytest tests/test_rough_boq_detail.py tests/test_rough_partial.py tests/test_export_boq_cli.py -q -p no:cacheprovider
+............................................................ [100%]
+60 passed in 7.07s
+pytest_exit_code=0
+Captured tool stdout: successful focused retry outside sandbox; no HTTP/DB/CAD/full.

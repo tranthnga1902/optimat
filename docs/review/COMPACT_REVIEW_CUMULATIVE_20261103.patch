@@ -1,0 +1,366 @@
+diff --git a/frontend/src/app/(user)/do-boc/Review.tsx b/frontend/src/app/(user)/do-boc/Review.tsx
+index e189c11..5601ba7 100644
+--- a/frontend/src/app/(user)/do-boc/Review.tsx
++++ b/frontend/src/app/(user)/do-boc/Review.tsx
+@@ -2,6 +2,7 @@
+ // Trang Kiểm tra bóc tách (thay iframe /ui/takeoff của app.html cũ): tải bản vẽ, kiểm tra, sửa, bổ sung rồi xác nhận từng mặt bằng.
+ // Kết quả chốt ghi vào optimat-confirmed, phần thô vào optimat-rough (store.set báo cho menu và các trang /vat-lieu, /phan-tho, /toi-uu).
+ import Link from "next/link";
++import { useRouter } from "next/navigation";
+ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
+ import { Steps } from "@/components/ui";
+ import { store, useStored } from "@/lib/store";
+@@ -13,7 +14,7 @@ import { OpeningList, OverviewList, QtyTab, WallFilters, WallList, WarnTab, type
+ import { RoughTab } from "./Rough";
+ import {
+   REASONS, RP_KEY, base, compute, convBad, csvText, fmt, groundTruth, initPlanParams, initState, nearestWall, payload, postJson, roughRequest, roughValues,
+-  type Confirmed, type Data, type PlanParams, type PlanState, type Rough,
++  type Confirmed, type Data, type PlanParams, type PlanState, type Rough, type Structural,
+ } from "./model";
+ import { useViewport } from "./viewport";
+ 
+@@ -23,10 +24,23 @@ const HINTS: Record<Mode, string> = {
+   open: "Chọn loại, nhập rộng × cao rồi bấm lên tường để thêm lỗ mở.",
+ };
+ const START = "Chọn \"Mở bản vẽ…\" để tải file .dxf hoặc .dwg. Hệ thống tách từng mặt bằng tầng, nhận dạng tường và lỗ mở; bạn kiểm tra, sửa, bổ sung rồi xác nhận.";
++// Trang điều chỉnh chỉ nhận snapshot khớp kết quả xác nhận đang dùng ở các module.
++export function reviewMatchesConfirmed(file: string, snapshot: Record<number, Confirmed>, published: Confirmed[]) {
++  const fields = (p: Confirmed) => JSON.stringify([p.height_mm, p.total_net_area_m2, p.groups, p.confirmed_at, p.takeoff_id || null]);
++  const saved = Object.values(snapshot);
++  const current = published.filter((p) => p.file === file);
++  return saved.length > 0 && saved.length === current.length && saved.every((p) =>
++    current.some((c) => c.plan === p.plan && fields(c) === fields(p)));
++}
++
+ type SheetState = { kind: "material" } | { kind: "confirm" } | { kind: "confirmed"; body: Confirmed; total: number }
+   | { kind: "msg"; title: string; body?: ReactNode; primary?: boolean };
+ 
+-export function Review() {
++export function Review({ adjustment = false }: { adjustment?: boolean }) {
++  const router = useRouter();
++  const [restored, setRestored] = useState(false);
++  const [saveError, setSaveError] = useState("");
++  const [saveNotice, setSaveNotice] = useState("");
+   const { svgRef, scaleRef, vbRef, movedRef, fitSize, focusOn, toWorld, onPointerDown } = useViewport();
+   const listRef = useRef<HTMLDivElement>(null), scrollTo = useRef<string | null>(null);
+   const [data, setData] = useState<Data | null>(null);
+@@ -44,6 +58,7 @@ export function Review() {
+   const [planP, setPlanP] = useState<Record<number, PlanParams>>({});
+   const [rough, setRough] = useState<Rough>(null);
+   const [roughBusy, setRoughBusy] = useState(false);
++  const [structural, setStructural] = useState<Structural | { error: string } | { busy: string } | null>(null);
+   const [roughVals, setRoughVals] = useState<Record<string, string>>({});
+   const [bgPref, setBgPref] = useState("cad");
+   const [showRec, setShowRec] = useState(true);
+@@ -55,6 +70,9 @@ export function Review() {
+   const [sheet, setSheet] = useState<SheetState | null>(null);
+ 
+   // ?project=12 trên địa chỉ trang hoặc ô Mã dự án: kết quả chốt được lưu vào dự án (bảng takeoff_results) khi máy chủ có PostgreSQL
++  const projectName = useStored("optimat-project-name", "");
++  const projectInfo = useStored<unknown>("optimat-project-info", null);
++  const projectReady = !!projectName.trim() && !!projectInfo;
+   const projectRaw = useStored<string | number>("optimat-project", "");
+   const project = Number(projectRaw) || null;
+   const confirmedList = useStored<unknown[]>("optimat-confirmed", []);
+@@ -62,11 +80,70 @@ export function Review() {
+   useEffect(() => {
+     const q = new URLSearchParams(location.search).get("project");
+     if (q) store.set("optimat-project", q);
+-    // eslint-disable-next-line react-hooks/set-state-in-effect -- đọc thiết lập lưu trên trình duyệt sau khi hydrate
+     setRoughVals(roughValues());
+     try { const m = localStorage.getItem("optimat-bg"); if (m) setBgPref(m); } catch { /* chế độ riêng tư */ }
+   }, []);
+ 
++  useEffect(() => {
++    const saved = store.get<{ data: Data; states: Record<number, PlanState>; planP: Record<number, PlanParams>; confirmed: Record<number, Confirmed>; structural: Structural | null; pi: number } | null>("optimat-review", null);
++    if (saved && adjustment && !reviewMatchesConfirmed(saved.data.file, saved.confirmed,
++      store.get<Confirmed[]>("optimat-confirmed", []))) {
++      setMsg("Bản vẽ đã lưu chưa khớp kết quả xác nhận hiện tại. Không mở bản cũ để điều chỉnh. Hãy quay lại trang đo bóc đang mở và lưu thành công trước khi tiếp tục.");
++      setRestored(true);
++      return;
++    }
++    if (saved) {
++      const restoredPi = saved.pi < 0 && !saved.data.overview?.cad ? 0 : saved.pi;
++      setData(saved.data);
++      setStates(Object.fromEntries(saved.data.plans.map((p, i) => [i, saved.states[i] || initState(p)])));
++      setPlanP(saved.planP); setConfirmed(saved.confirmed);
++      setStructural(saved.structural); setPi(restoredPi); setMsg(null);
++      setTab(adjustment ? "rough" : "qty");
++      const size = saved.data.plans[restoredPi]?.size || saved.data.overview?.size;
++      if (size) fitSize(size);
++    }
++    setRestored(true);
++    // eslint-disable-next-line react-hooks/exhaustive-deps -- khôi phục một lần khi mở trang
++  }, []);
++  const persistReview = useCallback((nextConfirmed = confirmed) => {
++    if (!data) return true;
++    const snapshot = { data, states, planP, confirmed: nextConfirmed, pi,
++      structural: structural && "file" in structural ? structural : null };
++    try {
++      localStorage.setItem("optimat-review", JSON.stringify(snapshot));
++      setSaveError(""); setSaveNotice("");
++      return true;
++    } catch {
++      // SVG nền CAD có thể rất lớn; hình học đo bóc vẫn đủ để khôi phục và tính tiếp.
++      try {
++        localStorage.setItem("optimat-review", JSON.stringify(snapshot, (key, value) => key === "cad" ? undefined : value));
++        setSaveError("");
++        setSaveNotice("Đã lưu bản gọn để tiếp tục: giữ hình học, kích thước và khối lượng; khi mở lại dùng nền nét đã đọc thay cho ảnh CAD gốc.");
++        return true;
++      } catch {
++        setSaveNotice("");
++        setSaveError("Chưa lưu được bản vẽ hiện tại. Bộ nhớ có thể đã đầy; chưa thể chuyển trang. Hãy giữ trang này mở và thử lại sau khi giải phóng bộ nhớ.");
++        return false;
++      }
++    }
++  }, [data, states, planP, confirmed, pi, structural]);
++  useEffect(() => {
++    if (restored) persistReview();
++  }, [restored, persistReview]);
++  useEffect(() => {
++    // Kiểm tra lại ngay lúc điều hướng, kể cả liên kết ở thanh bước và menu chung.
++    const beforeNavigate = (event: globalThis.MouseEvent) => {
++      const link = event.target instanceof Element ? event.target.closest("a[href]") : null;
++      if (!(link instanceof HTMLAnchorElement) || link.origin !== location.origin || link.pathname === location.pathname) return;
++      if (!persistReview()) {
++        event.preventDefault();
++        event.stopPropagation();
++      }
++    };
++    document.addEventListener("click", beforeNavigate, true);
++    return () => document.removeEventListener("click", beforeNavigate, true);
++  }, [persistReview]);
++
+   const P = data && pi >= 0 ? data.plans[pi] || null : null;
+   const S = P ? states[pi] || null : null;
+   const c = useMemo(() => (S ? compute(S) : null), [S]);
+@@ -80,32 +157,52 @@ export function Review() {
+   const unit = P ? Math.max(...P.size) / 100 : data?.overview ? Math.max(...data.overview.size) / 100 : 100;
+ 
+   // ---------------------------------------------------------------- phần thô: tự tính lại sau khi sửa, chỉ khi đã bấm "Tính phần thô" ít nhất một lần
+-  const latest = useRef({ data, states, planP, project, rough });
+-  useLayoutEffect(() => { latest.current = { data, states, planP, project, rough }; });
++  const latest = useRef({ data, states, planP, project, rough, structural });
++  useLayoutEffect(() => { latest.current = { data, states, planP, project, rough, structural }; });
+   const roughTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined), busyRef = useRef(false);
+-  const computeRough = useCallback(async () => {
++  const revision = useRef(0), roughStarted = useRef(false), uploadRevision = useRef(0), structuralRevision = useRef(0);
++  useEffect(() => () => { revision.current++; uploadRevision.current++; structuralRevision.current++; clearTimeout(roughTimer.current); }, []);
++  const computeRough = useCallback(async function runRough() {
+     const L = latest.current;
+-    if (!L.data || busyRef.current) return;
++    if (!L.data) return;
++    if (L.structural && !("file" in L.structural)) {
++      setRough({ error: "Chờ đọc bản vẽ kết cấu thành công rồi tính phần thô." });
++      return;
++    }
++    if (busyRef.current) { roughTimer.current = setTimeout(runRough, 100); return; }
++    const atRevision = revision.current;
++    roughStarted.current = true;
+     busyRef.current = true; setRoughBusy(true);
++    store.set("optimat-rough", null);
+     try {
+       const r = await fetch("/api/takeoff/rough", { method: "POST", headers: { "Content-Type": "application/json" },
+-        body: JSON.stringify(roughRequest(L.data, L.states, L.planP, L.project)) });
++        body: JSON.stringify(roughRequest(L.data, L.states, L.planP, L.project, L.structural && "file" in L.structural ? L.structural : null)) });
+       const body = await r.json();
+       if (!r.ok) throw new Error(typeof body.detail === "string" ? body.detail
+         : "Máy chủ từ chối dữ liệu phần thô: " + ((body.detail || []) as { loc?: string[]; msg: string }[]).map((d) => (d.loc || []).slice(-1)[0] + " " + d.msg).join("; "));
++      if (revision.current !== atRevision) return;
+       setRough(body);
+       store.set("optimat-rough", { file: L.data.file, at: new Date().toISOString(), result: body });
+-    } catch (err) { setRough({ error: (err as Error).message }); }
+-    busyRef.current = false; setRoughBusy(false);
++    } catch (err) {
++      if (revision.current === atRevision) setRough({ error: (err as Error).message });
++    } finally { busyRef.current = false; setRoughBusy(false); }
+   }, []);
+   const scheduleRough = useCallback(() => {
+-    if (!latest.current.rough) return;
++    revision.current++;
++    setRough(null);
++    store.set("optimat-rough", null);
+     clearTimeout(roughTimer.current);
+-    roughTimer.current = setTimeout(computeRough, 700);
++    if (roughStarted.current) roughTimer.current = setTimeout(computeRough, 700);
+   }, [computeRough]);
+ 
+   // ---------------------------------------------------------------- sửa: mỗi lần sửa lưu một bước hoàn tác, bỏ trạng thái đã xác nhận
+-  const markDirty = () => { setConfirmed((x) => { const r = { ...x }; delete r[pi]; return r; }); scheduleRough(); };
++  const markDirty = () => {
++    setConfirmed((x) => { const r = { ...x }; delete r[pi]; return r; });
++    if (data && P) store.set("optimat-confirmed", store.get<Confirmed[]>("optimat-confirmed", [])
++      .filter((p) => !(p.file === data.file && p.plan === P.plan.name)));
++    setSheet(null);
++    scheduleRough();
++  };
+   const edit = (fn: (n: PlanState) => void) => {
+     if (!S) return;
+     setHist((h) => [...h, JSON.stringify(S)].slice(-100));
+@@ -179,21 +276,28 @@ export function Review() {
+     D.materials = D.materials || [];
+     D.families = D.families || [];
+     clearTimeout(roughTimer.current);
+-    setData(D); setStates({}); setPlanP({}); setConfirmed({}); setRough(null); setMsg(null);
++    revision.current++; structuralRevision.current++; roughStarted.current = false;
++    store.set("optimat-rough", null);
++    store.set("optimat-confirmed", store.get<Confirmed[]>("optimat-confirmed", []).filter((p) => p.file !== D.file));
++    setSheet(null);
++    setData(D); setStates({}); setPlanP({}); setConfirmed({}); setRough(null); setStructural(null); setMsg(null);
+     if (D.overview && D.overview.cad) return showOverview(D);
+     if (!D.plans.length) { setPi(-1); setMsg("Bản vẽ không có mặt bằng kiến trúc để đo tường (chỉ có mặt bằng kết cấu, móng hoặc điện nước)."); return; }
+     loadPlan(0, D, {});
+   };
+   const upload = async (f: File | undefined) => {
+     if (!f) return;
++    if (!projectReady) { setMsg("Vui lòng lưu tên và thông tin dự án ở đầu trang trước khi mở bản vẽ."); return; }
++    const atUpload = ++uploadRevision.current;
+     setMsg(`Đang đọc ${f.name}…`);
+     const form = new FormData(); form.append("file", f);
++    if (project) form.append("project_id", String(project));
+     try {
+       const r = await fetch("/api/takeoff/view", { method: "POST", body: form });
+       const body = await r.json();
+       if (!r.ok) throw new Error(body.detail || "Không đọc được bản vẽ.");
+-      start(body);
+-    } catch (err) { setMsg((err as Error).message); }
++      if (uploadRevision.current === atUpload) start(body);
++    } catch (err) { if (uploadRevision.current === atUpload) setMsg((err as Error).message); }
+   };
+ 
+   // ---------------------------------------------------------------- vẽ thêm tường, thêm cửa
+@@ -262,13 +366,23 @@ export function Review() {
+   const sendConfirm = async () => {
+     if (!data || !P || !S || !c) return;
+     const at = pi;
++    const atRevision = revision.current;
+     try {
+       const body = await postJson<Confirmed>("/api/takeoff/confirm", payload(data, P, S, project), "Máy chủ từ chối kết quả.");
++      if (revision.current !== atRevision) return;
+       setConfirmed((x) => ({ ...x, [at]: body }));
+       remember(body);
+-      setSheet({ kind: "confirmed", body, total: c.total });
++      const nextConfirmed = { ...confirmed, [at]: body };
++      if (adjustment) {
++        setSheet({ kind: "msg", title: "Đã lưu điều chỉnh", body: <p>Phương án vật liệu của mặt bằng đã được cập nhật cho bước tra giá và tối ưu.</p> });
++      } else if (data.plans.every((_, i) => nextConfirmed[i])) {
++        if (persistReview(nextConfirmed)) router.push("/dieu-chinh");
++        else setSheet(null);
++      } else {
++        setSheet({ kind: "confirmed", body, total: c.total });
++      }
+     } catch (err) {
+-      setSheet({ kind: "msg", title: "Chưa xác nhận được", body: <p>{(err as Error).message}</p> });
++      if (revision.current === atRevision) setSheet({ kind: "msg", title: "Chưa xác nhận được", body: <p>{(err as Error).message}</p> });
+     }
+   };
+   const download = (name: string, text: string, type: string) => {
+@@ -297,6 +411,30 @@ export function Review() {
+     setRoughVals(vals);
+     scheduleRough();
+   };
++  // bản vẽ kết cấu tách file: máy chủ đọc dầm, cột, móng, bảng thép; ghép vào yêu cầu phần thô rồi tính lại
++  const onStructural = async (f: File | undefined) => {
++    if (!f) return;
++    const atStructural = ++structuralRevision.current;
++    const rerun = roughStarted.current;
++    scheduleRough(); clearTimeout(roughTimer.current);
++    latest.current.structural = null;
++    setStructural({ busy: `Đang đọc ${f.name}…` });
++    const form = new FormData(); form.append("file", f);
++    try {
++      const r = await fetch("/api/takeoff/structural", { method: "POST", body: form });
++      const body = await r.json();
++      if (structuralRevision.current !== atStructural) return;
++      if (!r.ok) throw new Error(typeof body.detail === "string" ? body.detail : "Không đọc được bản vẽ kết cấu.");
++      setStructural(body); latest.current.structural = body;
++      revision.current++;
++      computeRough();
++    } catch (err) {
++      if (structuralRevision.current === atStructural) {
++        setStructural({ error: (err as Error).message });
++        if (rerun) setRough({ error: "Chưa tính lại: không đọc được bản vẽ kết cấu. Mở lại file kết cấu rồi tính phần thô." });
++      }
++    }
++  };
+   const onPlanParam = (k: string, v: string | boolean) => {
+     if (!pp) return;
+     setPlanP({ ...planP, [pi]: { ...pp, [k]: v } });
+@@ -308,21 +446,23 @@ export function Review() {
+   const status = overview ? ["", "Xem toàn bộ"] : confirmed[pi] ? [s.done, "Đã xác nhận"] : [s.edit, "Đang kiểm tra"];
+   const showTab = (t: string) => { setTab(t); setMsg(null); };
+   const tabs: [string, string, ReactNode][] = [["walls", "Tường", S ? S.walls.filter((w) => w.keep).length : ""], ["open", "Lỗ mở", S ? S.openings.filter((o) => o.keep).length : ""],
+-    ["qty", "Khối lượng", null], ["rough", "Phần thô", null], ["warn", "Cảnh báo", P && S ? (P.warnings || []).length + convBad(data).length : ""]];
++    ["qty", "Khối lượng", null], ...(adjustment ? [["rough", "Phần thô", null] as [string, string, ReactNode]] : []), ["warn", "Cảnh báo", P && S ? (P.warnings || []).length + convBad(data).length : ""]];
+   let filters: ReactNode = null, body: ReactNode = null;
+   if (msg != null || !data) body = <div className={s.empty}>{msg}</div>;
+   else if (overview) body = <OverviewList D={data} onOpen={(i) => loadPlan(i)} />;
+   else if (P && S && c && pp) {
+     if (tab === "walls") {
+-      filters = <WallFilters S={S} filter={filter} onFilter={setFilter} onAllMat={() => setSheet({ kind: "material" })} />;
+-      body = <WallList D={data} S={S} c={c} filter={filter} selected={selected} onSelect={(id) => select(id, false)} change={change} />;
++      filters = <WallFilters S={S} filter={filter} onFilter={setFilter} onAllMat={adjustment ? () => setSheet({ kind: "material" }) : undefined} />;
++      body = <WallList materials={adjustment} D={data} S={S} c={c} filter={filter} selected={selected} onSelect={(id) => select(id, false)} change={change} />;
+     } else if (tab === "open") {
+       filters = <span>Rộng × cao theo mm. Cửa nhận từ khe tường lấy cao mặc định: kiểm tra lại theo bảng thống kê cửa.</span>;
+       body = <OpeningList S={S} selected={selected} onSelect={(id) => select(id, false)} change={change} onDelete={(id) => edit((n) => { n.openings = n.openings.filter((o) => o.id !== id); })} />;
+-    } else if (tab === "qty") body = <QtyTab D={data} S={S} c={c} confirmed={confirmed[pi]} />;
++    } else if (tab === "qty") body = <QtyTab materials={adjustment} D={data} S={S} c={c} confirmed={confirmed[pi]} />;
+     else if (tab === "rough") {
+-      filters = <span>Phần thô cả công trình: mọi mặt bằng trong file, theo tường, cửa đã sửa ở các tab khác.</span>;
+-      body = <RoughTab P={P} pp={pp} values={roughVals} rough={rough} busy={roughBusy} onParam={onParam} onPlanParam={onPlanParam} onRun={computeRough} />;
++      filters = <span>Phần thô cả công trình: mọi mặt bằng trong file, theo tường, cửa đã sửa ở các tab khác.
++        {(P.stairs?.length || 0) > 1 && <> Mặt bằng có {P.stairs!.length} thang: biểu mẫu sửa thang đầu tiên; các thang còn lại giữ nguyên dữ liệu nhận dạng.</>}</span>;
++      body = <RoughTab P={P} pp={pp} values={roughVals} rough={rough} busy={roughBusy} onParam={onParam} onPlanParam={onPlanParam} onRun={computeRough}
++        structural={structural} onStructural={onStructural} />;
+     } else body = <WarnTab D={data} P={P} />;
+   }
+   const closeSheet = () => setSheet(null);
+@@ -330,15 +470,22 @@ export function Review() {
+   return (
+     <div className="flex h-screen min-h-0 flex-col max-[900px]:h-auto">
+       <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 border-b border-rule bg-card px-5 py-3">
+-        <div className="mr-auto"><Steps cur="/do-boc" done={{ "/do-boc": confirmedList.length > 0, "/phan-tho": !!roughStored }} /></div>
++        <div className="mr-auto"><Steps cur={adjustment ? "/dieu-chinh" : "/do-boc"} done={{ "/do-boc": confirmedList.length > 0, "/phan-tho": !!roughStored }} /></div>
+         <label className="flex items-center gap-2" title="Có mã dự án và PostgreSQL: kết quả chốt được lưu vào bảng takeoff_results">Mã dự án{" "}
+           <ChangeInput className="field" type="number" min={1} value={String(projectRaw ?? "")} placeholder="không bắt buộc" style={{ width: 140 }}
+             onCommit={(el) => store.set("optimat-project", el.value)} /></label>
+-        <Link className="btn primary" href="/vat-lieu">Tiếp: vật liệu và giá</Link>
++        {adjustment ? (data && data.plans.length > 0 && data.plans.every((_, i) => confirmed[i])
++          ? <Link className="btn primary" href="/vat-lieu">Tiếp: vật liệu và giá</Link>
++          : <span className="text-muted">Lưu điều chỉnh từng mặt bằng để tiếp tục</span>)
++          : data && data.plans.length > 0 && data.plans.every((_, i) => confirmed[i])
++            ? <Link className="btn primary" href="/dieu-chinh">Tiếp: điều chỉnh vật liệu</Link>
++            : <span className="text-muted">Xác nhận khối lượng từng mặt bằng để tiếp tục</span>}
+       </div>
++      {saveError && <p role="alert">{saveError}</p>}
++      {saveNotice && <p role="status">{saveNotice}</p>}
+       <div className={`${s.app} min-h-0 flex-1`}>
+         <header className={s.head}>
+-          <h1>Kiểm tra bóc tách</h1>
++          <h1>{adjustment ? "Điều chỉnh vật liệu và phần thô" : "Xác nhận kích thước và khối lượng"}</h1>
+           <span className={s.file}>{data?.file || ""}</span>
+           {data && (data.plans.length > 1 || hasOverview) && <label className={s.field}>Mặt bằng{" "}
+             <select value={String(pi)} onChange={(e) => { const v = Number(e.target.value); if (v < 0) showOverview(); else loadPlan(v); }}>
+@@ -350,7 +497,7 @@ export function Review() {
+               if (!S) return;
+               const v = Number(el.value);
+               if (!(v >= 1 && v <= 10)) return (S.height_mm / 1000).toFixed(2);
+-              edit((n) => { n.height_mm = Math.round(v * 1000); });
++              edit((n) => { n.height_mm = Math.round(v * 1000); n.height_source = "nhập tay"; });
+               return (Math.round(v * 1000) / 1000).toFixed(2);
+             }} /></label>
+           <label className={s.field}>Chiều dài{" "}
+@@ -358,10 +505,10 @@ export function Review() {
+               <option value="tim">theo trục tim</option><option value="thong_thuy">thông thủy</option></select></label>
+           <span className={`${s.status} ${status[0]}`}>{status[1]}</span>
+           <span className={s.grow} />
+-          <label className={s.btn}>Mở bản vẽ… <input type="file" accept=".dxf,.dwg" hidden onChange={(e) => upload(e.target.files?.[0])} /></label>
++          <label className={s.btn} title={projectReady ? "Mở bản vẽ cho dự án hiện tại" : "Nhập thông tin dự án ở đầu trang trước"}>Mở bản vẽ… <input disabled={!projectReady} type="file" accept=".dxf,.dwg" hidden onChange={(e) => upload(e.target.files?.[0])} /></label>
+           <button className={s.btn} type="button" disabled={!hist.length} onClick={undo}>Hoàn tác</button>
+           <button className={s.btn} type="button" title="Lưu mặt bằng đã sửa đúng làm đáp án để đo độ chính xác nhận diện" onClick={saveGT}>Lưu làm đáp án</button>
+-          <button className={`${s.btn} ${s.primary}`} type="button" onClick={() => S && setSheet({ kind: "confirm" })}>Xác nhận bản vẽ</button>
++          <button className={`${s.btn} ${s.primary}`} type="button" onClick={() => S && setSheet({ kind: "confirm" })}>{adjustment ? "Lưu điều chỉnh mặt bằng" : "Xác nhận kích thước, khối lượng"}</button>
+         </header>
+         <div className={s.main}>
+           <Board svgRef={svgRef} scaleRef={scaleRef} movedRef={movedRef} toWorld={toWorld} onPointerDown={onPointerDown} fitSize={fitSize} data={data} pi={pi} P={P} S={S} selected={selected} mode={mode} onMode={setMode} hint={hint} draft={draft} snap={snap} unit={unit}

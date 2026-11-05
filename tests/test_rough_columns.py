@@ -25,6 +25,14 @@ def test_detect_columns_from_solid_fills():
     assert c220.x == pytest.approx(110, abs=10) and c220.y == pytest.approx(110, abs=10)
 
 
+def test_columns_far_apart_do_not_need_one_huge_grid():
+    """Hai khung vẽ cách nhau 50 km trong một file (bản vẽ banve1, 02/11/2026): trước đây một lưới 10 mm phủ cả hai
+    cần hàng trăm GiB; nay mỗi cụm một lưới, vẫn nhận đủ hai cột, id theo thứ tự quét lưới."""
+    sq = lambda x, y: HatchItem("SOLID", "0", [[(x, y), (x + 220, y), (x + 220, y + 220), (x, y + 220)]])  # noqa: E731
+    cols = detect_columns(drawing([sq(50_000_000, 40_000_000), sq(0, 0)]))
+    assert [(c.id, c.b_mm, round(c.x, -3)) for c in cols] == [("C1", 220, 0), ("C2", 220, 50_000_000)]
+
+
 def test_column_works_and_formwork():
     cols = [Column(id="C1", x=0, y=0, b_mm=220, h_mm=220), Column(id="C2", x=5000, y=0, b_mm=220, h_mm=220),
             Column(id="C3", x=9000, y=0, b_mm=220, h_mm=300), Column(id="C4", x=0, y=9000, b_mm=220, h_mm=220, keep=False)]

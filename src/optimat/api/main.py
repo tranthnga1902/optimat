@@ -6,6 +6,7 @@ Tài liệu thử nghiệm tự sinh tại http://localhost:8000/docs
 from __future__ import annotations
 
 import json
+import re
 import tempfile
 from dataclasses import asdict
 from pathlib import Path
@@ -13,7 +14,7 @@ from typing import Literal, Optional
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, PlainTextResponse, RedirectResponse, Response
+from fastapi.responses import FileResponse, PlainTextResponse, RedirectResponse, Response, StreamingResponse
 from pydantic import BaseModel, Field, model_validator
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -22,8 +23,12 @@ from fastapi.encoders import jsonable_encoder
 
 from .admin_db import router as admin_router
 from .admin_ops import router as admin_ops_router
-from .auth import require_admin, router as auth_router
+from .auth import require_admin, current_user, router as auth_router
 from .mapping import router as mapping_router
+from .material_advisor import router as material_advisor_router
+from .project_analysis import router as project_analysis_router
+from .ai_review import router as ai_review_router
+from .project_files import router as project_files_router
 from ..agent.llm import ParsedConstraints, llm_available, parse_constraints
 from ..agent.orchestrator import run_agent
 from ..agent.pipeline import run_pipeline
@@ -36,23 +41,30 @@ from ..drawing import concept_samples, concepts, dwg_convert
 from ..drawing.dwg_convert import DrawingError
 from ..drawing.dxf_reader import read_drawing
 from ..drawing.encoding import normalize
-from ..drawing.ingest import ingest_file
+from ..drawing.ingest import convert_with_log, ingest_file
 from ..drawing.objects import list_objects
 from ..drawing.review import ReviewPlan, ReviewResult, compute_review, save_review
 from ..drawing.takeoff import takeoff_from_file, takeoff_plans, takeoff_plans_from_file
-from ..drawing.viewer import material_options, view_payload
+from ..drawing.viewer import add_cad_layers, material_options, view_payload
+from ..drawing.view_progress import line_preview
 from ..optimize.problem import optimize
 from ..predict.cost_model import MaterialPriceModel
-from ..rough.models import STEEL_ELEMENTS, ProjectParams
+from ..rough.models import RAW_CLASSES, STEEL_ELEMENTS, ProjectParams
 from ..rough.norms import variants_of
-from ..rough.takeoff import RoughRequest, RoughResult, compute_rough, rough_from_drawing, save_rough
-from ..schemas import Constraints, OpeningDefaults, OptimizeResult, PlanTakeoff, TakeoffResult, WallGroup
+from ..rough.rebar import (RebarScopeAssignment, RebarSourceRef, collect_rebar_tables,
+                          resolve_rebar_tables, table_manifest)
+from ..rough.takeoff import RoughRequest, RoughResult, compute_rough, rough_from_drawing, save_rough, structural_parts
+from ..schemas import Constraints, MaterialDemand, OpeningDefaults, OptimizeResult, PlanTakeoff, TakeoffResult, WallGroup
 
 app = FastAPI(title="OptiMat AI", version="0.1.0")
 app.include_router(admin_router)     # quản trị cơ sở dữ liệu (api/admin_db.py)
 app.include_router(auth_router)      # đăng nhập, phân quyền (api/auth.py)
 app.include_router(admin_ops_router) # tổng quan, người dùng, dự án (api/admin_ops.py)
 app.include_router(mapping_router)   # hồ sơ chuẩn hóa kiến trúc–kết cấu (api/mapping.py)
+app.include_router(project_files_router)
+app.include_router(project_analysis_router)
+app.include_router(ai_review_router)    # KD06: hàng chờ duyệt đề xuất AI (api/ai_review.py)
+app.include_router(material_advisor_router)
 # Cho phép giao diện React chạy ở cổng khác gọi vào khi phát triển.
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://localhost:3000"],
                    allow_methods=["*"], allow_headers=["*"])
@@ -60,12 +72,22 @@ app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http
 
 class OptimizeRequest(BaseModel):
     groups: list[WallGroup]
+    materials: list[MaterialDemand] = Field(default_factory=list, max_length=300)  # vật tư ngoài tường
     constraints: Constraints = Constraints()
     method: str = "auto"
+    project_id: int | None = Field(default=None, gt=0)
+    takeoff_id: int | None = Field(default=None, gt=0)
+
+    @model_validator(mode='after')
+    def _saved_context(self):
+        if (self.project_id is None) != (self.takeoff_id is None):
+            raise ValueError('Lưu tối ưu cần cả dự án và kết quả bóc tách.')
+        return self
 
 
 class BillRequest(BaseModel):
     groups: list[WallGroup]
+    actual_only: bool = True
 
 
 class ParseRequest(BaseModel):
@@ -122,9 +144,54 @@ async def takeoff(file: UploadFile = File(...), floor_height_mm: float | None = 
             raise HTTPException(422, str(exc)) from exc
 
 
-@app.post("/api/takeoff/view")
+def _takeoff_view_payload(data: bytes, suffix: str, file_name: str, overrides: dict | None,
+                          project_id: int | None, floor_height_mm: float | None) -> dict:
+    """Đọc, đo và dựng nền CAD trong worker để không chặn các yêu cầu khác."""
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / f"upload{suffix}"
+        path.write_bytes(data)
+        try:
+            drawing = read_drawing(str(path), overrides)
+        except DrawingError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        height, openings = _project_inputs(project_id, floor_height_mm)
+        plans = takeoff_plans(drawing, height, Catalog.load(), openings)
+        return view_payload(drawing, plans, file_name or path.name)
+
+
+def _takeoff_view_events(data: bytes, suffix: str, file_name: str, overrides: dict | None,
+                         project_id: int | None, floor_height_mm: float | None):
+    """Một lần đọc file, trả nét trước khi đo bóc và dựng nền CAD đầy đủ."""
+    def packet(kind: str, **fields):
+        # Các mảng tọa độ đã là JSON; chỉ đổi những giá trị như model hoặc datetime khi cần.
+        return json.dumps({"type": kind, **fields}, ensure_ascii=False, allow_nan=False, default=jsonable_encoder) + "\n"
+
+    try:
+        yield packet("status", stage="reading", message="Đang đọc nét bản vẽ và quy đổi đơn vị…")
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / f"upload{suffix}"
+            path.write_bytes(data)
+            drawing = read_drawing(str(path), overrides)
+            yield packet("preview", preview=line_preview(drawing))
+            yield packet("status", stage="recognizing", message="Đã có nét bản vẽ. Đang nhận diện mặt bằng, tường và lỗ mở…")
+            height, openings = _project_inputs(project_id, floor_height_mm)
+            plans = takeoff_plans(drawing, height, Catalog.load(), openings)
+            payload = view_payload(drawing, plans, file_name or path.name, cad=False)
+            yield packet("recognized", data=payload)
+            yield packet("status", stage="rendering", message="Đã nhận diện hình học. Đang dựng nền CAD đầy đủ…")
+            add_cad_layers(drawing, payload, plans)
+            yield packet("complete", data=payload)
+    except Exception as exc:
+        message = str(exc.detail) if isinstance(exc, HTTPException) else str(exc)
+        yield packet("error", message="Chưa đọc xong bản vẽ: " + message)
+
+
+@app.post("/api/takeoff/view", response_model=dict, responses={
+    200: {"content": {"application/x-ndjson": {"schema": {"type": "string"}}}},
+})
 async def takeoff_view(file: UploadFile = File(...), floor_height_mm: float | None = Form(None),
-                       layer_overrides: str | None = Form(None), project_id: int | None = Form(None)) -> dict:
+                       layer_overrides: str | None = Form(None), project_id: int | None = Form(None),
+                       progressive: bool = Form(False)):
     """Dữ liệu cho trang Kiểm tra bóc tách: nét bản vẽ đã tách theo mặt bằng kèm kết quả nhận dạng."""
     suffix = Path(file.filename or "").suffix.lower()
     if suffix not in (".dxf", ".dwg"):
@@ -133,27 +200,26 @@ async def takeoff_view(file: UploadFile = File(...), floor_height_mm: float | No
         overrides = json.loads(layer_overrides) if layer_overrides else None
     except json.JSONDecodeError as exc:
         raise HTTPException(400, "layer_overrides phải là chuỗi JSON hợp lệ.") from exc
-    with tempfile.TemporaryDirectory() as tmp:
-        path = Path(tmp) / f"upload{suffix}"
-        path.write_bytes(await file.read())
-        try:
-            drawing = read_drawing(str(path), overrides)
-        except DrawingError as exc:
-            raise HTTPException(422, str(exc)) from exc
-    height, openings = _project_inputs(project_id, floor_height_mm)
-    plans = takeoff_plans(drawing, height, Catalog.load(), openings)
-    return view_payload(drawing, plans, file.filename or path.name)
+    data = await file.read()
+    if progressive is True:
+        return StreamingResponse(_takeoff_view_events(data, suffix, file.filename or "", overrides, project_id, floor_height_mm),
+                                 media_type="application/x-ndjson", headers={"Cache-Control": "no-store", "X-Accel-Buffering": "no"})
+    return await run_in_threadpool(_takeoff_view_payload, data, suffix, file.filename or "", overrides,
+                                   project_id, floor_height_mm)
 
 
 @app.post("/api/takeoff/confirm", response_model=ReviewResult)
 def takeoff_confirm(plan: ReviewPlan) -> ReviewResult:
     """Chốt kết quả sau khi người dùng sửa, bổ sung: máy chủ tính lại khối lượng bằng một công thức duy nhất."""
     try:
-        result = compute_review(plan)
+        from ..db.analysis20 import capture_catalog
+        catalog=Catalog.load()
+        snapshot=capture_catalog(catalog) if plan.project_id is not None and get_database_url() else None
+        result = compute_review(plan,catalog)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     try:
-        result.takeoff_id = save_review(result, plan)
+        result.takeoff_id = save_review(result, plan, snapshot)
     except LookupError as exc:
         raise HTTPException(404, str(exc)) from exc
     return result
@@ -202,15 +268,86 @@ async def takeoff_rough_auto(file: UploadFile = File(...), floor_height_mm: floa
     return {"request": jsonable_encoder(req), "result": jsonable_encoder(result)}
 
 
+def _takeoff_structural_payload(data: bytes, suffix: str, file_name: str | None,
+                                project: ProjectParams, structural_scale: float | None,
+                                rebar_scope_assignments: list[RebarScopeAssignment] | None = None) -> dict:
+    """Đọc kết cấu trong worker, giữ file tạm tới khi dựng đủ đầu vào phần thô."""
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / f"structural{suffix}"
+        path.write_bytes(data)
+        conversion = None
+        try:
+            read_path = str(path)
+            if rebar_scope_assignments is not None and suffix == ".dwg":
+                read_path, conversion = convert_with_log(str(path), str(Path(tmp) / "converted"))
+                if read_path is None:
+                    raise DrawingError(conversion.get("error") or "Chuyển DWG thất bại.")
+            drawing = read_drawing(read_path)
+        except DrawingError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        metadata = {}
+        if rebar_scope_assignments is None:
+            project, parts = structural_parts([drawing], project, structural_scale)
+        else:
+            source = RebarSourceRef.from_bytes(data)
+            try:
+                tables, warnings = collect_rebar_tables(drawing)
+                manifest = table_manifest(tables, source=source)
+                rows, resolved_warnings = resolve_rebar_tables(tables, source=source,
+                                                              assignments=rebar_scope_assignments)
+                project, parts = structural_parts([drawing], project, structural_scale,
+                                                  rebar_reads=[(rows, warnings + resolved_warnings)])
+            except ValueError as exc:
+                raise HTTPException(422, str(exc)) from exc
+            metadata = {"rebar_sources": [source], "rebar_table_manifest": manifest,
+                        "rebar_scope_assignments": rebar_scope_assignments,
+                        "rebar_conversion": {source.source_id: conversion} if conversion is not None else {}}
+        return jsonable_encoder({**parts, "foundations": project.foundations, "lintel_height_mm": project.lintel_height_mm,
+                                 "file": file_name, **metadata})
+
+
+@app.post("/api/takeoff/structural")
+async def takeoff_structural(file: UploadFile = File(...), params: str | None = Form(None),
+                             structural_scale: float | None = Form(None),
+                             rebar_scope_assignments: str | None = Form(None)) -> dict:
+    """Đọc bản vẽ kết cấu tách file (dầm, cột, móng, bảng thép) cho trang kiểm tra: trả các trường để ghép vào RoughRequest
+    rồi gửi /api/takeoff/rough. params: thông số đang nhập (móng, cao lanh tô chỉ bổ sung khi còn trống)."""
+    if Path(file.filename or "").suffix.lower() not in (".dxf", ".dwg"):
+        raise HTTPException(400, "Chỉ nhận file .dxf hoặc .dwg.")
+    if structural_scale is not None and not structural_scale > 0:
+        raise HTTPException(400, "structural_scale phải lớn hơn 0.")
+    try:
+        project = ProjectParams(**json.loads(params)) if params else ProjectParams()
+    except (json.JSONDecodeError, TypeError, ValueError) as exc:
+        raise HTTPException(400, f"params không hợp lệ: {exc}") from exc
+    assignments = None
+    if rebar_scope_assignments is not None:
+        try:
+            raw = json.loads(rebar_scope_assignments)
+            if not isinstance(raw, list):
+                raise ValueError("rebar_scope_assignments phải là danh sách JSON.")
+            assignments = [RebarScopeAssignment.model_validate(item) for item in raw]
+        except (json.JSONDecodeError, TypeError, ValueError) as exc:
+            raise HTTPException(422, f"rebar_scope_assignments không hợp lệ: {exc}") from exc
+    data = await file.read()
+    args = (data, Path(file.filename or "").suffix.lower(), file.filename, project, structural_scale)
+    if assignments is None:
+        return await run_in_threadpool(_takeoff_structural_payload, *args)
+    return await run_in_threadpool(_takeoff_structural_payload, *args, assignments)
+
+
 @app.post("/api/takeoff/rough", response_model=RoughResult)
 def takeoff_rough(req: RoughRequest) -> RoughResult:
     """Chốt bảng phần thô từ dữ liệu đã sửa (mọi mặt bằng + thông số công trình); lưu takeoff_results khi có dự án."""
     try:
-        result = compute_rough(req)
+        from ..db.analysis20 import capture_catalog
+        catalog=Catalog.load()
+        snapshot=capture_catalog(catalog) if req.project_id is not None and get_database_url() else None
+        result = compute_rough(req,catalog)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     try:
-        result.takeoff_id = save_rough(result, req)
+        result.takeoff_id = save_rough(result, req, snapshot)
     except LookupError as exc:
         raise HTTPException(404, str(exc)) from exc
     return result
@@ -226,6 +363,47 @@ def takeoff_rough_excel(req: RoughRequest) -> Response:
         raise HTTPException(422, str(exc)) from exc
     return Response(boq_bytes(result, req), media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     headers={"Content-Disposition": 'attachment; filename="boq_phan_tho.xlsx"'})
+
+
+ESTIMATE_MAX_BYTES = 10 * 1024 * 1024
+
+
+@app.post("/api/estimate/check", response_model=None)
+async def estimate_check(files: list[UploadFile] = File(...), works: str | None = Form(None), params: str | None = Form(None),
+                         nguong_pct: float = Form(10.0, gt=0, le=100), excel: bool = Form(False)) -> dict | Response:
+    """Kiểm tra sai lệch dự toán (bảng công tác, bảng vật tư CSV/XLSX): khối lượng so với `works` của hệ thống (JSON
+    danh sách WorkItem, từ /api/takeoff/rough), đơn giá so với giá danh mục, vật tư so với định mức, lỗi số học."""
+    from pydantic import TypeAdapter, ValidationError
+    from ..rough.estimate_check import check_estimate, check_workbook
+    from ..rough.models import WorkItem
+    data = []
+    for f in files:
+        content = await f.read(ESTIMATE_MAX_BYTES + 1)
+        if len(content) > ESTIMATE_MAX_BYTES:
+            raise HTTPException(413, f"{f.filename}: file quá 10 MB")
+        data.append((f.filename or "", content))
+    try:
+        system = TypeAdapter(list[WorkItem]).validate_json(works) if works else None
+        project = ProjectParams.model_validate_json(params) if params else ProjectParams()
+        result = await run_in_threadpool(check_estimate, data, system, project, Catalog.load(), nguong_pct)
+    except ValidationError as exc:
+        raise HTTPException(422, f"works/params không hợp lệ: {exc.errors()[0]['msg']}") from exc
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    if excel:
+        return Response(check_workbook(result), media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        headers={"Content-Disposition": 'attachment; filename="kiem_tra_sai_lech.xlsx"'})
+    return jsonable_encoder(result)
+
+
+@app.post("/api/takeoff/rough/optimizer")
+def takeoff_rough_optimizer(req: RoughRequest) -> dict:
+    """Vật liệu thô theo nhóm cho bộ tối ưu (JSON: nhóm, kg, giai đoạn, trạng thái; dòng D vào missing); không lưu."""
+    from ..rough.boq import export_for_optimizer
+    try:
+        return export_for_optimizer(compute_rough(req))
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
 
 
 @app.get("/api/catalog/wall-materials")
@@ -252,8 +430,15 @@ def catalog_reference() -> dict:
         "vehicles": [{"id": r.vehicle_id, "name": r.name, "payload_ton": float(r.payload_ton)} for r in veh.itertuples()],
         "wall_classes": [{"id": k, "min_mm": lo, "max_mm": hi} for k, (lo, hi) in config.WALL_THICKNESS_CLASSES.items()],
         "concrete_grades": variants_of("BE_TONG_TRON"),
+        "mortar_grades": sorted({"M" + match.group(1)
+            for row in catalog.materials.itertuples()
+            if row.unit == "m³" and "MORTAR" in str(row.usage_role)
+            if (match := re.search(r"mác\s*(\d+)\b", row.name, re.IGNORECASE))}, key=lambda g: int(g[1:])),
+        "plaster_thicknesses": sorted({v.split("/")[0] for v in variants_of("TRAT")}, key=float),
+        "screed_thicknesses": variants_of("CAN_NEN"),
         "waterproof_materials": [{"id": m, "name": catalog.material_name(m) or m} for m in variants_of("CHONG_THAM")],
         "steel_elements": [{"code": k, "name": v} for k, v in STEEL_ELEMENTS.items()],
+        "raw_classes": [{"code": k, "name": v} for k, v in RAW_CLASSES.items()],
         "data_kinds": list(DATA_KINDS),
     }
 
@@ -261,7 +446,7 @@ def catalog_reference() -> dict:
 @app.post("/api/price/bill", response_model=list[BillLine])
 def price_bill(req: BillRequest) -> list[BillLine]:
     """Bảng vật liệu theo thiết kế (gạch + vữa) và giá đang có, cho các nhóm tường đã chốt."""
-    return bill_of_materials(req.groups, Catalog.load())
+    return bill_of_materials(req.groups, Catalog.load(), actual_only=req.actual_only)
 
 
 @app.post("/api/takeoff/plans", response_model=list[PlanTakeoff])
@@ -295,21 +480,43 @@ def parse(req: ParseRequest) -> ParsedConstraints:
 
 
 @app.post("/api/optimize", response_model=OptimizeResult)
-def run_optimize(req: OptimizeRequest) -> OptimizeResult:
+def run_optimize(req: OptimizeRequest, user: dict | None = Depends(current_user)) -> OptimizeResult:
     try:
-        return optimize(req.groups, req.constraints, Catalog.load(), MaterialPriceModel.load(), req.method)
+        if req.project_id is not None:
+            from .project_files import _user, _project
+            from ..db.session import get_engine
+            from ..db.models import TakeoffResultRow
+            from sqlalchemy.orm import Session
+            uid=_user(user)
+            with Session(get_engine()) as db:
+                _project(db,req.project_id,uid)
+                saved=db.get(TakeoffResultRow,req.takeoff_id)
+                if saved is None or saved.project_id != req.project_id:
+                    raise HTTPException(404,'Không có kết quả bóc tách trong dự án.')
+                from ..db.optimization20 import assert_groups_match
+                assert_groups_match(saved.result,req.groups)
+        model = None if req.constraints.procurement_mode else MaterialPriceModel.load()
+        catalog=Catalog.load()
+        result=optimize(req.groups, req.constraints, catalog, model, req.method, req.materials)
+        if req.project_id is not None:
+            from ..db.optimization20 import save_optimization
+            result.run_id=save_optimization(req,result,catalog,model)
+        return result
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
 
 
 @app.post("/api/agent/run")
 async def agent_run(file: UploadFile = File(...), message: str = Form(""), floor_height_mm: float | None = Form(None),
-                    use_llm: bool = Form(True), rough_params: str | None = Form(None)) -> dict:
-    """Chạy trọn luồng: đo bóc -> vật liệu theo thiết kế và giá -> (phần thô) -> ràng buộc -> tối ưu -> giải thích.
+                    use_llm: bool = Form(True), rough_params: str | None = Form(None),
+                    structural_file: UploadFile | None = File(None)) -> dict:
+    """Chạy trọn luồng: đo bóc -> vật liệu theo thiết kế và giá -> phần thô -> ràng buộc -> tối ưu -> giải thích.
     Có mô hình ngôn ngữ thì agent gọi công cụ; không có (hoặc use_llm=false) thì chạy luồng cố định.
-    rough_params: chuỗi JSON thông số công trình; có thì luồng cố định bóc thêm phần thô."""
+    rough_params: chuỗi JSON thông số công trình (trống: phần cần thông số để trống kèm cảnh báo).
+    structural_file: bản vẽ kết cấu nếu tách file (móng, dầm, cột)."""
     suffix = Path(file.filename or "").suffix.lower()
-    if suffix not in (".dxf", ".dwg"):
+    s_suffix = Path(structural_file.filename or "").suffix.lower() if structural_file else ""
+    if suffix not in (".dxf", ".dwg") or (structural_file and s_suffix not in (".dxf", ".dwg")):
         raise HTTPException(400, "Chỉ nhận file .dxf hoặc .dwg.")
     try:
         rough = ProjectParams(**json.loads(rough_params)) if rough_params else None
@@ -318,17 +525,26 @@ async def agent_run(file: UploadFile = File(...), message: str = Form(""), floor
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / f"upload{suffix}"
         path.write_bytes(await file.read())
+        structural = []
+        if structural_file:
+            s_path = Path(tmp) / f"structural{s_suffix}"
+            s_path.write_bytes(await structural_file.read())
+            structural = [str(s_path)]
         try:
             if use_llm and llm_available():
-                out = run_agent(str(path), message, floor_height_mm, rough_params=rough)
+                out = run_agent(str(path), message, floor_height_mm, rough_params=rough, structural_paths=structural)
             else:
                 state = run_pipeline(str(path), message=message or None, floor_height_mm=floor_height_mm, use_llm=False,
-                                     rough_params=rough)
+                                     rough_params=rough, structural_paths=structural)
                 out = {"mode": "pipeline", "answer": state["explanation"], "takeoff": state["takeoff"],
                        "result": state["result"], "constraints": state["constraints"], "bill": state["bill"],
                        "questions": state["questions"], "rough": state.get("rough")}
         except DrawingError as exc:
             raise HTTPException(422, str(exc)) from exc
+    # Bản vẽ vừa tải trong agent chưa qua phân phạm vi và duyệt vật liệu của dự án.
+    out["procurement_ready"] = False
+    out["answer"] = ("Kịch bản sơ bộ từ bản vẽ tự nhận diện. Để lập nhu cầu mua, hãy duyệt mặt bằng, "
+                     "vật liệu và tính phần thô của dự án.\n" + out["answer"])
     return jsonable_encoder(out)
 
 
@@ -375,7 +591,8 @@ def data_offers() -> list[dict]:
     names = cat.materials.set_index("material_id").name
     rows = cat.offers(cat.supplier_materials.material_id.unique().tolist())
     keep = [c for c in ("supplier_id", "name", "material_id", "base_price", "sale_unit", "price_level", "price_date",
-                        "data_kind", "product_url", "maps_url", "province") if c in rows.columns]
+                        "data_kind", "product_url", "maps_url", "province", "vat_included", "transport_included",
+                        "lead_time_days", "quote_reference") if c in rows.columns]
     rows = rows[keep].assign(material_name=rows.material_id.map(names))
     return jsonable_encoder(rows.astype(object).where(rows.notna(), None).to_dict("records"))
 
@@ -603,19 +820,27 @@ def concepts_csv() -> PlainTextResponse:
 @app.post("/api/concepts/try")
 async def concepts_try(file: UploadFile = File(...)) -> dict:
     """Chạy nhận diện với bảng ký hiệu hiện hành trên một bản vẽ: danh sách từng đối tượng và layer chưa có ký hiệu."""
+    from hashlib import sha256
+    from ..drawing.layer_inventory import layer_inventory
+
     suffix = Path(file.filename or "").suffix.lower()
     if suffix not in (".dxf", ".dwg"):
         raise HTTPException(400, "Chỉ nhận file .dxf hoặc .dwg.")
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / f"upload{suffix}"
-        path.write_bytes(await file.read())
+        payload = await file.read()
+        digest = sha256(payload).hexdigest()
+        path.write_bytes(payload)
+        del payload
         try:
             drawing = read_drawing(str(path))
         except DrawingError as exc:
             raise HTTPException(422, str(exc)) from exc
     rows = list(list_objects(drawing, file.filename or path.name))
     unknown = sorted(n for n, c in drawing.layer_classes.items() if c.value == "UNKNOWN")
-    return jsonable_encoder({"rows": rows, "unknown_layers": unknown})
+    return jsonable_encoder({"rows": rows, "unknown_layers": unknown,
+                             "source": {"filename": file.filename, "sha256": digest},
+                             "layers": layer_inventory(drawing)})
 
 
 class GroundTruthPlan(BaseModel):

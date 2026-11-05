@@ -1,0 +1,22 @@
+{
+  "src/optimat/agent/material_advisor.py": {
+    "before": "463e8f88b2c92958b6217cde60ea419ecdbb345ef2569e912094d2adb300210e",
+    "after": "543dbc03f277b67512fc80600c00c1eaf59eb2eb20613b0c66f3b527c96298c9"
+  },
+  "tests/test_material_advisor.py": {
+    "before": "087304a58167992694b974e8454e0f0d527df25c8d662ce1061854b0ac54c4b5",
+    "after": "1a24cefb0bef7193debd9308a0a05520e7dc6e0bd01e2a2a22a93491c0d6fd45"
+  },
+  "frontend/src/app/(user)/toi-uu/Proposal.tsx": {
+    "after": "9a7b2c6ca45fc13c57b2a2c9bb83ea7f4499786e7f4e79c56e6ae041f632a207"
+  },
+  "frontend/src/app/(user)/toi-uu/optimize.tsx": {
+    "after": "9c260aa999456efbf09c297a672b8854e457d22389d47f8673e4e7c77c53f9ca"
+  },
+  "frontend/src/components/MaterialAdvisor.tsx": {
+    "after": "d4e34117e6cda1fdd61ae6930fcbbf8eeb2ecfa6a47c27e4ba223b4af56c0496"
+  },
+  "reports/demo_0511/frontend_procurement_regression.cjs": {
+    "after": "ac999814caf5f817d79d2c9c464706ea703030ba98d1c716e4d72942a86c20a0"
+  }
+}

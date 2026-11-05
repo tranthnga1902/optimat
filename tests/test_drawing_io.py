@@ -165,3 +165,38 @@ def test_read_dxf_warns_on_misplaced_geometry(tmp_path, monkeypatch):
     d = dxf_reader.read_dxf(_every_transform_dxf(tmp_path / "moi_loai.dxf"))
     assert [w for w in d.warnings if w.startswith(dxf_reader.MISMATCH_WARNING) and "0 ×" in w]
     assert dxf_reader.crop(d, (0, 0, 1, 1)).warnings[0].startswith(dxf_reader.MISMATCH_WARNING)   # đo từng mặt bằng
+
+
+def _dims_file(tmp_path, insunits, n=12, shown_factor=1.0):
+    """n đường kích thước ngang dài 1000 + 100·i đơn vị bản vẽ, chữ ghi số đo × shown_factor (mm thật)."""
+    import ezdxf
+    doc = ezdxf.new()
+    doc.header["$INSUNITS"] = insunits
+    msp = doc.modelspace()
+    for i in range(n):
+        length = 1000 + 100 * i
+        d = msp.add_linear_dim(base=(0, 500 * i + 300), p1=(0, 500 * i), p2=(length, 500 * i),
+                               text=f"{length * shown_factor:g}")
+        d.render()
+    path = tmp_path / "dims.dxf"
+    doc.saveas(path)
+    return str(path)
+
+
+def test_declared_inch_but_dimensions_in_mm(tmp_path):
+    """Đổi DWG ra DXF có thể ghi $INSUNITS = inch cho bản vẽ vẽ bằng mm (bộ 46, banve1, 02/11/2026): kích thước ghi
+    đúng số đo thô -> dùng mm và cảnh báo, không nhân 25,4."""
+    from optimat.drawing.dxf_reader import read_dxf
+    d = read_dxf(_dims_file(tmp_path, insunits=1))
+    assert d.unit_scale == 1.0
+    assert any("đường kích thước" in w and "mm" in w for w in d.warnings)
+
+
+def test_declared_units_kept_when_dimensions_agree_or_too_few(tmp_path):
+    from optimat.drawing.dxf_reader import read_dxf
+    ok = read_dxf(_dims_file(tmp_path, insunits=4))                       # mm, kích thước khớp
+    assert ok.unit_scale == 1.0 and not any("đường kích thước" in w for w in ok.warnings)
+    few = read_dxf(_dims_file(tmp_path, insunits=1, n=3))                 # dưới NG11: tin khai báo
+    assert few.unit_scale == pytest.approx(25.4)
+    enlarged = read_dxf(_dims_file(tmp_path, insunits=4, shown_factor=0.5))   # toàn hình phóng to 2 lần: giữ mm
+    assert enlarged.unit_scale == 1.0 and not any("đường kích thước" in w for w in enlarged.warnings)

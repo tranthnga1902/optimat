@@ -1,0 +1,11 @@
+--- a/src/optimat/rough/rebar.py
++++ b/src/optimat/rough/rebar.py
+@@ -197,7 +197,7 @@
+ def element_code(text: str) -> Optional[str]:
+     """Cấu kiện ghi trong bảng -> mã công tác: ký hiệu (C1, D2, M1...) theo ky_hieu_cau_kien.csv, rồi tên (CỘT, SÀN)."""
+     from .structural import element_of
+-    words = [w for w in re.split(r"[\s(),:;-]+", text) if w]
++    words = [w for w in re.split(r"[\s(),:;]+", text) if w]
+     for w in reversed(words):
+         if (e := element_of(w)) and e[0] in ROLE_WORK:
+             return ROLE_WORK[e[0]]

@@ -1,0 +1,57 @@
+{
+  "code_test_checks": [
+    {
+      "file": "scripts/c01_duong_co_so.py",
+      "unchanged_since_own_edit": true,
+      "sha256": "f523205a0c8844256cae80e01686c4515bc3c401ea0fae8474f9ed5449fd41f1"
+    },
+    {
+      "file": "tests/test_c01_duong_co_so.py",
+      "unchanged_since_own_edit": true,
+      "sha256": "202c6fb25ad502d5b59e6bd6cf44562f4ce6c45b2c05f317d1e57f1b683e82a6"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "scripts/c01_duong_co_so.py",
+      "sha256": "f523205a0c8844256cae80e01686c4515bc3c401ea0fae8474f9ed5449fd41f1",
+      "bytes": 20113
+    },
+    {
+      "file": "tests/test_c01_duong_co_so.py",
+      "sha256": "202c6fb25ad502d5b59e6bd6cf44562f4ce6c45b2c05f317d1e57f1b683e82a6",
+      "bytes": 12106
+    },
+    {
+      "file": "reports/c01_review_fix/c01_duong_co_so_build.xlsx",
+      "sha256": "16e23d1728ee19252289b058e5d227dcc912b518f3004de0b4065a14cd4a0625",
+      "bytes": 42183
+    },
+    {
+      "file": "reports/c01_review_fix/pytest.log",
+      "sha256": "82a058cdd03d5ad05cc698077e15d903b684714362ba8a3f3cf9ac3a778c6501",
+      "bytes": 109
+    },
+    {
+      "file": "reports/c01_review_fix/build.log",
+      "sha256": "cf1019c52f114957b64e62b834c7909f92e840e4a0713ac9d4c70061793b3be5",
+      "bytes": 353
+    },
+    {
+      "file": "reports/c01_review_fix/C01_fix.patch",
+      "sha256": "dfb3b0640d3311a5c9ab2ec3c4569f83ec0492ae44755d5503e3a549166d3ce7",
+      "bytes": 13672
+    },
+    {
+      "file": "reports/c01_review_fix/HUONG_DAN_BAN_SUA.md",
+      "sha256": "f0f758c546c92b587c9810777dc78e55c90ef58bb006a8110326580e47d601d2",
+      "bytes": 4163
+    },
+    {
+      "file": "reports/c01_review_fix/BAN_GIAO.md",
+      "sha256": "7fca5db0871042e72ab258f31b7254a802ce6d3d516ca2784d6278bf79ab830e",
+      "bytes": 5954
+    }
+  ],
+  "canonical_doc_matches_observed_other_writer": true
+}

@@ -1,0 +1,358 @@
+................................................................FF...... [ 97%]
+..                                                                       [100%]
+================================== FAILURES ===================================
+________________ test_dwg_without_converter_gives_clear_error _________________
+
+path = 'C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\docs\\review\\data20_05\\column_contour_fix\\pytest_v2_regression\\test_dwg_without_converter_giv0\\nha.dwg'
+layer_overrides = None
+
+    def read_drawing(path: str, layer_overrides: dict[str, str] | None = None) -> Drawing:
+        """Đọc .dxf trực tiếp; chuyển .dwg sang DXF bằng LibreDWG hoặc ODA."""
+        suffix = Path(path).suffix.lower()
+        if suffix in {".dwf", ".dwfx"}:
+            raise DrawingError("DWF chưa được đọc trực tiếp. Hãy chuyển bản vẽ sang DXF rồi tải lên; đổi đuôi file không chuyển định dạng.")
+        if suffix == ".dxf":
+            return read_dxf(path, layer_overrides)
+        if suffix == ".dwg":
+            with tempfile.TemporaryDirectory() as out_dir:
+>               return read_dxf(convert_dwg_to_dxf(path, out_dir), layer_overrides)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src\optimat\drawing\dxf_reader.py:586: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dwg_path = 'C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\docs\\review\\data20_05\\column_contour_fix\\pytest_v2_regression\\test_dwg_without_converter_giv0\\nha.dwg'
+output_dir = 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpnrmdful4'
+
+    def convert_dwg_to_dxf(dwg_path: str, output_dir: str) -> str:
+        """Chạy bộ chuyển đổi, chỉ trả DXF khi thành công và file không rỗng."""
+        converter = find_converter()
+        if not converter:
+>           raise DwgConversionUnavailable(unavailable_message())
+E           optimat.drawing.dwg_convert.DwgConversionUnavailable: Để đọc file DWG cần LibreDWG (dwg2dxf): thêm vào PATH hoặc đặt LIBREDWG_CONVERTER_PATH. Máy cũng có thể dùng ODA File Converter, hiện chưa được cài hoặc không tìm thấy trên máy này. Tải tại https://www.opendesign.com/guestfiles/oda_file_converter, cài đặt, rồi thêm thư mục cài vào PATH hoặc đặt biến môi trường ODA_CONVERTER_PATH trỏ tới file ODAFileConverter.exe. Cách tạm thời: mở bản vẽ bằng phần mềm CAD, lưu dưới dạng .dxf rồi tải file đó lên.
+
+src\optimat\drawing\dwg_convert.py:85: DwgConversionUnavailable
+
+During handling of the above exception, another exception occurred:
+
+path = 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpnrmdful4'
+onexc = <function TemporaryDirectory._rmtree.<locals>.onexc at 0x00000170384A3420>
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+>           os.rmdir(path)
+E           PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpnrmdful4'
+
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:631: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/docs/review/data20_05/column_contour_fix/pytest_v2_regression/test_dwg_without_converter_giv0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017038522F30>
+
+    def test_dwg_without_converter_gives_clear_error(tmp_path, monkeypatch):
+        _no_converter(monkeypatch)
+        assert dwg_convert.is_available() is False
+        dwg = tmp_path / "nha.dwg"
+        dwg.write_bytes(b"fake")
+        with pytest.raises(DwgConversionUnavailable) as exc:
+>           read_drawing(str(dwg))
+
+tests\test_drawing_io.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\optimat\drawing\dxf_reader.py:585: in read_drawing
+    with tempfile.TemporaryDirectory() as out_dir:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:946: in __exit__
+    self.cleanup()
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:950: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:930: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:790: in rmtree
+    return _rmtree_unsafe(path, onexc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:635: in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:902: in onexc
+    _resetperms(path)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:286: in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+func = <built-in function chmod>
+path = 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpnrmdful4'
+args = (448,)
+
+    def _dont_follow_symlinks(func, path, *args):
+        # Pass follow_symlinks=False, unless not supported on this platform.
+        if func in _os.supports_follow_symlinks:
+>           func(path, *args, follow_symlinks=False)
+E           PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpnrmdful4'
+
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:275: PermissionError
+_______________________ test_dwg_goes_through_converter _______________________
+
+dwg_path = 'C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\docs\\review\\data20_05\\column_contour_fix\\pytest_v2_regression\\test_dwg_goes_through_converte0\\nha.dwg'
+output_dir = 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmp8pactk2z'
+
+    def convert_dwg_to_dxf(dwg_path: str, output_dir: str) -> str:
+        """Chạy bộ chuyển đổi, chỉ trả DXF khi thành công và file không rỗng."""
+        converter = find_converter()
+        if not converter:
+            raise DwgConversionUnavailable(unavailable_message())
+    
+        with tempfile.TemporaryDirectory() as input_dir:
+            staged_dwg = Path(input_dir) / "drawing.dwg"
+>           shutil.copy(dwg_path, staged_dwg)
+
+src\optimat\drawing\dwg_convert.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:428: in copy
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+src = 'C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\docs\\review\\data20_05\\column_contour_fix\\pytest_v2_regression\\test_dwg_goes_through_converte0\\nha.dwg'
+dst = WindowsPath('C:/Users/Admin/AppData/Local/Packages/sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}/AC/Temp/tmpz0rjoih6/drawing.dwg')
+follow_symlinks = True
+
+    def copyfile(src, dst, *, follow_symlinks=True):
+        """Copy data from src to dst in the most efficient way possible.
+    
+        If follow_symlinks is not set and src is a symbolic link, a new
+        symlink will be created instead of copying the file it points to.
+    
+        """
+        sys.audit("shutil.copyfile", src, dst)
+    
+        if _samefile(src, dst):
+            raise SameFileError("{!r} and {!r} are the same file".format(src, dst))
+    
+        file_size = 0
+        for i, fn in enumerate([src, dst]):
+            try:
+                st = _stat(fn)
+            except OSError:
+                # File most likely does not exist
+                pass
+            else:
+                # XXX What about other special files? (sockets, devices...)
+                if stat.S_ISFIFO(st.st_mode):
+                    fn = fn.path if isinstance(fn, os.DirEntry) else fn
+                    raise SpecialFileError("`%s` is a named pipe" % fn)
+                if _WINDOWS and i == 0:
+                    file_size = st.st_size
+    
+        if not follow_symlinks and _islink(src):
+            os.symlink(os.readlink(src), dst)
+        else:
+            with open(src, 'rb') as fsrc:
+                try:
+>                   with open(dst, 'wb') as fdst:
+                         ^^^^^^^^^^^^^^^
+E                   PermissionError: [Errno 13] Permission denied: 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpz0rjoih6\\drawing.dwg'
+
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:262: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+path = 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpz0rjoih6'
+onexc = <function TemporaryDirectory._rmtree.<locals>.onexc at 0x00000170382FD080>
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+>           os.rmdir(path)
+E           PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpz0rjoih6'
+
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:631: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+path = 'C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\docs\\review\\data20_05\\column_contour_fix\\pytest_v2_regression\\test_dwg_goes_through_converte0\\nha.dwg'
+layer_overrides = None
+
+    def read_drawing(path: str, layer_overrides: dict[str, str] | None = None) -> Drawing:
+        """Đọc .dxf trực tiếp; chuyển .dwg sang DXF bằng LibreDWG hoặc ODA."""
+        suffix = Path(path).suffix.lower()
+        if suffix in {".dwf", ".dwfx"}:
+            raise DrawingError("DWF chưa được đọc trực tiếp. Hãy chuyển bản vẽ sang DXF rồi tải lên; đổi đuôi file không chuyển định dạng.")
+        if suffix == ".dxf":
+            return read_dxf(path, layer_overrides)
+        if suffix == ".dwg":
+            with tempfile.TemporaryDirectory() as out_dir:
+>               return read_dxf(convert_dwg_to_dxf(path, out_dir), layer_overrides)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src\optimat\drawing\dxf_reader.py:586: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\optimat\drawing\dwg_convert.py:87: in convert_dwg_to_dxf
+    with tempfile.TemporaryDirectory() as input_dir:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:946: in __exit__
+    self.cleanup()
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:950: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:930: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:790: in rmtree
+    return _rmtree_unsafe(path, onexc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:635: in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:902: in onexc
+    _resetperms(path)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:286: in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+func = <built-in function chmod>
+path = 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpz0rjoih6'
+args = (448,)
+
+    def _dont_follow_symlinks(func, path, *args):
+        # Pass follow_symlinks=False, unless not supported on this platform.
+        if func in _os.supports_follow_symlinks:
+>           func(path, *args, follow_symlinks=False)
+E           PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmpz0rjoih6'
+
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:275: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+path = 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmp8pactk2z'
+onexc = <function TemporaryDirectory._rmtree.<locals>.onexc at 0x00000170382FD800>
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+>           os.rmdir(path)
+E           PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmp8pactk2z'
+
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:631: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/docs/review/data20_05/column_contour_fix/pytest_v2_regression/test_dwg_goes_through_converte0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017038225310>
+sample_dxf = 'C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\data\\sample\\sample_floor.dxf'
+
+    def test_dwg_goes_through_converter(tmp_path, monkeypatch, sample_dxf):
+        """Giả lập ODA File Converter bằng một hàm chép file DXF mẫu ra thư mục đích."""
+        import shutil
+        from pathlib import Path
+    
+        fake = tmp_path / "ODAFileConverter"
+        fake.write_bytes(b"")
+        monkeypatch.setenv("ODA_CONVERTER_PATH", str(fake))
+    
+        def fake_run(args, **kwargs):
+            in_dir, out_dir = Path(args[1]), Path(args[2])
+            for f in in_dir.glob("*.dwg"):
+                shutil.copy(sample_dxf, out_dir / (f.stem + ".dxf"))
+            return type("R", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+    
+        monkeypatch.setattr(dwg_convert.subprocess, "run", fake_run)
+        dwg = tmp_path / "nha.dwg"
+        dwg.write_bytes(b"fake")
+>       drawing = read_drawing(str(dwg))
+                  ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_drawing_io.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\optimat\drawing\dxf_reader.py:585: in read_drawing
+    with tempfile.TemporaryDirectory() as out_dir:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:946: in __exit__
+    self.cleanup()
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:950: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:930: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:790: in rmtree
+    return _rmtree_unsafe(path, onexc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+D:\laragon\bin\python\python-3.13\Lib\shutil.py:635: in _rmtree_unsafe
+    onexc(os.rmdir, path, err)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:902: in onexc
+    _resetperms(path)
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:286: in _resetperms
+    _dont_follow_symlinks(_os.chmod, path, 0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+func = <built-in function chmod>
+path = 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmp8pactk2z'
+args = (448,)
+
+    def _dont_follow_symlinks(func, path, *args):
+        # Pass follow_symlinks=False, unless not supported on this platform.
+        if func in _os.supports_follow_symlinks:
+>           func(path, *args, follow_symlinks=False)
+E           PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Admin\\AppData\\Local\\Packages\\sandbox.{5eb48b5e-7921-41d3-949c-1c8a1dd3a356}\\AC\\Temp\\tmp8pactk2z'
+
+D:\laragon\bin\python\python-3.13\Lib\tempfile.py:275: PermissionError
+=========================== short test summary info ===========================
+FAILED tests/test_drawing_io.py::test_dwg_without_converter_gives_clear_error
+FAILED tests/test_drawing_io.py::test_dwg_goes_through_converter - Permission...
+2 failed, 72 passed, 11 deselected in 17.88s

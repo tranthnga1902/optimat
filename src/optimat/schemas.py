@@ -24,7 +24,7 @@ class WallSegment(BaseModel):
     material_id: Optional[str] = None           # mã vật liệu trong bảng materials, ví dụ GN01: dùng để tra giá
     wall_system_id: Optional[str] = None        # phương án tường trong bảng wall_systems, ví dụ W-GN01-220
     material_candidates: list[str] = Field(default_factory=list)   # phương án còn phải chọn khi danh mục có nhiều
-    material_source: str = "none"               # text | hatch | layer | none
+    material_source: str = "none"               # text | hatch | hatch_doan (hatch bị phá, dựng lại) | layer | none
     material_rule: Optional[str] = None         # mã quy tắc đã khớp
     material_confidence: float = 0.0
     is_masonry: bool = True                     # False: quy tắc xác định là bê tông, không tính vào khối xây
@@ -38,9 +38,10 @@ class WallGroup(BaseModel):
     gross_area_m2: float
     opening_area_m2: float
     net_area_m2: float
-    min_confidence: float
+    min_confidence: Optional[float] = None      # không có điểm AI khi khối lượng đã được duyệt từ nguồn đo
     design_material_id: Optional[str] = None    # vật liệu theo thiết kế của nhóm (theo chiều dài lớn nhất)
     design_wall_system_id: Optional[str] = None # phương án tường theo thiết kế của nhóm
+    design_mortar_material_id: Optional[str] = None  # vữa đã xác nhận riêng cho hệ thiết kế, không áp cho hệ thay thế
     design_material_share: float = 0.0          # phần chiều dài nhóm đã xác định được vật liệu đó
 
 
@@ -49,7 +50,7 @@ class OpeningItem(BaseModel):
     name: str
     x: float
     y: float
-    width_mm: float
+    width_mm: Optional[float] = None       # None: block không ghi và dự án chưa nhập rộng cửa, người dùng nhập trên trang kiểm tra
     height_mm: Optional[float] = None      # None: dự án chưa nhập chiều cao cửa (Quy ước B7), người dùng nhập trên trang kiểm tra
     wall_id: Optional[str] = None
     kind: str = "block"             # block | door | window
@@ -92,6 +93,8 @@ class PlanTakeoff(BaseModel):
 
 
 class Constraints(BaseModel):
+    procurement_mode: bool = False              # True: chỉ dữ liệu ACTUAL, đủ vật tư và nguồn giá; False: kịch bản tham khảo
+    approved_wall_system_ids: list[str] = Field(default_factory=list)  # phương án thay thế đã được người dùng duyệt
     site_lat: float = 20.9716
     site_lon: float = 105.7725
     budget: Optional[float] = None              # đồng
@@ -103,8 +106,17 @@ class Constraints(BaseModel):
     province: Optional[str] = None              # tỉnh để tra đơn giá nhân công (bảng labor_rates)
 
 
+class MaterialDemand(BaseModel):
+    """Vật tư phần thô ngoài khối xây tường (thép, bê tông, xi măng, cát, đá...): giữ mã thiết kế, chỉ chọn nguồn cung và xe."""
+    material_id: str = Field(min_length=1)
+    quantity: float = Field(gt=0, allow_inf_nan=False)  # đã gồm hao hụt nếu bản tính có
+    unit: str
+    raw_class: Optional[str] = None
+
+
 class GroupChoice(BaseModel):
-    wall_type: str
+    wall_type: str                   # vật tư ngoài tường: tên loại vật liệu thô
+    raw_class: Optional[str] = None  # có giá trị khi là vật tư ngoài tường
     wall_system_id: Optional[str] = None
     material_id: str
     material_name: str
@@ -116,11 +128,22 @@ class GroupChoice(BaseModel):
     unit_price: float
     price_source: str                # "model" | "catalog"
     product_url: str
-    distance_km: float
+    distance_km: Optional[float]
     trips: int
     material_cost: float
     transport_cost: float
     install_cost: float
+    main_material_cost: Optional[float] = None
+    mortar_material_id: Optional[str] = None
+    mortar_material_name: Optional[str] = None
+    mortar_quantity: Optional[float] = None
+    mortar_unit: Optional[str] = None
+    mortar_unit_price: Optional[float] = None
+    mortar_cost: Optional[float] = None
+    cost_complete: bool = False
+    transport_estimated: bool = True
+    supply_estimated: bool = True
+    cost_basis: str = "Kịch bản tham khảo, chưa đủ căn cứ mua hàng."
 
 
 class Solution(BaseModel):
@@ -134,3 +157,5 @@ class OptimizeResult(BaseModel):
     solutions: list[Solution]
     n_evaluated: int
     notes: list[str] = Field(default_factory=list)
+    run_id: Optional[int] = None
+    execution: dict = Field(default_factory=dict)

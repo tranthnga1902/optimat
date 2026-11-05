@@ -1,0 +1,408 @@
+{
+  "$defs": {
+    "StairFlight": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "run_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Run Mm"
+        },
+        "rise_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rise Mm"
+        },
+        "width_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Width Mm"
+        },
+        "waist_thickness_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Waist Thickness Mm"
+        },
+        "thickness_basis": {
+          "default": "unknown",
+          "enum": [
+            "normal",
+            "vertical",
+            "unknown"
+          ],
+          "title": "Thickness Basis",
+          "type": "string"
+        },
+        "step_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Step Count"
+        },
+        "tread_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tread Mm"
+        },
+        "riser_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Riser Mm"
+        },
+        "field_sources": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Field Sources",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "StairFlight",
+      "type": "object"
+    },
+    "StairLanding": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "area_m2": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Area M2"
+        },
+        "thickness_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thickness Mm"
+        },
+        "ownership": {
+          "default": "unknown",
+          "enum": [
+            "stair",
+            "floor",
+            "beam",
+            "unknown"
+          ],
+          "title": "Ownership",
+          "type": "string"
+        },
+        "field_sources": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Field Sources",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "StairLanding",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "id": {
+      "default": "T1",
+      "title": "Id",
+      "type": "string"
+    },
+    "steps": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Steps"
+    },
+    "flight_width_mm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Flight Width Mm"
+    },
+    "tread_mm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tread Mm"
+    },
+    "landing_area_m2": {
+      "default": 0.0,
+      "title": "Landing Area M2",
+      "type": "number"
+    },
+    "kind": {
+      "default": "ban",
+      "enum": [
+        "ban",
+        "con",
+        "xoan"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "beam_length_mm": {
+      "default": 0.0,
+      "title": "Beam Length Mm",
+      "type": "number"
+    },
+    "beam_width_mm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Beam Width Mm"
+    },
+    "beam_depth_mm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Beam Depth Mm"
+    },
+    "keep": {
+      "default": true,
+      "title": "Keep",
+      "type": "boolean"
+    },
+    "source": {
+      "default": "manual",
+      "title": "Source",
+      "type": "string"
+    },
+    "steps_material": {
+      "default": "unknown",
+      "enum": [
+        "concrete",
+        "masonry",
+        "unknown"
+      ],
+      "title": "Steps Material",
+      "type": "string"
+    },
+    "steps_material_source": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Steps Material Source"
+    },
+    "waist_thickness_mm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Waist Thickness Mm"
+    },
+    "waist_thickness_basis": {
+      "default": "unknown",
+      "enum": [
+        "normal",
+        "vertical",
+        "unknown"
+      ],
+      "title": "Waist Thickness Basis",
+      "type": "string"
+    },
+    "waist_thickness_source": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Waist Thickness Source"
+    },
+    "scope_source": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scope Source"
+    },
+    "formwork_scope_source": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Formwork Scope Source"
+    },
+    "from_floor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "From Floor"
+    },
+    "to_floor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "To Floor"
+    },
+    "flights": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/StairFlight"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Flights"
+    },
+    "landings": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/StairLanding"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Landings"
+    }
+  },
+  "title": "Stair",
+  "type": "object"
+}

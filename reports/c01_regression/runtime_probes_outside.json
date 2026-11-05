@@ -1,0 +1,16 @@
+[
+  {
+    "probe": "socketpair",
+    "exit_code": 0,
+    "stdout": "OK\n",
+    "stderr": "",
+    "timeout": false
+  },
+  {
+    "probe": "asyncio_loop",
+    "exit_code": 0,
+    "stdout": "OK\n",
+    "stderr": "",
+    "timeout": false
+  }
+]

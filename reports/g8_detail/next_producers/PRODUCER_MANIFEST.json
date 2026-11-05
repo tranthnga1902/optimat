@@ -1,0 +1,377 @@
+{
+  "status": "READ_ONLY_PREPARATION_NOT_SOURCE_RELEASE",
+  "accepted_lean_manifest": "reports/g8_detail/lean_producer/FINAL_HASH.json",
+  "steps": [
+    {
+      "id": "G8-P02",
+      "name": "Diện tích và lớp nền",
+      "files": [
+        "src/optimat/rough/areas.py",
+        "src/optimat/rough/quantity_details.py"
+      ],
+      "functions": [
+        "area_works"
+      ],
+      "work_codes": [
+        "SAN",
+        "CAN_NEN",
+        "NEN_DEM_CAT",
+        "BE_TONG_LOT",
+        "CHONG_THAM",
+        "COP_PHA"
+      ],
+      "dependencies": [
+        "PlanParams/PlanGeometry: outline,usable,void,rooms/perimeter",
+        "ProjectParams: slab/ground_layers/upturn"
+      ],
+      "net_mutations": [
+        "outline - void; hiện None bị legacy dùng0 nhưng ledger phải unknown",
+        "roof replacement loại cả SAN/CP object ở drop_slab_under_roof",
+        "CP SAN còn dòng trừ riêng từ takeoff/_neg, chưa được coi tổng CP SAN đủ detail"
+      ],
+      "gates": [
+        "Giữ logic/quantity/status legacy; không suy ô trống",
+        "Bao phủ ground BE_TONG_LOT riêng, không lấy lót móng đã có để tính là phủ cả code",
+        "Consumer phải đọc complete ledger khi engine status legacy vẫn C"
+      ],
+      "tests_common": [
+        "tests/test_rough_quantity_details.py",
+        "tests/test_rough_partial.py"
+      ],
+      "tests_family": [
+        "tests/test_rough_areas.py",
+        "tests/test_rough_takeoff.py"
+      ]
+    },
+    {
+      "id": "G8-P03",
+      "name": "Móng kết cấu và đất",
+      "files": [
+        "src/optimat/rough/foundations.py",
+        "src/optimat/rough/quantity_details.py"
+      ],
+      "functions": [
+        "foundation_works",
+        "_neg"
+      ],
+      "work_codes": [
+        "MONG",
+        "DAO_DAT",
+        "DAP_DAT",
+        "COP_PHA"
+      ],
+      "dependencies": [
+        "FoundationItem tiers/volume/source/count/positions",
+        "natural_ground_level,margin,slope,neck",
+        "pit/prismoid/overlap existing values"
+      ],
+      "net_mutations": [
+        "Đắp=hố-lót-móng-cổ, không gán kích thước hố thành khối đắp",
+        "Trừ hố chồng lấn sinh WorkItem âm DAO/DAP riêng",
+        "volume_m3 override: kích thước chỉ reference"
+      ],
+      "gates": [
+        "Giữ integration SLICES200; không đổi union algorithm",
+        "_neg dùng chung nhiều caller: cần test phạm vi và caller receipts trước mở hunk",
+        "Không dựng vị trí nếu không có positions"
+      ],
+      "tests_common": [
+        "tests/test_rough_quantity_details.py",
+        "tests/test_rough_partial.py"
+      ],
+      "tests_family": [
+        "tests/test_rough_foundations.py",
+        "tests/test_rough_formwork_materials.py"
+      ]
+    },
+    {
+      "id": "G8-P04",
+      "name": "Cột và dầm theo nguồn đã chọn",
+      "files": [
+        "src/optimat/rough/columns.py",
+        "src/optimat/rough/beams.py",
+        "src/optimat/rough/quantity_details.py"
+      ],
+      "functions": [
+        "column_works",
+        "schedule_column_works",
+        "beam_works"
+      ],
+      "work_codes": [
+        "COT",
+        "DAM",
+        "COP_PHA"
+      ],
+      "dependencies": [
+        "Selected local beams / KC view→floor O01",
+        "ColumnSpan signed elevations",
+        "Beam.cut_mm,framed and slab/b/d fallback provenance"
+      ],
+      "net_mutations": [
+        "beam_joints trước emit: gross/net/cut",
+        "CP cột trừ beam-end area",
+        "CP dầm trừ framed head areas"
+      ],
+      "gates": [
+        "Không đổi O01 allocation/alignment, chỉ emit từ argument đã selected",
+        "CP không chia scalar hole theo tỉ lệ giả; ghi tuple/parent source thật",
+        "CP SAN deduction tại takeoff là hunk riêng cần release, chưa có nó không claim CP SAN hoàn chỉnh"
+      ],
+      "tests_common": [
+        "tests/test_rough_quantity_details.py",
+        "tests/test_rough_partial.py"
+      ],
+      "tests_family": [
+        "tests/test_rough_columns.py",
+        "tests/test_rough_beams.py",
+        "tests/test_rough_beam_sources.py"
+      ]
+    },
+    {
+      "id": "G8-P05",
+      "name": "Thang bản và mái bê tông",
+      "files": [
+        "src/optimat/rough/stairs.py",
+        "src/optimat/rough/secondary.py",
+        "src/optimat/rough/quantity_details.py"
+      ],
+      "functions": [
+        "stair_works",
+        "roof_works"
+      ],
+      "work_codes": [
+        "CAU_THANG",
+        "MAI",
+        "COP_PHA"
+      ],
+      "dependencies": [
+        "Stair steps/tread/width/landing/beam; floor height and slab thickness",
+        "Roof area/thickness/replaces_slab_of"
+      ],
+      "net_mutations": [
+        "Thang tổng bản+bậc+chiếu nghỉ+dầm; CP tổng đáy/mặt đứng/dầm",
+        "Roof replacement loại SAN/CP cũ cùng object/detail"
+      ],
+      "gates": [
+        "Không mở secondary N03/L1 cùng hunk mái",
+        "Mái khung/thang cốn-xoắn vẫn ngoài M01",
+        "Cấu tạo bậc đang là công thức hiện hành, không lén đổi công thức"
+      ],
+      "tests_common": [
+        "tests/test_rough_quantity_details.py",
+        "tests/test_rough_partial.py"
+      ],
+      "tests_family": [
+        "tests/test_rough_stairs.py",
+        "tests/test_rough_secondary.py"
+      ]
+    },
+    {
+      "id": "G8-P06",
+      "name": "Thép theo bảng/nhập khối lượng/hàm lượng",
+      "files": [
+        "src/optimat/rough/steel.py",
+        "src/optimat/rough/quantity_details.py"
+      ],
+      "functions": [
+        "schedule_works",
+        "steel_works"
+      ],
+      "work_codes": [
+        "COT_THEP"
+      ],
+      "dependencies": [
+        "RebarRow.kg/missing/source/evidence/total_bars",
+        "Existing manual>table>ratio priority",
+        "steel_kg_per_m3 and selected parent WorkItem.quantity legacy"
+      ],
+      "net_mutations": [
+        "kg→tấn exact",
+        "Hàm lượng lấy BT legacy đã round; chưa chuyển sang raw ledger của BT"
+      ],
+      "gates": [
+        "Không nhân bar count lần2 nếu kg đã là tổng",
+        "Không giả đường kính/length cho manual/ratio",
+        "Tách quantity basis legacy upstream khỏi detail raw current operation"
+      ],
+      "tests_common": [
+        "tests/test_rough_quantity_details.py",
+        "tests/test_rough_partial.py"
+      ],
+      "tests_family": [
+        "tests/test_rough_steel.py",
+        "tests/test_rough_materials.py"
+      ]
+    },
+    {
+      "id": "G8-P07",
+      "name": "Tường/lanh tô/giằng/sê nô và net lifecycle",
+      "files": [
+        "src/optimat/rough/walls.py",
+        "src/optimat/rough/secondary.py",
+        "src/optimat/rough/quantity_details.py",
+        "src/optimat/rough/takeoff.py"
+      ],
+      "functions": [
+        "wall_works",
+        "linear_works",
+        "lintel_under_beam",
+        "deduct_ties"
+      ],
+      "work_codes": [
+        "XAY",
+        "TRAT",
+        "LANH_TO",
+        "GIANG_TUONG",
+        "SE_NO",
+        "COP_PHA"
+      ],
+      "dependencies": [
+        "Walls/openings/column overlaps/system thickness",
+        "O01 wall height basis",
+        "N03 normalized union/support metadata/z/source/context",
+        "L1 predicate and current operation order"
+      ],
+      "net_mutations": [
+        "XAY initial gross-openings-lintel-columns",
+        "L1 returns skipped lintel to XAY and subtracts BT/CP lintel per opening with round each step",
+        "N03 union deduction or quantityNone when unresolved",
+        "Raw reference giằng không cộng thêm union"
+      ],
+      "gates": [
+        "BA đã chốt source_quantity ghi rõ đầu vào legacy đã round; geometry reference; không đổi precision/residual",
+        "Rebuild tại mutation dù legacy round không đổi; finalizer so legacy không đủ",
+        "Không đổi normalize/axis/support/gate geometry N03 hoặc status engine",
+        "Không mở walls riêng rồi phát gross detail như net trước L1/N03"
+      ],
+      "tests_common": [
+        "tests/test_rough_quantity_details.py",
+        "tests/test_rough_partial.py"
+      ],
+      "tests_family": [
+        "tests/test_rough_secondary.py",
+        "tests/test_rough_status.py",
+        "tests/test_rough_takeoff.py",
+        "tests/test_rough_beam_sources.py"
+      ]
+    }
+  ],
+  "coverage_by_work_code": {
+    "XAY": [
+      "G8-P07"
+    ],
+    "TRAT": [
+      "G8-P07"
+    ],
+    "LANH_TO": [
+      "G8-P07"
+    ],
+    "COT": [
+      "G8-P04"
+    ],
+    "DAM": [
+      "G8-P04"
+    ],
+    "SAN": [
+      "G8-P02"
+    ],
+    "CAU_THANG": [
+      "G8-P05"
+    ],
+    "GIANG_TUONG": [
+      "G8-P07"
+    ],
+    "SE_NO": [
+      "G8-P07"
+    ],
+    "MAI": [
+      "G8-P05"
+    ],
+    "MONG": [
+      "G8-P03"
+    ],
+    "BE_TONG_LOT": [
+      "G8-P02"
+    ],
+    "DAO_DAT": [
+      "G8-P03"
+    ],
+    "DAP_DAT": [
+      "G8-P03"
+    ],
+    "NEN_DEM_CAT": [
+      "G8-P02"
+    ],
+    "CAN_NEN": [
+      "G8-P02"
+    ],
+    "CHONG_THAM": [
+      "G8-P02"
+    ],
+    "COT_THEP": [
+      "G8-P06"
+    ],
+    "COP_PHA": [
+      "G8-P02",
+      "G8-P03",
+      "G8-P04",
+      "G8-P05",
+      "G8-P07"
+    ]
+  },
+  "cross_cutting_hunks": [
+    {
+      "file": "foundations.py:_neg + takeoff.py:_slab_form_deduction",
+      "purpose": "Signed deductions across foundation and CP SAN; explicit receipt/unit/source; no generic sign guessing"
+    },
+    {
+      "file": "takeoff.py:pending O01 DAM/CP",
+      "purpose": "Unknown contribution rows if needed, keeping owner/allocation unchanged; separate release before claim all rows covered"
+    }
+  ],
+  "scope_note": "Work-code coverage is not producer-branch coverage or functional acceptance. CP requires every parent family. Only lean foundation currently emits accepted detail.",
+  "not_released_files": "All step files are proposed only. No source edits or tests in this preparation turn.",
+  "ba_decisions": {
+    "P06_P07_rounding": "source_quantity explicitly labels legacy input rounded upstream; geometry reference; no precision engine change or residual correction",
+    "same_round_net": "Mutator must rebuild even when legacy round3 unchanged; test .32254-.00003=.32251 with legacy .323",
+    "P02_voidNone": "Detail partial may coexist with parent legacy C; consumer must distinguish; engine quantity/status unchanged"
+  },
+  "summary_step": {
+    "id": "G8-SUM",
+    "kind": "cross_cutting_backend_summary_not_producer",
+    "status": "CONTRACT_ONLY_NOT_SOURCE_RELEASE",
+    "contract": "reports/g8_detail/raw_group_contract/CONTRACT.md",
+    "files_proposed": [
+      "src/optimat/rough/models.py",
+      "src/optimat/rough/quantity_details.py",
+      "src/optimat/rough/takeoff.py",
+      "tests/test_rough_quantity_summary.py"
+    ],
+    "placement": "After net/status/finalize, same reviewed/persisted result; no legacy quantity/status/total/material edits",
+    "keys": [
+      "stage",
+      "code",
+      "variant",
+      "unit",
+      "compatible structured source/basis",
+      "formwork_of",
+      "steel_element",
+      "wall_system_id",
+      "sourced material/method context"
+    ],
+    "unknown_compatibility": "Isolate by work_key, do not infer grade/norm from code/formula/evidence",
+    "raw_sum": "Sum member detail known_part once; no-detail never falls back to legacy; total None unless every member detail complete",
+    "coverage": "Work categories components/aggregate/unavailable/no_detail; known/unknown contribution rows and references counted separately; reference does not contribute",
+    "identity": "Snapshot+work_key+row_id, same row_id across works is not duplicate; bind membership/hash/counts to parent works",
+    "tests": [
+      "Different unit/basis/variant not merged",
+      "Unknown0/no_detail/reference/sign",
+      "Scoped row IDs across works",
+      "Partial keeps known, totalNone",
+      "Group Decimal precision",
+      "Stale hash/membership and forged totals rejected",
+      "ParentC/detailpartial visible"
+    ],
+    "suggested_order": "After consumer lean gate, before P02 expansion; 01 decides exact files/hunks; no source now"
+  }
+}

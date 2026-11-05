@@ -1,0 +1,51 @@
+--- a/src/optimat/rough/takeoff.py
++++ b/src/optimat/rough/takeoff.py
+@@ -392,18 +392,30 @@
+-def attach_prices(materials: list[MaterialLine], catalog: Catalog, actual_only: bool = False) -> None:
+-    """Giá thấp nhất cùng đơn vị cho từng vật liệu có mã (giá đại lý, báo giá, công bố giá). Khác đơn vị thì để trống,
+-    không tự quy đổi (bao, kg, tấn...)."""
+-    from ..catalog.pricing import price_offers, select_best_offer
+-    ids = sorted({m.material_id for m in materials if m.material_id})
+-    if not ids:
+-        return
+-    offers = price_offers(catalog, ids)
+-    kinds = dict(zip(catalog.materials.material_id, catalog.materials.data_kind))
+-    for m in materials:
+-        best, _ = select_best_offer(offers.get(m.material_id or "", []), m.unit, kinds.get(m.material_id), actual_only)
+-        if best is None:
+-            continue
+-        m.best_price = best.price
+-        level = "BULLETIN (công bố tham khảo)" if best.is_reference else best.price_level
+-        m.price_source = ", ".join(x for x in (level, best.supplier_name or best.source_detail, best.price_date, best.data_kind) if x)
+-        qty = m.quantity_with_waste if m.quantity_with_waste is not None else m.quantity
+-        m.est_cost = round(qty * best.price) if qty is not None and m.complete else None
++def attach_prices(materials: list[MaterialLine], catalog: Catalog, actual_only: bool = False) -> None:
++    """Giá thấp nhất cùng đơn vị cho từng vật liệu có mã (giá đại lý, báo giá, công bố giá). Khác đơn vị thì để trống,
++    không tự quy đổi (bao, kg, tấn...)."""
++    from ..catalog.pricing import has_price_source, price_offers, select_best_offer
++    for m in materials:
++        m.best_price = None
++        m.price_source = None
++        m.est_cost = None
++    ids = sorted({m.material_id for m in materials if m.material_id})
++    if not ids:
++        return
++    offers = price_offers(catalog, ids)
++    kinds = dict(zip(catalog.materials.material_id, catalog.materials.data_kind))
++    for m in materials:
++        best, _ = select_best_offer(offers.get(m.material_id or "", []), m.unit, kinds.get(m.material_id), actual_only)
++        if best is None:
++            continue
++        m.best_price = best.price
++        level = "BULLETIN (công bố tham khảo)" if best.is_reference else best.price_level
++        if best.source == "price_records" and not best.is_reference:
++            level = f"{best.price_level} (giá lịch sử tham khảo)"
++        terms = {"YES": "đã gồm", "NO": "chưa gồm"}
++        vat = terms.get(best.vat_included, "chưa rõ") + " VAT"
++        freight = terms.get(best.transport_included, "chưa rõ") + " cước giao hàng"
++        page = best.url if has_price_source(price_url=best.url) and best.url != best.source_detail else None
++        basis = (level, best.supplier_name or best.supplier_id, best.price_date, best.data_kind,
++                 best.source_detail, page, vat, freight)
++        m.price_source = " · ".join(x for x in basis if x)
++        qty = m.quantity_with_waste if m.quantity_with_waste is not None else m.quantity
++        m.est_cost = round(qty * best.price) if qty is not None and m.complete and m.status != "D" else None

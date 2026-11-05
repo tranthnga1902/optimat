@@ -1,0 +1,73 @@
+--- before/src/optimat/rough/rebar.py
++++ source-ready/src/optimat/rough/rebar.py
+@@ -396,6 +396,10 @@
+             raise ValueError(f"Bảng {ref.table_id}: có nhiều assignment, cần một xác nhận duy nhất.")
+         if assignment.content_sha256 != _content_sha256(table.rows):
+             raise ValueError(f"Bảng {ref.table_id}: content_sha256 đã thay đổi, cần xác nhận manifest mới.")
++        known_codes = {row.element_code for row in table.rows if row.element_code is not None}
++        if assignment.scope.element_code != "ALL" and known_codes - {assignment.scope.element_code}:
++            raise ValueError(f"Bảng {ref.table_id}: nhóm scope {assignment.scope.element_code} không khớp nhóm dòng "
++                             f"{', '.join(sorted(known_codes))}; override_reason không đổi phân loại cấu kiện.")
+         title_scope = _title_scope(table.title)
+         if title_scope is not None and (assignment.scope != title_scope or table.scope_from_title is None) and not assignment.override_reason:
+             raise ValueError(f"Bảng {ref.table_id}: scope trái tiêu đề cần override_reason.")
+--- before/tests/test_rough_rebar.py
++++ source-ready/tests/test_rough_rebar.py
+@@ -362,6 +362,57 @@
+         resolve_rebar_tables(tables, source=source, assignments=[assignment])
+ 
+ 
++@pytest.mark.parametrize("override_reason", [None, "SYNTHETIC: không được dùng lý do để đổi DAM thành COT"])
++def test_b1_scope_group_must_match_known_rows_atomically(override_reason):
++    tables = _b1_unscoped_tables()
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC mismatched group")
++    manifest = table_manifest(tables, source=source)
++    first = _b1_assignment(manifest[0])
++    second = _b1_assignment(manifest[1], override_reason=override_reason)
++    second.scope.element_code = "COT"
++    before = [t.model_dump_json() for t in tables]
++    assignments_before = [a.model_dump_json() for a in (first, second)]
++    with pytest.raises(ValueError) as exc:
++        resolve_rebar_tables(tables, source=source, assignments=[first, second])
++    assert manifest[1].ref.table_id in str(exc.value) and "COT" in str(exc.value) and "DAM" in str(exc.value)
++    assert [t.model_dump_json() for t in tables] == before
++    assert [a.model_dump_json() for a in (first, second)] == assignments_before
++
++
++def test_b1_all_accepts_mixed_groups_without_promoting_unknown_row():
++    records = [["D1", "1", "thẳng", "Ø16", "2000", "10", "31,60"],
++               ["C1", "1", "thẳng", "Ø16", "2000", "10", "31,60"],
++               ["X9", "1", "thẳng", "Ø16", "2000", "10", "31,60"]]
++    title = "BẢNG THỐNG KÊ CỐT THÉP"
++    tables, _ = collect_rebar_tables(_drawing(_scoped_table(1000, records=records, title=title)
++                                            + _scoped_table(-5000, records=records, title=title)))
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC mixed groups")
++    manifest = table_manifest(tables, source=source)
++    assignments = [_b1_assignment(m, scope=RebarScope(levels=(1,), element_code="ALL", quantity_basis="total"))
++                   for m in manifest]
++    rows, _ = resolve_rebar_tables(tables, source=source, assignments=assignments)
++    assert len(rows) == 3 and [r.element_code for r in rows] == ["DAM", "COT", None]
++    assert all(r.scope.element_code == "ALL" for r in rows)
++    assert any("Not supported" in note for note in rows[2].notes)
++    assignments[0].scope.element_code = "DAM"
++    with pytest.raises(ValueError, match="COT"):
++        resolve_rebar_tables(tables, source=source, assignments=assignments)
++
++
++def test_b1_title_group_override_can_follow_rows_but_never_reclassifies_them():
++    title = "BẢNG THỐNG KÊ CỐT THÉP CỘT TẦNG 1 (TỔNG TOÀN TẦNG)"
++    tables, _ = collect_rebar_tables(_drawing(_scoped_table(1000, title=title)))
++    assert tables[0].scope_from_title is None and tables[0].rows[0].element_code == "DAM"
++    source = RebarSourceRef.from_bytes(b"SYNTHETIC wrong title group")
++    assignment = _b1_assignment(table_manifest(tables, source=source)[0])
++    with pytest.raises(ValueError, match="override_reason"):
++        resolve_rebar_tables(tables, source=source, assignments=[assignment])
++    assignment.override_reason = "SYNTHETIC: tiêu đề cột sai, xác nhận phạm vi dầm theo dòng thiết kế"
++    rows, _ = resolve_rebar_tables(tables, source=source, assignments=[assignment])
++    assert len(rows) == 1 and rows[0].element_code == "DAM" and rows[0].scope.element_code == "DAM"
++    assert title in rows[0].scope_evidence and "override_reason" in rows[0].scope_evidence
++
++
+ def test_b1_override_requires_reason_and_keeps_original_title():
+     tables, _ = collect_rebar_tables(_drawing(_scoped_table(1000)))
+     source = RebarSourceRef.from_bytes(b"SYNTHETIC override source")

@@ -1,0 +1,28 @@
+[
+  {
+    "database": "postgres",
+    "has_users": false,
+    "roles": []
+  },
+  {
+    "database": "optimat",
+    "has_users": true,
+    "roles": [
+      [
+        "admin",
+        true,
+        1
+      ],
+      [
+        "user",
+        false,
+        1
+      ]
+    ]
+  },
+  {
+    "database": "booksdb",
+    "has_users": false,
+    "roles": []
+  }
+]

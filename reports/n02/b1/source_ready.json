@@ -1,0 +1,6 @@
+{
+  "status": "SOURCE-READY_BEFORE_TESTS",
+  "parser_N01_unchanged": true,
+  "tests_run_at_snapshot": false,
+  "scope": "reader models/collect/manifest/resolve/wrapper only; API/partial not implemented"
+}

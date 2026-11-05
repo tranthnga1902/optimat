@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_formwork_materials.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\b01\\pytest_temp"
+  ],
+  "started_utc": "2026-11-03T10:47:44.122216+00:00",
+  "DATABASE_URL_present": false,
+  "OPTIMAT_TEST_DATABASE_URL_present": false,
+  "OPTIMAT_NO_DOTENV": "1",
+  "PYTHONIOENCODING": "utf-8",
+  "sandboxed": true,
+  "scope": "pure materials; explicit CSV norms and Catalog.from_csv(None); no CAD/TestClient/async/DB",
+  "test_sha256": "f7d9be73f346f9cc8bf3e7d7dac3c39fded18f06fa57dae504773f412e6eb8bf"
+}

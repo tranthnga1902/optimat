@@ -1,0 +1,102 @@
+{
+  "fixture_kind": "SYNTHETIC_CONTRACT_ONLY_NOT_ENGINE_OUTPUT",
+  "snapshot_ref": "example-only-not-reviewed",
+  "members": [
+    {
+      "work_key": "w:0",
+      "unit": "m³",
+      "legacy_quantity": "0.323",
+      "detail_level": "components",
+      "known_part_raw": "0.3225",
+      "complete": true,
+      "rows": [
+        {
+          "row_id": "r1",
+          "role": "contribution",
+          "raw_quantity": "0.3225",
+          "sign": 1
+        },
+        {
+          "row_id": "reference1",
+          "role": "reference",
+          "raw_quantity": "100",
+          "sign": 1
+        }
+      ]
+    },
+    {
+      "work_key": "w:1",
+      "unit": "m³",
+      "legacy_quantity": "0.323",
+      "detail_level": "components",
+      "known_part_raw": "0.3225",
+      "complete": true,
+      "rows": [
+        {
+          "row_id": "r1",
+          "role": "contribution",
+          "raw_quantity": "0.3225",
+          "sign": 1
+        }
+      ]
+    },
+    {
+      "work_key": "w:2",
+      "unit": "m³",
+      "legacy_quantity": null,
+      "detail_level": "components",
+      "known_part_raw": null,
+      "complete": false,
+      "rows": [
+        {
+          "row_id": "missing1",
+          "role": "contribution",
+          "raw_quantity": null,
+          "sign": 1,
+          "missing": [
+            "Chưa đo"
+          ]
+        }
+      ]
+    },
+    {
+      "work_key": "w:3",
+      "unit": "m³",
+      "legacy_quantity": "1",
+      "detail_level": null,
+      "known_part_raw": null,
+      "complete": false,
+      "rows": null
+    }
+  ],
+  "expected_partial": {
+    "known_part_raw": "0.6450",
+    "total_raw": null,
+    "complete": false,
+    "coverage": {
+      "work_count": 4,
+      "components": 3,
+      "aggregate": 0,
+      "unavailable": 0,
+      "no_detail": 1,
+      "quantity_complete_works": 2,
+      "quantity_incomplete_works": 2,
+      "contribution_rows": 3,
+      "known_contribution_rows": 2,
+      "unknown_contribution_rows": 1,
+      "reference_rows": 1
+    }
+  },
+  "expected_first_two_only": {
+    "known_part_raw": "0.6450",
+    "total_raw": "0.6450",
+    "complete": true
+  },
+  "notes": [
+    "r1 in different works are different scoped row refs",
+    "No-detail legacy1 must not be added to raw",
+    "Reference100 never added",
+    "First two legacy sum0.646 is not raw0.6450",
+    "Unknown subtraction does not make known_part a guaranteed lower bound"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "status": "PREPARED_WAIT_FRONTEND_BUILD_SLOT",
+  "pytest_started": false,
+  "collection_started": false,
+  "test_handle": null,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\backend_20261104\\full_run\\pytest_temp",
+    "--deselect=tests/test_drawing_io.py::test_real_drawing_read_in_world_coords",
+    "--deselect=tests/test_rough_build_drawings.py::test_nha_dan_columns_and_rough",
+    "--deselect=tests/test_rough_build_drawings.py::test_nha_pho_columns",
+    "--deselect=tests/test_registry.py::test_ket_cau_build_drawing",
+    "--deselect=tests/test_rough_structural.py::test_ket_cau_build_drawing"
+  ],
+  "deselect_prefixes": [
+    "tests/test_drawing_io.py::test_real_drawing_read_in_world_coords",
+    "tests/test_rough_build_drawings.py::test_nha_dan_columns_and_rough",
+    "tests/test_rough_build_drawings.py::test_nha_pho_columns",
+    "tests/test_registry.py::test_ket_cau_build_drawing",
+    "tests/test_rough_structural.py::test_ket_cau_build_drawing"
+  ],
+  "deselect_reason": "user full khong CAD that",
+  "deselected_case_count": null,
+  "case_count_note": "Use actual collected/deselected terminal counts; five prefixes are not necessarily five parametrized cases.",
+  "environment_plan": {
+    "unset": [
+      "DATABASE_URL",
+      "OPTIMAT_TEST_DATABASE_URL",
+      "OPENAI_API_KEY",
+      "OPTIMAT_PROJECT_DB_TEST",
+      "OPTIMAT_PROJECT_MIGRATION_TEST"
+    ],
+    "set": {
+      "OPTIMAT_NO_DOTENV": "1",
+      "PYTHONIOENCODING": "utf-8",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "OPTIMAT_CATALOG_OVERLAY": "data/sample/catalog"
+    }
+  },
+  "hash_plan": {
+    "reference_manifest": "../tmp/package_01_post_concrete_20261104T020202Z/manifest.json relative to repo",
+    "reference_backend_count": 221,
+    "before_run": "After 01 opens slot, verify current source against reference and two fresh snapshots; stop/report paths if drift.",
+    "scope": "Reference manifest plus Python src/scripts/tests, catalog/rules CSV, ground_truth CSV/JSON and pytest/config/requirements used; record actual count by profile.",
+    "after_run": "Record hashes and changed/added/removed, no source edits or implicit rerun."
+  },
+  "constraints": [
+    "No pytest collection/execution before 01 opens slot",
+    "No real CAD, DB, LLM network, browser upload, service restart or source edit",
+    "Do not compensate deselection by reading real drawings",
+    "Keep all synthetic/API/unit tests otherwise; retain justified DB/opt-in skips"
+  ]
+}

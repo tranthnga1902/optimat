@@ -1,0 +1,28 @@
+rule_id,signal,pattern,target,element,width_mm,height_mm,priority,note
+T01,text,be tong khi,AAC,WALL_MASONRY,,,90,"Ghi chú có ""bê tông khí"""
+T02,text,aac,AAC,WALL_MASONRY,,,90,"Ghi chú có ""AAC"""
+T03,text,gach nhe,AAC|CLC,WALL_MASONRY,,,80,"Ghi chú có ""gạch nhẹ"": AAC hoặc bê tông bọt, chọn theo phương án có trong danh mục"
+T04,text,gach be tong,CMU_SOLID|CMU_HOLLOW,WALL_MASONRY,,,70,"Ghi chú có ""gạch bê tông"" (xét sau ""bê tông khí"")"
+T05,text,gach xi mang,CMU_SOLID|CMU_HOLLOW,WALL_MASONRY,,,70,"Ghi chú có ""gạch xi măng"""
+T06,text,gach block,CMU_SOLID|CMU_HOLLOW,WALL_MASONRY,,,70,"Ghi chú có ""gạch block"""
+T07,text,gach khong nung,CMU_SOLID|CMU_HOLLOW|CLC|AAC,WALL_MASONRY,,,50,"Ghi chú có ""gạch không nung"": chưa rõ loại, để người dùng chọn khi còn nhiều phương án"
+T09,text,gach dat nung,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,80,"Ghi chú có ""gạch đất nung"""
+T10,text,gach nung,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,80,"Ghi chú có ""gạch nung"""
+T11,text,gach tuynel,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,80,"Ghi chú có ""gạch tuynel"""
+T12,text,gach chi,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,75,"Ghi chú có ""gạch chỉ"""
+T13,text,gach lo,CLAY_HOLLOW|CMU_HOLLOW,WALL_MASONRY,,,70,"Ghi chú có ""gạch lỗ"" mà không ghi số lỗ"
+T14,text,thach cao,GYPSUM,WALL_MASONRY,,,80,"Ghi chú có ""thạch cao"""
+T15,text,xi mang soi,CEMBOARD,WALL_MASONRY,,,80,"Ghi chú có ""xi măng sợi"""
+T16,text,alc,ALC_PANEL,WALL_MASONRY,,,85,"Ghi chú có ""ALC"""
+T17,text,eps,EPS_PANEL,WALL_MASONRY,,,80,"Ghi chú có ""EPS"""
+H01,hatch,ANSI31,,WALL_MASONRY,,,60,"Nét gạch chéo là mặt cắt khối xây chung: xác nhận là tường xây, không cho biết loại gạch"
+H02,hatch,AR-BRSTD,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,60,"Mẫu gạch xây tiêu chuẩn. GIẢ ĐỊNH theo TCVN, chưa kiểm trên bản vẽ gốc AutoCAD (bản vẽ build bị phá hatch): ngoài chỉ tiêu S10"
+H03,hatch,AR-B816,CMU_HOLLOW,WALL_MASONRY,,,60,"Mẫu block bê tông 8x16. GIẢ ĐỊNH theo TCVN, chưa kiểm trên bản vẽ gốc AutoCAD (bản vẽ build bị phá hatch): ngoài chỉ tiêu S10"
+H04,hatch,AR-CONC,,CONCRETE,,,95,Bê tông: cấu kiện không phải tường xây (cột hoặc vách). Loại khỏi khối lượng xây
+H05,hatch,SOLID,,CONCRETE,,,40,Tô đặc thường là cột hoặc vách bê tông. Cần kiểm trên bản vẽ thật
+L01,layer,aac,AAC,WALL_MASONRY,,,40,"Tên layer có ""AAC"""
+L02,layer,gach nung,CLAY_SOLID|CLAY_HOLLOW,WALL_MASONRY,,,40,"Tên layer có ""gạch nung"""
+L03,layer,gach be tong,CMU_SOLID|CMU_HOLLOW,WALL_MASONRY,,,40,"Tên layer có ""gạch bê tông"""
+L04,layer,thach cao,GYPSUM,WALL_MASONRY,,,40,"Tên layer có ""thạch cao"""
+B01,block,^(D|CD)\d*$,,DOOR,,,50,Cửa đi; kích thước lấy từ thuộc tính WIDTH/HEIGHT hoặc thông số cửa của dự án
+B02,block,^(S|CS|W)\d*$,,WINDOW,,,50,Cửa sổ; kích thước lấy từ thuộc tính WIDTH/HEIGHT hoặc thông số cửa của dự án

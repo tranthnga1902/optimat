@@ -1,0 +1,624 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:optimat:quantity-knowledge:v1",
+  "description": "Chọn $defs theo loại bản ghi; JSONL mỗi dòng là một đối tượng.",
+  "$defs": {
+    "norm": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "pdf_page",
+        "record_id",
+        "table_id",
+        "norm_code",
+        "resource_name",
+        "resource_kind",
+        "resource_unit",
+        "quantity",
+        "quantity_raw",
+        "value_type",
+        "quantity_per_basis_unit",
+        "basis",
+        "source_sha256",
+        "effective_from",
+        "effective_to_exclusive",
+        "enabled",
+        "review_status",
+        "review_issues"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pdf_page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "record_id": {
+          "type": "string"
+        },
+        "table_id": {
+          "type": "string"
+        },
+        "norm_code": {
+          "type": "string",
+          "pattern": "^(?:[A-Z]{2}|\\d{2})\\.\\d{5}$"
+        },
+        "resource_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resource_kind": {
+          "enum": [
+            "material",
+            "labor",
+            "machine"
+          ]
+        },
+        "resource_unit": {
+          "type": "string"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d+(?:\\.\\d+)?(?:[Ee][+-]?\\d+)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "quantity_raw": {
+          "type": "string"
+        },
+        "value_type": {
+          "enum": [
+            "resource_quantity",
+            "percentage"
+          ]
+        },
+        "quantity_per_basis_unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d+(?:\\.\\d+)?(?:[Ee][+-]?\\d+)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "basis": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "quantity",
+                "unit",
+                "unit_raw"
+              ],
+              "properties": {
+                "quantity": {
+                  "type": "string",
+                  "pattern": "^\\d+(?:\\.\\d+)?(?:[Ee][+-]?\\d+)?$"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "unit_raw": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "effective_from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "effective_to_exclusive": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "review_status": {
+          "type": "string"
+        },
+        "review_issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "measurement_rule": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "pdf_page",
+        "rule_id",
+        "source_locator",
+        "summary_vi",
+        "work_codes",
+        "work_scope",
+        "purposes",
+        "predicate",
+        "effect",
+        "effective_from",
+        "effective_to_exclusive",
+        "enabled",
+        "review_status"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pdf_page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "source_locator": {
+          "type": "string"
+        },
+        "summary_vi": {
+          "type": "string"
+        },
+        "work_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "work_scope": {
+          "enum": [
+            "all",
+            "selected",
+            "outside_current_rough_module"
+          ]
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "estimate",
+              "payment"
+            ]
+          }
+        },
+        "predicate": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "effect": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "effective_from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "effective_to_exclusive": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "review_status": {
+          "type": "string"
+        }
+      }
+    },
+    "table": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "pdf_page",
+        "table_id",
+        "bbox_pt",
+        "rows",
+        "columns",
+        "grid",
+        "cells"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pdf_page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "table_id": {
+          "type": "string"
+        },
+        "bbox_pt": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "columns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "grid": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "cells": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "row",
+              "column",
+              "text_raw",
+              "bbox_pt",
+              "decimal"
+            ],
+            "properties": {
+              "row": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "column": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "text_raw": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "bbox_pt": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 4,
+                    "maxItems": 4
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "decimal": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "pdf_page",
+        "text",
+        "method",
+        "mean_word_confidence",
+        "review_status"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pdf_page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "text": {
+          "type": "string"
+        },
+        "method": {
+          "enum": [
+            "native_pdf",
+            "tesseract_vie"
+          ]
+        },
+        "mean_word_confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "review_status": {
+          "type": "string"
+        }
+      }
+    },
+    "reference_table": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "pdf_page",
+        "table_id",
+        "table_kind",
+        "column_paths",
+        "records",
+        "resources",
+        "source_sha256",
+        "enabled",
+        "review_status"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pdf_page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "table_id": {
+          "type": "string"
+        },
+        "table_kind": {
+          "enum": [
+            "classification",
+            "material_property",
+            "document_index",
+            "resource_matrix",
+            "labor_matrix",
+            "coefficient_lookup",
+            "layout_fragment",
+            "narrative_note",
+            "cost_rate"
+          ]
+        },
+        "column_paths": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "row",
+              "physical_row",
+              "key_raw",
+              "fields"
+            ],
+            "properties": {
+              "row": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "physical_row": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "key_raw": {
+                "type": "string"
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "column",
+                    "header_path",
+                    "text_raw",
+                    "decimal",
+                    "bbox_pt",
+                    "lines"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "source_id",
+              "pdf_page",
+              "table_id",
+              "resource_name",
+              "resource_unit",
+              "quantity",
+              "source_codes",
+              "basis",
+              "basis_evidence"
+            ],
+            "properties": {
+              "quantity": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^\\d+(?:\\.\\d+)?(?:[Ee][+-]?\\d+)?$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "resource_name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "resource_unit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "basis": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "quantity",
+                      "unit",
+                      "unit_raw"
+                    ],
+                    "properties": {
+                      "quantity": {
+                        "type": "string",
+                        "pattern": "^\\d+(?:\\.\\d+)?(?:[Ee][+-]?\\d+)?$"
+                      },
+                      "unit": {
+                        "type": "string"
+                      },
+                      "unit_raw": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "review_status": {
+          "type": "string"
+        }
+      }
+    },
+    "basis_resolution": {
+      "type": "object",
+      "required": [
+        "record_id",
+        "table_id",
+        "basis",
+        "evidence"
+      ],
+      "properties": {
+        "record_id": {
+          "type": "string"
+        },
+        "table_id": {
+          "type": "string"
+        },
+        "basis": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "quantity",
+                "unit",
+                "unit_raw"
+              ],
+              "properties": {
+                "quantity": {
+                  "type": "string",
+                  "pattern": "^\\d+(?:\\.\\d+)?(?:[Ee][+-]?\\d+)?$"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "unit_raw": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "evidence": {
+          "type": "object",
+          "required": [
+            "source_id",
+            "pdf_page",
+            "quote",
+            "method"
+          ],
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "pdf_page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            },
+            "method": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

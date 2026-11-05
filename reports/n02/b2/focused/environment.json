@@ -1,0 +1,42 @@
+{
+  "started_utc": "2026-11-03T10:56:28.193468+00:00",
+  "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+  "python_executable": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "outside_sandbox": true,
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rebar_scope_api.py",
+    "tests/test_takeoff_structural_concurrency.py",
+    "tests/test_takeoff_view_concurrency.py",
+    "tests/test_rough_rebar.py",
+    "tests/test_rough_steel.py",
+    "tests/test_rough_materials.py",
+    "tests/test_rough_formwork_materials.py",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=120",
+    "--basetemp=C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\n02\\b2\\focused\\pytest_temp"
+  ],
+  "test_file_count": 7,
+  "flags": {
+    "DATABASE_URL_present": false,
+    "OPTIMAT_TEST_DATABASE_URL_present": false,
+    "OPTIMAT_NO_DOTENV": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPTIMAT_CATALOG_OVERLAY": "data/sample/catalog",
+    "pytest_cacheprovider_enabled": false,
+    "runxfail": false
+  },
+  "outside_hash_scope": [
+    "frontend",
+    "SQL",
+    "other documents/reports"
+  ],
+  "scope_note": "focused only, mocked API; not real CAD/full/DB; demo worker 20288 untouched"
+}

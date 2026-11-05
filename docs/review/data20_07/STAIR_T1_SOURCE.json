@@ -1,0 +1,982 @@
+{
+  "source_file": "data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf",
+  "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "pdf_page": 37,
+  "sheet": "KC-06-01",
+  "group": "THÉP BẢN THANG T1",
+  "group_count": 1,
+  "source_inserts": [
+    {
+      "insert_handle": "118E4AC",
+      "xy": [
+        -1836557.0,
+        -1283452.097439905,
+        0.0
+      ],
+      "block": "TK_2",
+      "attrs": [
+        {
+          "handle": "118E4AE",
+          "tag": "L2",
+          "raw": "3200",
+          "xy": [
+            -1833570.083219645,
+            -1283190.635743525,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4AF",
+          "tag": "TL",
+          "raw": "23.7",
+          "xy": [
+            -1823444.844474761,
+            -1283192.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4B0",
+          "tag": "DT",
+          "raw": "38.4",
+          "xy": [
+            -1825204.844474761,
+            -1283192.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4B1",
+          "tag": "SLA",
+          "raw": "12",
+          "xy": [
+            -1826630.083219645,
+            -1283192.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4B2",
+          "tag": "SL1",
+          "raw": "12",
+          "xy": [
+            -1827630.083219645,
+            -1283192.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4B3",
+          "tag": "DAI",
+          "raw": "3200",
+          "xy": [
+            -1829023.166439291,
+            -1283192.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4B4",
+          "tag": "DK",
+          "raw": "10",
+          "xy": [
+            -1830533.541609823,
+            -1283190.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4B5",
+          "tag": "SH",
+          "raw": "1",
+          "xy": [
+            -1836215.34582135,
+            -1283192.506716849,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118E4B8",
+      "xy": [
+        -1836557.0,
+        -1284172.097439905,
+        0.0
+      ],
+      "block": "TK_9",
+      "attrs": [
+        {
+          "handle": "118E4BA",
+          "tag": "SH",
+          "raw": "2",
+          "xy": [
+            -1836215.34582135,
+            -1283912.506716849,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4BB",
+          "tag": "L1",
+          "raw": "90",
+          "xy": [
+            -1835111.605287759,
+            -1283912.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4BC",
+          "tag": "L2",
+          "raw": "3200",
+          "xy": [
+            -1833570.083219645,
+            -1283910.635743525,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4BD",
+          "tag": "L3",
+          "raw": "90",
+          "xy": [
+            -1831812.021377534,
+            -1283912.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4BE",
+          "tag": "DK",
+          "raw": "10",
+          "xy": [
+            -1830533.541609823,
+            -1283910.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4BF",
+          "tag": "DAI",
+          "raw": "3380",
+          "xy": [
+            -1829023.166439291,
+            -1283912.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4C0",
+          "tag": "SL1",
+          "raw": "12",
+          "xy": [
+            -1827630.083219645,
+            -1283912.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4C1",
+          "tag": "SLA",
+          "raw": "12",
+          "xy": [
+            -1826630.083219645,
+            -1283912.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4C2",
+          "tag": "DT",
+          "raw": "40.6",
+          "xy": [
+            -1825204.844474761,
+            -1283912.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4C3",
+          "tag": "TL",
+          "raw": "25.0",
+          "xy": [
+            -1823444.844474761,
+            -1283912.000000005,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118E4C6",
+      "xy": [
+        -1836557.0,
+        -1284892.097439905,
+        0.0
+      ],
+      "block": "TK_2",
+      "attrs": [
+        {
+          "handle": "118E4C8",
+          "tag": "L2",
+          "raw": "4000",
+          "xy": [
+            -1833570.083219645,
+            -1284630.703956348,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4C9",
+          "tag": "TL",
+          "raw": "32.1",
+          "xy": [
+            -1823444.844474761,
+            -1284632.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4CA",
+          "tag": "DT",
+          "raw": "52",
+          "xy": [
+            -1825030.083219645,
+            -1284632.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4CB",
+          "tag": "SLA",
+          "raw": "13",
+          "xy": [
+            -1826630.083219645,
+            -1284632.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4CC",
+          "tag": "SL1",
+          "raw": "13",
+          "xy": [
+            -1827630.083219645,
+            -1284632.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4CD",
+          "tag": "DAI",
+          "raw": "4000",
+          "xy": [
+            -1829023.166439291,
+            -1284632.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4CE",
+          "tag": "DK",
+          "raw": "10",
+          "xy": [
+            -1830533.541609823,
+            -1284630.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4CF",
+          "tag": "SH",
+          "raw": "3",
+          "xy": [
+            -1836215.34582135,
+            -1284630.733183425,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118E4D2",
+      "xy": [
+        -1836557.0,
+        -1285612.097439905,
+        0.0
+      ],
+      "block": "TK_9",
+      "attrs": [
+        {
+          "handle": "118E4D4",
+          "tag": "SH",
+          "raw": "4",
+          "xy": [
+            -1836215.34582135,
+            -1285352.097439905,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4D5",
+          "tag": "L1",
+          "raw": "90",
+          "xy": [
+            -1835111.605287759,
+            -1285352.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4D6",
+          "tag": "L2",
+          "raw": "4000",
+          "xy": [
+            -1833570.083219645,
+            -1285350.703956348,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4D7",
+          "tag": "L3",
+          "raw": "90",
+          "xy": [
+            -1831812.021377534,
+            -1285352.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4D8",
+          "tag": "DK",
+          "raw": "10",
+          "xy": [
+            -1830533.541609823,
+            -1285350.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4D9",
+          "tag": "DAI",
+          "raw": "4180",
+          "xy": [
+            -1829023.166439291,
+            -1285352.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4DA",
+          "tag": "SL1",
+          "raw": "13",
+          "xy": [
+            -1827630.083219645,
+            -1285352.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4DB",
+          "tag": "SLA",
+          "raw": "13",
+          "xy": [
+            -1826630.083219645,
+            -1285352.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4DC",
+          "tag": "DT",
+          "raw": "54.3",
+          "xy": [
+            -1825204.844474761,
+            -1285352.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4DD",
+          "tag": "TL",
+          "raw": "33.5",
+          "xy": [
+            -1823444.844474761,
+            -1285352.000000005,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118E4E0",
+      "xy": [
+        -1836557.0,
+        -1286332.097439905,
+        0.0
+      ],
+      "block": "TK_2",
+      "attrs": [
+        {
+          "handle": "118E4E2",
+          "tag": "L2",
+          "raw": "4500",
+          "xy": [
+            -1833570.083219645,
+            -1286070.703956348,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4E3",
+          "tag": "TL",
+          "raw": "33.3",
+          "xy": [
+            -1823444.844474761,
+            -1286072.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4E4",
+          "tag": "DT",
+          "raw": "54",
+          "xy": [
+            -1825030.083219645,
+            -1286072.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4E5",
+          "tag": "SLA",
+          "raw": "12",
+          "xy": [
+            -1826630.083219645,
+            -1286072.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4E6",
+          "tag": "SL1",
+          "raw": "12",
+          "xy": [
+            -1827630.083219645,
+            -1286072.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4E7",
+          "tag": "DAI",
+          "raw": "4500",
+          "xy": [
+            -1829023.166439291,
+            -1286072.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4E8",
+          "tag": "DK",
+          "raw": "10",
+          "xy": [
+            -1830533.541609823,
+            -1286070.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4E9",
+          "tag": "SH",
+          "raw": "5",
+          "xy": [
+            -1836215.34582135,
+            -1286069.027862824,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118E4EC",
+      "xy": [
+        -1836557.0,
+        -1287052.097439905,
+        0.0
+      ],
+      "block": "TK_9",
+      "attrs": [
+        {
+          "handle": "118E4EE",
+          "tag": "SH",
+          "raw": "6",
+          "xy": [
+            -1836215.34582135,
+            -1286790.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4EF",
+          "tag": "L1",
+          "raw": "90",
+          "xy": [
+            -1835111.605287759,
+            -1286792.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4F0",
+          "tag": "L2",
+          "raw": "4500",
+          "xy": [
+            -1833570.083219645,
+            -1286790.703956348,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4F1",
+          "tag": "L3",
+          "raw": "90",
+          "xy": [
+            -1831812.021377534,
+            -1286792.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4F2",
+          "tag": "DK",
+          "raw": "10",
+          "xy": [
+            -1830533.541609823,
+            -1286790.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4F3",
+          "tag": "DAI",
+          "raw": "4680",
+          "xy": [
+            -1829023.166439291,
+            -1286792.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4F4",
+          "tag": "SL1",
+          "raw": "12",
+          "xy": [
+            -1827630.083219645,
+            -1286792.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4F5",
+          "tag": "SLA",
+          "raw": "12",
+          "xy": [
+            -1826630.083219645,
+            -1286792.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4F6",
+          "tag": "DT",
+          "raw": "56.2",
+          "xy": [
+            -1825204.844474761,
+            -1286792.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4F7",
+          "tag": "TL",
+          "raw": "34.6",
+          "xy": [
+            -1823444.844474761,
+            -1286792.000000005,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118E4FA",
+      "xy": [
+        -1836557.0,
+        -1287772.097439905,
+        0.0
+      ],
+      "block": "TK_4",
+      "attrs": [
+        {
+          "handle": "118E4FC",
+          "tag": "SH",
+          "raw": "7",
+          "xy": [
+            -1836215.34582135,
+            -1287510.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4FD",
+          "tag": "M",
+          "raw": "80",
+          "xy": [
+            -1834299.541609823,
+            -1287390.703956348,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4FE",
+          "tag": "M",
+          "raw": "80",
+          "xy": [
+            -1832607.541609823,
+            -1287390.703956348,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E4FF",
+          "tag": "L2",
+          "raw": "1150",
+          "xy": [
+            -1833570.083219645,
+            -1287510.703956348,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E500",
+          "tag": "DK",
+          "raw": "8",
+          "xy": [
+            -1830475.270804912,
+            -1287510.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E501",
+          "tag": "SL1",
+          "raw": "20",
+          "xy": [
+            -1827630.083219645,
+            -1287512.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E502",
+          "tag": "DAI",
+          "raw": "1310",
+          "xy": [
+            -1829023.166439291,
+            -1287512.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E503",
+          "tag": "DT",
+          "raw": "26.2",
+          "xy": [
+            -1825204.844474761,
+            -1287512.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E504",
+          "tag": "SLA",
+          "raw": "20",
+          "xy": [
+            -1826630.083219645,
+            -1287512.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E505",
+          "tag": "TL",
+          "raw": "10.3",
+          "xy": [
+            -1823444.844474761,
+            -1287512.000000005,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "insert_handle": "118E506",
+      "xy": [
+        -1836557.0,
+        -1288492.097439905,
+        0.0
+      ],
+      "block": "TK_9",
+      "attrs": [
+        {
+          "handle": "118E508",
+          "tag": "SH",
+          "raw": "8",
+          "xy": [
+            -1836215.34582135,
+            -1288230.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E509",
+          "tag": "L1",
+          "raw": "90",
+          "xy": [
+            -1835111.605287759,
+            -1288232.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E50A",
+          "tag": "L2",
+          "raw": "1150",
+          "xy": [
+            -1833570.083219645,
+            -1288230.703956348,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E50B",
+          "tag": "L3",
+          "raw": "90",
+          "xy": [
+            -1831812.021377534,
+            -1288232.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E50C",
+          "tag": "DK",
+          "raw": "8",
+          "xy": [
+            -1830475.270804912,
+            -1288230.801396249,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E50D",
+          "tag": "DAI",
+          "raw": "1330",
+          "xy": [
+            -1829023.166439291,
+            -1288232.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E50E",
+          "tag": "SL1",
+          "raw": "20",
+          "xy": [
+            -1827630.083219645,
+            -1288232.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E50F",
+          "tag": "SLA",
+          "raw": "20",
+          "xy": [
+            -1826630.083219645,
+            -1288232.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E510",
+          "tag": "DT",
+          "raw": "26.6",
+          "xy": [
+            -1825204.844474761,
+            -1288232.000000005,
+            0.0
+          ]
+        },
+        {
+          "handle": "118E511",
+          "tag": "TL",
+          "raw": "10.5",
+          "xy": [
+            -1823444.844474761,
+            -1288232.000000005,
+            0.0
+          ]
+        }
+      ]
+    }
+  ],
+  "row_recalculations": [
+    {
+      "mark": 1,
+      "diameter_mm": 10,
+      "developed_length_mm": 3200,
+      "total_bars": 12,
+      "total_length_m": "38.4",
+      "unit_mass_kg_m": "0.617",
+      "mass_kg": "23.6928",
+      "printed_row_mass_kg": "23.7",
+      "scope": "whole stair T1 schedule SL1, not multiplied by flight count",
+      "source_insert_handle": "118E4AC"
+    },
+    {
+      "mark": 2,
+      "diameter_mm": 10,
+      "developed_length_mm": 3380,
+      "total_bars": 12,
+      "total_length_m": "40.56",
+      "unit_mass_kg_m": "0.617",
+      "mass_kg": "25.02552",
+      "printed_row_mass_kg": "25.0",
+      "scope": "whole stair T1 schedule SL1, not multiplied by flight count",
+      "source_insert_handle": "118E4B8"
+    },
+    {
+      "mark": 3,
+      "diameter_mm": 10,
+      "developed_length_mm": 4000,
+      "total_bars": 13,
+      "total_length_m": "52",
+      "unit_mass_kg_m": "0.617",
+      "mass_kg": "32.084",
+      "printed_row_mass_kg": "32.1",
+      "scope": "whole stair T1 schedule SL1, not multiplied by flight count",
+      "source_insert_handle": "118E4C6"
+    },
+    {
+      "mark": 4,
+      "diameter_mm": 10,
+      "developed_length_mm": 4180,
+      "total_bars": 13,
+      "total_length_m": "54.34",
+      "unit_mass_kg_m": "0.617",
+      "mass_kg": "33.52778",
+      "printed_row_mass_kg": "33.5",
+      "scope": "whole stair T1 schedule SL1, not multiplied by flight count",
+      "source_insert_handle": "118E4D2"
+    },
+    {
+      "mark": 5,
+      "diameter_mm": 10,
+      "developed_length_mm": 4500,
+      "total_bars": 12,
+      "total_length_m": "54",
+      "unit_mass_kg_m": "0.617",
+      "mass_kg": "33.318",
+      "printed_row_mass_kg": "33.3",
+      "scope": "whole stair T1 schedule SL1, not multiplied by flight count",
+      "source_insert_handle": "118E4E0"
+    },
+    {
+      "mark": 6,
+      "diameter_mm": 10,
+      "developed_length_mm": 4680,
+      "total_bars": 12,
+      "total_length_m": "56.16",
+      "unit_mass_kg_m": "0.617",
+      "mass_kg": "34.65072",
+      "printed_row_mass_kg": "34.6",
+      "scope": "whole stair T1 schedule SL1, not multiplied by flight count",
+      "source_insert_handle": "118E4EC"
+    },
+    {
+      "mark": 7,
+      "diameter_mm": 8,
+      "developed_length_mm": 1310,
+      "total_bars": 20,
+      "total_length_m": "26.2",
+      "unit_mass_kg_m": "0.395",
+      "mass_kg": "10.3490",
+      "printed_row_mass_kg": "10.3",
+      "scope": "whole stair T1 schedule SL1, not multiplied by flight count",
+      "source_insert_handle": "118E4FA"
+    },
+    {
+      "mark": 8,
+      "diameter_mm": 8,
+      "developed_length_mm": 1330,
+      "total_bars": 20,
+      "total_length_m": "26.6",
+      "unit_mass_kg_m": "0.395",
+      "mass_kg": "10.5070",
+      "printed_row_mass_kg": "10.5",
+      "scope": "whole stair T1 schedule SL1, not multiplied by flight count",
+      "source_insert_handle": "118E506"
+    }
+  ],
+  "totals": {
+    "10": {
+      "mass_from_unrounded_lengths_kg": "182.29882",
+      "printed_mass_kg": "182.2"
+    },
+    "8": {
+      "mass_from_unrounded_lengths_kg": "20.8560",
+      "printed_mass_kg": "20.8"
+    }
+  },
+  "concrete": {
+    "inclined_waist_perpendicular_thickness_m": 0.12,
+    "upper_floor_landing_thickness_m": 0.15,
+    "steps_material": "brickwork",
+    "flight_count_candidate": 3,
+    "flight_count_basis": "three directional step runs on plan; extent/junction geometry not fully resolved",
+    "volume_m3": null
+  },
+  "formwork": {
+    "soffit_area_m2": null,
+    "reason": "Need flight elevation breakdown, clear widths/landing boundaries, supports/side surfaces and joint allocation"
+  },
+  "missing": [
+    "No longitudinal stair section with every flight start/end elevation identified on p37.",
+    "Plan step numbers1–17 do not independently define all riser heights/transition polygons.",
+    "Do not use developed steel lengths as stair concrete slope lengths.",
+    "Landing clear dimensions and ownership relative to floor/beam missing."
+  ],
+  "approval_status": "chua_kiem",
+  "human_approval": false,
+  "architecture_evidence": [
+    {
+      "image": "docs/review/data20_07/STAIR_KT_PAGE19.png",
+      "image_sha256": "a145445466daaa451a8b7e60f6b8e451d0e29fc7c196007fa0340c083e5677bf",
+      "pdf_page": 19,
+      "sheet": "KT-17",
+      "status": "image_inspected; exact landing/support boundaries pending"
+    },
+    {
+      "image": "docs/review/data20_07/STAIR_KT_PAGE20.png",
+      "image_sha256": "97ce437ea7cad4793a6b109cf7bdfc8ca6d40cf18b1b3aff6e1f7f0808dbe1e1",
+      "pdf_page": 20,
+      "sheet": "KT-18",
+      "status": "image_inspected; exact landing/support boundaries pending"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "data\\drawings\\build\\nha_sang_hai_duong_4x15_ket_cau.dxf": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+  "data\\drawings\\build\\nha_sang_hai_duong_4x15_kien_truc.dxf": "719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6",
+  "src\\optimat\\rough\\structural_column_instances.py": "95fbc000c79d077ecd0e82e0714bc69ffb822915daa0bc8e805bceba122c4a24",
+  "src\\optimat\\rough\\structural.py": "cd6238ad76a55f4900acfc46447c1292b784b0f04db837ff8b6d66e46a9df1b3",
+  "src\\optimat\\rough\\takeoff.py": "1641a1dec3bf2f79cb2224a0b9fa97e7abbdcee40092b9c4a5c67ee80331ea3a",
+  "src\\optimat\\drawing\\dxf_reader.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0",
+  "src\\optimat\\rough\\columns.py": "84457d7dbeab3ea9a369d5ca401baa9069fd5e60502a278dc2fb52dddfb39a14",
+  "data\\rules\\ky_hieu_cau_kien.csv": "249006f039082a269b3c9a10822c9504399bdbfbff1f80fc63f5038b0b4170d5",
+  "data\\rules\\loai_ban_ve.csv": "da6b8b0eedd38042c1c183fcc97946ab6493a35666267a3f6e9e262d5ec976fd",
+  "data\\rules\\nguong_nhan_dien.csv": "fd1db3a6c7f05ac4429931f24d7b63ab2cac5aaaf9ed24db695cf8dee8807419"
+}

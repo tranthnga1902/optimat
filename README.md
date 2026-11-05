@@ -1,6 +1,6 @@
 # OptiMat AI: bộ khung mã (base code)
 
-Hệ thống AI Agent hỗ trợ tối ưu lựa chọn vật liệu xây tường cho nhà ở riêng lẻ,
+Hệ thống AI Agent hỗ trợ tối ưu lựa chọn vật liệu thô (phần thô: kiến trúc + kết cấu) cho nhà ở riêng lẻ,
 dùng XGBoost để dự đoán giá và NSGA-II để tối ưu đa mục tiêu.
 
 Đây là **bộ khung chạy được từ đầu đến cuối trên dữ liệu mẫu**, chưa phải hệ thống hoàn chỉnh.
@@ -8,6 +8,9 @@ Mục "Việc cần làm tiếp" ở cuối liệt kê những phần còn thi�
 
 Kế hoạch 15 tuần và danh sách việc: `PLAN.md` (có hướng dẫn kết nối DBeaver).
 Bối cảnh dự án cho Claude Code: `CLAUDE.md`.
+
+Database hiện hành chốt **20 bảng vật lý**. Xem [đặc tả](docs/schema/CSDL_20_BANG.md) và [kế hoạch dữ liệu sáu tuần](docs/KE_HOACH_HOAN_THIEN_DU_LIEU_20_BANG.md).
+Database cũ phải chuyển bằng `python scripts/migrate_schema20.py --apply` (sao lưu bắt buộc); không dùng `--reset` để chuyển dữ liệu.
 
 ## Cài đặt (Windows, PowerShell)
 
@@ -22,7 +25,7 @@ Cần Python 3.10 trở lên.
 
 ### PostgreSQL
 
-Cơ sở dữ liệu gồm 23 bảng, định nghĩa trong `src/optimat/db/models.py`. Có hai cách tạo, cho kết quả như nhau.
+Cơ sở dữ liệu gồm **20 bảng vật lý**, định nghĩa trong `src/optimat/db/schema20.py`. Các tên cũ trong `models.py` có thể là view tương thích; không dùng metadata cũ để tạo database mới.
 
 **Bước chung:** trong DBeaver, kết nối bằng tài khoản `postgres` rồi chạy từng lệnh trong
 `sql/00_create_database.sql` (tạo người dùng `optimat` và database `optimat` mã hóa UTF-8).
@@ -37,7 +40,7 @@ python scripts/init_db.py --prices data/sample/prices_sample.csv
 **Cách 2, bằng SQL trong DBeaver:** kết nối tới database `optimat` bằng tài khoản `optimat`, mở và chạy
 `sql/01_schema.sql` (Alt+X để chạy cả file), rồi `sql/02_seed_sample.sql`, `sql/03_materials.sql`, `sql/05_rules.sql`.
 
-Sau đó trong DBeaver, bấm F5 ở mục Tables để thấy 23 bảng. Sửa `db/models.py` thì chạy
+Sau đó trong DBeaver, bấm F5 ở mục Tables để thấy 20 bảng; các tên chuyển tiếp nằm ở Views. Sửa `db/schema20.py` thì chạy
 `python scripts/export_sql.py` để sinh lại các file SQL.
 
 Khi có `DATABASE_URL`, hệ thống đọc danh mục, họ vật liệu, đơn giá nhân công, bộ quy tắc, định mức và lịch sử giá từ PostgreSQL. Khi không có, hệ thống đọc
@@ -45,6 +48,12 @@ các file CSV trong `data/catalog` (dùng cho kiểm thử). `GET /api/health` c
 
 ### Đọc file DWG
 
+Ưu tiên LibreDWG (`dwg2dxf`): thêm vào PATH hoặc đặt `LIBREDWG_CONVERTER_PATH`
+trỏ tới executable. DXF đọc trực tiếp không cần bộ chuyển đổi. DWF/DWFx cần
+chuyển sang DXF trước khi tải lên, không chỉ đổi đuôi file.
+Deploy backend trên Render bằng Docker: xem [deploy/RENDER.md](deploy/RENDER.md).
+
+Máy đã có ODA vẫn dùng được khi không tìm thấy LibreDWG:
 Cài ODA File Converter (miễn phí) từ https://www.opendesign.com/guestfiles/oda_file_converter.
 Hệ thống tự tìm trong `C:\Program Files\ODA`. Nếu cài chỗ khác, đặt biến môi trường:
 
@@ -110,7 +119,7 @@ print(state["explanation"])
 | Thư mục | Nội dung |
 |---|---|
 | `src/optimat/drawing/` | Đọc DXF và DWG (`dxf_reader.py`, `dwg_convert.py`), gán vai trò layer (`layer_classifier.py`), chuyển mã phông TCVN3 (`encoding.py`), nhận diện tường (`walls.py`), đo bóc (`takeoff.py`) |
-| `src/optimat/db/` | Lược đồ 23 bảng PostgreSQL (`models.py`), kết nối (`session.py`) |
+| `src/optimat/db/` | Lược đồ 20 bảng (`schema20.py`), view tương thích (`compat20.py`), chuyển đổi có đối chiếu (`migrate20.py`) |
 | `sql/` | File SQL để tạo database, bảng và dữ liệu mẫu trực tiếp trong DBeaver |
 | `src/optimat/catalog/` | Nạp danh mục vật liệu, nhà cung cấp, phương tiện; ước lượng cự ly |
 | `src/optimat/predict/` | Đặc trưng (`features.py`), huấn luyện và so sánh mô hình (`train.py`), nạp mô hình để dự đoán (`cost_model.py`) |

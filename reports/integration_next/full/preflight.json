@@ -1,0 +1,12 @@
+{
+  "observed_utc": "2026-11-03T15:08:45.323756+00:00",
+  "snapshot_interval_seconds": 3,
+  "hash_diff": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "other_pytest_process_check": "read-only Get-CimInstance 2026-11-03T22:08:16+07:00 returned no pytest processes",
+  "writer_hold_evidence": "root conditional release + QA_6_MODULE_BROWSER_20261103.md HOLD main/ingest/view; demo production source-ready; N03 source-ready",
+  "test_started": true
+}

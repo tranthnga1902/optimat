@@ -37,17 +37,17 @@ function MatSelect({ D, w, onChange }: { D: Data; w: Wall; onChange: (v: string)
 
 const NAMES: Record<string, string> = { all: "Tất cả", low: "Tin cậy thấp", nomat: "Chưa có vật liệu", man: "Vẽ thêm", off: "Đã loại" };
 
-export function WallFilters({ S, filter, onFilter, onAllMat }: { S: PlanState; filter: string; onFilter: (f: string) => void; onAllMat: () => void }) {
+export function WallFilters({ S, filter, onFilter, onAllMat }: { S: PlanState; filter: string; onFilter: (f: string) => void; onAllMat?: () => void }) {
   const counts: Record<string, number> = { all: S.walls.length, low: S.walls.filter((w) => w.keep && w.conf < 0.7).length,
     off: S.walls.filter((w) => !w.keep).length, man: S.walls.filter((w) => w.src === "manual").length,
     nomat: S.walls.filter((w) => w.keep && w.masonry && !w.mat).length };
   return <>
-    {Object.keys(NAMES).map((k) => <button key={k} className={s.pill} type="button" aria-pressed={filter === k} onClick={() => onFilter(k)}>{NAMES[k]} {counts[k]}</button>)}
-    <span className={s.grow} /><button className={s.pill} type="button" onClick={onAllMat}>Gán vật liệu cho mọi tường chưa rõ…</button>
+    {Object.keys(NAMES).filter((k) => onAllMat || k !== "nomat").map((k) => <button key={k} className={s.pill} type="button" aria-pressed={filter === k} onClick={() => onFilter(k)}>{NAMES[k]} {counts[k]}</button>)}
+    <span className={s.grow} />{onAllMat && <button className={s.pill} type="button" onClick={onAllMat}>Gán vật liệu cho mọi tường chưa rõ…</button>}
   </>;
 }
 
-export function WallList({ D, S, c, filter, selected, onSelect, change }: { D: Data; S: PlanState; c: Computed; filter: string; selected: string | null; onSelect: (id: string) => void; change: Change }) {
+export function WallList({ materials = true, D, S, c, filter, selected, onSelect, change }: { materials?: boolean; D: Data; S: PlanState; c: Computed; filter: string; selected: string | null; onSelect: (id: string) => void; change: Change }) {
   const classes = useWallClasses();
   let items = S.walls;
   if (filter === "low") items = items.filter((w) => w.keep && w.conf < 0.7);
@@ -64,13 +64,13 @@ export function WallList({ D, S, c, filter, selected, onSelect, change }: { D: D
         <span className={s.rmain}>
           <select aria-label="Loại tường" value={w.cls} onChange={(e) => change(w.id, "cls", e.target.value)}>{(classes.includes(w.cls) ? classes : [...classes, w.cls]).map((k) => <option key={k}>{k}</option>)}</select>
           <select aria-label="Vai trò" value={w.role} onChange={(e) => change(w.id, "role", e.target.value)}><option value="envelope">bao che</option><option value="partition">ngăn</option></select>
-          {w.masonry ? <MatSelect D={D} w={w} onChange={(v) => change(w.id, "mat", v)} /> : tag("", "bê tông, không tính")}
+          {materials && (w.masonry ? <MatSelect D={D} w={w} onChange={(v) => change(w.id, "mat", v)} /> : tag("", "bê tông, không tính"))}
           {w.src === "manual" ? tag(s.man, "vẽ thêm") : w.edited ? tag(s.edit, "đã sửa") : null}
           {w.src !== "manual" && w.conf < 0.7 && tag(s.low, `tin cậy ${fmt(w.conf)}`)}
           {!w.keep && w.src !== "manual" && <select aria-label="Lý do loại" value={w.reason || REASONS[0]} onChange={(e) => change(w.id, "reason", e.target.value)}>
             {REASONS.map((r) => <option key={r}>{r}</option>)}</select>}
         </span>
-        <span className={s.rnum}>{fmt(len)} m<small>{w.keep && w.masonry ? fmt(Math.max(0, area)) + " m²" : "—"}</small></span>
+        <span className={s.rnum}>{fmt(len)} m<small>{!(w.keep && w.masonry) ? "—" : S.height_mm ? fmt(Math.max(0, area)) + " m²" : "chưa tính"}</small></span>
       </div>
     );
   })}</>;
@@ -81,26 +81,26 @@ export function OpeningList({ S, selected, onSelect, change, onDelete }: { S: Pl
   if (!S.openings.length) return <div className={s.empty}>Chưa có lỗ mở. Chọn &quot;Thêm cửa&quot; rồi bấm lên tường để thêm.</div>;
   return <>{S.openings.map((o) => {
     const w = byId[o.wall], on = o.keep && w && w.keep;
-    const size = (f: "w" | "h") => (el: HTMLInputElement) => { change(o.id, f, el.value); return String(Math.round(Math.max(100, Number(el.value) || o[f] || 0))); };
+    const size = (f: "w" | "h") => (el: HTMLInputElement) => { change(o.id, f, el.value); const v = Number(el.value) ? Math.max(100, Number(el.value)) : o[f]; return v == null ? "" : String(Math.round(v)); };
     return (
       <div key={o.id} data-id={o.id} className={`${s.row} ${on ? "" : s.off} ${o.id === selected ? s.sel : ""}`} onClick={pickRow(onSelect, o.id)}>
         <input type="checkbox" checked={o.keep} onChange={(e) => change(o.id, "keep", e.target.checked)} aria-label={`Giữ lỗ mở ${o.id}`} />
         <span className={s.rid}><i className={s.sw} style={{ background: "var(--open)" }} />{o.id}</span>
         <span className={s.rmain}>
           <select aria-label="Loại cửa" value={o.kind} onChange={(e) => change(o.id, "kind", e.target.value)}>{Object.keys(KIND).map((k) => <option key={k} value={k}>{KIND[k]}</option>)}</select>
-          <ChangeInput type="number" value={String(Math.round(o.w))} step={50} min={100} aria-label="Rộng (mm)" onCommit={size("w")} /> ×
+          <ChangeInput type="number" value={o.w == null ? "" : String(Math.round(o.w))} placeholder="nhập rộng" step={50} min={100} aria-label="Rộng (mm)" onCommit={size("w")} /> ×
           <ChangeInput type="number" value={o.h == null ? "" : String(Math.round(o.h))} placeholder="nhập cao" step={50} min={100} aria-label="Cao (mm)" onCommit={size("h")} />
           {tag("", `tường ${o.wall}`)}
           {o.src === "manual" ? tag(s.man, "thêm tay") : o.ev ? tag("", o.ev) : null}
           {o.src === "manual" && <button className={s.x} type="button" aria-label="Xóa lỗ mở" onClick={() => onDelete(o.id)}>×</button>}
         </span>
-        <span className={s.rnum}>{o.h == null ? "chưa trừ" : `${fmt(o.w * Math.min(o.h, S.height_mm) / 1e6)} m²`}</span>
+        <span className={s.rnum}>{o.w == null || o.h == null ? "chưa trừ" : `${fmt(o.w * Math.min(o.h, S.height_mm) / 1e6)} m²`}</span>
       </div>
     );
   })}</>;
 }
 
-export function QtyTab({ D, S, c, confirmed }: { D: Data; S: PlanState; c: Computed; confirmed?: Confirmed }) {
+export function QtyTab({ materials = true, D, S, c, confirmed }: { materials?: boolean; D: Data; S: PlanState; c: Computed; confirmed?: Confirmed }) {
   const edits = S.walls.filter((w) => w.edited || w.src === "manual" || !w.keep).length + S.openings.filter((o) => o.src === "manual" || o.edited || !o.keep).length;
   return (
     <div className={s.qty}>
@@ -110,14 +110,15 @@ export function QtyTab({ D, S, c, confirmed }: { D: Data; S: PlanState; c: Compu
           <td className={s.num}>{fmt(g.L)}</td><td className={s.num}>{fmt(g.gross)}</td><td className={s.num}>{fmt(g.open)}</td><td className={s.num}><b>{fmt(g.net)}</b></td></tr>)
           : <tr><td colSpan={6}>Chưa có tường nào được giữ.</td></tr>}</tbody>
         <tfoot><tr><td colSpan={5}>Tổng</td><td className={s.num}>{fmt(c.total)}</td></tr></tfoot></table></div>
-      <p className={s.label}>Vật liệu theo thiết kế</p>
+      {materials && <><p className={s.label}>Vật liệu theo thiết kế</p>
       <div style={{ overflowX: "auto" }}><table><tbody>{c.groups.map((g, i) => {
         const sys = g.mat && sysOf(D, g.mat, g.cls);
         return <tr key={i}><td>{g.cls} {ROLE[g.role]}</td><td>{g.mat ? <>{matLabel(D, g.mat)} {tag("", `${Math.round(g.share * 100)}% chiều dài`)}{" "}
           {sys ? tag("", sys) : tag(s.low, `chưa có phương án tường ${g.cls}`)}</> : tag(s.low, "chưa rõ")}</td></tr>;
       })}</tbody></table></div>
-      <p style={{ color: "var(--muted)", margin: 0 }}>{edits ? `Đã chỉnh tay ${edits} mục so với kết quả tự động.` : "Chưa chỉnh mục nào."} Số trên trang là tính tạm; bấm &quot;Xác nhận bản vẽ&quot; để chốt và tra giá theo mã vật liệu.</p>
-      {confirmed && confirmed.bill && <BillTable r={confirmed} />}
+      </>}
+      <p style={{ color: "var(--muted)", margin: 0 }}>{edits ? `Đã chỉnh tay ${edits} mục so với kết quả tự động.` : "Chưa chỉnh mục nào."} Số trên trang là tính tạm; bấm &quot;Xác nhận bản vẽ&quot; để chốt kích thước và khối lượng.</p>
+      {materials && confirmed && confirmed.bill && <BillTable r={confirmed} />}
     </div>
   );
 }

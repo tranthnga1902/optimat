@@ -1,0 +1,28 @@
+{
+  "status": "source_verified_not_deployed",
+  "base_manifest_sha256": "7654220fd0859dc928e638ceac2644f5dd03928e322a03a2fd95c42271255cc1",
+  "after_opening_manifest_sha256": "b285c83d85e9988a93676407f374eeda3bb32b0faa349cf53b48b9dcc6032aeb",
+  "after_opening_source": "opening_validation_ui_v3/manifest.json",
+  "ports": {
+    "3002": {
+      "base": "XLGfOY4MIuGt8ZUp-wppq",
+      "logs": [
+        "scope.log",
+        "integrated.log",
+        "scope-types.json",
+        "integrated-types.json",
+        "integration-apply.json"
+      ]
+    },
+    "3001": {
+      "base": "LKTDjEOitNSiJBETPtyW8",
+      "logs": [
+        "scope.log",
+        "integrated.log",
+        "scope-types.json",
+        "integrated-types.json",
+        "integration-apply.json"
+      ]
+    }
+  }
+}

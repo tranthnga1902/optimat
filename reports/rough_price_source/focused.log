@@ -1,0 +1,16 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 95 items
+
+tests\test_rough_price_source.py ...........                             [ 11%]
+tests\test_catalog_pricing.py .........................................  [ 54%]
+tests\test_rough_partial.py .........................................    [ 97%]
+tests\test_rough_agent.py .                                              [ 98%]
+tests\test_rough_materials.py .                                          [100%]
+
+============================= 95 passed in 13.22s =============================
+
+EXIT=0

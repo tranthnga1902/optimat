@@ -1,0 +1,10 @@
+{
+  "src/optimat/rough/structural.py": "cd6238ad76a55f4900acfc46447c1292b784b0f04db837ff8b6d66e46a9df1b3",
+  "src/optimat/rough/takeoff.py": "31b351ea5c3b8427047906c86d748c65551b1bc114bc26f31cf3a1bde01003a8",
+  "src/optimat/rough/structural_column_instances.py": "fdab0bba6d02b8f5b583402283d4cc5f4fbb58775922e101e656a295679fb4d9",
+  "tests/test_structural_column_instances.py": "f2098049ab1398f0db2d2705a575f880e6bc84fa0c6063aa95c5cb4d683d0eb6",
+  "tests/test_rough_columns.py": "d9e07dfcd4179fc8192e0527fcfbeae403478776f05cf8a0052b43e2814961d0",
+  "tests/test_rough_structural.py": "ad199e465fff5073649a1950362013286d899b91c0cae5f9d24153e2be728e54",
+  "tests/test_work_dimensions.py": "db65fe6ce2bc23f48748c247af694f63982e574eed73a387de4b1cdb2e80ea0d",
+  "tests/test_rough_quantity_details.py": "012eefaffc397763ddbfa97137552428f34157557491b1c334e82e603ee3810d"
+}

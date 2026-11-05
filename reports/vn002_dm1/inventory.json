@@ -1,0 +1,2032 @@
+{
+  "total": 288,
+  "groups": {
+    "catalog": 13,
+    "cong_bo_gia": 1,
+    "drawings": 171,
+    "ground_truth": 36,
+    "project_documents": 2,
+    "rules": 18,
+    "sample": 26,
+    "uploads": 18,
+    "van_ban": 3
+  },
+  "files": [
+    {
+      "path": "data/catalog/labor_rates.csv",
+      "bytes": 56,
+      "sha256": "b096494b1fc17dcb94d1a75f9d618bcaf0ab076dc376d546503f45b4a95fd2e6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/material_aliases.csv",
+      "bytes": 11336,
+      "sha256": "aca18b7d581f02c46cee4960cb32bcc18b0e12662f94f177e627888add291fe6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/material_families.csv",
+      "bytes": 494,
+      "sha256": "2ec8e306997dc03e1d59f892b418e0dcf8010fcc3cf987b6237f7a92b8e3ba11",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/material_groups.csv",
+      "bytes": 706,
+      "sha256": "6e643128f1765bcee81292cb363708cdf60582e6a079194c42d27f88b43e051c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/material_relations.csv",
+      "bytes": 3199,
+      "sha256": "5b8233eae16c7e3edbe4b00147729241d6be83bdb10c5a842cd9fca9767793ef",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/material_standards.csv",
+      "bytes": 3950,
+      "sha256": "afeb87b30b2dabaa4470056ca7f2e3e3850f6cc6fe411de8dc7f4f71e2143582",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/materials.csv",
+      "bytes": 45696,
+      "sha256": "9b644f3d83f4f525a3ddd9d62de7bda8761367ae4998bc7b809821e6a12a2bf6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/materials_master.xlsx",
+      "bytes": 48972,
+      "sha256": "0b554f31110de39cc1f25ab904524699edf007ad0263f129bcc7607c1a5a3b4d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/standards.csv",
+      "bytes": 6999,
+      "sha256": "e9a18efb42a0b4b41c9fe3a3886e4dcf7fa8aa29a1a00175dba9207a1ad5d25a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/supplier_materials.csv",
+      "bytes": 93,
+      "sha256": "614a4e11632391f927ec05465bbaf6c83494795fbdbbba14666323799d4673bf",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/suppliers.csv",
+      "bytes": 975149,
+      "sha256": "4892ee38bc494445f74585a882e87e18e889e9e0d42ce0062ec8957301a504e7",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/catalog/vehicles.csv",
+      "bytes": 58,
+      "sha256": "c48ed13f6c5b8d8b24e35b96bbb33ab9bd611679ee1e01a2ba630ceb1198d310",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/catalog/wall_systems.csv",
+      "bytes": 6618,
+      "sha256": "7b135b8ae2ee64db8530d098b6aea799fa537db4f0bb8dc79ebc1029aace2408",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/cong_bo_gia/02.01_2026_CBGVL-SXD.csv",
+      "bytes": 1259380,
+      "sha256": "b50943b4093d56710f87bd0f8ff9d4eb18ba2401394b69341568bb70cd4117a3",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/.concept_samples.json",
+      "bytes": 21171837,
+      "sha256": "285d010026cd4d84881ed7d2f4be2d1e2af103c3b9b0c4b2dd0e681dabe61f63",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/build/ket_cau.dxf",
+      "bytes": 8091301,
+      "sha256": "fb8d2a90fe0cf50215659975c81512b173614308c8e1fa6b2236a69bec764b56",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/ket_cau.khai_niem.json",
+      "bytes": 11435,
+      "sha256": "b8ddee69c45adf6d003ea2c787f89e6a40edd1f9d0cb989f557b94ebbf949c9c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/nha_dan.dxf",
+      "bytes": 8176918,
+      "sha256": "ace1e306aeaa6600b9572d685d744a80215b2f1d90c43eb52aa9148fee0892b2",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/nha_dan.khai_niem.json",
+      "bytes": 49266,
+      "sha256": "b9063c80ff5e63fae7a9b5362a8a3f6cb7c880a5954e2ddcd87ede150419c3c5",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/nha_huong_hai_duong_7x12_ket_cau.dxf",
+      "bytes": 8992729,
+      "sha256": "4ea9e76ead4eb9bb0849954eabf64f0a3cab74fa566633a981c82df50e859c4f",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/nha_huong_hai_duong_7x12_kien_truc.dxf",
+      "bytes": 9430388,
+      "sha256": "f3721915d599a9f115fd81e9b5fc266f98d896171cba3d1a1f522debc86f0234",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/nha_pho.dxf",
+      "bytes": 20796388,
+      "sha256": "9cb2a7eb44c429852aa58ef10b17e7b5af4c47869c0f983458af6b8d871b250d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/nha_pho.khai_niem.json",
+      "bytes": 38333,
+      "sha256": "67b04de078dfb197d80b4242a94ae21d5bf3055e193bc0f514d459240621f570",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/nha_sang_hai_duong_4x15_ket_cau.dxf",
+      "bytes": 15295031,
+      "sha256": "22cda9103ace1a6c0826805836f309a97bef71c03dc27d3508efdb56fe0ec19c",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/build/nha_sang_hai_duong_4x15_kien_truc.dxf",
+      "bytes": 17232252,
+      "sha256": "719ea17b22b856bb31363fbfc9bf218f312112958e9de4f6638e2ede1f1cf8d6",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/build/tan_binh_ket_cau.dxf",
+      "bytes": 7878010,
+      "sha256": "b68e6545214dd1630a8022638f7be8e647addc3b1097529d69b691bcb3deacb5",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/build/tan_binh_kien_truc.dxf",
+      "bytes": 13067970,
+      "sha256": "271201b51226c2dd0e9b16f2b09d44f5c10cc99d8737d79c1b62f1b69aeed8f6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/banve1/DIEN_14.04.2011.dwg",
+      "bytes": 550848,
+      "sha256": "6f69e0e53c5e63fcc603a17e31ff0f4c450dc93df370e2101c109fe179bf18d4",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/banve1/du_toan_23-4.xls",
+      "bytes": 492032,
+      "sha256": "46e7b2d5f349736427f740af156028c6c80cf5ea68d349190aca60c74551b333",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/banve1/ket_cau22-4-11.dwg",
+      "bytes": 541280,
+      "sha256": "1dbf157c2c28111d7a5113a9aa371b8afad45c33ee8eca50ab4d2d6246ad4dc0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/banve1/kien_truc.dwg",
+      "bytes": 2662880,
+      "sha256": "86872afec00888d450e5275e59096b2aa8d812f8f6a23d97f638df65ba600369",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/banve1/nuoc.dwg",
+      "bytes": 555211,
+      "sha256": "a17fecfc06a4703219f25ecabe09f33afc5a30b3f91b458b6f3c5bd6cbfa3595",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/Du Toan Nha Tan Binh/BAN VE/BIEN PHAP THI CONG.dwg",
+      "bytes": 2965248,
+      "sha256": "45275aa3ae716104a5c4bdff4982b1f892282776515179e2d097230d0a5933a7",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/Du Toan Nha Tan Binh/BAN VE/Dien nuoc.dwg",
+      "bytes": 792096,
+      "sha256": "36513ac4ad1827560aa23c3a055dad584495f1e9f893983a83a414ad6b739d0c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/Du Toan Nha Tan Binh/BAN VE/Ket cau.dwg",
+      "bytes": 1866176,
+      "sha256": "467ed02988e6fcc7e2e22cbb141889b4769d17f90f4d84a0fbd202ea7f7bad3c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/Du Toan Nha Tan Binh/BAN VE/Kien truc.dwg",
+      "bytes": 2057376,
+      "sha256": "f3c76142a44ce06a4fb2e1fa911d521ec73cda3801b6f2e4489b423a617c5d50",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261102/banve/Du Toan Nha Tan Binh/Nha Tan Binh.xls",
+      "bytes": 1082880,
+      "sha256": "b35185afc64093bcc7edb59954f00b8850615015e5ba46dcdcee11bb31e32f27",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO DIEN 16-12-2019 NHA ANH HUONG-HAI DUONG.dwg",
+      "bytes": 1024512,
+      "sha256": "20d4fc01dd6f88e10557df48d6663e47d59bfc97921a1b7e3d44566a4e23c24e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO KET CAU 18-12 NHA A HUONG - HAI DUONG (SUA THEP DAM).dwg",
+      "bytes": 1651872,
+      "sha256": "0b6506e0948ab09edbc8fa439900af17bb4b9cc9ef7165a772ef8a3ce0fde732",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HO SO NUOC 14-12-2019 NHA ANH HUONG - HAI DUONG.dwg",
+      "bytes": 792384,
+      "sha256": "9c5a21021c1edc05a7c76c006440039d8c4ab92e19ce5ff93fbe8256efec424f",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HỒ SƠ DỰ TOÁN NHÀ PHỐ 2 TẦNG 7X12M.pdf",
+      "bytes": 3182938,
+      "sha256": "6798261ea7ce01c78e4913d8fff8378f1a08fe6ed9112c69ac07b6c23a2db523",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/HỒ SƠ THIẾT KẾ KIẾN TRÚC.dwg",
+      "bytes": 1489664,
+      "sha256": "8579f576f1fe8a23c5968153478afe0a819785804557a9cdc661faefd8b59ea8",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ KIẾN TRÚC.pdf",
+      "bytes": 4447425,
+      "sha256": "48dafa62678b5046418de2f2d096cc8d5d97d2456c1e309886c864672a215720",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ KẾT CẤU.pdf",
+      "bytes": 9655936,
+      "sha256": "422a9175668dc8ef0a9c8a40e04d0ec4866b7b3d81ffdc3b6308f1c691bd4a1c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ NƯỚC.pdf",
+      "bytes": 3801117,
+      "sha256": "5b5d752bcf65b5481befdc511c3c8920d9b3c55b0c5379a1d9d542daa4215970",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN001_nha_pho_2_tang_7x12/PHẦN THIẾT KẾ ĐIỆN.pdf",
+      "bytes": 7557735,
+      "sha256": "de831d88dda6e1acd6987dac54d3fcb893d5fe16b7a9dac67b62217011f629d0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/BO KY THUAT NHA A SANG.dwg",
+      "bytes": 2403936,
+      "sha256": "36f2b110f04522e97ba481275f4594d3ea8b71442743f72f4b8fecc8f8489bc6",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/DU TOAN NHA PHO 4 TANG 4X15M.pdf",
+      "bytes": 3378621,
+      "sha256": "31a9cbd2b0662f3d57cf069b2ad109f6a4702a8dc92b74d5ba24bd2acfcce92b",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HO SO DIEN NHA ANH SANG - HAI DUONG - 15-10-2021.dwg",
+      "bytes": 1470848,
+      "sha256": "c152b169a9171c3a19615e09a0b851f3932426aa34f20ec93893330e9ad05cee",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HO SO KET CAU NHA A SANG - HAI DUONG   15-10-2021.dwg",
+      "bytes": 2199392,
+      "sha256": "8e049401408d381aae3aa50b624f41cc13cf2f3d7955334ecbd213b6392cd51e",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HO SO NUOC NHA ANH SANG - HAI DUONG 14-10-2021.dwg",
+      "bytes": 916992,
+      "sha256": "e6b9df01062d142af2191c4d79ae44d02477f5fd10d8fe1715093ce4b448d5b7",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ KIẾN TRÚC PDF.pdf",
+      "bytes": 6991492,
+      "sha256": "59cad635a392c11f061d5a4f78406c00b4248f810643b9332d4b085e0809ea88",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ KẾT CẤU.pdf",
+      "bytes": 13325257,
+      "sha256": "4b6ca4f97e80b85ae4d1df555f13ad1b531c8243f52f300ec34d436357060344",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ NƯỚC.pdf",
+      "bytes": 4125712,
+      "sha256": "89191e31fade0412d8245fb2e3247be9c73a0f6e4c3afb47465c9920a30de7d2",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN002_nha_pho_4_tang_4x15/HỒ SƠ ĐIỆN.pdf",
+      "bytes": 4983467,
+      "sha256": "75ea204930ba59861fa1938d8e6dab7f0c3197bdcf2283bc575f03fe2b0b6b91",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN DIEN.dwg",
+      "bytes": 571680,
+      "sha256": "c4ecaf88307a9324333512ce0e6190b47922918985237e134f5e137533cddf30",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN DU TOAN.xls",
+      "bytes": 487424,
+      "sha256": "c1ce7cdc1eee430a3b147f0933787e09244d92d11cd8a4db4353a1aa76f3b412",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN KET CAU.dwg",
+      "bytes": 550976,
+      "sha256": "f4d22d83ce04ca1654a610a1707c78c32ee97d7bc86eab61ec228c8b8cee394a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN KIEN TRUC.dwg",
+      "bytes": 2700160,
+      "sha256": "54fc2ad7c2e085ae3e8ab97faf517869542204033f519ce721f6d6fd4166cd16",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN003_nha_pho_3_tang/PHAN NUOC.dwg",
+      "bytes": 569760,
+      "sha256": "e0567eac9b05d6d03e089ae556d9359df27096a8e32edd3a1628f1e8e3a06afa",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/BIEN PHAP THI CONG.dwg",
+      "bytes": 2965248,
+      "sha256": "45275aa3ae716104a5c4bdff4982b1f892282776515179e2d097230d0a5933a7",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/dien nuoc nguen binh.dwg",
+      "bytes": 792096,
+      "sha256": "36513ac4ad1827560aa23c3a055dad584495f1e9f893983a83a414ad6b739d0c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/ketcauNGUYENBINH.dwg",
+      "bytes": 1866176,
+      "sha256": "467ed02988e6fcc7e2e22cbb141889b4769d17f90f4d84a0fbd202ea7f7bad3c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/Nha Tan Binh.xls",
+      "bytes": 1089536,
+      "sha256": "b252d28a966266eb1fe7c0943515a952611bbef430e181f1267caebcf61d96ae",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/raw_20261103/VN004_nha_o_Tan_Binh/tk nguen binh.dwg",
+      "bytes": 2057376,
+      "sha256": "f3c76142a44ce06a4fb2e1fa911d521ec73cda3801b6f2e4489b423a617c5d50",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/README.md",
+      "bytes": 752,
+      "sha256": "416587be0f0d608a665c929fd5684b72cabee3f4bb9925d3c72361d6d5959a3b",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c01_tiet_dien_ghi_chu.dxf",
+      "bytes": 70047,
+      "sha256": "9393aec214a0822cc9664baefc1d0c3b035216be11be057d67c40492b66131cc",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c02_thieu_chi_tiet.dxf",
+      "bytes": 69884,
+      "sha256": "bff003dd4bb1943c44f613705485a432ee840718e704859cc4cc9643bae4a161",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c03_xung_dot_chu.dxf",
+      "bytes": 70188,
+      "sha256": "532550ace1fcdf5102cec56416a0a878b675af8d82cb32f9638aa49a3e650f2a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c04_net_lech_tiet_dien.dxf",
+      "bytes": 70036,
+      "sha256": "04712d086e7f44a8fa5c0d85e0a7073b906d95fd2d11c3ed4404a135f6f44a2b",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c05_khong_co_net.dxf",
+      "bytes": 70037,
+      "sha256": "cae80564e08b7e8019547e3c0943fc2505547db5e144167f4844db4c87a9745e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c06_mong_dem.dxf",
+      "bytes": 70305,
+      "sha256": "dead5a940c2c89ec47d782ca38fca956978fcb7191c04502da0e3fac5e5fe0f3",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c07_chi_tiet_thua.dxf",
+      "bytes": 70203,
+      "sha256": "12823db5c38af4151b33ae26d85b7cff94ac18d754b9ac0a2537e0b31c56d6af",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c08_da_tang.dxf",
+      "bytes": 70047,
+      "sha256": "e0ffe69300027d46622f5614dac229576baec9aa9e0aa3119b6cf2e53cf7fda6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c09_lech_phien_ban.dxf",
+      "bytes": 70345,
+      "sha256": "589f252391cecc7f56db8e2ece0ff22f86224436484fc7e546fcf61f991e690e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c10_ky_hieu_la.dxf",
+      "bytes": 70186,
+      "sha256": "8f2566648ff8d3d6029442732a301bf055167e85f60651e56e8a078a434bbc31",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c11_gan_ky_hieu.dxf",
+      "bytes": 70186,
+      "sha256": "337297bc7ef44d1a858de87f9323ed8646f51adcff8827a405e2e12d2b1070e3",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c12_cot_dien_hinh.dxf",
+      "bytes": 70507,
+      "sha256": "8d8f0b2f5013903873b9ef1add2f9641f15e62f75bbd8901bd186b745b77166c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c13_truc.dxf",
+      "bytes": 70469,
+      "sha256": "600816bcbfc8308ff350a8c7ff3e690b67f0558f0226929decfc13b2e5dcf239",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c14_trung_tang.dxf",
+      "bytes": 72670,
+      "sha256": "28ff15e6b2239d0eb0428cb62996efb06ac67ac3e4951602bc8711f15c6374cb",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/s03/c15_tieu_de_la.dxf",
+      "bytes": 70207,
+      "sha256": "d73027a67434de569c3e32f12231642091f84860c4857166f6c9d7a9148f9f3a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P01/P01_ban_ve.dxf",
+      "bytes": 42236,
+      "sha256": "e01dce597055285817660638812f49e654953b8ee652cfc35fb2fbb5f1ec918a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P01/P01_ban_ve.pdf",
+      "bytes": 101189,
+      "sha256": "65db4be87943bc57030438149db2046ba69e30da511eb769b5e9aa2299e48048",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P01/P01_data.json",
+      "bytes": 116588,
+      "sha256": "5b1c2e6cbb2eb7812b6b6c6127f55089c1b166272667131f249a78f40da6b317",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P01/P01_tien_luong.xlsx",
+      "bytes": 31783,
+      "sha256": "0d159067902e99d4d75621e1a0dd901c8b2211bf742a9a2f143fdc0eb9075e1b",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P01/P01_vat_lieu_dai_ly.md",
+      "bytes": 4800,
+      "sha256": "623b1931f7404e07d12ab0815be2266da5fc1e90bc46fb2f734ddf7dbbfaaa82",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P02/P02_ban_ve.dxf",
+      "bytes": 42391,
+      "sha256": "904519f2ad40f421a92fe21d3b572abe4fad5ef6876038283b4f5a506b77c09e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P02/P02_ban_ve.pdf",
+      "bytes": 101227,
+      "sha256": "470ff734711508c30e703918bbb51d958095870acbde1cc073f6d7ed7921cf14",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P02/P02_data.json",
+      "bytes": 117040,
+      "sha256": "33d4e570c5fd17700361aea519e0378b2dd9ebd1dc0f7f4bbf604f86ef21653c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P02/P02_tien_luong.xlsx",
+      "bytes": 31741,
+      "sha256": "35bfbfaec7f03f2cc7d4ee14305b15033e759052bba7c33ae35e885f2d30d5af",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P02/P02_vat_lieu_dai_ly.md",
+      "bytes": 3937,
+      "sha256": "47fd08a5b209d185ff691af3a4c6e450d658c3f823291cedc9f9ae61900040c9",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P03/P03_ban_ve.dxf",
+      "bytes": 42249,
+      "sha256": "524ef196e5b0b616a227abb20bef26fc61c5632e1c6b02a880af9d60419a5d1e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P03/P03_ban_ve.pdf",
+      "bytes": 101132,
+      "sha256": "b0e31882949f6b932444377b4220e3cafca0043a3087bd73c2e3e86cbb11746a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P03/P03_data.json",
+      "bytes": 116672,
+      "sha256": "3f8ff24bfef1a2d1275b4a97ce456e82b0b61d80e342aec4bce5096a30bcec31",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P03/P03_tien_luong.xlsx",
+      "bytes": 31670,
+      "sha256": "379c4f81dc994e1328423142b0a45676187c65c127c6429c786c58bb025de581",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P03/P03_vat_lieu_dai_ly.md",
+      "bytes": 4007,
+      "sha256": "54aadcaf27178243b0e046268b307712231a71ee024fc96c54ea0af32a2289fa",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P04/P04_ban_ve.dxf",
+      "bytes": 44264,
+      "sha256": "111ce6140175f5688152019352dba850c0e5b99387180832ba8f42d47323d2e1",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P04/P04_ban_ve.pdf",
+      "bytes": 101322,
+      "sha256": "6c7f7d112a2902108d60aa05a24293552ef33effc19c44ad6f40efe2cba134b1",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P04/P04_data.json",
+      "bytes": 120423,
+      "sha256": "366dd9f139d5a96a4fe4abdba04265f0f2cf1725e6a307e69a2200d036f72d6d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P04/P04_tien_luong.xlsx",
+      "bytes": 32352,
+      "sha256": "f2d5d3d6457481502f9c6384b7c2811ae50b4d8311d41d96f5fcbbaf08688ca0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P04/P04_vat_lieu_dai_ly.md",
+      "bytes": 4807,
+      "sha256": "1b234d3a1a1de3e6244621a8ef896b6d4fc834fabbc426aae7470d0eb91f1218",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P05/P05_ban_ve.dxf",
+      "bytes": 66243,
+      "sha256": "7381d19270650eeba0240de96de68b7a748ab332131b25838680e088461055e2",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P05/P05_ban_ve.pdf",
+      "bytes": 107603,
+      "sha256": "8e00bf020a5a1979445b8b59c1278a93a0b61d3cdca8f15edaf31214abe0c27e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P05/P05_data.json",
+      "bytes": 194013,
+      "sha256": "cd8d9fec15fd1ca044d068779627fc4f1ad2a9193b1ed60a502c976dc89bbba0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P05/P05_tien_luong.xlsx",
+      "bytes": 46433,
+      "sha256": "1faf82d5053629ce6b2bd0bb323eeed9b892e6100c8e6762edefb83ffc83a161",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P05/P05_vat_lieu_dai_ly.md",
+      "bytes": 4128,
+      "sha256": "221d2ee6887d0c0018a9fe7bc7256cb90ecebf0f34b0b91accc1440b58d7e151",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P06/P06_ban_ve.dxf",
+      "bytes": 66421,
+      "sha256": "da2cc44c28704fe25d21ce510c2aaa58888f20c43dedf8194ebb6a39f0c6bd65",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P06/P06_ban_ve.pdf",
+      "bytes": 107602,
+      "sha256": "9b7ae798a36d5747b3a77ce66579d0422c34a5490aee329c4c205c6900be618e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P06/P06_data.json",
+      "bytes": 194076,
+      "sha256": "53347436f6dedbd760dc8283716e5dcaaf3915275ca27aead9a124c9304fed52",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P06/P06_tien_luong.xlsx",
+      "bytes": 46404,
+      "sha256": "a8a5807b8311571d017eb29b594e3bd768ea0f8c259f457300770cbd69fdfa09",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P06/P06_vat_lieu_dai_ly.md",
+      "bytes": 4197,
+      "sha256": "43ded086ea7f5a2e60be61c05ff63691535af326d3d7bb93eb032f15506494c4",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P07/P07_ban_ve.dxf",
+      "bytes": 66455,
+      "sha256": "ea256886f6572a4a1b926d09edaf223a8c6512d84e739346db837783fb34d6c9",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P07/P07_ban_ve.pdf",
+      "bytes": 107614,
+      "sha256": "b87fad3d134396b9f662debdc533245edf13071aadfb7f7bca5dcf317d3db57b",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P07/P07_data.json",
+      "bytes": 194864,
+      "sha256": "1e3f656915fb9ddd62425ba0974e8b5db718b707bb809b4436bfbe5ff1934681",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P07/P07_tien_luong.xlsx",
+      "bytes": 46495,
+      "sha256": "2666623e30da7c8d169e016567f2c8a7937b33c773f68bee2c6e0acfc54488e0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P07/P07_vat_lieu_dai_ly.md",
+      "bytes": 4993,
+      "sha256": "a73be77812f8496e36d6bfdfceb13f1b00d08f37729907c8b07f48c9cfdf498d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P08/P08_ban_ve.dxf",
+      "bytes": 70147,
+      "sha256": "12225848ff27eb68938f4db5375c39e0a6522784f33ac0a0b114800013967c09",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P08/P08_ban_ve.pdf",
+      "bytes": 107820,
+      "sha256": "de755665c9f36a966fdd82fd60bfc2550f8fa498ae96bf2243787ad32f145a90",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P08/P08_data.json",
+      "bytes": 202017,
+      "sha256": "1651913f69821b8fec853e1ba59e3ad7416ae7dec20f454b6bdce99a97c7dee7",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P08/P08_tien_luong.xlsx",
+      "bytes": 47717,
+      "sha256": "c0f4901947b081ca2bdfac2b0fd45cfed774b7fe8dc8e5811960dc097356f925",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P08/P08_vat_lieu_dai_ly.md",
+      "bytes": 4132,
+      "sha256": "280065f189dd56ac4a5020df0fae2462e1e975761df72b364e3093c9dba7e21e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P09/P09_ban_ve.dxf",
+      "bytes": 66276,
+      "sha256": "7000cd2e3888431ef2bffa937abdcaade962760090e5e976857c772e66e3c9a4",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P09/P09_ban_ve.pdf",
+      "bytes": 107486,
+      "sha256": "44586ce3da8b6c7a4e7e47dc1ff3f0920e27891212e3a3e3d317092a9fee6df6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P09/P09_data.json",
+      "bytes": 194122,
+      "sha256": "e45c1bc3bbc40ea12e80772af65a9a28b46f40af53414bb407c4b09003add8f4",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P09/P09_tien_luong.xlsx",
+      "bytes": 46298,
+      "sha256": "b968d59ad7894b007f15da2841ff5d12d89cd2430c78e1ceada90d5cd6d8742a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P09/P09_vat_lieu_dai_ly.md",
+      "bytes": 4199,
+      "sha256": "1e921efee48655ddf9b5265771a084d64e0b5e8d6301272fabe95e0c03abec6c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P10/P10_ban_ve.dxf",
+      "bytes": 66464,
+      "sha256": "9823ecad7b307f6af14e98a6331c60d40cac13d387da3f010a99ed7569b3d00d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P10/P10_ban_ve.pdf",
+      "bytes": 107653,
+      "sha256": "3820fc2642906db068c576f841b2f7ce798a5b9a89a23b715d3fa4fac78b98ac",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P10/P10_data.json",
+      "bytes": 194185,
+      "sha256": "297bacb0f286435db28d4b978e6d67bac455ecd33fcd1668fdd9f40b79bbc109",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P10/P10_tien_luong.xlsx",
+      "bytes": 46395,
+      "sha256": "4b4a0f2acfc8bb7e497a777811a289bca6c62352da0d7921add6fd248f4f367a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P10/P10_vat_lieu_dai_ly.md",
+      "bytes": 4998,
+      "sha256": "fe2c5f1a6335fe85809328c3e64f457dcc758767b4ce388666ae0dd2e5d1a7a1",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P11/P11_ban_ve.dxf",
+      "bytes": 66457,
+      "sha256": "409cb17cc261bef0dcb2e3a0a6cbf006e9f32bd80f14be0219dd3cd3afc0f20d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P11/P11_ban_ve.pdf",
+      "bytes": 107603,
+      "sha256": "b9a5c255badf902f716e98689d0139c72a6f90d474ceef16642ef3054943e334",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P11/P11_data.json",
+      "bytes": 194567,
+      "sha256": "33251786ff2e7a9123b7c5c5cb6e4756842c49f4c9d1a9e598426cf79b2b396b",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P11/P11_tien_luong.xlsx",
+      "bytes": 46476,
+      "sha256": "870a94df54cec81ac41f6de0952c4ed5d912e1517ddb10fa610f376aa8a10e40",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P11/P11_vat_lieu_dai_ly.md",
+      "bytes": 4131,
+      "sha256": "c0e89061a1bf6c7636bd33f5a0d979b9a3ea1f61fe1aa95d0ed6b126844097da",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P12/P12_ban_ve.dxf",
+      "bytes": 70103,
+      "sha256": "6ef0c172b80ece1aeb0601a9cbc4db0c0803e1c194c4bd4320996b9702943220",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P12/P12_ban_ve.pdf",
+      "bytes": 107696,
+      "sha256": "ddb39a147a3b1fbca75f4db4015bee60c91ffbdac8118280d7f78d3cb52b9f49",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P12/P12_data.json",
+      "bytes": 201288,
+      "sha256": "540ce64331bd982ada12f533630e5b221515874229e44394ed028cd5025d6c64",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P12/P12_tien_luong.xlsx",
+      "bytes": 47483,
+      "sha256": "8d945da908bcfb9c0fceffd38c3da75280b7a36ae0caca61e394eea7d1185a43",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P12/P12_vat_lieu_dai_ly.md",
+      "bytes": 4201,
+      "sha256": "4066a6b9fc5c9a1358e7c166e32bd177e895c4df7c6b72dcf3953df9b610b158",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P13/P13_ban_ve.dxf",
+      "bytes": 90529,
+      "sha256": "bee05bcac933e9b1b8f9fff712234c37b88d9077ada7db7d512f8e1e16a0f632",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P13/P13_ban_ve.pdf",
+      "bytes": 110871,
+      "sha256": "5ed0572483f689918242f561c2d8fdc2a47d3c9702ef671c0daff1dc849895af",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P13/P13_data.json",
+      "bytes": 270792,
+      "sha256": "919ccc98e4beed0cdd35138cf43f96a3f07281c803d945181248766b524a6595",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P13/P13_tien_luong.xlsx",
+      "bytes": 60561,
+      "sha256": "71fcc59183b9b4891bc39906fbc25dd2d329c8aa607c2d8827a0590b79dde8fe",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P13/P13_vat_lieu_dai_ly.md",
+      "bytes": 4998,
+      "sha256": "8f06048a88b7951804b8e6e184e9b700b65d804c1b74b7c6d3e9ac0b5e33db0f",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P14/P14_ban_ve.dxf",
+      "bytes": 90746,
+      "sha256": "5bb52ba6651b183b45c0a90620493d1a0dab03f24ac68f53f23e8a933bcd08e0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P14/P14_ban_ve.pdf",
+      "bytes": 110903,
+      "sha256": "e3f3a0298296f27b3f1633bdedf78183efdb6c8ccaf0c3b8eabd17981459d8c1",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P14/P14_data.json",
+      "bytes": 271940,
+      "sha256": "b22144c5134048a4b299957d145ab8a9ccb94f9d8cadb603de62c456f8a98db8",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P14/P14_tien_luong.xlsx",
+      "bytes": 60700,
+      "sha256": "70338fe8dfa63af21c4d13077adb49a2960aa3cec12b5c47d197a561e5d9ec51",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P14/P14_vat_lieu_dai_ly.md",
+      "bytes": 4135,
+      "sha256": "7909630b0fcd5a50677deb8d1654583e4f417ab4502b3cfc19cd6227c39b1e75",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P15/P15_ban_ve.dxf",
+      "bytes": 90544,
+      "sha256": "7f19bd7f6da192a600411c3fece33b6e1fdbf11488b676f6d27fc0463bed7831",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P15/P15_ban_ve.pdf",
+      "bytes": 110928,
+      "sha256": "e89ebbf1429cf6f226d725b13563a7fef91665939cf75a0e4a2d160f5eac0958",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P15/P15_data.json",
+      "bytes": 270922,
+      "sha256": "c4e06ba43bd0ce9707c3404e5c6b224199628c25038321af2fb42cc0e605329a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P15/P15_tien_luong.xlsx",
+      "bytes": 60579,
+      "sha256": "0f35dac455d848f9230263ee5d8b3816ab6a78495b444a56b284060b5d2608cf",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P15/P15_vat_lieu_dai_ly.md",
+      "bytes": 4203,
+      "sha256": "a3947da3b76932f57a92412890f8639109dfc1a2813edf83ccff1233cd0002b4",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P16/P16_ban_ve.dxf",
+      "bytes": 95991,
+      "sha256": "c6e3f23b084ae908dd1c20e30e9cc8c4e140d4eb36db057fd9c4b2af4820736d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P16/P16_ban_ve.pdf",
+      "bytes": 111100,
+      "sha256": "2a31b5d78551d2c318792b3e46708222ed7cffc2f2026c32cf8965c5ac8ba5b4",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P16/P16_data.json",
+      "bytes": 282135,
+      "sha256": "d066fa53ba7e48f6e6fb037b2c442b2afc6b238ebfb1a863be152a5b1e402735",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P16/P16_tien_luong.xlsx",
+      "bytes": 62350,
+      "sha256": "f57da7ffd4244c0446c5952ad7d9f3cc218576ea93dd9c32c23d8f30212b716f",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P16/P16_vat_lieu_dai_ly.md",
+      "bytes": 5002,
+      "sha256": "068270002332166a863340d6fcb1fff00db611bdbe6113c3fe5bfca3c157393e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P17/P17_ban_ve.dxf",
+      "bytes": 90859,
+      "sha256": "ea2bd2ab6ba6fcbd5376dbfe8399f93298c2da6201dd41d434b9bf733fec6664",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P17/P17_ban_ve.pdf",
+      "bytes": 110810,
+      "sha256": "bb328e0fce52c104047cc111826b0ca0747cad4a820ee163d83b7e00327c5454",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P17/P17_data.json",
+      "bytes": 270984,
+      "sha256": "54f35c9e2e473ace6c0db77ec16430f94de23112e7eb79337f5b442e2e6da0f5",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P17/P17_tien_luong.xlsx",
+      "bytes": 60403,
+      "sha256": "0eea57e7ef62c4a15ac43e13f42876b24d1afe28773aed9e2154f56df486bb81",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P17/P17_vat_lieu_dai_ly.md",
+      "bytes": 4138,
+      "sha256": "46126736fd4668021c0e29b6a7ba7ae69a689c7e704e4eb60e025ba455c18c6e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P18/P18_ban_ve.dxf",
+      "bytes": 66717,
+      "sha256": "5947f263d2ce695894fc8c40c9514e6c52d68a059fdb68330738cf6a388778ca",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P18/P18_ban_ve.pdf",
+      "bytes": 107676,
+      "sha256": "3302b0ac138a53eae493f2e36c732d1eeb1ed809f26f78bd0e66ba5231401638",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P18/P18_data.json",
+      "bytes": 194434,
+      "sha256": "e3d5a8718cad0a3d6989efa794e980dcc407be040700901baa7e8b60bf862f84",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P18/P18_tien_luong.xlsx",
+      "bytes": 46407,
+      "sha256": "1c547b72bd00f6ed42fa4abc745e82b51331888c2d371150ac92032cd12320dd",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P18/P18_vat_lieu_dai_ly.md",
+      "bytes": 4201,
+      "sha256": "2a5974219f9d80f21d1c2a2eb39da1725cd295d1f8825c99f87814f864725918",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P19/P19_ban_ve.dxf",
+      "bytes": 66670,
+      "sha256": "75fd65cb190cefe7fd6ef613ab7a8ae31eaff17e38a8ca2e434222b7e58f39b8",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P19/P19_ban_ve.pdf",
+      "bytes": 107661,
+      "sha256": "11c980816a9d9a19f849ebc8a0879fe7e8dceae63f53341a53ecf1d9c6ebca8d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P19/P19_data.json",
+      "bytes": 194676,
+      "sha256": "da749f0f80e93447ca95498d83e0b5373216b753fafcfb617fad1601a510616c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P19/P19_tien_luong.xlsx",
+      "bytes": 46447,
+      "sha256": "521efa2e780b6376dbf57740494b2d267d323952be50a7c400923f9577c5d39c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P19/P19_vat_lieu_dai_ly.md",
+      "bytes": 4998,
+      "sha256": "fd2a3a28171c257f68fedd149ee1f9c2dd3c8f8db27091959121a219ec4329a4",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P20/P20_ban_ve.dxf",
+      "bytes": 96069,
+      "sha256": "cc812aee8dc324d53aba8258a355ac0a628731083b9adfbf1ce866c2d07120bb",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P20/P20_ban_ve.pdf",
+      "bytes": 110946,
+      "sha256": "9f52ccdd5c6a78e76fbe81a9c886c52a1988b6d3cb37da56537d04eeb29a8439",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P20/P20_data.json",
+      "bytes": 283345,
+      "sha256": "c4fe7e271d10ac92c199171e1392c6c1e49eb838b2f674f6fe3b516828a6fc2e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P20/P20_tien_luong.xlsx",
+      "bytes": 62442,
+      "sha256": "21e5f003f38204531235e15f98e66aac524cbee080b630e4cf17be0e76a62cf1",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/synthetic_20/P20/P20_vat_lieu_dai_ly.md",
+      "bytes": 4138,
+      "sha256": "aea7d5fe2030aaff4e251b7e04c534313392864387acb40a0b05f071680b4934",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/test/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/test/banve1_ket_cau.dxf",
+      "bytes": 3725909,
+      "sha256": "3706625b22bcbd92342b8dbce33e72b36c1589e0f8277878414bef2502b14455",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/test/banve1_kien_truc.dxf",
+      "bytes": 17794868,
+      "sha256": "7d4852b0b0d0d4042bb660cbe966120a2630d547806ac419dea8b7c5bac30385",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/drawings/thu_vien/thu_vien_mau_hay_dung.dxf",
+      "bytes": 14515646,
+      "sha256": "d5600526c5925e0691594a76b33722ca3584581dcd54cb7286d0dc8e37485144",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/46_nha_tan_binh.csv",
+      "bytes": 10847,
+      "sha256": "89877eb850c1c9aa1c50d2e8eacd2af8295a2056bc41b326e6361f81f3f48654",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/46_thong_so.json",
+      "bytes": 991,
+      "sha256": "edd61750f8856dbafeb3b5b5b5865e9d3b24a3eb476b4203a5da396923d72266",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/46_vat_tu.csv",
+      "bytes": 8391,
+      "sha256": "ff21ee393835069a682ba6cbecf9e04e78a994635f05256f27326467a28e9b1d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/banve1_nha_pho_di_an.csv",
+      "bytes": 11380,
+      "sha256": "a6fb8a6e8efb68b6cf5aa642267161bf4479d53f20cc26b218ead70f7b3f0c7e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/banve1_vat_tu.csv",
+      "bytes": 2358,
+      "sha256": "f507b92f6d831b728d9a24f4ad85024f37cd50379b9438af6832d7a65be092c0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/cases.csv",
+      "bytes": 993,
+      "sha256": "43ef43159fc0d5cdcde5ad88bfb86c30bd2fd404979adfab3dd9d902e803533d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/d02/46_nha_tan_binh/dap_an_cong_tac.csv",
+      "bytes": 36014,
+      "sha256": "1fa0726c7b92ebd08300c7275328ebec1d0504987604d1a3a9d63365c975270a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/d02/46_nha_tan_binh/dap_an_vat_tu.csv",
+      "bytes": 6889,
+      "sha256": "b2d7546078eb264883f90a11a0b792d4fb1242e678bc8d9556e1df47dea8c964",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/d02/46_nha_tan_binh/khoa_nguon.csv",
+      "bytes": 1540,
+      "sha256": "f37c3844872e48c78e4e6554bf04e9368203f262f474ce93942a961d1bd3f65a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/d02/46_nha_tan_binh/so_hang_muc.csv",
+      "bytes": 8098,
+      "sha256": "1514b49bb89d0b7c32d6b673818b81c71721331b091af42f315231c559a1ce50",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/d02/_mau/dap_an_cong_tac.csv",
+      "bytes": 292,
+      "sha256": "ec2b5b63af0280a1d894e8400925c5639948ab8deb1032c321450f9d8138c449",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/d02/_mau/dap_an_vat_tu.csv",
+      "bytes": 216,
+      "sha256": "2a90e547f537990cce962cc2ee27e6ed8a375c31598cc4c1048b27aaf25445f1",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/d02/_mau/khoa_nguon.csv",
+      "bytes": 62,
+      "sha256": "b6e9c9131ff08ee57e3b8ef4ed1ce4e2a13e2489e24e5e6cfb395b9a4101ea5c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/d02/_mau/so_hang_muc.csv",
+      "bytes": 110,
+      "sha256": "72858e07ba8e591051f1a9147ab2e0a99c90e95ac2c32eac5a2b1b9eab542be1",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/HO_SO_NHAP_20261103.md",
+      "bytes": 3510,
+      "sha256": "e198efdda75a1eff8d4e5fd5c0bfdc5d5626334614f0c22b6c8bf8d110dce973",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/incoming_20261103.json",
+      "bytes": 12189,
+      "sha256": "1ae8cd0dcf1a2f922757565c760e77bce184a1c8407ca0e3bc976d01c2e1f622",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/database_receipt.json",
+      "bytes": 336,
+      "sha256": "5a1b41943b495d5338a9538641577e938220f60d1b6e5cd730616fbf7db2fa73",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/drawing_spotcheck_evidence.json",
+      "bytes": 1317,
+      "sha256": "167b07e6256f26af5676bd7a260032fd72c93259d6458f62d92067b6c5a5c066",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_huong_hai_duong_7x12.arithmetic_review.json",
+      "bytes": 955,
+      "sha256": "1fd1c81235b7ba6ad5424503651d3e42213268ce85c422f5a98ddf63e7a6d5c5",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_huong_hai_duong_7x12.comparison.json",
+      "bytes": 126368,
+      "sha256": "ca4917c80e8bec52edccfee34e49fdf7a43a74705ff7fa2877cd107197e9bbe3",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_huong_hai_duong_7x12.estimate.json",
+      "bytes": 468892,
+      "sha256": "4025f88e374e6c1bdaad48bdd7d8d3128f7b1af4d1515a6fd7b4159b4e704d55",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_huong_hai_duong_7x12.quality_review.json",
+      "bytes": 134725,
+      "sha256": "a88abff69d1c64df435623941dfa9f16988b4d0f0c5edb1781a40967235b039f",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_huong_hai_duong_7x12.verified_quantities.json",
+      "bytes": 12750,
+      "sha256": "dac7c2381aac3ed0d39872989c256084e7d97e8da9f1d3f104a37dd99db16540",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_sang_hai_duong_4x15.arithmetic_review.json",
+      "bytes": 307,
+      "sha256": "d1685331b828393d3fd84e3065de34334b98ca485053240b2aee14e1b8a703f4",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_sang_hai_duong_4x15.comparison.json",
+      "bytes": 222538,
+      "sha256": "c987ec4af17550e7ea6d252dee427530f58be90d6f6d0373344154ac20915dc6",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_sang_hai_duong_4x15.estimate.json",
+      "bytes": 488300,
+      "sha256": "b5485677036543ef6590e121299aeea0aef5be94b88feddb692e86f55bcc72a2",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_sang_hai_duong_4x15.quality_review.json",
+      "bytes": 149797,
+      "sha256": "95ea416b06169ac082682912f9a89eacf0db6ef4aa41ddad4b342303c5affcbe",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/nha_sang_hai_duong_4x15.verified_quantities.json",
+      "bytes": 16927,
+      "sha256": "d185c3359ac5129199e5eff3fecb6aa0b7d2de194a0fed0d5d2ce4a8162550e5",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/README.md",
+      "bytes": 6059,
+      "sha256": "52c8bc1e0f2fc866ce47fcf319f1c5a5d0bf9cf29c997d58a1f0073a27e9e26b",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/normalized_20261103/review_evidence.json",
+      "bytes": 8654,
+      "sha256": "2c6326196bc510f0a28a9f9b347ad3276585b8473465d8802ddd1a6aea6790ab",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/ground_truth/du_toan/README.md",
+      "bytes": 8653,
+      "sha256": "eed8d98986de4ae72490b2df3d1f21831c56166f7a9784fc8b4fd1e0516aaf2a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/du_toan/synthetic_20_normalized.jsonl",
+      "bytes": 2813407,
+      "sha256": "47d4e2d13efab7c717368d0f903a236cffb9b0007d45d3ddbedf80b480357b13",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/index.csv",
+      "bytes": 306,
+      "sha256": "ba3d5352dbedf6725a31aa0b1a95afa566fef4c7e4d119c5be4caa80ca6ed68b",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/plans/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/s03/cases.json",
+      "bytes": 10344,
+      "sha256": "846ef5c6c545aac3c6e8257676b8f3f3f9b47f810f320f36e04aaa8fbed87634",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/ground_truth/walls.csv",
+      "bytes": 157,
+      "sha256": "cb74784fe9ea866d8ad75210a562fe42727018e557c81de2b2edefe0e4fa4929",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/project_documents/23/c533db5077bee379f98ebc203053e8bff8b39fc484e03da1.dxf",
+      "bytes": 18229,
+      "sha256": "f88d3808a2db5241ee24420f4d689c61f8e1736c6d834f6435db82ffece721a0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/project_documents/24/5331cc86c29fa4ced66256163902ca2451b09e85d909feea.dxf",
+      "bytes": 20796388,
+      "sha256": "9cb2a7eb44c429852aa58ef10b17e7b5af4c47869c0f983458af6b8d871b250d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/bang_thep.csv",
+      "bytes": 1172,
+      "sha256": "903e4e606286c843eeae48d772b987bfe07727349c291ac6a2e107fc684b7104",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/concepts.csv",
+      "bytes": 9984,
+      "sha256": "21b7ccdd274ac3b5c72f44b6d1af2756e2b6e699a9332ea6783479cbaaa092b2",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/cong_bo_gia.csv",
+      "bytes": 1552,
+      "sha256": "0e21d01838cc2260502935ee1d10f753f1efbbc69f0ef39d8e87c91eeeaf60e8",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/dinh_muc_phan_tho.csv",
+      "bytes": 22557,
+      "sha256": "0e677eaa3cffeb4affd1fa3baaafb35c288f63e05ec39481e73c437cb092d542",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/do_tin_cay.csv",
+      "bytes": 1095,
+      "sha256": "986974b759f93753adeb55ba1591c146337213b1081c418ee83029fc35128066",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/hinh_ky_hieu/cua_di-door.svg",
+      "bytes": 435,
+      "sha256": "858d187443c3caee97e600c15b4aa40ae597281e88c7935107d98fa272dcf783",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/ho_tro_cau_kien.csv",
+      "bytes": 3527,
+      "sha256": "1c94b700aff0e8380e6bdad09da5e6ad3a88109ed48ecc60771a02f469a7e0d6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/khoang_hop_ly.csv",
+      "bytes": 1978,
+      "sha256": "d0e1f60e47fe9bdc26d2f1b83710cea4b135c3945d5fc26047c2f7654ce6392b",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/ky_hieu_cau_kien.csv",
+      "bytes": 1320,
+      "sha256": "249006f039082a269b3c9a10822c9504399bdbfbff1f80fc63f5038b0b4170d5",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/loai_ban_ve.csv",
+      "bytes": 2855,
+      "sha256": "da6b8b0eedd38042c1c183fcc97946ab6493a35666267a3f6e9e262d5ec976fd",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/loai_mai.csv",
+      "bytes": 349,
+      "sha256": "c0cfbff19fc8d9fefd7d675cd387e8340970ffa6bbf4d2f6cd9733d6aa701e3d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/material_notes.csv",
+      "bytes": 23139,
+      "sha256": "e54749dbc933af2f03cb59dc95904b25998f694e8b2d408afacfb9d00ad706c8",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/material_rules.csv",
+      "bytes": 3095,
+      "sha256": "2f6a0c5ee12c374fce797a8dfe1738712f8b3f8e84f706c115324d075e513552",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/nguong_nhan_dien.csv",
+      "bytes": 4039,
+      "sha256": "fd1db3a6c7f05ac4429931f24d7b63ab2cac5aaaf9ed24db695cf8dee8807419",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/quy_uoc.csv",
+      "bytes": 4832,
+      "sha256": "69207a5fe2b32ce149733bfeeb151685532ec4738668553b6c5451d141059309",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/room_rules.csv",
+      "bytes": 423,
+      "sha256": "436c26ff1a5a9ea6026469f7e35fe57ce8ad7ace7bf3275a39264d5ae1977f88",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/thep_kg_m.csv",
+      "bytes": 725,
+      "sha256": "050d3684f6c57520b25aae3bc021cf9063cca4c5daa252661509ae7014eecee7",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/rules/viet_tat.csv",
+      "bytes": 1552,
+      "sha256": "d0d2e52c16ddf4258a5b861d5e8676e59c7f8bd291686ec0f2fd7bfe29015fa4",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/catalog/labor_rates.csv",
+      "bytes": 166,
+      "sha256": "e094e41cfbc67f877f20de66fd6f29ee42034f924656acd8001f24d26c88f492",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/catalog/materials.csv",
+      "bytes": 1048,
+      "sha256": "90de6a6908d1ae93504b728408be37d3fd1b61420d24c88ef9a52ba860afed75",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/catalog/README.md",
+      "bytes": 769,
+      "sha256": "96cbab99f6e8c68b0e189c91e8dd5a77ff14aee786cb7662d88e0480b77145f5",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/catalog/supplier_materials.csv",
+      "bytes": 1289,
+      "sha256": "78776ce972158f15bce56fdb9344cc0b27fad4c200e5b77b9b4e48710af6298b",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/catalog/suppliers.csv",
+      "bytes": 277,
+      "sha256": "e35362edf84c4d2b70d296489358d9a9a72f299c81c96f0e6e8d33e437d94c28",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/catalog/vehicles.csv",
+      "bytes": 255,
+      "sha256": "911bdc57aa615da86c8e8bed58b07166e310e8246ac84402a625f615a3fa55a0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/catalog/wall_systems.csv",
+      "bytes": 1245,
+      "sha256": "15608659638ae120764d756a48ee2eed7c1a12abc3b1c27327bcef8517914128",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/01_hop_le_mm.dxf",
+      "bytes": 48209,
+      "sha256": "757d6d1e18cb2df2b16fa5659c2322e9326f0055da98b0612e6b01d95e5b6986",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/02_thieu_don_vi.dxf",
+      "bytes": 48209,
+      "sha256": "0caca103a80d1e9c8f8f30d6c33f360d56fd1f35ee7d516068a797f42ddedb73",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/03_don_vi_met.dxf",
+      "bytes": 48097,
+      "sha256": "b81be52deea0b4f71f77bc53e510301522e4219a33e00723785ba9aa5bb8151a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/04_sai_ty_le.dxf",
+      "bytes": 48122,
+      "sha256": "80f860c0c2ab6d3632a3e969e2d4301a06fd3cf3993125420a0ca62fc0a10635",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/05_dimlfac_ghi_de.dxf",
+      "bytes": 50313,
+      "sha256": "a002b64146356199b8d6b899b0d82204078eeb78fd9712d29a0b141b9aa5cb7a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/06_xref.dxf",
+      "bytes": 49246,
+      "sha256": "a42060aa1e82109c988b85ad37c8fbde4c5453afaeacdc13cbd57a353bb65607",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/07_nhieu_layout.dxf",
+      "bytes": 50959,
+      "sha256": "b65ed3031641ac1eff0d64c6cc4e4d11ee7031e1543826dbc8128ad2e2b8ebcb",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/08_font_vni_spline.dxf",
+      "bytes": 48780,
+      "sha256": "8bee22a620120b00718503892e719a6ebb55599151b9c2d2f8fa877a4432f93f",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/09_modelspace_rong.dxf",
+      "bytes": 19500,
+      "sha256": "42bb15d51a67e45e18dd408bf27db41bf1e28efc4e796c1040487bebf260a8c6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/10_dxf_hong.dxf",
+      "bytes": 59,
+      "sha256": "86399fa45ebd5050e7fc7fe600a5b46803c582e68c65f04bbcd986fd8e4d3d5f",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/11_dwg_hong.dwg",
+      "bytes": 70,
+      "sha256": "ff468a706abcb52f41cbd23b3417957aaf9c9453695ae481f1b9cf0275879029",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/12_pdf_doi_ten.dxf",
+      "bytes": 15,
+      "sha256": "c644f26a0d71bd3bbb2ef5e90ba41b6f10a19ca99934fb9e784edfafd3b2620c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/13_nhi_phan.dxf",
+      "bytes": 34877,
+      "sha256": "d12ea0e45681f60ba32e73dcf7298bb40ee353670e8608a3502c8cc60ed887ce",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/14_block_long_sau.dxf",
+      "bytes": 51413,
+      "sha256": "ebd86c4d8f9b4c9bcdb50daa05be9f989aba74b2aa3f0581c3db9b9db1175ad0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/15_khong_header_chu_insunits.dxf",
+      "bytes": 172,
+      "sha256": "559ccf797dc114731028612204b4cf1d64160db774692f8d2647ea6407237a6c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/ingest/expected.json",
+      "bytes": 1558,
+      "sha256": "ea564eadd3112a09527e1f237e3c4213460811e06ce44a250bf3c19bfa5db6ea",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/prices_sample.csv",
+      "bytes": 119632,
+      "sha256": "7365419141d0be7067ef334e051d4944513153a89493ce20b0d7ef5662addeb1",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/sample_floor.dxf",
+      "bytes": 18229,
+      "sha256": "f88d3808a2db5241ee24420f4d689c61f8e1736c6d834f6435db82ffece721a0",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/sample/thong_so_mau.json",
+      "bytes": 1264,
+      "sha256": "279b0fe5a6b1ca870c62b51d0d46326b5e13efd792abc77a5425d2c866d61709",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/0b6506e0948ab09edbc8fa439900af17bb4b9cc9ef7165a772ef8a3ce0fde732.dwg",
+      "bytes": 1651872,
+      "sha256": "0b6506e0948ab09edbc8fa439900af17bb4b9cc9ef7165a772ef8a3ce0fde732",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/20d4fc01dd6f88e10557df48d6663e47d59bfc97921a1b7e3d44566a4e23c24e.dwg",
+      "bytes": 1024512,
+      "sha256": "20d4fc01dd6f88e10557df48d6663e47d59bfc97921a1b7e3d44566a4e23c24e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/36513ac4ad1827560aa23c3a055dad584495f1e9f893983a83a414ad6b739d0c.dwg",
+      "bytes": 792096,
+      "sha256": "36513ac4ad1827560aa23c3a055dad584495f1e9f893983a83a414ad6b739d0c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/36f2b110f04522e97ba481275f4594d3ea8b71442743f72f4b8fecc8f8489bc6.dwg",
+      "bytes": 2403936,
+      "sha256": "36f2b110f04522e97ba481275f4594d3ea8b71442743f72f4b8fecc8f8489bc6",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/uploads/45275aa3ae716104a5c4bdff4982b1f892282776515179e2d097230d0a5933a7.dwg",
+      "bytes": 2965248,
+      "sha256": "45275aa3ae716104a5c4bdff4982b1f892282776515179e2d097230d0a5933a7",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/467ed02988e6fcc7e2e22cbb141889b4769d17f90f4d84a0fbd202ea7f7bad3c.dwg",
+      "bytes": 1866176,
+      "sha256": "467ed02988e6fcc7e2e22cbb141889b4769d17f90f4d84a0fbd202ea7f7bad3c",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/54fc2ad7c2e085ae3e8ab97faf517869542204033f519ce721f6d6fd4166cd16.dwg",
+      "bytes": 2700160,
+      "sha256": "54fc2ad7c2e085ae3e8ab97faf517869542204033f519ce721f6d6fd4166cd16",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/8579f576f1fe8a23c5968153478afe0a819785804557a9cdc661faefd8b59ea8.dwg",
+      "bytes": 1489664,
+      "sha256": "8579f576f1fe8a23c5968153478afe0a819785804557a9cdc661faefd8b59ea8",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/8e049401408d381aae3aa50b624f41cc13cf2f3d7955334ecbd213b6392cd51e.dwg",
+      "bytes": 2199392,
+      "sha256": "8e049401408d381aae3aa50b624f41cc13cf2f3d7955334ecbd213b6392cd51e",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/uploads/9c5a21021c1edc05a7c76c006440039d8c4ab92e19ce5ff93fbe8256efec424f.dwg",
+      "bytes": 792384,
+      "sha256": "9c5a21021c1edc05a7c76c006440039d8c4ab92e19ce5ff93fbe8256efec424f",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/c152b169a9171c3a19615e09a0b851f3932426aa34f20ec93893330e9ad05cee.dwg",
+      "bytes": 1470848,
+      "sha256": "c152b169a9171c3a19615e09a0b851f3932426aa34f20ec93893330e9ad05cee",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/uploads/c4ecaf88307a9324333512ce0e6190b47922918985237e134f5e137533cddf30.dwg",
+      "bytes": 571680,
+      "sha256": "c4ecaf88307a9324333512ce0e6190b47922918985237e134f5e137533cddf30",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/e0567eac9b05d6d03e089ae556d9359df27096a8e32edd3a1628f1e8e3a06afa.dwg",
+      "bytes": 569760,
+      "sha256": "e0567eac9b05d6d03e089ae556d9359df27096a8e32edd3a1628f1e8e3a06afa",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/e6b9df01062d142af2191c4d79ae44d02477f5fd10d8fe1715093ce4b448d5b7.dwg",
+      "bytes": 916992,
+      "sha256": "e6b9df01062d142af2191c4d79ae44d02477f5fd10d8fe1715093ce4b448d5b7",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/uploads/f3c76142a44ce06a4fb2e1fa911d521ec73cda3801b6f2e4489b423a617c5d50.dwg",
+      "bytes": 2057376,
+      "sha256": "f3c76142a44ce06a4fb2e1fa911d521ec73cda3801b6f2e4489b423a617c5d50",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/f4d22d83ce04ca1654a610a1707c78c32ee97d7bc86eab61ec228c8b8cee394a.dwg",
+      "bytes": 550976,
+      "sha256": "f4d22d83ce04ca1654a610a1707c78c32ee97d7bc86eab61ec228c8b8cee394a",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/f5750773df05aeac04959992ae40861ef9aa22527a22315fe9923ad6fd7bf4c8.dwg",
+      "bytes": 1580747,
+      "sha256": "f5750773df05aeac04959992ae40861ef9aa22527a22315fe9923ad6fd7bf4c8",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/uploads/manifest.jsonl",
+      "bytes": 5210,
+      "sha256": "79a7a03c77d5296a5d13f1c8db6d981c5e5b2e18b4bf399919b9b35d4c801ace",
+      "vn002_reference": true,
+      "matches_vn002_reference_bytes": true
+    },
+    {
+      "path": "data/van_ban/38.2026.tt-bxd-pl2dmdtxaydung_signed1.pdf",
+      "bytes": 8808217,
+      "sha256": "454ad108280159d4b041753efef0e248a989be02b26f8d1076eea19c42dd44fb",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/van_ban/PL7-TT-38.pdf",
+      "bytes": 901079,
+      "sha256": "8ba969a2b1478fca5bb9706cbd7041f92f77c726e7140e5184b0f6bd72bee52d",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    },
+    {
+      "path": "data/van_ban/README.md",
+      "bytes": 972,
+      "sha256": "f0050f69a0bf44247dd3f45d8ab47797e063fa8a6812c44d754c824f2955e473",
+      "vn002_reference": false,
+      "matches_vn002_reference_bytes": false
+    }
+  ]
+}

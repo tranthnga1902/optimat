@@ -1,0 +1,17 @@
+{
+  "candidate_listener_pid": 40212,
+  "candidate_start": "2026-11-04T10:24:34.4888736+07:00",
+  "launcher_pid": 14808,
+  "host": "127.0.0.1",
+  "port": 8001,
+  "database": "optimat",
+  "database_match_via_client_port": 61750,
+  "openapi_path_count": 58,
+  "health_http": 200,
+  "anonymous_auth_http": 200,
+  "anonymous_user_null": true,
+  "existing_api_pid": 10060,
+  "existing_api_port": 8000,
+  "source_snapshot_match": true,
+  "note": "Chưa kiểm quyền dữ liệu hoặc E2E; không gọi POST trợ lý."
+}

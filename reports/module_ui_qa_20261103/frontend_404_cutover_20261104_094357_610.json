@@ -1,0 +1,21 @@
+{
+  "time": "2026-11-04T09:43:57.6683416+07:00",
+  "oldPid": 27012,
+  "oldBuild": "31Tsz2vLf5JymYeu5kmDw",
+  "candidateBuild": "H7eQgDZ8u5vo-N2SW_pLT",
+  "cwd": "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\frontend",
+  "bind": "127.0.0.1:3000",
+  "logSuffix": "20261104_094357_610",
+  "status": "failed_before_stop",
+  "oldHome": {
+    "http": 200,
+    "sha256": "BA8648A6834B942B4118FBB727B3F195FF01833AFE90076D98A40DC43FB02994"
+  },
+  "oldProjectStatus": 404,
+  "proxyBefore": 200,
+  "apiPidBefore": [
+    10060
+  ],
+  "oldStarted": "2026-11-04T08:24:54.4840820+07:00",
+  "error": "Cannot stop process \"node (27012)\" because of the following error: Access is denied."
+}

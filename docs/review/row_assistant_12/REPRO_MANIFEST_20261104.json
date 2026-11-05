@@ -1,0 +1,384 @@
+{
+  "mode": "READ_ONLY_STATIC_INVENTORY_NO_TEST_NO_NETWORK",
+  "source_imports_executed": false,
+  "method": "AST conservative closure including package initializers and imports inside functions; catalog CSV superset",
+  "source_file_count": 22,
+  "files": [
+    {
+      "path": "data/catalog/labor_rates.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "B096494B1FC17DCB94D1A75F9D618BCAF0AB076DC376D546503F45B4A95FD2E6",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/material_aliases.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "ACA18B7D581F02C46CEE4960CB32BCC18B0E12662F94F177E627888ADD291FE6",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/material_families.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "2EC8E306997DC03E1D59F892B418E0DCF8010FCC3CF987B6237F7A92B8E3BA11",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/material_groups.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "6E643128F1765BCEE81292CB363708CDF60582E6A079194C42D27F88B43E051C",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/material_relations.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "5B8233EAE16C7E3EDBE4B00147729241D6BE83BDB10C5A842CD9FCA9767793EF",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/material_standards.csv",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "AFEB87B30B2DABAA4470056CA7F2E3E3850F6CC6FE411DE8DC7F4F71E2143582",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/materials.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "9B644F3D83F4F525A3DDD9D62DE7BDA8761367AE4998BC7B809821E6A12A2BF6",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/standards.csv",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "E9A18EFB42A0B4B41C9FE3A3886E4DCF7FA8AA29A1A00175DBA9207A1AD5D25A",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/supplier_materials.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "614A4E11632391F927EC05465BBAF6C83494795FBDBBBA14666323799D4673BF",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/suppliers.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "4892EE38BC494445F74585A882E87E18E889E9E0D42CE0062EC8957301A504E7",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/vehicles.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "C48ED13F6C5B8D8B24E35B96BBB33AB9BD611679EE1E01A2BA630CEB1198D310",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/catalog/wall_systems.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "7B135B8AE2EE64DB8530D098B6AEA799FA537DB4F0BB8DC79EBC1029AACE2408",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "data/rules/nguong_nhan_dien.csv",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "FD1DB3A6C7F05AC4429931F24D7B63AB2CAC5AAAF9ED24DB695CF8DEE8807419",
+      "role": "catalog_or_config_data"
+    },
+    {
+      "path": "docs/review/row_assistant_12/HANDOFF.md",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "2C310EE668A692632470ADE751A4EC925E5485216BEB1AD0D20875013BADDD11",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "docs/review/row_assistant_12/ORIGIN_3001_HTTP.log",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "C086E0AC7B08308B049449238BEFC1BFC8D43CDBA7430568575C43D3E01EF0CA",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "docs/review/row_assistant_12/ORIGIN_3001_RECEIPT.json",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "D1338564A0B5150DDBA6211DDC492C97A22FA99B823E5526E1396A3A387323F1",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "pytest.ini",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "D6E3E89CC6AAB7944C11E4A14FB0A4DB51C9AE36606BF263F47B7A9378F6DE65",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "reports/demo_0511/live_advisor_vn002/check_advisor.py",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "645823B45201AFC9BC6E341A3F2C392A3AE142D93CDB2F00D7E2F56E85120EE1",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "reports/demo_0511/live_advisor_vn002/context.local.json",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "E1DDE8DB29D9697677D206F09CCD96FBCFDC48C7A1734C35FE2D82131752EE51",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "reports/demo_0511/live_advisor_vn002/live_attempt.json",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "3E4AF373EF1051D220699AB2FB4396E30AE644F06D39D6E29BA7C2CD59322849",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "reports/demo_0511/live_advisor_vn002/live_receipt.json",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "07E680DDE74DC5536DEEA72E9B9F6D6AB4FC6A2B8453526E6BDA42A536A5CE95",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "reports/demo_0511/live_advisor_vn002/provenance.json",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "E4DD0313618273BA23CACE9392A68A5B064B51ABE1A06ECE72EB6402B5134E55",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "reports/demo_0511/live_advisor_vn002/replay_canonical.json",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "35114E597617C607CA456DB5D178FDB638F7C672AD7E5E8A9FF48DE7AAD85AE8",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "reports/demo_0511/live_advisor_vn002/reply.openai.json",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "7949F99FD03739FFBFDD5217542CC93A06185F07F50F6CC66781964900463A53",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "requirements.txt",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "328F8101D1B3DD5FB4ECB8956DBB84003BE9B307398DFEF9CE5E69160731438D",
+      "role": "setup_or_evidence"
+    },
+    {
+      "path": "src/optimat/__init__.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/agent/__init__.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/agent/llm.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "FB4997EDBF6A38A0D9D22601FB859C7FB5CC3BC101E83CABE88C5C4C6DB7F555",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/agent/material_advisor.py",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "463E8F88B2C92958B6217CDE60EA419ECDBB345EF2569E912094D2ADB300210E",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/api/__init__.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/api/auth.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "30B9923B29E2411A5F2F1AFEFC8D31692EBA3AF4D5DFA7CB383F47C955EFBFA5",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/api/material_advisor.py",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "3873672E507B0F30B029A9F1A9A4D8E4659C833B67CF813009C0611C7F14901D",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/catalog/__init__.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/catalog/pricing.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "6D442DC717088959F1AFE1A331B495BA1FB28524BE0A53DBF04DB8845B5E740C",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/catalog/repository.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "B3DD3AF216008E56424521305AD564986150A715389334BB3399C5F28324FA82",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/config.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "18A4F2BE39EDD9F545EEAFD26F9ECD9272FCFE23256237C99911AF69766A355B",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/db/__init__.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/db/models.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "92B4AF9CF528D22C9BA2D0EDEBFA99F9E86F64C7A589053DB35FFC9812A990E5",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/db/session.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "E7E1005F5A6DB657735E8779BC3D09B03A135B796455A784A643FFFA1FE9B4E9",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/drawing/__init__.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/drawing/encoding.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "002B85FF15E3AE9F0F957A06D50A0138FD7B394D8DF294208530BE5BBA7395CA",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/rough/__init__.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "D5360B86A70DED85EFF6119215EB791DB1B023ED83F89A5FF1317842922BFC46",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/rough/models.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "69F12FFB9EE6E4250D8569F80281D076F461E1252E353CBB8E8A297AC9A06AC2",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "src/optimat/schemas.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": " M",
+      "sha256": "CDF3AD62FEF7E78938A06BDF9DB53CD992532CC26D3FE290FCEF508154528B40",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "tests/conftest.py",
+      "exists": true,
+      "tracked": true,
+      "git_status": "clean",
+      "sha256": "7058D70CC25C209424C53476D90736EBE42DF1417EC259AB4530B9613AFF839D",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "tests/test_material_advisor.py",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "087304A58167992694B974E8454E0F0D527DF25C8D662CE1061854B0AC54C4B5",
+      "role": "static_import_closure"
+    },
+    {
+      "path": "tests/test_material_advisor_api.py",
+      "exists": true,
+      "tracked": false,
+      "git_status": "??",
+      "sha256": "EEF33C6213829F704F36243FDD9742183D70D5A74588979DDFD995018FDC22CD",
+      "role": "static_import_closure"
+    }
+  ]
+}

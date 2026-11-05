@@ -1,0 +1,17 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collected 145 items / 3 deselected / 142 selected
+
+tests\test_rough_quantity_details.py ................................... [ 24%]
+........................                                                 [ 41%]
+tests\test_rough_beam_sources.py ...........................             [ 60%]
+tests\test_rough_takeoff.py ..........                                   [ 67%]
+tests\test_rough_foundations.py ..........                               [ 74%]
+tests\test_work_dimensions.py ....................................       [100%]
+
+===================== 142 passed, 3 deselected in 10.52s ======================
+
+EXIT=0

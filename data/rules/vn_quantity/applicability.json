@@ -1,0 +1,78 @@
+{
+  "dataset_version": "2026-11-04",
+  "production_ready": false,
+  "default_enabled": false,
+  "date_boundary_policy": "effective_to_exclusive",
+  "profiles": [
+    {
+      "id": "vn-2021-original",
+      "from": "2021-10-15",
+      "to_exclusive": "2025-03-08",
+      "sources": [
+        "TT13_2021_1"
+      ]
+    },
+    {
+      "id": "vn-2025-amended",
+      "from": "2025-03-08",
+      "to_exclusive": "2026-07-01",
+      "sources": [
+        "TT13_2021_1",
+        "TT01_2025_CONGBAO"
+      ],
+      "override": "II.5.4 dùng TT01/2025; TT60/2025 Điều 3 chỉ bổ sung giá ca máy Phụ lục V."
+    },
+    {
+      "id": "vn-2026",
+      "from": "2026-07-01",
+      "sources": [
+        "QD1041_2026",
+        "TT36_2026_1",
+        "TT36_2026_9",
+        "TT37_2026",
+        "TT38_2026_1",
+        "ND206_2026",
+        "ND210_2026_1"
+      ],
+      "legacy_rules": "Chỉ tham khảo sau khi được lựa chọn cho dự án, xác định tương thích pháp luật, hợp đồng, chỉ dẫn và định mức."
+    }
+  ],
+  "required_project_context": [
+    "ngay_lap_ho_so",
+    "muc_dich_du_toan_hay_thanh_toan",
+    "nguon_von",
+    "giai_doan_thiet_ke",
+    "ho_so_phe_duyet",
+    "dieu_khoan_chuyen_tiep",
+    "loai_hop_dong",
+    "phuong_phap_do_thoa_thuan",
+    "tieu_chuan_chi_dan_ap_dung"
+  ],
+  "selection_note": "Ngày chỉ là bộ lọc sơ bộ; phải kiểm tra chuyển tiếp NĐ206 Điều 36, hồ sơ phê duyệt và hợp đồng. Không chọn phiên bản chỉ bằng ngày hôm nay.",
+  "unit_conversions": [
+    {
+      "from": "m3",
+      "to": "100m3",
+      "factor": 0.01
+    },
+    {
+      "from": "m2",
+      "to": "100m2",
+      "factor": 0.01
+    },
+    {
+      "from": "kg",
+      "to": "t",
+      "factor": 0.001
+    }
+  ],
+  "quantity_layers": [
+    "geometric_design_quantity",
+    "measured_cost_quantity",
+    "resource_consumption",
+    "purchase_quantity",
+    "accepted_payment_quantity"
+  ],
+  "missing_data_behavior": "needs_review, không tự điền hệ số, neo/nối hoặc hao hụt",
+  "strict_threshold_note": "nhỏ hơn dùng <; tại đúng ngưỡng cần xét điều khoản đầy đủ, không tự thay thành <=."
+}

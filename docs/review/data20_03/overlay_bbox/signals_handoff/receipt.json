@@ -1,0 +1,8 @@
+{
+  "base_path": "docs\\review\\data20_03\\overlay_bbox\\implementation\\snapshot\\src\\optimat\\drawing\\viewer.py",
+  "base_sha256": "d04ebe38558212a06603bd04daa0a69800fe8e09244a06cd279c2df0cb481aea",
+  "viewer_sha256": "c58d12f0bd0cdcfd736f5f995187523e2bde2304746a823597eb69f43101767f",
+  "tests": "16 passed in 14.81s; exit 0",
+  "scope": "viewer only: bounds, drawing_work_signals, per-view render fallback",
+  "limitation": "candidate/newwidthbase path unavailable; patch base is recorded pre-bounds viewer snapshot, not verified candidate base; no full canonical package"
+}

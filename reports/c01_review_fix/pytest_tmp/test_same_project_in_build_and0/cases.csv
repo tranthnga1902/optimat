@@ -1,0 +1,3 @@
+ten,cong_trinh_id,data_kind,split,du_toan,phien_ban,kien_truc,ket_cau,thong_so,nguon,quyen_dung,dap_an_trang_thai,nguoi_kiem,ghi_chu
+v1,nha_x,ACTUAL,build,gt/v1.csv,chua_ro,kt/v1.dxf,,,x,noi_bo,chua_kiem,,
+v2,nha_x,ACTUAL,test,gt/v2.csv,v2,kt/v2.dxf,,,x,noi_bo,chua_kiem,,

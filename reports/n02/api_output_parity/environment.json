@@ -1,0 +1,23 @@
+{
+  "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\reports\\n02\\api_output_parity\\runtime_probe.py"
+  ],
+  "DATABASE_URL_present": false,
+  "OPTIMAT_TEST_DATABASE_URL_present": false,
+  "OPTIMAT_NO_DOTENV": "1",
+  "outside_sandbox": true,
+  "patches": [
+    "takeoff.default_catalog -> CSV catalog copy in RAM; TH10 waste_pct=0",
+    "pricing.price_offers -> TH10 SYNTHETIC QUOTE 100/kg"
+  ],
+  "compute_boq_export_mocked": false,
+  "fixture_source": "tests/test_rough_partial.py::rows_for via runpy; no pytest invocation",
+  "outside_hash_scope": [
+    "frontend",
+    "SQL",
+    "docs",
+    "other reports"
+  ]
+}

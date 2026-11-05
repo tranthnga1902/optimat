@@ -18,3 +18,12 @@ data/uploads/
 deploy/duckdns.env
 deploy/duckdns.log
 deploy/logs/
+data/drawings/.concept_samples.json
+data/van_ban/*.pdf
+data/drawings/raw_*/
+
+/backups/
+data/cache/
+data/ai_de_xuat/
+data/project_documents/
+docs/review/data20_03/overlay_bbox/release_handoff/apply_check/

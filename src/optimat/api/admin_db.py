@@ -24,6 +24,7 @@ from sqlalchemy.exc import DBAPIError, IntegrityError
 
 from .. import config
 from ..db.models import Base
+from ..db.schema20 import metadata as storage_metadata
 from ..db.session import get_database_url, get_engine
 from .auth import audit, require_admin
 
@@ -38,12 +39,11 @@ EDITABLE = {"material_rules": "material_rules.csv", "material_notes": "material_
 DEALER_TABLES = {"suppliers": "suppliers.csv", "supplier_materials": "supplier_materials.csv"}
 WRITABLE = {**EDITABLE, **DEALER_TABLES}
 CLUSTERS = {
-    "Danh mục vật liệu": ["material_groups", "material_families", "materials", "wall_systems", "material_relations",
-                          "material_aliases", "standards", "material_standards"],
-    "Quy tắc nhận dạng": ["material_rules", "material_notes", "drawing_concepts", "convention_clauses", "room_rules", "rough_norms"],
-    "Nguồn cung và giá": ["suppliers", "supplier_materials", "vehicles", "price_records", "labor_rates"],
-    "Người dùng và dự án": ["users", "projects", "project_files", "takeoff_results", "optimization_runs"],
-    "Vận hành": ["model_versions", "audit_logs"],
+    "Tài khoản và hồ sơ": ["users", "projects", "document_revisions"],
+    "Nhận dạng và bóc tách": ["analysis_runs", "building_elements", "element_measurements", "evidence_sources", "takeoff_items"],
+    "Vật liệu và định mức": ["materials", "wall_systems", "material_relations", "work_norms"],
+    "Nguồn cung và chi phí": ["suppliers", "supplier_materials", "price_records", "cost_parameters"],
+    "Phương án và vận hành": ["material_scenarios", "optimization_runs", "rule_sets", "audit_logs"],
 }
 
 
@@ -52,7 +52,9 @@ def _masked(url: str) -> str:
 
 
 def _table(name: str):
-    t = Base.metadata.tables.get(name)
+    t = storage_metadata.tables.get(name)
+    if t is None:
+        t = Base.metadata.tables.get(name)
     if t is None:
         raise HTTPException(404, f"Không có bảng {name}.")
     return t
@@ -86,7 +88,8 @@ def _clear_caches(name: str) -> None:
 def db_overview() -> dict:
     url = get_database_url()
     out: dict[str, Any] = {"source": "postgresql" if url else "csv", "url": _masked(url) if url else None,
-                           "connected": False, "error": None, "clusters": []}
+                           "connected": False, "error": None, "clusters": [], "schema_version": 20,
+                           "expected_table_count": 20, "physical_table_count": None}
     counts: dict[str, int | None] = {}
     if url:
         try:
@@ -94,25 +97,36 @@ def db_overview() -> dict:
                 out["server"] = conn.execute(text("SHOW server_version")).scalar()
                 have = set(conn.execute(text("SELECT table_name FROM information_schema.tables "
                                              "WHERE table_schema = 'public'")).scalars())
-                for name, t in Base.metadata.tables.items():
+                physical=set(conn.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'")).scalars())
+                out['physical_table_count']=len(physical)
+                out['schema_ready']=physical==set(storage_metadata.tables)
+                for name, t in storage_metadata.tables.items():
                     counts[name] = conn.execute(select(func.count()).select_from(t)).scalar() if name in have else None
+                for name in EDITABLE:
+                    if name in have:
+                        counts[name]=conn.execute(select(func.count()).select_from(Base.metadata.tables[name])).scalar()
             out["connected"] = True
         except DBAPIError as exc:
             out["error"] = str(exc.orig).splitlines()[0] if exc.orig else str(exc).splitlines()[0]
     if not out["connected"]:
         import pandas as pd
-        for name in Base.metadata.tables:
+        for name in storage_metadata.tables:
             p = _csv_path(name)
             counts[name] = len(pd.read_csv(p, dtype=str)) if p else None
+        for name in EDITABLE:
+            counts[name]=len(pd.read_csv(RULES/EDITABLE[name],dtype=str))
     listed = {n for names in CLUSTERS.values() for n in names}
-    clusters = {**CLUSTERS, "Khác": [n for n in Base.metadata.tables if n not in listed]}
+    clusters = {**CLUSTERS, "Khác": [n for n in storage_metadata.tables if n not in listed]}
     out["clusters"] = [{"name": c, "tables": [{"name": n, "rows": counts.get(n), "editable": n in WRITABLE and out["connected"],
-                                               "doc": (Base.metadata.tables[n].comment or _doc(n)),
-                                               "title": Base.metadata.tables[n].info.get("title"),
+                                               "doc": (storage_metadata.tables[n].comment or _doc(n)),
+                                               "title": storage_metadata.tables[n].info.get("title"),
                                                "kind": "rule" if n in EDITABLE else "dealer" if n in DEALER_TABLES else None,
                                                "source_file": _source_file(n) if n in WRITABLE else None}
-                                              for n in names if n in Base.metadata.tables]}
+                                              for n in names if n in storage_metadata.tables]}
                        for c, names in clusters.items() if names]
+    out['rule_views']=[{'name':n,'title':Base.metadata.tables[n].info.get('title'),
+                       'rows':counts.get(n),'editable':out['connected'],'kind':'rule',
+                       'source_file':_source_file(n),'doc':Base.metadata.tables[n].comment or _doc(n)} for n in EDITABLE]
     return out
 
 
@@ -193,6 +207,10 @@ def _validate(name: str, row: dict, conn) -> None:
         known = set(conn.execute(text("SELECT material_id FROM materials")).scalars())
         if row.get("material_id") not in known:
             raise HTTPException(422, f"Mã vật liệu {row.get('material_id')} không có trong danh mục.")
+    if name == "suppliers" and row.get("linked_supplier_id") and row.get("linked_supplier_id") == row.get("supplier_id"):
+        raise HTTPException(422, "Đại lý cùng công ty phải là mã nhà cung cấp khác.")
+    if name == "supplier_materials" and row.get("valid_until") and row.get("price_date") and row["valid_until"] < row["price_date"]:
+        raise HTTPException(422, "Ngày hết hiệu lực báo giá phải sau ngày báo giá.")
     if name == "drawing_concepts":
         allowed = concepts.LAYER_ROLES if row.get("tin_hieu") == "layer" else concepts.BLOCK_ROLES
         if row.get("vai_tro") not in allowed:

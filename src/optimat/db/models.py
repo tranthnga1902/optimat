@@ -1,4 +1,10 @@
-"""Lược đồ bảng PostgreSQL (SQLAlchemy), gồm 26 bảng chia 4 cụm:
+"""Ánh xạ tương thích PostgreSQL của các luồng/API hiện có.
+
+Lược đồ lưu trữ chính thức gồm 20 bảng trong db/schema20.py. Một số lớp ở đây
+ánh xạ view có thể ghi, không phải bảng vật lý. Khởi tạo qua compat20.initialize_database;
+chuyển dữ liệu cũ bằng scripts/migrate_schema20.py, không gọi Base.metadata.create_all.
+
+Các cấu trúc tương thích chia 4 cụm:
 danh mục vật liệu, nguồn cung và giá, người dùng và dự án, vận hành hệ thống.
 
 Tên cột của các bảng danh mục trùng với tên cột trong các file CSV để phần còn lại của hệ thống
@@ -84,6 +90,7 @@ class Material(Base):
     reference_brands: Mapped[Optional[str]] = mapped_column(Text)
     tech_notes: Mapped[Optional[str]] = mapped_column(Text)
     data_note: Mapped[Optional[str]] = mapped_column(Text)
+    raw_class: Mapped[Optional[str]] = mapped_column(String(32))         # loại vật liệu thô (RAW_CLASSES trong rough/models.py) để chọn vật liệu cần bóc
 
 
 class WallSystem(Base):
@@ -192,6 +199,10 @@ class RoughNorm(Base):
     material_name: Mapped[Optional[str]] = mapped_column(String(255), comment="tên vật liệu")
     qty: Mapped[Optional[float]] = mapped_column(Float, comment="lượng trên 1 đơn vị công tác")
     qty_unit: Mapped[Optional[str]] = mapped_column(String(64), comment="ví dụ kg / m³")
+    qty_min: Mapped[Optional[float]] = mapped_column(Float, comment="cận dưới khi hệ số là khoảng (đặc tả 30/10/2026 mục 3B)")
+    qty_max: Mapped[Optional[float]] = mapped_column(Float, comment="cận trên khi hệ số là khoảng")
+    muc_xac_nhan: Mapped[Optional[str]] = mapped_column(String(16), comment="nguon | tinh | kinh_nghiem")
+    ngay_tra: Mapped[Optional[str]] = mapped_column(String(10), comment="ngày tra số, YYYY-MM-DD")
     norm_code: Mapped[Optional[str]] = mapped_column(String(64), comment="số hiệu bảng TT 38/2026/TT-BXD")         # số hiệu bảng TT 38/2026/TT-BXD
     source: Mapped[Optional[str]] = mapped_column(String(255), comment="nguồn")
     note: Mapped[Optional[str]] = mapped_column(Text, comment="ghi chú")
@@ -284,6 +295,8 @@ class Supplier(Base):
     collected_by: Mapped[Optional[str]] = mapped_column(String(128))
     source: Mapped[Optional[str]] = mapped_column(String(1024))
     note: Mapped[Optional[str]] = mapped_column(Text)
+    # Nhà cung cấp trong công bố giá (CBG-...) là cùng công ty với đại lý này: dùng vị trí, thời gian cung ứng của đại lý.
+    linked_supplier_id: Mapped[Optional[str]] = mapped_column(ForeignKey("suppliers.supplier_id", ondelete="SET NULL"))
 
 
 class SupplierMaterial(Base):
@@ -315,6 +328,9 @@ class SupplierMaterial(Base):
     transport_included: Mapped[str] = mapped_column(String(8), default="UNKNOWN", server_default="UNKNOWN")
     in_stock: Mapped[Optional[bool]] = mapped_column(Boolean)
     note: Mapped[Optional[str]] = mapped_column(Text)
+    quote_reference: Mapped[Optional[str]] = mapped_column(String(1024))     # số/ngày báo giá, người báo, file lưu
+    valid_until: Mapped[Optional[date]] = mapped_column(Date)                 # báo giá hết hiệu lực sau ngày này
+    lead_time_days: Mapped[Optional[float]] = mapped_column(Float)            # trống: lấy thời gian cung ứng của đại lý
 
 
 class Vehicle(Base):

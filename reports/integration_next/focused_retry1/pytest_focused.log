@@ -1,0 +1,66 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\.venv\Scripts\python.exe
+rootdir: C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai
+configfile: pytest.ini
+plugins: anyio-4.15.1, platformdirs-4.13.3
+collecting ... collected 50 items
+
+tests/test_review.py::test_review_without_edits_matches_takeoff PASSED   [  2%]
+tests/test_review.py::test_review_edits_remove_add_and_height PASSED     [  4%]
+tests/test_review.py::test_review_api PASSED                             [  6%]
+tests/test_review.py::test_confirm_returns_bill_priced_by_catalog_code PASSED [  8%]
+tests/test_review.py::test_payload_materials_are_catalog_codes PASSED    [ 10%]
+tests/test_view_progress.py::test_missing_detect_class_keeps_material_available PASSED [ 12%]
+tests/test_view_progress.py::test_progressive_http_sample_reaches_complete PASSED [ 14%]
+tests/test_view_progress.py::test_preview_coordinates_and_limit PASSED   [ 16%]
+tests/test_view_progress.py::test_preview_is_yielded_before_recognition_and_renderer PASSED [ 18%]
+tests/test_view_progress.py::test_error_after_preview_keeps_stream_incomplete_and_cleans_file PASSED [ 20%]
+tests/test_view_progress.py::test_cancel_after_preview_cleans_tempfile_without_recognizing PASSED [ 22%]
+tests/test_takeoff_view_concurrency.py::test_view_worker_allows_health_and_preserves_inputs PASSED [ 24%]
+tests/test_takeoff_view_concurrency.py::test_view_drawing_error_keeps_422_and_cleans_tempfile PASSED [ 26%]
+tests/test_takeoff_view_concurrency.py::test_view_validation_stays_before_worker[nha.pdf-{}] PASSED [ 28%]
+tests/test_takeoff_view_concurrency.py::test_view_validation_stays_before_worker[nha.dxf-{] PASSED [ 30%]
+tests/test_takeoff_view_concurrency.py::test_view_project_error_keeps_status_and_cleans_tempfile PASSED [ 32%]
+tests/test_admin_project_file.py::test_anonymous_and_nonadmin PASSED     [ 34%]
+tests/test_admin_project_file.py::test_file_bytes_and_headers[.dxf-application/octet-stream] PASSED [ 36%]
+tests/test_admin_project_file.py::test_file_bytes_and_headers[.pdf-application/pdf] PASSED [ 38%]
+tests/test_admin_project_file.py::test_file_bytes_and_headers[.xlsx-application/vnd.openxmlformats-officedocument.spreadsheetml.sheet] PASSED [ 40%]
+tests/test_admin_project_file.py::test_file_bytes_and_headers[.json-application/json] PASSED [ 42%]
+tests/test_admin_project_file.py::test_file_bytes_and_headers[.md-text/plain] PASSED [ 44%]
+tests/test_admin_project_file.py::test_cross_project_missing_and_traversal PASSED [ 46%]
+tests/test_admin_project_file.py::test_symlink_escape SKIPPED (Không thể
+tạo symlink trong môi trường kiểm thử)                                   [ 48%]
+tests/test_admin_project_file.py::test_vietnamese_filename PASSED        [ 50%]
+tests/test_auth_admin.py::test_password_hash_and_token PASSED            [ 52%]
+tests/test_auth_admin.py::test_without_database_login_is_off PASSED      [ 54%]
+tests/test_auth_admin.py::test_roles_users_projects_in_postgresql SKIPPED [ 56%]
+tests/test_admin_db.py::test_overview_and_rows_from_csv PASSED           [ 58%]
+tests/test_admin_db.py::test_edit_rule_tables_in_postgresql SKIPPED      [ 60%]
+tests/test_admin_db.py::test_manage_dealers_in_postgresql SKIPPED (chưa
+đặt OPTIMAT_TEST_DATABASE_URL)                                           [ 62%]
+tests/test_rough_beams.py::test_infer_beams_along_walls PASSED           [ 64%]
+tests/test_rough_beams.py::test_beam_works PASSED                        [ 66%]
+tests/test_rough_beams.py::test_beam_missing_section_and_manual_override PASSED [ 68%]
+tests/test_rough_columns.py::test_detect_columns_from_solid_fills PASSED [ 70%]
+tests/test_rough_columns.py::test_columns_far_apart_do_not_need_one_huge_grid PASSED [ 72%]
+tests/test_rough_columns.py::test_column_works_and_formwork PASSED       [ 74%]
+tests/test_rough_columns.py::test_wall_through_column_overlap PASSED     [ 76%]
+tests/test_rough_columns.py::test_manual_and_removed_columns PASSED      [ 78%]
+tests/test_rough_columns.py::test_signal_columns_from_column_layer PASSED [ 80%]
+tests/test_rough_takeoff.py::test_two_floor_house PASSED                 [ 82%]
+tests/test_rough_takeoff.py::test_no_params_everything_flagged_not_guessed PASSED [ 84%]
+tests/test_rough_takeoff.py::test_ground_index PASSED                    [ 86%]
+tests/test_rough_takeoff.py::test_formwork_summary_no_double_count PASSED [ 88%]
+tests/test_rough_takeoff.py::test_manual_beam_depth_used_for_walls PASSED [ 90%]
+tests/test_rough_takeoff.py::test_same_title_counted_once PASSED         [ 92%]
+tests/test_rough_takeoff.py::test_duplicate_ground_flag_moves_to_counted_copy PASSED [ 94%]
+tests/test_rough_takeoff.py::test_no_plans_warns PASSED                  [ 96%]
+tests/test_rough_takeoff.py::test_found_rough_parts_warn_until_entered PASSED [ 98%]
+tests/test_rough_takeoff.py::test_structural_beam_views_same_floor_counted_once PASSED [100%]
+
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_admin_project_file.py:84: Không thể tạo symlink trong môi trường kiểm thử
+SKIPPED [1] tests\test_auth_admin.py:41: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_admin_db.py:34: chưa đặt OPTIMAT_TEST_DATABASE_URL
+SKIPPED [1] tests\test_admin_db.py:61: chưa đặt OPTIMAT_TEST_DATABASE_URL
+======================= 46 passed, 4 skipped in 15.64s ========================

@@ -1,0 +1,3 @@
+module.exports=[63672,a=>{"use strict";var b=a.i(72131),c=a.i(19032);async function d(){await (0,c.k)("/api/auth/logout",{method:"POST"}),window.location.assign("/dang-nhap")}a.s(["C",0,d,"r",0,function(){let[a,d]=(0,b.useState)(null);return(0,b.useEffect)(()=>{(0,c.k)("/api/auth/me").then(d,()=>d({auth:!1,user:null,setup:!1}))},[]),a}])}];
+
+//# sourceMappingURL=src_lib_auth_ts_0-jf5yczne32l._.js.map

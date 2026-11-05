@@ -1,0 +1,34 @@
+..............F.........................................                 [100%]
+================================== FAILURES ===================================
+___ test_dxf_block_translation_preserves_rectangle_and_rejects_open_shapes ____
+
+tmp_path = WindowsPath('C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/docs/review/data20_05/column_contour_fix/pytest_temp1/test_dxf_block_translation_pre0')
+
+    def test_dxf_block_translation_preserves_rectangle_and_rejects_open_shapes(tmp_path):
+        import ezdxf
+        from optimat.drawing.dxf_reader import read_drawing
+        from optimat.rough.columns import column_works
+    
+        doc = ezdxf.new()
+        doc.layers.new("COT")
+        block = doc.blocks.new("SECTION")
+        for x1, y1, x2, y2 in RECT:
+            block.add_line((x1, y1), (x2, y2), dxfattribs={"layer": "COT"})
+        model = doc.modelspace()
+        model.add_blockref("SECTION", (2000, 3000))
+        model.add_line((6000, 5000), (6225, 5335), dxfattribs={"layer": "COT"})
+        for x1, y1, x2, y2 in RECT[:2]:
+            model.add_line((x1+7000, y1+6000), (x2+7000, y2+6000), dxfattribs={"layer": "COT"})
+        path = tmp_path / "columns.dxf"
+        doc.saveas(path)
+        cols = detect_columns(read_drawing(str(path)))
+>       assert [(c.x, c.y, c.b_mm, c.h_mm) for c in cols] == [(2112.5, 3167.5, 225, 335)]
+E       assert [] == [(2112.5, 3167.5, 225, 335)]
+E         
+E         Right contains one more item: (2112.5, 3167.5, 225, 335)
+E         Use -v to get more diff
+
+tests\test_rough_column_contours.py:90: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rough_column_contours.py::test_dxf_block_translation_preserves_rectangle_and_rejects_open_shapes
+1 failed, 55 passed in 17.57s

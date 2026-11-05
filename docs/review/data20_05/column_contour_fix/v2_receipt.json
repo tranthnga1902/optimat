@@ -1,0 +1,21 @@
+{
+  "status": "PASS_SCOPED_SYNTHETIC",
+  "touching_before": "4 failed; touch_before.log",
+  "touching_after": "4 passed,18 deselected; touch_final.log; exit0",
+  "regression": "72 passed,2 environment failures,11 deselected; v2_regression.log; session51879 terminal exit1",
+  "retry": "same 2 converter tests:2passed in2.97s; converter_retry.log; exit0; workspace TMP/TEMP/TMPDIR",
+  "total_unique_passed": 74,
+  "real_cad_deselected": 11,
+  "hashes": {
+    "src/optimat/drawing/dxf_reader.py": "f3a4f413414a3dc516e70846e25abb33c57fb2899396c9d6e5ab3b614a4095d0",
+    "src/optimat/rough/columns.py": "84457d7dbeab3ea9a369d5ca401baa9069fd5e60502a278dc2fb52dddfb39a14",
+    "tests/test_rough_column_contours.py": "93f35364ebe87cdff1e7c35d47af0979570144e2f2efe2d8e229603f431dab40"
+  },
+  "not_checked": [
+    "CAD thực tế",
+    "full suite",
+    "DB",
+    "runtime/browser"
+  ],
+  "ownership": "00 xác nhận 03 không giữ dxf_reader/columns; cho phép hunk contour tối thiểu, giữ thay đổi khác"
+}

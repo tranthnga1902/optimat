@@ -1,0 +1,93 @@
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.field {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--rule2);
+  border-radius: 8px;
+}
+
+.field dt,
+.description h4 {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.field dd,
+.value {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.source,
+.note {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.note {
+  margin: 0;
+}
+
+.description {
+  min-width: 0;
+}
+
+.longText summary {
+  cursor: pointer;
+}
+
+.preview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.expand,
+.collapse {
+  color: var(--accent);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.collapse,
+.longText[open] .preview,
+.longText[open] .expand {
+  display: none;
+}
+
+.longText[open] .collapse {
+  display: inline;
+}
+
+.longText[open] .value {
+  margin-top: 6px;
+}

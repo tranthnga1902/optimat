@@ -1,0 +1,23 @@
+{
+  "_ghi_chu": "SỐ MẪU (data_kind SAMPLE) để chạy thử bóc phần thô trên bản vẽ bất kỳ; mọi số là giả định người dùng (trạng thái C), thay bằng thông số công trình thật. Hàm lượng thép theo đặc tả 30/10/2026 mục 3B (mức Tính, cận dưới); lanh tô 100 x gối 200 là kinh nghiệm; phương án tường theo lớp chỉ áp cho tường bản vẽ không ghi vật liệu.",
+  "concrete_supply": "site_mix",
+  "concrete_grade": "M250",
+  "lean_concrete_grade": "M100",
+  "masonry_mortar_grade": "M75",
+  "plaster_mortar_grade": "M75",
+  "screed_mortar_grade": "M75",
+  "plaster_thickness_mm": 15,
+  "screed_thickness_mm": 30,
+  "slab_thickness_mm": 100,
+  "beam_width_mm": 220,
+  "beam_depth_mm": 350,
+  "lintel_height_mm": 100,
+  "lintel_bearing_mm": 200,
+  "stair_slab_thickness_mm": 120,
+  "waterproof_upturn_mm": 300,
+  "waterproof_material_id": "CT02",
+  "formwork_type": "go",
+  "steel_kg_per_m3": {"COT": 154, "DAM": 139, "SAN": 79, "LANH_TO": 100, "CAU_THANG": 100, "MONG": 100},
+  "ground_layers": [{"kind": "NEN_DEM_CAT", "thickness_mm": 300}, {"kind": "BE_TONG_LOT", "thickness_mm": 100}],
+  "wall_systems_by_class": {"110": "W-GN01-110", "150": "W-GN03-150", "220": "W-GN01-220"}
+}

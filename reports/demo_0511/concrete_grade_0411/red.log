@@ -1,0 +1,49 @@
+FFFFF.....FFFFF..........FFF                                             [100%]
+================================== FAILURES ===================================
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   ValueError: not enough values to unpack (expected 1, got 0)
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:134: ValueError: not enough values to unpack (expected 1, got 0)
+E   AssertionError: assert 'BT03' is None
+     +  where 'BT03' = ready_mix_material(Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None), 'M250')
+     +    where Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None) = replace(Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None), materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...      xi_mang    ACT...an_tho  ...  vua_be_tong    ACTUAL\n97        BT07  be_tong_cot_thep  ...  vua_be_tong    ACTUAL\n\n[98 rows x 29 columns])
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:158: AssertionError: assert 'BT03' is None
+E   AssertionError: assert 'BT03' is None
+     +  where 'BT03' = ready_mix_material(Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None), 'M250')
+     +    where Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None) = replace(Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None), materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...      xi_mang    ACT...an_tho  ...  vua_be_tong    ACTUAL\n97        BT07  be_tong_cot_thep  ...  vua_be_tong    ACTUAL\n\n[98 rows x 29 columns])
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:158: AssertionError: assert 'BT03' is None
+E   AssertionError: assert 'BT03' is None
+     +  where 'BT03' = ready_mix_material(Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None), 'M250')
+     +    where Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None) = replace(Catalog(materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...  ...ket_cau_thep_bao_che  ...  Thép hình, thép tấm, thép ống, liên kết, chống...\n\n[5 rows x 4 columns], price_records=None), materials=   material_id             group  ...    raw_class data_kind\n0         XM01  be_tong_cot_thep  ...      xi_mang    ACT...an_tho  ...  vua_be_tong    ACTUAL\n97        BT07  be_tong_cot_thep  ...  vua_be_tong    ACTUAL\n\n[98 rows x 29 columns])
+C:\Users\Admin\Downloads\optimat-ai_6\optimat-ai\tests\test_rough_materials.py:158: AssertionError: assert 'BT03' is None
+=========================== short test summary info ===========================
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[COT-ready_mix-M250/M300]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[COT-ready_mix-M250.5]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[COT-ready_mix-M250,5]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[COT-ready_mix-M250 ch\u1ed1ng th\u1ea5m W8]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[COT-ready_mix-B250]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[BE_TONG_LOT-ready_mix-M250/M300]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[BE_TONG_LOT-ready_mix-M250.5]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[BE_TONG_LOT-ready_mix-M250,5]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[BE_TONG_LOT-ready_mix-M250 ch\u1ed1ng th\u1ea5m W8]
+FAILED tests/test_rough_materials.py::test_concrete_unclear_grade_stays_separate[BE_TONG_LOT-ready_mix-B250]
+FAILED tests/test_rough_materials.py::test_ready_mix_catalog_noninteger_or_combined_grade[M250.5]
+FAILED tests/test_rough_materials.py::test_ready_mix_catalog_noninteger_or_combined_grade[M250,5]
+FAILED tests/test_rough_materials.py::test_ready_mix_catalog_noninteger_or_combined_grade[M250/M300]
+13 failed, 15 passed, 46 deselected in 4.39s

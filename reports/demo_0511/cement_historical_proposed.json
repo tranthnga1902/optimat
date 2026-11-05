@@ -1,0 +1,196 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "applied": false,
+  "observed_on": "2026-11-03",
+  "source_pdf": "reports/demo_0511/cemia_ximang_thang3_2026.pdf",
+  "source_pdf_sha256": "6ebfe2d3e432cb08f5319878e65463583350a96238b0ff62a6d17f02b1342c8d",
+  "catalog_sha256": "9b644f3d83f4f525a3ddd9d62de7bda8761367ae4998bc7b809821e6a12a2bf6",
+  "supplier_candidate": {
+    "supplier_id": "CBG-991233626E",
+    "name": "Công ty Xi măng Vicem Tam Điệp",
+    "province": "Hà Nội",
+    "data_kind": "ACTUAL",
+    "lat": null,
+    "lon": null,
+    "lead_time_days": null,
+    "verified": false,
+    "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf",
+    "note": "Đơn vị kê khai trong bảng chính thức; chưa xác minh giao hàng/công trình"
+  },
+  "records": [
+    {
+      "proposed_record": {
+        "date": "2026-03-17",
+        "material_id": "XM01",
+        "supplier_id": "CBG-991233626E",
+        "province": "Hà Nội",
+        "quantity": 1.0,
+        "unit": "tấn",
+        "unit_price": 1150000,
+        "vat_included": "YES",
+        "transport_included": "UNKNOWN",
+        "data_kind": "ACTUAL",
+        "price_level": "BULLETIN",
+        "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=13; STT 1; 1228/XMTĐ-XNTT; Xi măng Vicem cao cấp PCB30; bao KPK 50 kg; giá đã VAT"
+      },
+      "evidence": {
+        "url": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf",
+        "pdf_page_1based": 13,
+        "row_stt": 1,
+        "document_no": "1228/XMTĐ-XNTT",
+        "document_date": "2026-03-17",
+        "product_name": "Xi măng Vicem cao cấp PCB30",
+        "packaging": "bao KPK 50 kg",
+        "standard": "TCVN 6260:2020",
+        "currency": "VND",
+        "price_column": "Giá (đã có VAT)",
+        "tax_excluded_cell": "blank",
+        "delivery_note_cell": "blank",
+        "conversion": "Không quy đổi: bảng nguồn báo trực tiếp đồng/tấn, danh mục unit=tấn",
+        "image": "reports/demo_0511/cemia_price_page-13.png",
+        "visual_review": "agent đã xem PNG render bằng Poppler, xác nhận số nằm trong cột Giá (đã có VAT)"
+      },
+      "unknown": [
+        "valid_until",
+        "transport_included",
+        "lead_time_days",
+        "coordinates",
+        "minimum_order",
+        "freight_fee"
+      ],
+      "mapping_limit": "Mã XM01/XM02 là nhóm chung, không phải SKU thương hiệu; giữ tên biến thể trong source, không so như cùng biến thể."
+    },
+    {
+      "proposed_record": {
+        "date": "2026-03-17",
+        "material_id": "XM02",
+        "supplier_id": "CBG-991233626E",
+        "province": "Hà Nội",
+        "quantity": 1.0,
+        "unit": "tấn",
+        "unit_price": 1200000,
+        "vat_included": "YES",
+        "transport_included": "UNKNOWN",
+        "data_kind": "ACTUAL",
+        "price_level": "BULLETIN",
+        "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=13; STT 2; 1228/XMTĐ-XNTT; Xi măng Vicem cao cấp PCB40; bao KPK 50 kg; giá đã VAT"
+      },
+      "evidence": {
+        "url": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf",
+        "pdf_page_1based": 13,
+        "row_stt": 2,
+        "document_no": "1228/XMTĐ-XNTT",
+        "document_date": "2026-03-17",
+        "product_name": "Xi măng Vicem cao cấp PCB40",
+        "packaging": "bao KPK 50 kg",
+        "standard": "TCVN 6260:2020",
+        "currency": "VND",
+        "price_column": "Giá (đã có VAT)",
+        "tax_excluded_cell": "blank",
+        "delivery_note_cell": "blank",
+        "conversion": "Không quy đổi: bảng nguồn báo trực tiếp đồng/tấn, danh mục unit=tấn",
+        "image": "reports/demo_0511/cemia_price_page-13.png",
+        "visual_review": "agent đã xem PNG render bằng Poppler, xác nhận số nằm trong cột Giá (đã có VAT)"
+      },
+      "unknown": [
+        "valid_until",
+        "transport_included",
+        "lead_time_days",
+        "coordinates",
+        "minimum_order",
+        "freight_fee"
+      ],
+      "mapping_limit": "Mã XM01/XM02 là nhóm chung, không phải SKU thương hiệu; giữ tên biến thể trong source, không so như cùng biến thể."
+    },
+    {
+      "proposed_record": {
+        "date": "2026-03-17",
+        "material_id": "XM01",
+        "supplier_id": "CBG-991233626E",
+        "province": "Hà Nội",
+        "quantity": 1.0,
+        "unit": "tấn",
+        "unit_price": 1070000,
+        "vat_included": "YES",
+        "transport_included": "UNKNOWN",
+        "data_kind": "ACTUAL",
+        "price_level": "BULLETIN",
+        "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=14; STT 3; 1228/XMTĐ-XNTT; Xi măng đa dụng PCB30; bao KPK 50 kg; giá đã VAT"
+      },
+      "evidence": {
+        "url": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf",
+        "pdf_page_1based": 14,
+        "row_stt": 3,
+        "document_no": "1228/XMTĐ-XNTT",
+        "document_date": "2026-03-17",
+        "product_name": "Xi măng đa dụng PCB30",
+        "packaging": "bao KPK 50 kg",
+        "standard": "TCVN 6260:2020",
+        "currency": "VND",
+        "price_column": "Giá (đã có VAT)",
+        "tax_excluded_cell": "blank",
+        "delivery_note_cell": "blank",
+        "conversion": "Không quy đổi: bảng nguồn báo trực tiếp đồng/tấn, danh mục unit=tấn",
+        "image": "reports/demo_0511/cemia_price_page-14.png",
+        "visual_review": "agent đã xem PNG render bằng Poppler, xác nhận số nằm trong cột Giá (đã có VAT)"
+      },
+      "unknown": [
+        "valid_until",
+        "transport_included",
+        "lead_time_days",
+        "coordinates",
+        "minimum_order",
+        "freight_fee"
+      ],
+      "mapping_limit": "Mã XM01/XM02 là nhóm chung, không phải SKU thương hiệu; giữ tên biến thể trong source, không so như cùng biến thể."
+    },
+    {
+      "proposed_record": {
+        "date": "2026-03-17",
+        "material_id": "XM02",
+        "supplier_id": "CBG-991233626E",
+        "province": "Hà Nội",
+        "quantity": 1.0,
+        "unit": "tấn",
+        "unit_price": 1130000,
+        "vat_included": "YES",
+        "transport_included": "UNKNOWN",
+        "data_kind": "ACTUAL",
+        "price_level": "BULLETIN",
+        "source": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf#page=14; STT 4; 1228/XMTĐ-XNTT; Xi măng đa dụng PCB40; bao KPK 50 kg; giá đã VAT"
+      },
+      "evidence": {
+        "url": "https://cemia.gov.vn/UploadedFiles/UploadedFiles/tiep%20nhan/20260403035144_Ke%20khai%20gia%20Xi%20mang%20thang%203.2026.pdf",
+        "pdf_page_1based": 14,
+        "row_stt": 4,
+        "document_no": "1228/XMTĐ-XNTT",
+        "document_date": "2026-03-17",
+        "product_name": "Xi măng đa dụng PCB40",
+        "packaging": "bao KPK 50 kg",
+        "standard": "TCVN 6260:2020",
+        "currency": "VND",
+        "price_column": "Giá (đã có VAT)",
+        "tax_excluded_cell": "blank",
+        "delivery_note_cell": "blank",
+        "conversion": "Không quy đổi: bảng nguồn báo trực tiếp đồng/tấn, danh mục unit=tấn",
+        "image": "reports/demo_0511/cemia_price_page-14.png",
+        "visual_review": "agent đã xem PNG render bằng Poppler, xác nhận số nằm trong cột Giá (đã có VAT)"
+      },
+      "unknown": [
+        "valid_until",
+        "transport_included",
+        "lead_time_days",
+        "coordinates",
+        "minimum_order",
+        "freight_fee"
+      ],
+      "mapping_limit": "Mã XM01/XM02 là nhóm chung, không phải SKU thương hiệu; giữ tên biến thể trong source, không so như cùng biến thể."
+    }
+  ],
+  "limitations": [
+    "Lịch sử kê khai tháng3/2026, không phải báo giá mua còn hiệu lực ngày05/11",
+    "Không dùng price_records BULLETIN lấp supplier_materials DEALER",
+    "Không suy thuế suất hoặc tính lại giá trước VAT",
+    "Chưa ghi database; cần phiên chính review trước import"
+  ]
+}

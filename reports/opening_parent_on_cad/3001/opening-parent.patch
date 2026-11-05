@@ -1,0 +1,34 @@
+--- a/src/app/(user)/do-boc/model.ts
++++ b/src/app/(user)/do-boc/model.ts
+@@ -89,12 +89,20 @@
+ }
+ 
+ export type Group = { cls: string; role: string; L: number; open: number; mats: Record<string, number>; gross: number; net: number | null; mat: string | null; share: number };
++function pendingMasonryOpenings<T extends { wall:string; keep:boolean; w:number|null; h:number|null }>(walls: Pick<Wall,"id"|"keep"|"masonry">[], openings:T[]) {
++  const keptParents = new Map(walls.filter(w => w.keep).map(w => [w.id,w]));
++  return openings.filter(o => {
++    const parent = keptParents.get(o.wall);
++    return o.keep && (!parent || (parent.masonry && (o.w == null || o.h == null)));
++  });
++}
++
+ export function compute(S: PlanState) {
+   const H = S.height_mm;
+   const kept = S.walls.filter((w) => w.keep && w.masonry), ids = new Set(kept.map((w) => w.id));
+   const len = S.length_rule === "thong_thuy" ? netLengths(S.walls.filter((w) => w.keep))
+     : Object.fromEntries(S.walls.map((w) => [w.id, wallLen(w)]));
+-  const pending = S.openings.filter(o => o.keep && (o.w == null || o.h == null || !ids.has(o.wall)));
++  const pending = pendingMasonryOpenings(S.walls,S.openings);
+   // Khi chưa biết tường cha, chưa thể loại trừ ảnh hưởng đến bất kỳ nhóm nào của mặt bằng này.
+   const unassigned = pending.some(o => !ids.has(o.wall));
+   const pendingWalls = unassigned ? ids : new Set(pending.map(o => o.wall));
+@@ -338,8 +346,7 @@
+ 
+ export function missingWallOpenings(request?: {plans: { name:string; walls:{id:string;keep:boolean;masonry:boolean}[]; openings:{id:string;wall:string;keep:boolean;w:number|null;h:number|null}[] }[]}) {
+   return (request?.plans || []).flatMap(plan => {
+-    const walls = new Set(plan.walls.filter(w => w.keep && w.masonry).map(w => w.id));
+-    return plan.openings.filter(o => o.keep && (o.w == null || o.h == null || !walls.has(o.wall))).map(o => plan.name + " · " + o.id);
++    return pendingMasonryOpenings(plan.walls,plan.openings).map(o => plan.name + " · " + o.id);
+   });
+ }
+ /** Giữ đường dẫn FastAPI để người dùng tìm đúng mặt bằng, tường và lỗ mở. */

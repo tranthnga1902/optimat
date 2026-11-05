@@ -53,7 +53,7 @@ function InvCard({ r }: { r: Inv }) {
         <dt>Dung lượng</dt><dd>{f.size != null ? (f.size / 1024).toFixed(1) + " KB" : "-"}{f.version ? ` · phiên bản ${f.version}${f.duplicate ? " (trùng nội dung đã lưu)" : ""}` : ""}</dd>
         <dt>SHA-256</dt><dd className="break-all text-muted">{f.sha256 || "-"}</dd>
         <dt>Định dạng</dt><dd>{f.dwg_version ? "DWG " + f.dwg_version : ""} {r.acad_release ? "DXF " + r.acad_release : ""}</dd>
-        {c && <><dt>Chuyển DWG</dt><dd>{c.ok ? "thành công" : "thất bại"} · ODA {c.converter_version || "?"} → {c.target_version} · {c.seconds ?? "?"} s</dd></>}
+        {c && <><dt>Chuyển DWG</dt><dd>{c.ok ? "thành công" : "thất bại"} · {c.converter_version || "Bộ chuyển đổi CAD"} → {c.target_version} · {c.seconds ?? "?"} s</dd></>}
         <dt>Đơn vị</dt><dd>{u ? `${u.name} ($INSUNITS = ${u.insunits}) · ×${u.scale_to_mm} → mm` : "-"}</dd>
         <dt>Khung bao (mm)</dt><dd>{b ? `${b.size[0].toLocaleString("vi")} × ${b.size[1].toLocaleString("vi")}` : "-"}</dd>
         <dt>Entity modelspace</dt><dd>{r.entity_total.toLocaleString("vi")} · {r.layers.length} layer · {r.blocks.length} block · {r.layouts.length} layout</dd>

@@ -1,0 +1,35 @@
+# Đề xuất phạm vi lưu và mở lại bản nháp bản vẽ
+
+**Trạng thái.** Gói phân loại tường cha đã đóng băng tại `b42e4fcfdd688a6b4d85f733ab2487acb453a89307c71d9db4e34d0d85dc5ae6`. Phần DTO tọa độ có thể bàn giao độc lập. Phần checkpoint dưới đây là đề xuất cho 01 đối chiếu với 06 trước khi cấp phạm vi ghi.
+
+## A. Tọa độ trong dữ liệu gửi máy chủ
+
+- **Frontend, sau gói tường cha** · `src/app/(user)/do-boc/model.ts`, hàm dùng chung cho `payload` và `roughRequest`. Giữ nguyên từng `x` và `y` hữu hạn của tất cả lỗ, cùng ID, tường cha, nguồn, kích thước và trạng thái giữ/bỏ. Chấp nhận âm và 0; trường vắng/null xuất null; chuỗi, NaN hoặc vô cực báo lỗi trước JSON. Tọa độ là vị trí trong mặt bằng SVG đang sửa, cùng hệ với đầu tường, đơn vị mm, trục y hướng xuống. Không dịch theo origin của bản vẽ tổng khi gửi.
+- **Backend 06** · `ReviewOpening` theo `docs/review/data20_06/OPENING_XY_CONTRACT.md`. Confirm và rough dùng cùng DTO và lưu bản input trong JSON hiện hữu của `takeoff_results`. Việc xác nhận trên máy chủ và lưu nháp trên trình duyệt là hai mốc riêng.
+- **Dữ liệu cũ** · Giữ riêng trục còn biết nếu chỉ có một trục. Cần đủ hai số hữu hạn mới có vị trí để vẽ. Bản chỉ có ID và tường cha vẫn dùng được để đọc danh sách. Khi bổ sung đường khôi phục, 17 đối chiếu hunk trong `Board.tsx` trước phép chiếu cửa lên tường để chặn toán tử JavaScript ép null về 0. Không suy vị trí từ tâm tường hoặc từ một lỗ khác.
+
+## B. Checkpoint trên trình duyệt
+
+| Tệp dự kiến | Hunk và trách nhiệm |
+|---|---|
+| `src/lib/review-session.ts` | Bổ sung tham chiếu nguồn cố định cho `ReviewSession`, bản ghi nháp có phiên bản định dạng, hàm ghi/đọc và kiểm tra danh tính. Dùng cơ chế lưu hiện hữu; bỏ dữ liệu nền `cad` trong bản gọn, giữ nguyên `states` bao gồm tọa độ, `seq`, phạm vi, chiều cao, kích thước, kept, `planP`, mặt bằng đang mở và căn cứ nguồn. |
+| `src/lib/projects.ts` | Nếu chốt dùng khóa mới trong localStorage, thêm đúng `optimat-drawing-drafts` vào `KEYS` để `switchProject` lưu và khôi phục cùng lịch sử. |
+| `src/app/(user)/du-an-cua-toi/ProjectWorkspace.tsx` | Trong chi tiết dự án đã chọn, thêm mục **Bản nháp bản vẽ** cạnh lối mở bản bóc tách. Danh sách dự án vẫn gộp theo `dbIds`; danh sách nháp đọc riêng tất cả mục lịch sử thuộc đúng dự án đang xem trước khi gộp các dòng dự án. Nút **Xem nháp** chỉ chọn một mục trong state hiển thị. |
+| `src/app/(user)/do-boc/Review.tsx` | Hunk restore/persist, `upload`, `readFile`, handoff bộ hồ sơ, `start` và điều khiển “Mở lại bản nháp”. Dùng cùng giao dịch chuyển cho tệp trực tiếp, bộ revision và mở bản nháp; chặn chuyển lúc xác nhận/khôi phục đang dở. Giữ stamp P0, CAD, phân loại và công tác. |
+| `src/app/(user)/do-boc/model.ts` | Chỉ hunk A ở gói độc lập. Các module tính toán, tải hồ sơ, chọn vật liệu và tối ưu nằm ngoài phạm vi thay đổi checkpoint. |
+
+**Khóa nguồn.** Nháp thuộc cả `projectUid` lẫn mã dự án máy chủ nếu có. Với hồ sơ đã lưu, khóa từ danh sách revision thực sự dùng, gồm `file_id, revision_id, sha256, role` và phiên bản thông tin công trình; giữ nguyên thứ tự đầu vào nếu nó quyết định ánh xạ hình. Với tệp mở trực tiếp, dùng SHA-256 nội dung. Tên tệp chỉ dùng để hiển thị. `drawingId` hiện thay đổi khi sửa hình học nên chỉ là phiên bản chỉnh sửa. Nháp cũ chưa có căn cứ nguồn chỉ được mở đích danh trong lịch sử của dự án bằng mã phiên cũ, kèm nhãn chưa xác định revision. Không tự gắn nó với tệp mới cùng tên.
+
+**Chuyển A → B.** Kiểm quyền sở hữu snapshot và phiên bản trước khi đọc B. Ghi bền trạng thái A và bản có thể mở lại trước khi bỏ dữ liệu nào của A. Trong khi B đang đọc, giữ giao diện A và kiểm lại quyền sở hữu, phiên đọc, các chỉnh sửa phát sinh ngay trước lúc chuyển. Chỉ cập nhật bản đang hoạt động sau khi bộ dữ liệu B và thông tin nguồn tương ứng đã ghi thành công. Phản hồi muộn/cancel/sai revision không được ghi A, B hoặc chuyển bước. Chỉ tiêu thụ token handoff khi thao tác có thể hoàn tất, hoặc có nút thử lại từ đúng context.
+
+**Khi bộ nhớ đầy.** Dùng fallback gọn để bỏ nền CAD; không xóa hình học hoặc xóa nháp cũ để ép ghi. Nếu cả hai lần ghi thất bại thì giữ A đang mở, các sửa tay trong RAM, snapshot bền trước đó và bản B đã lưu. Cho người dùng thử lại trên cùng trang. Dùng `saveTogether` cho các khóa phải thay đổi cùng nhau, không dùng `store.set` vì nó nuốt lỗi quota. Phân biệt checkpoint bền với hoàn thành xử lý HTTP. Luồng nhận kết quả không được dọn trước các khóa phụ thuộc nếu việc chuyển chưa thành công.
+
+**Khôi phục.** Chỉ khôi phục hình học theo đúng nguồn và dự án. Đối chiếu bản xác nhận, bản tính và biên nhận với cùng danh tính và phiên bản trước khi dùng chúng để mở bước tiếp. Nội dung đã sửa nhưng chưa gửi vẫn là nháp. Nếu thiếu chứng cứ ghép với bản máy chủ thì giữ phần chỉnh sửa để người dùng kiểm lại. Không ghi lại lịch sử máy chủ và không tự xác nhận hộ người dùng.
+
+**Danh sách và xem trước chỉ đọc.** Hiện `switchProject` chỉ thêm bản vào lịch sử khi đổi dự án. `ProjectWorkspace` bỏ qua mục có mã nằm trong `dbIds`, nên một dòng dự án trên giao diện không cho biết có bao nhiêu bản nháp của nó. Đề xuất đọc ba nguồn trong giao diện sản phẩm: phiên đang hoạt động, checkpoint mới và `ProjectHistory.values["optimat-review"]` nếu có. Hiển thị nguồn, tên bản vẽ, revision đã kiểm chứng (hoặc “chưa xác định”), thời điểm lưu nếu có nguồn, mặt bằng và số lần sửa có căn cứ. Các nháp khác nhau của cùng dự án vẫn có dòng riêng; không gộp theo tên file, mã dự án hoặc ID lỗ. Kiểm quyền sở hữu dự án máy chủ trước khi liệt kê, với dự án cục bộ chỉ dùng đúng UID; đánh dấu bản cũ không đủ căn cứ định danh. Bản không xác minh được chủ sở hữu không xuất hiện chéo dự án.
+
+**Bảng lỗ trong nháp.** Mỗi dòng ghi mặt bằng, ID lỗ, tường cha, nguồn tự động/thêm tay, giữ/bỏ, x, y, rộng và cao theo mm. Mỗi trường thiếu hiện “chưa có”; (0,0) vẫn hiện hai số 0. Khi có ít hơn hai tọa độ hữu hạn, chỉ hiển thị dữ liệu đã biết, không đặt ký hiệu đó lên mặt bằng. Một lỗ vắng khỏi nháp đang xem chỉ có nghĩa nháp này không chứa nó. Không nhập chung N1–N4 của bản máy chủ và N5 từ một phiên chưa xác minh.
+
+**Ranh giới hành động.** Liệt kê, mở xem, chuyển dòng và đóng xem trước không gọi `switchProject`, không đổi `optimat-review`, không POST và không điều hướng sang phiên hiệu chỉnh. Chỉ sau thao tác riêng **Mở để tiếp tục chỉnh sửa** mới chạy checkpoint bảo vệ phiên đang mở, xác minh lại nguồn và chuyển. Gói xem trước có thể nghiệm thu riêng bằng so sánh các khóa trước/sau bằng dữ liệu tổng hợp, kể cả lịch sử có hai nháp cùng mã dự án và cùng tên DWG. Chưa kiểm tra storage, chưa khôi phục hay ghi vào dự án 26; tình trạng tồn tại của bản nháp chứa N5 vẫn chưa xác định.
+
+**Ca nghiệm thu cần có.** A → B → A và tải lại trang giữ đủ các lỗ thêm tay, kể cả lỗ chưa POST; hai revision cùng tên, hai dự án và hai tệp nội dung khác nhau không lẫn nhau. Thử vị trí âm, gốc (0,0), thiếu một/hai trục; nháp cũ thiếu nguồn; phản hồi B đến muộn sau C; đổi ngữ cảnh cùng tab/tab khác; quota khi lưu A, khi cài B và khi mở lại A. Đối chiếu snapshot trước/sau khi lỗi, không chỉ kiểm thông báo. Số liệu dự án 26 và bản ghi 27 là bằng chứng sự cố, không phải đích chạy thử.

@@ -1,0 +1,133 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+________ test_two_closed_polylines_keep_their_identity[offset0-False] _________
+
+tmp_path = WindowsPath('C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/docs/review/data20_05/column_contour_fix/pytest_touch_before/test_two_closed_polylines_keep0')
+offset = (225, 0), bridge = False
+
+    @pytest.mark.parametrize("offset,bridge", [((225, 0), False), ((225, 335), False),
+                                                ((400, 0), True), ((225.4, 0), False)])
+    def test_two_closed_polylines_keep_their_identity(tmp_path, offset, bridge):
+        import ezdxf
+        from optimat.drawing.dxf_reader import read_drawing
+    
+        doc = ezdxf.new()
+        doc.units = 4
+        doc.layers.new("COT")
+        model = doc.modelspace()
+        for x, y in ((0, 0), offset):
+            model.add_lwpolyline([(x, y), (x+225, y), (x+225, y+335), (x, y+335)],
+                                 close=True, dxfattribs={"layer": "COT"})
+        if bridge:
+            model.add_line((225, 0), offset, dxfattribs={"layer": "COT"})
+        path = tmp_path / "two_columns.dxf"
+        doc.saveas(path)
+        cols = detect_columns(read_drawing(str(path)))
+>       assert sorted((c.x, c.y, c.b_mm, c.h_mm) for c in cols) == sorted([
+            (112.5, 167.5, 225, 335), (offset[0]+112.5, round(offset[1]+167.5, 1), 225, 335)])
+E       assert [(225.0, 167.5, 450.0, 335.0)] == [(112.5, 167.....5, 225, 335)]
+E         
+E         At index 0 diff: (225.0, 167.5, 450.0, 335.0) != (112.5, 167.5, 225, 335)
+E         Right contains one more item: (337.5, 167.5, 225, 335)
+E         Use -v to get more diff
+
+tests\test_rough_column_contours.py:114: AssertionError
+________ test_two_closed_polylines_keep_their_identity[offset1-False] _________
+
+tmp_path = WindowsPath('C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/docs/review/data20_05/column_contour_fix/pytest_touch_before/test_two_closed_polylines_keep1')
+offset = (225, 335), bridge = False
+
+    @pytest.mark.parametrize("offset,bridge", [((225, 0), False), ((225, 335), False),
+                                                ((400, 0), True), ((225.4, 0), False)])
+    def test_two_closed_polylines_keep_their_identity(tmp_path, offset, bridge):
+        import ezdxf
+        from optimat.drawing.dxf_reader import read_drawing
+    
+        doc = ezdxf.new()
+        doc.units = 4
+        doc.layers.new("COT")
+        model = doc.modelspace()
+        for x, y in ((0, 0), offset):
+            model.add_lwpolyline([(x, y), (x+225, y), (x+225, y+335), (x, y+335)],
+                                 close=True, dxfattribs={"layer": "COT"})
+        if bridge:
+            model.add_line((225, 0), offset, dxfattribs={"layer": "COT"})
+        path = tmp_path / "two_columns.dxf"
+        doc.saveas(path)
+        cols = detect_columns(read_drawing(str(path)))
+>       assert sorted((c.x, c.y, c.b_mm, c.h_mm) for c in cols) == sorted([
+            (112.5, 167.5, 225, 335), (offset[0]+112.5, round(offset[1]+167.5, 1), 225, 335)])
+E       assert [] == [(112.5, 167.....5, 225, 335)]
+E         
+E         Right contains 2 more items, first extra item: (112.5, 167.5, 225, 335)
+E         Use -v to get more diff
+
+tests\test_rough_column_contours.py:114: AssertionError
+_________ test_two_closed_polylines_keep_their_identity[offset2-True] _________
+
+tmp_path = WindowsPath('C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/docs/review/data20_05/column_contour_fix/pytest_touch_before/test_two_closed_polylines_keep2')
+offset = (400, 0), bridge = True
+
+    @pytest.mark.parametrize("offset,bridge", [((225, 0), False), ((225, 335), False),
+                                                ((400, 0), True), ((225.4, 0), False)])
+    def test_two_closed_polylines_keep_their_identity(tmp_path, offset, bridge):
+        import ezdxf
+        from optimat.drawing.dxf_reader import read_drawing
+    
+        doc = ezdxf.new()
+        doc.units = 4
+        doc.layers.new("COT")
+        model = doc.modelspace()
+        for x, y in ((0, 0), offset):
+            model.add_lwpolyline([(x, y), (x+225, y), (x+225, y+335), (x, y+335)],
+                                 close=True, dxfattribs={"layer": "COT"})
+        if bridge:
+            model.add_line((225, 0), offset, dxfattribs={"layer": "COT"})
+        path = tmp_path / "two_columns.dxf"
+        doc.saveas(path)
+        cols = detect_columns(read_drawing(str(path)))
+>       assert sorted((c.x, c.y, c.b_mm, c.h_mm) for c in cols) == sorted([
+            (112.5, 167.5, 225, 335), (offset[0]+112.5, round(offset[1]+167.5, 1), 225, 335)])
+E       assert [] == [(112.5, 167.....5, 225, 335)]
+E         
+E         Right contains 2 more items, first extra item: (112.5, 167.5, 225, 335)
+E         Use -v to get more diff
+
+tests\test_rough_column_contours.py:114: AssertionError
+________ test_two_closed_polylines_keep_their_identity[offset3-False] _________
+
+tmp_path = WindowsPath('C:/Users/Admin/Downloads/optimat-ai_6/optimat-ai/docs/review/data20_05/column_contour_fix/pytest_touch_before/test_two_closed_polylines_keep3')
+offset = (225.4, 0), bridge = False
+
+    @pytest.mark.parametrize("offset,bridge", [((225, 0), False), ((225, 335), False),
+                                                ((400, 0), True), ((225.4, 0), False)])
+    def test_two_closed_polylines_keep_their_identity(tmp_path, offset, bridge):
+        import ezdxf
+        from optimat.drawing.dxf_reader import read_drawing
+    
+        doc = ezdxf.new()
+        doc.units = 4
+        doc.layers.new("COT")
+        model = doc.modelspace()
+        for x, y in ((0, 0), offset):
+            model.add_lwpolyline([(x, y), (x+225, y), (x+225, y+335), (x, y+335)],
+                                 close=True, dxfattribs={"layer": "COT"})
+        if bridge:
+            model.add_line((225, 0), offset, dxfattribs={"layer": "COT"})
+        path = tmp_path / "two_columns.dxf"
+        doc.saveas(path)
+        cols = detect_columns(read_drawing(str(path)))
+>       assert sorted((c.x, c.y, c.b_mm, c.h_mm) for c in cols) == sorted([
+            (112.5, 167.5, 225, 335), (offset[0]+112.5, round(offset[1]+167.5, 1), 225, 335)])
+E       assert [] == [(112.5, 167.....5, 225, 335)]
+E         
+E         Right contains 2 more items, first extra item: (112.5, 167.5, 225, 335)
+E         Use -v to get more diff
+
+tests\test_rough_column_contours.py:114: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rough_column_contours.py::test_two_closed_polylines_keep_their_identity[offset0-False]
+FAILED tests/test_rough_column_contours.py::test_two_closed_polylines_keep_their_identity[offset1-False]
+FAILED tests/test_rough_column_contours.py::test_two_closed_polylines_keep_their_identity[offset2-True]
+FAILED tests/test_rough_column_contours.py::test_two_closed_polylines_keep_their_identity[offset3-False]
+4 failed, 15 deselected in 6.47s

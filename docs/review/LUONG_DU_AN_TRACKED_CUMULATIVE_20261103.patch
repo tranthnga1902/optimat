@@ -1,0 +1,937 @@
+diff --git a/frontend/src/app/(user)/do-boc/Dialogs.tsx b/frontend/src/app/(user)/do-boc/Dialogs.tsx
+index b690415..c24ead0 100644
+--- a/frontend/src/app/(user)/do-boc/Dialogs.tsx
++++ b/frontend/src/app/(user)/do-boc/Dialogs.tsx
+@@ -1,10 +1,9 @@
+ "use client";
+ // Hộp thoại trong trang: gán vật liệu hàng loạt, xác nhận mặt bằng, kết quả chốt (bảng vật liệu, tối ưu nhanh), thông báo.
+-import Link from "next/link";
+ import { useState, type ReactNode } from "react";
+ import s from "./review.module.css";
+ import { useWallClasses } from "@/lib/reference";
+-import { ROLE, fmt, money, postJson, type Computed, type Confirmed, type Data, type Plan, type PlanState } from "./model";
++import { ROLE, fmt, money, type Computed, type Confirmed, type Data, type Plan, type PlanState } from "./model";
+ 
+ export function Sheet({ onClose, children }: { onClose: () => void; children: ReactNode }) {
+   return (
+@@ -48,12 +47,11 @@ export function MaterialDialog({ data, n, onApply, onClose }: { data: Data; n: n
+ export function ConfirmDialog({ P, S, c, send, onClose }: { P: Plan; S: PlanState; c: Computed; send: () => Promise<void>; onClose: () => void }) {
+   const [busy, setBusy] = useState(false);
+   const off = S.walls.filter((w) => !w.keep).length, man = S.walls.filter((w) => w.src === "manual" && w.keep).length;
+-  const nomat = S.walls.filter((w) => w.keep && w.masonry && !w.mat).length;
+   return (
+     <Sheet onClose={onClose}>
+       <h2>Xác nhận mặt bằng &quot;{P.plan.name}&quot;</h2>
+       <p>Chiều cao tầng {fmt(S.height_mm / 1000)} m · {S.walls.filter((w) => w.keep).length} đoạn tường (vẽ thêm {man}, đã loại {off}) · {S.openings.filter((o) => o.keep).length} lỗ mở.</p>
+-      <p>Diện tích tường thực tính tạm: <b>{fmt(c.total)} m²</b>.{nomat ? ` Còn ${nomat} tường chưa có vật liệu.` : ""}</p>
++      <p>Diện tích tường thực tính tạm: <b>{fmt(c.total)} m²</b>. Vật liệu được lựa chọn ở bước tiếp theo.</p>
+       <p>Máy chủ sẽ tính lại khối lượng bằng cùng công thức và trả kết quả chốt.</p>
+       <div className={s.actions}><button className={s.btn} type="button" onClick={onClose}>Quay lại sửa</button>
+         <button className={`${s.btn} ${s.primary}`} type="button" disabled={busy} onClick={() => { setBusy(true); send(); }}>{busy ? "Đang gửi…" : "Xác nhận"}</button></div>
+@@ -83,52 +81,13 @@ export function BillTable({ r }: { r: Confirmed }) {
+   </>;
+ }
+ 
+-type Choice = { wall_type: string; wall_system_id?: string; material_id?: string; product_url?: string; supplier_name: string };
+-type Solution = { total_cost: number; supply_days: number; u_value: number; choices: Choice[] };
+-
+-/** Kết quả chốt của máy chủ; tối ưu nhanh riêng mặt bằng này với các nhóm tường đã chốt (cùng mã vật liệu, phương án tường). */
++/** Xác nhận chỉ hiển thị khối lượng; vật liệu và tối ưu nằm ở bước sau. */
+ export function ConfirmedDialog({ body, total, onClose }: { body: Confirmed; total: number; onClose: () => void }) {
+-  const [keepDesign, setKeepDesign] = useState(false);
+-  const [busy, setBusy] = useState(false);
+-  const [out, setOut] = useState<{ sols: Solution[]; notes: string[] } | { error: string } | null>(null);
+-  const run = async () => {
+-    setBusy(true);
+-    try {
+-      const r = await postJson<{ solutions?: Solution[]; notes?: string[] }>("/api/optimize", { groups: body.groups, constraints: { keep_design_material: keepDesign } }, "Không tối ưu được.");
+-      setOut({ sols: r.solutions || [], notes: r.notes || [] });
+-    } catch (err) { setOut({ error: (err as Error).message }); }
+-    setBusy(false);
+-  };
+-  let result: ReactNode = null;
+-  if (out && "error" in out) result = <Warn items={[out.error]} />;
+-  else if (out) {
+-    const sols = out.sols;
+-    const pick: [string, Solution][] = sols.length ? [["Chi phí thấp nhất", sols[0]],
+-      ["Cung ứng nhanh nhất", [...sols].sort((a, b) => a.supply_days - b.supply_days || a.total_cost - b.total_cost)[0]],
+-      ["Cách nhiệt tốt nhất", [...sols].sort((a, b) => a.u_value - b.u_value || a.total_cost - b.total_cost)[0]]] : [];
+-    result = <>
+-      {sols.length ? <div style={{ overflowX: "auto" }}><table><thead><tr><th>Phương án</th><th>Tường</th><th>Vật liệu</th><th>Nhà cung cấp</th><th className={s.num}>Tổng đồng</th><th className={s.num}>Ngày</th><th className={s.num}>U</th></tr></thead><tbody>
+-        {pick.flatMap(([label, sol], k) => sol.choices.map((c, i) => (
+-          <tr key={k + ":" + i}><td>{i ? "" : label}</td><td>{c.wall_type}</td><td>{c.wall_system_id || c.material_id}</td>
+-            <td>{c.product_url ? <a href={c.product_url} target="_blank" rel="noopener">{c.supplier_name}</a> : c.supplier_name}</td>
+-            <td className={s.num}>{i ? "" : money(sol.total_cost)}</td><td className={s.num}>{i ? "" : sol.supply_days}</td><td className={s.num}>{i ? "" : sol.u_value}</td></tr>
+-        )))}
+-      </tbody></table></div> : <p>Không có phương án nào.</p>}
+-      {out.notes.length > 0 && <Warn items={out.notes} />}
+-    </>;
+-  }
+-  return (
+-    <Sheet onClose={onClose}>
+-      <h2>Đã xác nhận</h2><p>Máy chủ tính được <b>{fmt(body.total_net_area_m2)} m²</b> tường thực (trang tính tạm {fmt(total)} m²).</p>
+-      {body.takeoff_id ? <p>Đã lưu vào dự án (mã kết quả {body.takeoff_id}).</p> : null}
+-      <BillTable r={body} />
+-      {body.warnings.length > 0 && <Warn items={body.warnings} />}
+-      <p>Đã ghi mặt bằng này cho giao diện chung: <Link href="/vat-lieu">Vật liệu và giá (gộp các tầng)</Link> · <Link href="/toi-uu">Phương án tối ưu</Link>.</p>
+-      <p className={s.label}>Hoặc tối ưu nhanh riêng mặt bằng này</p>
+-      <label className={s.field}><input type="checkbox" checked={keepDesign} onChange={(e) => setKeepDesign(e.target.checked)} /> Giữ vật liệu theo thiết kế (chỉ chọn nhà cung cấp và xe)</label>
+-      <div>{result}</div>
+-      <div className={s.actions}><button className={s.btn} type="button" onClick={onClose}>Đóng</button>
+-        <button className={`${s.btn} ${s.primary}`} type="button" disabled={busy} onClick={run}>{busy ? "Đang tối ưu…" : "Tối ưu"}</button></div>
+-    </Sheet>
+-  );
++  return <Sheet onClose={onClose}>
++    <h2>Đã xác nhận khối lượng mặt bằng</h2>
++    <p>Diện tích tường thực: <b>{fmt(body.total_net_area_m2)} m²</b> (trang tính {fmt(total)} m²).</p>
++    <p>Tiếp tục xác nhận các mặt bằng còn lại. Khi hoàn tất, hệ thống mở trang điều chỉnh vật liệu.</p>
++    {body.warnings.length > 0 && <Warn items={body.warnings} />}
++    <button className={s.btn} type="button" onClick={onClose}>Kiểm tra mặt bằng tiếp theo</button>
++  </Sheet>;
+ }
+diff --git a/frontend/src/app/(user)/do-boc/Lists.tsx b/frontend/src/app/(user)/do-boc/Lists.tsx
+index 5d69cff..9b799b9 100644
+--- a/frontend/src/app/(user)/do-boc/Lists.tsx
++++ b/frontend/src/app/(user)/do-boc/Lists.tsx
+@@ -37,17 +37,17 @@ function MatSelect({ D, w, onChange }: { D: Data; w: Wall; onChange: (v: string)
+ 
+ const NAMES: Record<string, string> = { all: "Tất cả", low: "Tin cậy thấp", nomat: "Chưa có vật liệu", man: "Vẽ thêm", off: "Đã loại" };
+ 
+-export function WallFilters({ S, filter, onFilter, onAllMat }: { S: PlanState; filter: string; onFilter: (f: string) => void; onAllMat: () => void }) {
++export function WallFilters({ S, filter, onFilter, onAllMat }: { S: PlanState; filter: string; onFilter: (f: string) => void; onAllMat?: () => void }) {
+   const counts: Record<string, number> = { all: S.walls.length, low: S.walls.filter((w) => w.keep && w.conf < 0.7).length,
+     off: S.walls.filter((w) => !w.keep).length, man: S.walls.filter((w) => w.src === "manual").length,
+     nomat: S.walls.filter((w) => w.keep && w.masonry && !w.mat).length };
+   return <>
+-    {Object.keys(NAMES).map((k) => <button key={k} className={s.pill} type="button" aria-pressed={filter === k} onClick={() => onFilter(k)}>{NAMES[k]} {counts[k]}</button>)}
+-    <span className={s.grow} /><button className={s.pill} type="button" onClick={onAllMat}>Gán vật liệu cho mọi tường chưa rõ…</button>
++    {Object.keys(NAMES).filter((k) => onAllMat || k !== "nomat").map((k) => <button key={k} className={s.pill} type="button" aria-pressed={filter === k} onClick={() => onFilter(k)}>{NAMES[k]} {counts[k]}</button>)}
++    <span className={s.grow} />{onAllMat && <button className={s.pill} type="button" onClick={onAllMat}>Gán vật liệu cho mọi tường chưa rõ…</button>}
+   </>;
+ }
+ 
+-export function WallList({ D, S, c, filter, selected, onSelect, change }: { D: Data; S: PlanState; c: Computed; filter: string; selected: string | null; onSelect: (id: string) => void; change: Change }) {
++export function WallList({ materials = true, D, S, c, filter, selected, onSelect, change }: { materials?: boolean; D: Data; S: PlanState; c: Computed; filter: string; selected: string | null; onSelect: (id: string) => void; change: Change }) {
+   const classes = useWallClasses();
+   let items = S.walls;
+   if (filter === "low") items = items.filter((w) => w.keep && w.conf < 0.7);
+@@ -64,7 +64,7 @@ export function WallList({ D, S, c, filter, selected, onSelect, change }: { D: D
+         <span className={s.rmain}>
+           <select aria-label="Loại tường" value={w.cls} onChange={(e) => change(w.id, "cls", e.target.value)}>{(classes.includes(w.cls) ? classes : [...classes, w.cls]).map((k) => <option key={k}>{k}</option>)}</select>
+           <select aria-label="Vai trò" value={w.role} onChange={(e) => change(w.id, "role", e.target.value)}><option value="envelope">bao che</option><option value="partition">ngăn</option></select>
+-          {w.masonry ? <MatSelect D={D} w={w} onChange={(v) => change(w.id, "mat", v)} /> : tag("", "bê tông, không tính")}
++          {materials && (w.masonry ? <MatSelect D={D} w={w} onChange={(v) => change(w.id, "mat", v)} /> : tag("", "bê tông, không tính"))}
+           {w.src === "manual" ? tag(s.man, "vẽ thêm") : w.edited ? tag(s.edit, "đã sửa") : null}
+           {w.src !== "manual" && w.conf < 0.7 && tag(s.low, `tin cậy ${fmt(w.conf)}`)}
+           {!w.keep && w.src !== "manual" && <select aria-label="Lý do loại" value={w.reason || REASONS[0]} onChange={(e) => change(w.id, "reason", e.target.value)}>
+@@ -100,7 +100,7 @@ export function OpeningList({ S, selected, onSelect, change, onDelete }: { S: Pl
+   })}</>;
+ }
+ 
+-export function QtyTab({ D, S, c, confirmed }: { D: Data; S: PlanState; c: Computed; confirmed?: Confirmed }) {
++export function QtyTab({ materials = true, D, S, c, confirmed }: { materials?: boolean; D: Data; S: PlanState; c: Computed; confirmed?: Confirmed }) {
+   const edits = S.walls.filter((w) => w.edited || w.src === "manual" || !w.keep).length + S.openings.filter((o) => o.src === "manual" || o.edited || !o.keep).length;
+   return (
+     <div className={s.qty}>
+@@ -110,14 +110,15 @@ export function QtyTab({ D, S, c, confirmed }: { D: Data; S: PlanState; c: Compu
+           <td className={s.num}>{fmt(g.L)}</td><td className={s.num}>{fmt(g.gross)}</td><td className={s.num}>{fmt(g.open)}</td><td className={s.num}><b>{fmt(g.net)}</b></td></tr>)
+           : <tr><td colSpan={6}>Chưa có tường nào được giữ.</td></tr>}</tbody>
+         <tfoot><tr><td colSpan={5}>Tổng</td><td className={s.num}>{fmt(c.total)}</td></tr></tfoot></table></div>
+-      <p className={s.label}>Vật liệu theo thiết kế</p>
++      {materials && <><p className={s.label}>Vật liệu theo thiết kế</p>
+       <div style={{ overflowX: "auto" }}><table><tbody>{c.groups.map((g, i) => {
+         const sys = g.mat && sysOf(D, g.mat, g.cls);
+         return <tr key={i}><td>{g.cls} {ROLE[g.role]}</td><td>{g.mat ? <>{matLabel(D, g.mat)} {tag("", `${Math.round(g.share * 100)}% chiều dài`)}{" "}
+           {sys ? tag("", sys) : tag(s.low, `chưa có phương án tường ${g.cls}`)}</> : tag(s.low, "chưa rõ")}</td></tr>;
+       })}</tbody></table></div>
+-      <p style={{ color: "var(--muted)", margin: 0 }}>{edits ? `Đã chỉnh tay ${edits} mục so với kết quả tự động.` : "Chưa chỉnh mục nào."} Số trên trang là tính tạm; bấm &quot;Xác nhận bản vẽ&quot; để chốt và tra giá theo mã vật liệu.</p>
+-      {confirmed && confirmed.bill && <BillTable r={confirmed} />}
++      </>}
++      <p style={{ color: "var(--muted)", margin: 0 }}>{edits ? `Đã chỉnh tay ${edits} mục so với kết quả tự động.` : "Chưa chỉnh mục nào."} Số trên trang là tính tạm; bấm &quot;Xác nhận bản vẽ&quot; để chốt kích thước và khối lượng.</p>
++      {materials && confirmed && confirmed.bill && <BillTable r={confirmed} />}
+     </div>
+   );
+ }
+diff --git a/frontend/src/app/(user)/do-boc/Review.tsx b/frontend/src/app/(user)/do-boc/Review.tsx
+index e189c11..9245e93 100644
+--- a/frontend/src/app/(user)/do-boc/Review.tsx
++++ b/frontend/src/app/(user)/do-boc/Review.tsx
+@@ -2,6 +2,7 @@
+ // Trang Kiểm tra bóc tách (thay iframe /ui/takeoff của app.html cũ): tải bản vẽ, kiểm tra, sửa, bổ sung rồi xác nhận từng mặt bằng.
+ // Kết quả chốt ghi vào optimat-confirmed, phần thô vào optimat-rough (store.set báo cho menu và các trang /vat-lieu, /phan-tho, /toi-uu).
+ import Link from "next/link";
++import { useRouter } from "next/navigation";
+ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
+ import { Steps } from "@/components/ui";
+ import { store, useStored } from "@/lib/store";
+@@ -13,7 +14,7 @@ import { OpeningList, OverviewList, QtyTab, WallFilters, WallList, WarnTab, type
+ import { RoughTab } from "./Rough";
+ import {
+   REASONS, RP_KEY, base, compute, convBad, csvText, fmt, groundTruth, initPlanParams, initState, nearestWall, payload, postJson, roughRequest, roughValues,
+-  type Confirmed, type Data, type PlanParams, type PlanState, type Rough,
++  type Confirmed, type Data, type PlanParams, type PlanState, type Rough, type Structural,
+ } from "./model";
+ import { useViewport } from "./viewport";
+ 
+@@ -26,7 +27,10 @@ const START = "Chọn \"Mở bản vẽ…\" để tải file .dxf hoặc .dwg.
+ type SheetState = { kind: "material" } | { kind: "confirm" } | { kind: "confirmed"; body: Confirmed; total: number }
+   | { kind: "msg"; title: string; body?: ReactNode; primary?: boolean };
+ 
+-export function Review() {
++export function Review({ adjustment = false }: { adjustment?: boolean }) {
++  const router = useRouter();
++  const [restored, setRestored] = useState(false);
++  const [saveError, setSaveError] = useState("");
+   const { svgRef, scaleRef, vbRef, movedRef, fitSize, focusOn, toWorld, onPointerDown } = useViewport();
+   const listRef = useRef<HTMLDivElement>(null), scrollTo = useRef<string | null>(null);
+   const [data, setData] = useState<Data | null>(null);
+@@ -44,6 +48,7 @@ export function Review() {
+   const [planP, setPlanP] = useState<Record<number, PlanParams>>({});
+   const [rough, setRough] = useState<Rough>(null);
+   const [roughBusy, setRoughBusy] = useState(false);
++  const [structural, setStructural] = useState<Structural | { error: string } | { busy: string } | null>(null);
+   const [roughVals, setRoughVals] = useState<Record<string, string>>({});
+   const [bgPref, setBgPref] = useState("cad");
+   const [showRec, setShowRec] = useState(true);
+@@ -62,11 +67,31 @@ export function Review() {
+   useEffect(() => {
+     const q = new URLSearchParams(location.search).get("project");
+     if (q) store.set("optimat-project", q);
+-    // eslint-disable-next-line react-hooks/set-state-in-effect -- đọc thiết lập lưu trên trình duyệt sau khi hydrate
+     setRoughVals(roughValues());
+     try { const m = localStorage.getItem("optimat-bg"); if (m) setBgPref(m); } catch { /* chế độ riêng tư */ }
+   }, []);
+ 
++  useEffect(() => {
++    const saved = store.get<{ data: Data; states: Record<number, PlanState>; planP: Record<number, PlanParams>; confirmed: Record<number, Confirmed>; structural: Structural | null; pi: number } | null>("optimat-review", null);
++    if (saved) {
++      setData(saved.data); setStates(saved.states); setPlanP(saved.planP); setConfirmed(saved.confirmed);
++      setStructural(saved.structural); setPi(saved.pi); setMsg(null);
++      setTab(adjustment ? "rough" : "qty");
++      const size = saved.data.plans[saved.pi]?.size || saved.data.overview?.size;
++      if (size) fitSize(size);
++    }
++    setRestored(true);
++    // eslint-disable-next-line react-hooks/exhaustive-deps -- khôi phục một lần khi mở trang
++  }, []);
++  useEffect(() => {
++    if (!restored || !data) return;
++    try {
++      localStorage.setItem("optimat-review", JSON.stringify({ data, states, planP, confirmed, pi,
++        structural: structural && "file" in structural ? structural : null }));
++      setSaveError("");
++    } catch { setSaveError("Chưa lưu được bản vẽ trên trình duyệt. Bộ nhớ có thể đã đầy; hãy giữ trang này mở."); }
++  }, [restored, data, states, planP, confirmed, pi, structural]);
++
+   const P = data && pi >= 0 ? data.plans[pi] || null : null;
+   const S = P ? states[pi] || null : null;
+   const c = useMemo(() => (S ? compute(S) : null), [S]);
+@@ -80,32 +105,52 @@ export function Review() {
+   const unit = P ? Math.max(...P.size) / 100 : data?.overview ? Math.max(...data.overview.size) / 100 : 100;
+ 
+   // ---------------------------------------------------------------- phần thô: tự tính lại sau khi sửa, chỉ khi đã bấm "Tính phần thô" ít nhất một lần
+-  const latest = useRef({ data, states, planP, project, rough });
+-  useLayoutEffect(() => { latest.current = { data, states, planP, project, rough }; });
++  const latest = useRef({ data, states, planP, project, rough, structural });
++  useLayoutEffect(() => { latest.current = { data, states, planP, project, rough, structural }; });
+   const roughTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined), busyRef = useRef(false);
+-  const computeRough = useCallback(async () => {
++  const revision = useRef(0), roughStarted = useRef(false), uploadRevision = useRef(0), structuralRevision = useRef(0);
++  useEffect(() => () => { revision.current++; uploadRevision.current++; structuralRevision.current++; clearTimeout(roughTimer.current); }, []);
++  const computeRough = useCallback(async function runRough() {
+     const L = latest.current;
+-    if (!L.data || busyRef.current) return;
++    if (!L.data) return;
++    if (L.structural && !("file" in L.structural)) {
++      setRough({ error: "Chờ đọc bản vẽ kết cấu thành công rồi tính phần thô." });
++      return;
++    }
++    if (busyRef.current) { roughTimer.current = setTimeout(runRough, 100); return; }
++    const atRevision = revision.current;
++    roughStarted.current = true;
+     busyRef.current = true; setRoughBusy(true);
++    store.set("optimat-rough", null);
+     try {
+       const r = await fetch("/api/takeoff/rough", { method: "POST", headers: { "Content-Type": "application/json" },
+-        body: JSON.stringify(roughRequest(L.data, L.states, L.planP, L.project)) });
++        body: JSON.stringify(roughRequest(L.data, L.states, L.planP, L.project, L.structural && "file" in L.structural ? L.structural : null)) });
+       const body = await r.json();
+       if (!r.ok) throw new Error(typeof body.detail === "string" ? body.detail
+         : "Máy chủ từ chối dữ liệu phần thô: " + ((body.detail || []) as { loc?: string[]; msg: string }[]).map((d) => (d.loc || []).slice(-1)[0] + " " + d.msg).join("; "));
++      if (revision.current !== atRevision) return;
+       setRough(body);
+       store.set("optimat-rough", { file: L.data.file, at: new Date().toISOString(), result: body });
+-    } catch (err) { setRough({ error: (err as Error).message }); }
+-    busyRef.current = false; setRoughBusy(false);
++    } catch (err) {
++      if (revision.current === atRevision) setRough({ error: (err as Error).message });
++    } finally { busyRef.current = false; setRoughBusy(false); }
+   }, []);
+   const scheduleRough = useCallback(() => {
+-    if (!latest.current.rough) return;
++    revision.current++;
++    setRough(null);
++    store.set("optimat-rough", null);
+     clearTimeout(roughTimer.current);
+-    roughTimer.current = setTimeout(computeRough, 700);
++    if (roughStarted.current) roughTimer.current = setTimeout(computeRough, 700);
+   }, [computeRough]);
+ 
+   // ---------------------------------------------------------------- sửa: mỗi lần sửa lưu một bước hoàn tác, bỏ trạng thái đã xác nhận
+-  const markDirty = () => { setConfirmed((x) => { const r = { ...x }; delete r[pi]; return r; }); scheduleRough(); };
++  const markDirty = () => {
++    setConfirmed((x) => { const r = { ...x }; delete r[pi]; return r; });
++    if (data && P) store.set("optimat-confirmed", store.get<Confirmed[]>("optimat-confirmed", [])
++      .filter((p) => !(p.file === data.file && p.plan === P.plan.name)));
++    setSheet(null);
++    scheduleRough();
++  };
+   const edit = (fn: (n: PlanState) => void) => {
+     if (!S) return;
+     setHist((h) => [...h, JSON.stringify(S)].slice(-100));
+@@ -179,21 +224,27 @@ export function Review() {
+     D.materials = D.materials || [];
+     D.families = D.families || [];
+     clearTimeout(roughTimer.current);
+-    setData(D); setStates({}); setPlanP({}); setConfirmed({}); setRough(null); setMsg(null);
++    revision.current++; structuralRevision.current++; roughStarted.current = false;
++    store.set("optimat-rough", null);
++    store.set("optimat-confirmed", store.get<Confirmed[]>("optimat-confirmed", []).filter((p) => p.file !== D.file));
++    setSheet(null);
++    setData(D); setStates({}); setPlanP({}); setConfirmed({}); setRough(null); setStructural(null); setMsg(null);
+     if (D.overview && D.overview.cad) return showOverview(D);
+     if (!D.plans.length) { setPi(-1); setMsg("Bản vẽ không có mặt bằng kiến trúc để đo tường (chỉ có mặt bằng kết cấu, móng hoặc điện nước)."); return; }
+     loadPlan(0, D, {});
+   };
+   const upload = async (f: File | undefined) => {
+     if (!f) return;
++    const atUpload = ++uploadRevision.current;
+     setMsg(`Đang đọc ${f.name}…`);
+     const form = new FormData(); form.append("file", f);
++    if (project) form.append("project_id", String(project));
+     try {
+       const r = await fetch("/api/takeoff/view", { method: "POST", body: form });
+       const body = await r.json();
+       if (!r.ok) throw new Error(body.detail || "Không đọc được bản vẽ.");
+-      start(body);
+-    } catch (err) { setMsg((err as Error).message); }
++      if (uploadRevision.current === atUpload) start(body);
++    } catch (err) { if (uploadRevision.current === atUpload) setMsg((err as Error).message); }
+   };
+ 
+   // ---------------------------------------------------------------- vẽ thêm tường, thêm cửa
+@@ -262,13 +313,24 @@ export function Review() {
+   const sendConfirm = async () => {
+     if (!data || !P || !S || !c) return;
+     const at = pi;
++    const atRevision = revision.current;
+     try {
+       const body = await postJson<Confirmed>("/api/takeoff/confirm", payload(data, P, S, project), "Máy chủ từ chối kết quả.");
++      if (revision.current !== atRevision) return;
+       setConfirmed((x) => ({ ...x, [at]: body }));
+       remember(body);
+-      setSheet({ kind: "confirmed", body, total: c.total });
++      const nextConfirmed = { ...confirmed, [at]: body };
++      if (adjustment) {
++        setSheet({ kind: "msg", title: "Đã lưu điều chỉnh", body: <p>Phương án vật liệu của mặt bằng đã được cập nhật cho bước tra giá và tối ưu.</p> });
++      } else if (data.plans.every((_, i) => nextConfirmed[i])) {
++        localStorage.setItem("optimat-review", JSON.stringify({ data, states, planP, confirmed: nextConfirmed, pi: at,
++          structural: structural && "file" in structural ? structural : null }));
++        router.push("/dieu-chinh");
++      } else {
++        setSheet({ kind: "confirmed", body, total: c.total });
++      }
+     } catch (err) {
+-      setSheet({ kind: "msg", title: "Chưa xác nhận được", body: <p>{(err as Error).message}</p> });
++      if (revision.current === atRevision) setSheet({ kind: "msg", title: "Chưa xác nhận được", body: <p>{(err as Error).message}</p> });
+     }
+   };
+   const download = (name: string, text: string, type: string) => {
+@@ -297,6 +359,30 @@ export function Review() {
+     setRoughVals(vals);
+     scheduleRough();
+   };
++  // bản vẽ kết cấu tách file: máy chủ đọc dầm, cột, móng, bảng thép; ghép vào yêu cầu phần thô rồi tính lại
++  const onStructural = async (f: File | undefined) => {
++    if (!f) return;
++    const atStructural = ++structuralRevision.current;
++    const rerun = roughStarted.current;
++    scheduleRough(); clearTimeout(roughTimer.current);
++    latest.current.structural = null;
++    setStructural({ busy: `Đang đọc ${f.name}…` });
++    const form = new FormData(); form.append("file", f);
++    try {
++      const r = await fetch("/api/takeoff/structural", { method: "POST", body: form });
++      const body = await r.json();
++      if (structuralRevision.current !== atStructural) return;
++      if (!r.ok) throw new Error(typeof body.detail === "string" ? body.detail : "Không đọc được bản vẽ kết cấu.");
++      setStructural(body); latest.current.structural = body;
++      revision.current++;
++      computeRough();
++    } catch (err) {
++      if (structuralRevision.current === atStructural) {
++        setStructural({ error: (err as Error).message });
++        if (rerun) setRough({ error: "Chưa tính lại: không đọc được bản vẽ kết cấu. Mở lại file kết cấu rồi tính phần thô." });
++      }
++    }
++  };
+   const onPlanParam = (k: string, v: string | boolean) => {
+     if (!pp) return;
+     setPlanP({ ...planP, [pi]: { ...pp, [k]: v } });
+@@ -308,21 +394,23 @@ export function Review() {
+   const status = overview ? ["", "Xem toàn bộ"] : confirmed[pi] ? [s.done, "Đã xác nhận"] : [s.edit, "Đang kiểm tra"];
+   const showTab = (t: string) => { setTab(t); setMsg(null); };
+   const tabs: [string, string, ReactNode][] = [["walls", "Tường", S ? S.walls.filter((w) => w.keep).length : ""], ["open", "Lỗ mở", S ? S.openings.filter((o) => o.keep).length : ""],
+-    ["qty", "Khối lượng", null], ["rough", "Phần thô", null], ["warn", "Cảnh báo", P && S ? (P.warnings || []).length + convBad(data).length : ""]];
++    ["qty", "Khối lượng", null], ...(adjustment ? [["rough", "Phần thô", null] as [string, string, ReactNode]] : []), ["warn", "Cảnh báo", P && S ? (P.warnings || []).length + convBad(data).length : ""]];
+   let filters: ReactNode = null, body: ReactNode = null;
+   if (msg != null || !data) body = <div className={s.empty}>{msg}</div>;
+   else if (overview) body = <OverviewList D={data} onOpen={(i) => loadPlan(i)} />;
+   else if (P && S && c && pp) {
+     if (tab === "walls") {
+-      filters = <WallFilters S={S} filter={filter} onFilter={setFilter} onAllMat={() => setSheet({ kind: "material" })} />;
+-      body = <WallList D={data} S={S} c={c} filter={filter} selected={selected} onSelect={(id) => select(id, false)} change={change} />;
++      filters = <WallFilters S={S} filter={filter} onFilter={setFilter} onAllMat={adjustment ? () => setSheet({ kind: "material" }) : undefined} />;
++      body = <WallList materials={adjustment} D={data} S={S} c={c} filter={filter} selected={selected} onSelect={(id) => select(id, false)} change={change} />;
+     } else if (tab === "open") {
+       filters = <span>Rộng × cao theo mm. Cửa nhận từ khe tường lấy cao mặc định: kiểm tra lại theo bảng thống kê cửa.</span>;
+       body = <OpeningList S={S} selected={selected} onSelect={(id) => select(id, false)} change={change} onDelete={(id) => edit((n) => { n.openings = n.openings.filter((o) => o.id !== id); })} />;
+-    } else if (tab === "qty") body = <QtyTab D={data} S={S} c={c} confirmed={confirmed[pi]} />;
++    } else if (tab === "qty") body = <QtyTab materials={adjustment} D={data} S={S} c={c} confirmed={confirmed[pi]} />;
+     else if (tab === "rough") {
+-      filters = <span>Phần thô cả công trình: mọi mặt bằng trong file, theo tường, cửa đã sửa ở các tab khác.</span>;
+-      body = <RoughTab P={P} pp={pp} values={roughVals} rough={rough} busy={roughBusy} onParam={onParam} onPlanParam={onPlanParam} onRun={computeRough} />;
++      filters = <span>Phần thô cả công trình: mọi mặt bằng trong file, theo tường, cửa đã sửa ở các tab khác.
++        {(P.stairs?.length || 0) > 1 && <> Mặt bằng có {P.stairs!.length} thang: biểu mẫu sửa thang đầu tiên; các thang còn lại giữ nguyên dữ liệu nhận dạng.</>}</span>;
++      body = <RoughTab P={P} pp={pp} values={roughVals} rough={rough} busy={roughBusy} onParam={onParam} onPlanParam={onPlanParam} onRun={computeRough}
++        structural={structural} onStructural={onStructural} />;
+     } else body = <WarnTab D={data} P={P} />;
+   }
+   const closeSheet = () => setSheet(null);
+@@ -330,15 +418,21 @@ export function Review() {
+   return (
+     <div className="flex h-screen min-h-0 flex-col max-[900px]:h-auto">
+       <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 border-b border-rule bg-card px-5 py-3">
+-        <div className="mr-auto"><Steps cur="/do-boc" done={{ "/do-boc": confirmedList.length > 0, "/phan-tho": !!roughStored }} /></div>
++        <div className="mr-auto"><Steps cur={adjustment ? "/dieu-chinh" : "/do-boc"} done={{ "/do-boc": confirmedList.length > 0, "/phan-tho": !!roughStored }} /></div>
+         <label className="flex items-center gap-2" title="Có mã dự án và PostgreSQL: kết quả chốt được lưu vào bảng takeoff_results">Mã dự án{" "}
+           <ChangeInput className="field" type="number" min={1} value={String(projectRaw ?? "")} placeholder="không bắt buộc" style={{ width: 140 }}
+             onCommit={(el) => store.set("optimat-project", el.value)} /></label>
+-        <Link className="btn primary" href="/vat-lieu">Tiếp: vật liệu và giá</Link>
++        {adjustment ? (data && data.plans.length > 0 && data.plans.every((_, i) => confirmed[i])
++          ? <Link className="btn primary" href="/vat-lieu">Tiếp: vật liệu và giá</Link>
++          : <span className="text-muted">Lưu điều chỉnh từng mặt bằng để tiếp tục</span>)
++          : data && data.plans.length > 0 && data.plans.every((_, i) => confirmed[i])
++            ? <Link className="btn primary" href="/dieu-chinh">Tiếp: điều chỉnh vật liệu</Link>
++            : <span className="text-muted">Xác nhận khối lượng từng mặt bằng để tiếp tục</span>}
+       </div>
++      {saveError && <p role="alert">{saveError}</p>}
+       <div className={`${s.app} min-h-0 flex-1`}>
+         <header className={s.head}>
+-          <h1>Kiểm tra bóc tách</h1>
++          <h1>{adjustment ? "Điều chỉnh vật liệu và phần thô" : "Xác nhận kích thước và khối lượng"}</h1>
+           <span className={s.file}>{data?.file || ""}</span>
+           {data && (data.plans.length > 1 || hasOverview) && <label className={s.field}>Mặt bằng{" "}
+             <select value={String(pi)} onChange={(e) => { const v = Number(e.target.value); if (v < 0) showOverview(); else loadPlan(v); }}>
+@@ -350,7 +444,7 @@ export function Review() {
+               if (!S) return;
+               const v = Number(el.value);
+               if (!(v >= 1 && v <= 10)) return (S.height_mm / 1000).toFixed(2);
+-              edit((n) => { n.height_mm = Math.round(v * 1000); });
++              edit((n) => { n.height_mm = Math.round(v * 1000); n.height_source = "nhập tay"; });
+               return (Math.round(v * 1000) / 1000).toFixed(2);
+             }} /></label>
+           <label className={s.field}>Chiều dài{" "}
+@@ -361,7 +455,7 @@ export function Review() {
+           <label className={s.btn}>Mở bản vẽ… <input type="file" accept=".dxf,.dwg" hidden onChange={(e) => upload(e.target.files?.[0])} /></label>
+           <button className={s.btn} type="button" disabled={!hist.length} onClick={undo}>Hoàn tác</button>
+           <button className={s.btn} type="button" title="Lưu mặt bằng đã sửa đúng làm đáp án để đo độ chính xác nhận diện" onClick={saveGT}>Lưu làm đáp án</button>
+-          <button className={`${s.btn} ${s.primary}`} type="button" onClick={() => S && setSheet({ kind: "confirm" })}>Xác nhận bản vẽ</button>
++          <button className={`${s.btn} ${s.primary}`} type="button" onClick={() => S && setSheet({ kind: "confirm" })}>{adjustment ? "Lưu điều chỉnh mặt bằng" : "Xác nhận kích thước, khối lượng"}</button>
+         </header>
+         <div className={s.main}>
+           <Board svgRef={svgRef} scaleRef={scaleRef} movedRef={movedRef} toWorld={toWorld} onPointerDown={onPointerDown} fitSize={fitSize} data={data} pi={pi} P={P} S={S} selected={selected} mode={mode} onMode={setMode} hint={hint} draft={draft} snap={snap} unit={unit}
+diff --git a/frontend/src/app/(user)/do-boc/Rough.tsx b/frontend/src/app/(user)/do-boc/Rough.tsx
+index dda2978..d9c267d 100644
+--- a/frontend/src/app/(user)/do-boc/Rough.tsx
++++ b/frontend/src/app/(user)/do-boc/Rough.tsx
+@@ -3,70 +3,122 @@
+ import s from "./review.module.css";
+ import { ChangeInput } from "./ChangeInput";
+ import { useReference } from "@/lib/reference";
+-import { PP, fmt, roughFields, type Plan, type PlanParams, type Rough, type RoughResult } from "./model";
++import { PP, fmt, roughFields, type Plan, type PlanParams, type Rough, type RoughResult, type Status, type Structural } from "./model";
+ 
+ const missTip = (list?: string[]) => (list || []).join("; ");
++// trạng thái dữ liệu (đặc tả 30/10 mục 3): C luôn ghi "tạm tính", D không ra số
++const ST: Record<string, string> = { A: "A đọc", B: "B suy", C: "C tạm tính", D: "D thiếu" };
++const Badge = ({ st, tip }: { st?: Status; tip?: string }) => st ? <span className={`${s.tag} ${st === "C" || st === "D" ? s.low : ""}`} title={tip}>{ST[st]}</span> : null;
+ 
+ function RoughResultView({ R }: { R: Rough }) {
+-  if (!R) return <p style={{ color: "var(--muted)", margin: 0 }}>Nhập thông số rồi bấm &quot;Tính phần thô&quot;. Thông số nào để trống thì công tác cần nó để trống và có cảnh báo, hệ thống không tự điền.</p>;
++  const { ref } = useReference();
++  if (!R) return <p style={{ color: "var(--muted)", margin: 0 }}>Chọn phương án vật liệu bên trên; hệ thống tự tính lại phần thô. Các công tác chưa đủ dữ liệu sẽ ghi rõ thông tin cần bổ sung.</p>;
+   if ("error" in R) return <ul className={s.warn}><li>{R.error}</li></ul>;
+   const r: RoughResult = R;
++  const className = Object.fromEntries((ref?.raw_classes || []).map((c) => [c.code, c.name]));
+   const why = (code: string) => r.works.filter((w) => w.code === code && w.missing.length).flatMap((w) => w.missing.map((m) => (w.plan ? w.plan + ": " : "") + m));
+   const low = (t: string, title?: string) => <span className={`${s.tag} ${s.low}`} title={title}>{t}</span>;
+   const plans = [...new Set(r.works.map((w) => w.plan || "Cả công trình"))];
+   return <>
+-    <p className={s.label}>Khối lượng công tác (cộng các tầng)</p>
+-    <div style={{ overflowX: "auto" }}><table><thead><tr><th>Công tác</th><th className={s.num}>Khối lượng</th><th>ĐVT</th><th></th></tr></thead><tbody>
+-      {r.totals.map((t, i) => <tr key={i}><td>{t.name}</td><td className={s.num}>{t.quantity == null ? "" : fmt(t.quantity)}</td><td>{t.unit}</td>
++    <p className={s.label}>Khối lượng công tác (cộng các tầng) <Badge st={r.status} tip="Trạng thái xấu nhất của toàn bảng" /></p>
++    <div style={{ overflowX: "auto" }}><table><thead><tr><th>Công tác</th><th className={s.num}>Khối lượng</th><th>ĐVT</th><th>Trạng thái</th><th></th></tr></thead><tbody>
++      {r.totals.map((t, i) => <tr key={i}><td>{t.name}</td><td className={s.num}>{t.quantity == null ? "" : fmt(t.quantity)}</td><td>{t.unit}</td><td><Badge st={t.status} /></td>
+         <td>{t.complete ? "" : low("còn thiếu", missTip([...new Set(why(t.code))]))}</td></tr>)}
+     </tbody></table></div>
+     {(r.formwork || []).length > 0 && <>
+       <p className={s.label}>Cốp pha theo cấu kiện</p>
+-      <div style={{ overflowX: "auto" }}><table><tbody>{r.formwork!.map((f, i) => <tr key={i}><td>{f.name}</td><td className={s.num}>{f.quantity == null ? "" : fmt(f.quantity)}</td><td>m²</td><td>{f.complete ? "" : low("còn thiếu")}</td></tr>)}</tbody></table></div>
++      <div style={{ overflowX: "auto" }}><table><tbody>{r.formwork!.map((f, i) => <tr key={i}><td>{f.name}</td><td className={s.num}>{f.quantity == null ? "" : fmt(f.quantity)}</td><td>m²</td><td><Badge st={f.status} /></td><td>{f.complete ? "" : low("còn thiếu")}</td></tr>)}</tbody></table></div>
+     </>}
+     <p className={s.label}>Vật liệu mua về</p>
+-    <div style={{ overflowX: "auto" }}><table><thead><tr><th>Mã</th><th>Vật liệu</th><th className={s.num}>Khối lượng</th><th className={s.num}>Có hao hụt</th><th>ĐVT</th></tr></thead><tbody>
++    <div style={{ overflowX: "auto" }}><table><thead><tr><th>Mã</th><th>Vật liệu</th><th>Loại</th><th className={s.num}>Khối lượng</th><th className={s.num}>Có hao hụt</th><th>ĐVT</th><th className={s.num}>kg</th><th className={s.num}>Đơn giá</th><th className={s.num}>Thành tiền</th><th>Trạng thái</th></tr></thead><tbody>
+       {r.materials.map((m, i) => <tr key={i} className={m.complete ? undefined : s.missrow} title={m.complete ? undefined : missTip(m.missing)}>
+-        <td>{m.material_id || "—"}</td><td>{m.name}</td>
+-        <td className={s.num}>{m.quantity == null ? low("thiếu") : fmt(m.quantity, 3)}</td>
+-        <td className={s.num}>{m.quantity_with_waste == null ? <span className={s.tag} title="Chưa có hao hụt thi công">—</span> : fmt(m.quantity_with_waste, 3)}</td><td>{m.unit}</td></tr>)}
++        <td>{m.material_id || "—"}</td><td>{m.name}</td><td>{className[m.raw_class || ""] || ""}</td>
++        <td className={s.num}>{m.quantity == null || m.status === "D" ? low("thiếu", m.quantity == null ? undefined : `Đã tính được một phần: ${fmt(m.quantity, 3)}`)
++          : m.quantity_min != null && m.quantity_max != null ? <span title={`Khoảng ${fmt(m.quantity_min, 3)}–${fmt(m.quantity_max, 3)}`}>{fmt(m.quantity, 3)}</span> : fmt(m.quantity, 3)}</td>
++        <td className={s.num}>{m.quantity_with_waste == null ? <span className={s.tag} title="Chưa có hao hụt thi công">—</span> : fmt(m.quantity_with_waste, 3)}</td><td>{m.unit}</td>
++        <td className={s.num}>{m.weight_kg == null ? "" : fmt(m.weight_kg)}</td>
++        <td className={s.num} title={m.price_source || "Chưa có giá cùng đơn vị"}>{m.best_price == null ? "" : fmt(m.best_price)}</td>
++        <td className={s.num}>{m.est_cost == null ? "" : fmt(m.est_cost)}</td><td><Badge st={m.status} /></td></tr>)}
+     </tbody></table></div>
+-    <p style={{ color: "var(--muted)", margin: 0, fontSize: 12 }}>Dòng tô màu còn thiếu số liệu: rê chuột để xem thiếu gì.</p>
++    <p style={{ color: "var(--muted)", margin: 0, fontSize: 12 }}>Dòng tô màu còn thiếu số liệu: rê chuột để xem thiếu gì. Đơn giá: giá thấp nhất cùng đơn vị đang có (rê chuột xem nguồn); thành tiền chỉ tính khi vật liệu đủ số, chưa gồm vận chuyển, nhân công. Trạng thái: A đọc trực tiếp, B suy luận, C tạm tính (thông số người dùng, hệ số tham khảo), D thiếu dữ liệu (không ra số).</p>
+     <p className={s.label}>Chi tiết theo tầng</p>
+     {plans.map((pl) => <details key={pl}><summary>{pl}</summary><div style={{ overflowX: "auto" }}><table><tbody>
+       {r.works.filter((w) => (w.plan || "Cả công trình") === pl).map((w, i) => <tr key={i}><td>{w.name}<br /><small style={{ color: "var(--muted)" }}>{w.element || ""}</small></td>
+         <td><small>{w.formula}</small>{w.missing.length > 0 && <><br />{low("thiếu: " + w.missing.join(", "))}</>}</td>
+-        <td className={s.num}>{w.quantity == null ? "" : fmt(w.quantity, 3)} {w.unit}</td></tr>)}
++        <td className={s.num}>{w.quantity == null ? "" : fmt(w.quantity, 3)} {w.unit}</td><td><Badge st={w.status} tip={(w.inputs || []).join("; ")} /></td></tr>)}
+     </tbody></table></div></details>)}
+     {r.warnings.length > 0 && <><p className={s.label}>Cảnh báo</p><ul className={s.warn} style={{ padding: 0 }}>{r.warnings.map((w, i) => <li key={i}>{w}</li>)}</ul></>}
+     {r.takeoff_id ? <p>Đã lưu vào dự án (mã kết quả {r.takeoff_id}).</p> : null}
+   </>;
+ }
+ 
+-export function RoughTab({ P, pp, values, rough, busy, onParam, onPlanParam, onRun }: {
++export function RoughTab({ P, pp, values, rough, busy, onParam, onPlanParam, onRun, structural, onStructural }: {
+   P: Plan; pp: PlanParams; values: Record<string, string>; rough: Rough; busy: boolean;
+   onParam: (k: string, v: string) => void; onPlanParam: (k: string, v: string | boolean) => void; onRun: () => void;
++  structural: Structural | { error: string } | { busy: string } | null; onStructural: (f: File | undefined) => void;
+ }) {
+   const cols = pp.cols;
+-  const { ref } = useReference();
++  const { ref, error } = useReference();
++  const suggestions: Record<string, string[]> = {
++    concrete_grade: ref?.concrete_grades || [], lean_concrete_grade: ref?.concrete_grades || [],
++    masonry_mortar_grade: ref?.mortar_grades || [], plaster_mortar_grade: ref?.mortar_grades || [],
++    screed_mortar_grade: ref?.mortar_grades || [], plaster_thickness_mm: ref?.plaster_thicknesses || [],
++    screed_thickness_mm: ref?.screed_thicknesses || [],
++  };
+   return (
+     <div className={s.qty}>
+-      <p className={s.label}>Thông số công trình</p>
++      <p className={s.label}>Bản vẽ kết cấu</p>
++      <div className={s.actions} style={{ justifyContent: "flex-start", alignItems: "center" }}>
++        <label className={s.btn}>{structural && "file" in structural ? "Đổi bản vẽ kết cấu…" : "Mở bản vẽ kết cấu…"}
++          <input type="file" accept=".dxf,.dwg" hidden onChange={(e) => { onStructural(e.target.files?.[0]); e.target.value = ""; }} /></label>
++        <span style={{ color: "var(--muted)", fontSize: 12.5 }}>
++          {!structural ? "Chưa có: dầm suy từ tường và cột, móng chưa tính. Mở file kết cấu (móng, dầm, cột, bảng thép) nếu tách riêng."
++            : "busy" in structural ? structural.busy
++            : "error" in structural ? <span className={`${s.tag} ${s.low}`}>{structural.error}</span>
++            : `${structural.file}: ${Object.keys(structural.structural_beams || {}).length} mặt bằng dầm, ${structural.foundations.length} loại móng.`}
++        </span>
++      </div>
++      {structural && "notes" in structural && structural.notes.length > 0 &&
++        <details><summary>Ghi chú đọc kết cấu ({structural.notes.length})</summary><ul className={s.warn} style={{ padding: 0 }}>{structural.notes.map((n, i) => <li key={i}>{n}</li>)}</ul></details>}
++      <p className={s.label}>Bước 2 · Chọn phương án vật liệu phần thô</p>
++      <p style={{ margin: 0, color: "var(--muted)" }}>Hệ thống đề xuất các lựa chọn từ danh mục và định mức hiện có. Chọn theo hồ sơ thiết kế; khối lượng và vật liệu mua về tự cập nhật khi bạn chọn. Thông số kết cấu được bổ sung từ bản vẽ khi có dữ liệu.</p>
++      {error && <p role="alert" className={s.warn}>Chưa tải được danh mục đề xuất: {error}. Bạn có thể nhập thông số riêng hoặc tải lại trang.</p>}
++      {!ref && !error && <p role="status">Đang tải phương án vật liệu…</p>}
+       {/* gợi ý mác bê tông: biến thể BE_TONG_TRON trong rough_norms */}
+       <datalist id="concrete-grades">{(ref?.concrete_grades || []).map((g) => <option key={g} value={g} />)}</datalist>
+       {roughFields(ref).map(([title, fields]) => (
+         <fieldset key={title} className={s.rfs}><legend>{title}</legend>
+           {fields.map(([k, label, type, ph]) => (
+             <label key={k} className={s.rf}><span>{label}</span>
++              {suggestions[k]?.length > 0 && <>
++                <select aria-label={`Đề xuất ${label.toLowerCase()}`} value={suggestions[k].includes(values[k] || "") ? values[k] : ""}
++                  onChange={(e) => onParam(k, e.target.value)}>
++                  <option value="">{values[k] ? "Thông số riêng" : "Chọn phương án đề xuất…"}</option>
++                  {suggestions[k].map((v) => <option key={v} value={v}>{v}{k.endsWith("_mm") ? " mm" : ""}</option>)}
++                </select>
++                <small>Đề xuất từ dữ liệu · có thể sửa bên dưới</small>
++              </> }
+               {Array.isArray(type)
+                 ? <select value={String(values[k] || "")} onChange={(e) => onParam(k, e.target.value)}>{type.map(([val, txt]) => <option key={val} value={val}>{txt}</option>)}</select>
+-                : <ChangeInput {...(type === "num" ? { type: "number", min: 0, step: "any" } : { type: "text" })} list={type === "grade" ? "concrete-grades" : undefined}
+-                  value={values[k] ?? ""} placeholder={ph || ""}
+-                  onCommit={(el) => onParam(k, el.value)} />}
++                : <ChangeInput {...(type === "num" ? { type: "number", min: k === "natural_ground_level_mm" ? undefined : 0, step: "any" } : { type: "text" })} list={type === "grade" ? "concrete-grades" : undefined}
++                  value={values[k] ?? ""} placeholder={ph || (suggestions[k] ? "Hoặc nhập thông số riêng" : "Bổ sung nếu bản vẽ chưa có")}
++                  onCommit={(el) => {
++                    if (type === "num" && el.value !== "" && (!Number.isFinite(Number(el.value)) || (k !== "natural_ground_level_mm" && Number(el.value) < 0))) return values[k] ?? "";
++                    onParam(k, el.value);
++                  }} />}
+             </label>
+           ))}
+         </fieldset>
+       ))}
++      <fieldset className={s.rfs}><legend>Loại vật liệu cần bóc (bỏ trống = mọi loại)</legend>
++        {(ref?.raw_classes || []).map((c) => {
++          const picked = String(values.material_classes || "").split(",").filter(Boolean);
++          return <label key={c.code} className={`${s.rf} ${s.rfc}`}>
++            <input type="checkbox" checked={picked.includes(c.code)}
++              onChange={(e) => onParam("material_classes", (e.target.checked ? [...picked, c.code] : picked.filter((x) => x !== c.code)).join(","))} />
++            <span>{c.name}</span></label>;
++        })}
++      </fieldset>
+       <p className={s.label}>Mặt bằng &quot;{P.plan.name}&quot;</p>
+       <fieldset className={s.rfs}>
+         <label className={`${s.rf} ${s.rfc}`}><input type="checkbox" checked={pp.is_ground} onChange={(e) => onPlanParam("is_ground", e.target.checked)} /> <span>Tầng trệt (tính nền, không tính sàn)</span></label>
+@@ -75,7 +127,7 @@ export function RoughTab({ P, pp, values, rough, busy, onParam, onPlanParam, onR
+             <ChangeInput type="number" min={0} step="any" value={String(pp[k] ?? "")} onCommit={(el) => onPlanParam(k, el.value)} /></label>
+         ))}
+       </fieldset>
+-      <p style={{ margin: 0, color: "var(--muted)", fontSize: 12.5 }}>Cột nhận được: {cols.filter((c) => c.keep).length}/{cols.length} (bấm vào ô cột trên bản vẽ để bỏ hoặc giữ). Dầm chưa có bản vẽ kết cấu thì suy từ tường và cột.</p>
++      <p style={{ margin: 0, color: "var(--muted)", fontSize: 12.5 }}>Cột nhận được: {cols.filter((c) => c.keep).length}/{cols.length} (bấm vào ô cột trên bản vẽ để bỏ hoặc giữ). {structural && "file" in structural ? "Dầm, móng lấy từ bản vẽ kết cấu." : "Dầm chưa có bản vẽ kết cấu thì suy từ tường và cột."}</p>
+       <div className={s.actions} style={{ justifyContent: "flex-start" }}>
+         <button className={`${s.btn} ${s.primary}`} type="button" disabled={busy} onClick={onRun}>{busy ? "Đang tính…" : "Tính phần thô"}</button>
+       </div>
+diff --git a/frontend/src/app/(user)/do-boc/model.ts b/frontend/src/app/(user)/do-boc/model.ts
+index 4f8775c..88d48e6 100644
+--- a/frontend/src/app/(user)/do-boc/model.ts
++++ b/frontend/src/app/(user)/do-boc/model.ts
+@@ -14,6 +14,7 @@ export type Plan = {
+   walls: RawWall[]; openings: RawOpening[]; rejected?: { reason: string; cls: string; x1: number; y1: number; x2: number; y2: number }[];
+   wall_layers?: string[]; warnings?: string[]; unmatched?: Record<string, unknown>; cad?: string;
+   columns?: Column[]; found?: Record<string, unknown>; labels?: unknown[];
++  stairs?: { id?: string; steps: number | null; flight_width_mm: number | null; tread_mm: number | null; landing_area_m2: number }[];   // thang tự nhận (B)
+ };
+ export type Check = { ma: string; muc: string; trang_thai: string; ket_qua: string; bang_chung: string[] };
+ export type Data = {
+@@ -27,7 +28,7 @@ export type Wall = { id: string; cls: string; role: string; x1: number; y1: numb
+   keep: boolean; src: string; edited: boolean };
+ export type Opening = { id: string; wall: string; kind: string; w: number; h: number | null; ev?: string | null; x: number; y: number; keep: boolean; src: string;
+   edited?: boolean; reason?: string | null };
+-export type PlanState = { height_mm: number; length_rule: string; walls: Wall[]; openings: Opening[]; seq: number };
++export type PlanState = { height_mm: number; height_source?: string | null; length_rule: string; walls: Wall[]; openings: Opening[]; seq: number };
+ export type PlanCol = Column & { keep: boolean; source: string };
+ export type PlanParams = { is_ground: boolean; cols: PlanCol[]; [k: string]: unknown };
+ 
+@@ -43,6 +44,7 @@ export const money = (v: number | null | undefined) => (v == null ? "" : Math.ro
+ export function initState(p: Plan): PlanState {
+   return {
+     height_mm: p.height_mm,
++    height_source: p.plan.height_source || null,
+     length_rule: p.length_rule || "tim",
+     walls: p.walls.map((w) => ({ id: w.id, cls: w.cls, role: w.role || "partition", x1: w.x1, y1: w.y1, x2: w.x2, y2: w.y2,
+       reason: null, mat: w.mat || null, fam: w.fam || null, cand: w.cand || [], masonry: w.masonry, conf: w.conf, layer: w.layer, msrc: w.src, rule: w.rule,
+@@ -135,7 +137,7 @@ export const convBad = (D: Data | null) => ((D && D.conventions && D.conventions
+ export function payload(D: Data, P: Plan, S: PlanState, project: number | null) {
+   // rule, msrc, ev, height_source, unmatched: căn cứ nhận dạng, lưu cùng bản chốt để truy vết
+   return { project_id: project, file: D.file, plan: P.plan.name, height_mm: S.height_mm, length_rule: S.length_rule || "tim",
+-    height_source: P.plan.height_source || null, unmatched: P.unmatched || {},
++    height_source: S.height_source || P.plan.height_source || null, unmatched: P.unmatched || {},
+     walls: S.walls.map(({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited, rule, msrc }) => ({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited, rule: rule || null, msrc: msrc || null })),
+     openings: S.openings.map(({ id, wall, kind, w, h, keep, src, ev }) => ({ id, wall, kind, w, h, keep, src, ev: ev || null })) };
+ }
+@@ -173,11 +175,16 @@ export function roughFields(ref: Reference | null): [string, RField[]][] {
+     ["Vữa", [["masonry_mortar_grade", "Mác vữa xây", "text"], ["plaster_mortar_grade", "Mác vữa trát", "text"],
+       ["screed_mortar_grade", "Mác vữa cán", "text"], ["plaster_thickness_mm", "Dày trát (mm)", "num"], ["screed_thickness_mm", "Dày cán nền (mm)", "num"]]],
+     ["Kết cấu", [["slab_thickness_mm", "Dày sàn (mm)", "num"], ["beam_width_mm", "Rộng dầm (mm)", "num"], ["beam_depth_mm", "Cao dầm (mm)", "num"],
+-      ["lintel_height_mm", "Cao lanh tô (mm)", "num"], ["lintel_bearing_mm", "Gối lanh tô (mm)", "num"], ["stair_slab_thickness_mm", "Dày bản thang (mm)", "num"]]],
++      ["lintel_height_mm", "Cao lanh tô (mm)", "num"], ["lintel_bearing_mm", "Gối lanh tô (mm)", "num"], ["stair_slab_thickness_mm", "Dày bản thang (mm)", "num"],
++      ["formwork_type", "Loại ván khuôn", [["", "chưa chọn"], ["go", "gỗ (định mức AF.81)"], ["van_ep", "ván ép phủ phim (chưa có định mức)"]]]]],
++    ["Móng, đào đất", [["natural_ground_level_mm", "Cốt đất tự nhiên (mm, so với ±0.000)", "num", "âm: dưới ±0.000"],
++      ["excavation_margin_mm", "Mở rộng đáy hố đào mỗi bên (mm)", "num"], ["excavation_slope", "Hệ số mái taluy m", "num", "0 = vách đứng"]]],
+     ["Nền, chống thấm", [["ground_sand_mm", "Đệm cát nền (mm)", "num"], ["ground_lean_mm", "Bê tông lót nền (mm)", "num"],
+       ["waterproof_upturn_mm", "Cổ tường chống thấm (mm)", "num"],
+       ["waterproof_material_id", "Vật liệu chống thấm", [["", "chưa chọn"], ...(ref?.waterproof_materials || []).map((m): [string, string] => [m.id, `${m.id} ${m.name}`])]]]],
+-    ["Hàm lượng thép (kg/m³)", (ref?.steel_elements || []).map((e): RField => [`steel_${e.code}`, e.name.charAt(0).toUpperCase() + e.name.slice(1), "num"])],
++    ["Kiểm tra, hướng nhà", [["building_area_m2", "Diện tích xây dựng (m²)", "num"], ["north_deg", "Hướng bắc (độ, từ trục +x)", "num"],
++      ["min_opening_m2", "Không trừ lỗ nhỏ hơn (m²)", "num", "0 = trừ mọi lỗ"]]],
++    ["Hàm lượng thép (kg/m³)",(ref?.steel_elements || []).map((e): RField => [`steel_${e.code}`, e.name.charAt(0).toUpperCase() + e.name.slice(1), "num"])],
+   ];
+ }
+ export const PP: [string, string][] = [["void_area_m2", "Ô trống trên sàn (m²)"], ["balcony_area_m2", "Ban công cần chống thấm (m²)"],
+@@ -186,15 +193,20 @@ export const PP: [string, string][] = [["void_area_m2", "Ô trống trên sàn (
+ export const RP_KEY = "optimat-rough-params";
+ export const numOr = (v: unknown) => (v === "" || v == null || isNaN(Number(v)) ? null : Number(v));
+ export function roughValues(): Record<string, string> { try { return JSON.parse(localStorage.getItem(RP_KEY) || "{}"); } catch { return {}; } }
++const st0 = (p: Plan) => (p.stairs || [])[0];
++// ô thang điền sẵn theo thang máy chủ tự nhận trên nét mũi bậc (người dùng sửa được)
+ export const initPlanParams = (p: Plan): PlanParams => ({ is_ground: !!(p.plan && p.plan.is_ground),
+-  cols: (p.columns || []).map((c) => ({ ...c, keep: true, source: c.source || "hatch" })) });
++  cols: (p.columns || []).map((c) => ({ ...c, keep: true, source: c.source || "hatch" })),
++  ...(st0(p) ? { stair_steps: String(st0(p).steps ?? ""), stair_width: String(st0(p).flight_width_mm ?? ""), stair_tread: String(st0(p).tread_mm ?? ""),
++    stair_landing: String(st0(p).landing_area_m2 || "") } : {}) });
+ 
+-const TEXT_PARAMS = ["concrete_supply", "waterproof_material_id"];
++const TEXT_PARAMS = ["concrete_supply", "waterproof_material_id", "formwork_type"];
+ // chỉ gửi thông số có trên biểu mẫu (trình duyệt có thể còn khóa cũ)
+ const KNOWN = new Set(roughFields(null).flatMap(([, f]) => f.map(([k]) => k)));
+ function projectParams(v: Record<string, string>) {
+   const out: Record<string, unknown> & { steel_kg_per_m3: Record<string, number>; ground_layers: { kind: string; thickness_mm: number }[] } = { steel_kg_per_m3: {}, ground_layers: [] };
+   for (const [k, raw] of Object.entries(v)) {
++    if (k === "material_classes") { if (raw) out.material_classes = String(raw).split(",").filter(Boolean); continue; }   // loại vật liệu cần bóc
+     if (raw === undefined || raw === "" || !(k.startsWith("steel_") || KNOWN.has(k))) continue;
+     const n = numOr(raw);
+     if (k.startsWith("steel_")) { if (n != null) out.steel_kg_per_m3[k.slice(6)] = n; }
+@@ -205,27 +217,55 @@ function projectParams(v: Record<string, string>) {
+   return out;
+ }
+ 
+-export function roughRequest(D: Data, states: Record<number, PlanState>, planP: Record<number, PlanParams>, project: number | null) {
+-  return { project_id: project, file: D.file, params: projectParams(roughValues()), plans: D.plans.map((p, i) => {
++/** Phần đọc từ bản vẽ kết cấu tách file (/api/takeoff/structural): dầm, cột, móng, bảng thép, cấu kiện phụ. */
++export type Structural = { file: string; foundations: unknown[]; lintel_height_mm: number | null; notes: string[];
++  structural_beams: Record<string, unknown>; sheets: unknown[]; structural_floors: unknown; column_sections: unknown;
++  column_schedule: unknown[]; rebar: unknown[]; members: unknown[] };
++
++// thang giữ đúng số tự nhận thì là suy luận (B), người dùng đã sửa thì là nhập tay (C)
++const stairSource = (p: Plan, pp: PlanParams) => {
++  const a = st0(p);
++  return a && numOr(pp.stair_steps) === a.steps && numOr(pp.stair_width) === a.flight_width_mm && numOr(pp.stair_tread) === a.tread_mm
++    && (numOr(pp.stair_landing) || 0) === (a.landing_area_m2 || 0) ? "auto" : "manual";
++};
++
++export function roughRequest(D: Data, states: Record<number, PlanState>, planP: Record<number, PlanParams>, project: number | null,
++  structural?: Structural | null) {
++  const params = projectParams(roughValues());
++  // móng, cao lanh tô đọc từ bản vẽ kết cấu chỉ bổ sung khi người dùng chưa nhập
++  const { foundations, lintel_height_mm, ...parts } = structural || ({} as Partial<Structural>);
++  if (structural) {
++    if (foundations?.length) params.foundations = foundations;
++    if (params.lintel_height_mm == null && lintel_height_mm != null) params.lintel_height_mm = lintel_height_mm;
++  }
++  return { ...parts, project_id: project, file: D.file, params, plans: D.plans.map((p, i) => {
+     const st = states[i] || initState(p), pp = planP[i] || initPlanParams(p);
+-    const stair = numOr(pp.stair_steps) ? [{ id: "T1", steps: Math.round(numOr(pp.stair_steps) as number), flight_width_mm: numOr(pp.stair_width),
+-      tread_mm: numOr(pp.stair_tread), landing_area_m2: numOr(pp.stair_landing) || 0 }] : [];
+-    return { name: p.plan.name, is_ground: pp.is_ground, height_mm: st.height_mm,
++    const steps = numOr(pp.stair_steps);
++    const hasStair = !!st0(p) || [pp.stair_steps, pp.stair_width, pp.stair_tread, pp.stair_landing].some((v) => numOr(v) != null);
++    const stair = hasStair ? [{ ...st0(p), id: st0(p)?.id || "T1", steps: steps == null ? null : Math.round(steps), flight_width_mm: numOr(pp.stair_width),
++      tread_mm: numOr(pp.stair_tread), landing_area_m2: numOr(pp.stair_landing) || 0, source: stairSource(p, pp) }] : [];
++    // Biểu mẫu hiện sửa thang đầu tiên; các thang còn lại phải giữ nguyên dữ liệu máy chủ.
++    const stairs = [...stair, ...(p.stairs || []).slice(1)];
++    return { name: p.plan.name, is_ground: pp.is_ground, height_mm: st.height_mm, height_source: st.height_source || p.plan.height_source || null,
+       void_area_m2: numOr(pp.void_area_m2), balcony_area_m2: numOr(pp.balcony_area_m2),
+       outline_area_m2: numOr(pp.outline_area_m2), usable_area_m2: numOr(pp.usable_area_m2),
+       walls: st.walls.map(({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited }) => ({ id, cls, role, x1, y1, x2, y2, mat, masonry, keep, src, edited })),
+       openings: st.openings.map(({ id, wall, kind, w, h, keep, src }) => ({ id, wall, kind, w, h, keep, src })),
+       columns: pp.cols.map(({ id, x, y, b_mm, h_mm, keep, source }) => ({ id, x, y, b_mm, h_mm, keep, source })),
+-      stairs: stair, labels: p.labels || [], found: p.found || {} };
++      stairs, labels: p.labels || [], found: p.found || {} };
+   }) };
+ }
+ 
+-export type RoughWork = { code: string; name: string; plan?: string | null; element?: string; formula: string; missing: string[]; quantity: number | null; unit: string };
++export type Status = "A" | "B" | "C" | "D" | null;
++export type RoughWork = { code: string; name: string; plan?: string | null; element?: string; formula: string; missing: string[]; quantity: number | null; unit: string;
++  status?: Status; inputs?: string[] };
+ export type RoughResult = {
+-  totals: { code: string; name: string; quantity: number | null; unit: string; complete: boolean }[];
+-  formwork?: { name: string; quantity: number | null; complete: boolean }[];
+-  materials: { material_id?: string | null; name: string; quantity: number | null; quantity_with_waste: number | null; unit: string; complete: boolean; missing?: string[] }[];
+-  works: RoughWork[]; warnings: string[]; takeoff_id?: number | null;
++  totals: { code: string; name: string; quantity: number | null; unit: string; complete: boolean; status?: Status }[];
++  formwork?: { name: string; quantity: number | null; complete: boolean; status?: Status }[];
++  materials: { material_id?: string | null; name: string; quantity: number | null; quantity_with_waste: number | null; unit: string; complete: boolean; missing?: string[];
++    status?: Status; quantity_min?: number | null; quantity_max?: number | null; weight_kg?: number | null; raw_class?: string | null;
++    best_price?: number | null; price_source?: string | null; est_cost?: number | null }[];
++  works: RoughWork[]; warnings: string[]; takeoff_id?: number | null; status?: Status;
+ };
+ export type Rough = RoughResult | { error: string } | null;
+ 
+diff --git a/frontend/src/app/(user)/phan-tho/rough.tsx b/frontend/src/app/(user)/phan-tho/rough.tsx
+index 00b0309..4acda02 100644
+--- a/frontend/src/app/(user)/phan-tho/rough.tsx
++++ b/frontend/src/app/(user)/phan-tho/rough.tsx
+@@ -4,13 +4,18 @@ import Link from "next/link";
+ import { nf } from "@/lib/api";
+ import { useStored } from "@/lib/store";
+ import { Card, Empty, Head, Pill, Steps, Tile, Tiles } from "@/components/ui";
++import type { Status } from "../do-boc/model";
+ 
+-type Qty = { name: string; quantity?: number | null };
++type Qty = { name: string; quantity?: number | null; status?: Status; complete?: boolean };
+ type Total = Qty & { code: string; unit: string; complete: boolean };
+-type Mat = Qty & { material_id?: string; quantity_with_waste?: number | null; unit: string; missing: string[]; complete: boolean };
++type Mat = Qty & { material_id?: string; quantity_with_waste?: number | null; unit: string; missing: string[]; complete: boolean;
++  best_price?: number | null; est_cost?: number | null; price_source?: string | null };
+ type Result = { works: { code: string; plan?: string; missing: string[] }[]; totals: Total[]; formwork?: Qty[]; materials: Mat[]; warnings: string[] };
+ type Saved = { file?: string; at?: string; result?: Result };
+ 
++const STATUS: Record<string, string> = { A: "A đọc", B: "B suy", C: "C tạm tính", D: "D thiếu" };
++const StatusPill = ({ status }: { status?: Status }) => status ? <Pill level={status === "C" || status === "D" ? "warn" : "info"}>{STATUS[status]}</Pill> : null;
++
+ export function Rough() {
+   const saved = useStored<Saved | null>("optimat-rough", null), R = saved?.result;
+   const plans = useStored<unknown[]>("optimat-confirmed", []);
+@@ -19,43 +24,48 @@ export function Rough() {
+   return (
+     <>
+       <Steps cur="/phan-tho" done={{ "/do-boc": plans.length > 0, "/phan-tho": !!saved }} />
+-      <Head title="Khối lượng phần thô" actions={<Link className="btn" href="/do-boc">Sửa trên trang kiểm tra</Link>}>
++      <Head title="Khối lượng phần thô" actions={<Link className="btn" href="/dieu-chinh">Điều chỉnh phần thô</Link>}>
+         Xây, trát, lanh tô, cột, dầm, sàn, cầu thang, cán nền, chống thấm, nền, cốt thép, cốp pha và vật liệu mua về. Phần nào thiếu thông số
+         hoặc định mức thì để trống và ghi rõ thiếu gì; hệ thống không tự điền số.
+       </Head>
+       {!R ? (
+-        <Empty>Chưa tính phần thô. Vào <Link href="/do-boc">Hồ sơ và đo bóc</Link>, mở bản vẽ, chọn tab &quot;Phần thô&quot;, nhập thông số rồi bấm &quot;Tính phần thô&quot;.</Empty>
++        <Empty>Chưa tính phần thô. Vào <Link href="/dieu-chinh">Điều chỉnh vật liệu và phần thô</Link>, mở bản vẽ, chọn tab &quot;Phần thô&quot;, nhập thông số rồi bấm &quot;Tính phần thô&quot;.</Empty>
+       ) : (<>
+         <Tiles>
+           <Tile k="Bản vẽ" v={<span className="text-lg">{saved!.file}</span>} s={`tính lúc ${(saved!.at || "").replace("T", " ").slice(0, 16)}`} />
+           <Tile tone={R.totals.every((t) => t.complete) ? "ok" : "warn"} k="Công tác đủ số" v={`${R.totals.filter((t) => t.complete).length}/${R.totals.length}`} />
+-          <Tile tone={done === R.materials.length ? "ok" : "warn"} k="Vật liệu đủ số" v={`${done}/${R.materials.length}`} s="thiếu chủ yếu do định mức chưa tra TT 38" />
++          <Tile tone={done === R.materials.length ? "ok" : "warn"} k="Vật liệu đủ số" v={`${done}/${R.materials.length}`} s="Xem thông số và định mức còn thiếu trong từng dòng" />
+         </Tiles>
+         <div className="flex flex-wrap items-start gap-[18px] [&>*]:flex-[1_1_320px]">
+           <Card title="Khối lượng công tác">
+             <div className="tw"><table>
+-              <thead><tr><th>Công tác</th><th className="n">Khối lượng</th><th>ĐVT</th><th></th></tr></thead>
++              <thead><tr><th>Công tác</th><th className="n">Khối lượng</th><th>ĐVT</th><th>Trạng thái</th><th></th></tr></thead>
+               <tbody>{R.totals.map((t, i) => (
+-                <tr key={i}><td>{t.name}</td><td className="n">{nf(t.quantity)}</td><td>{t.unit}</td>
+-                  <td>{!t.complete && <span title={why(t.code).join("; ")}><Pill level="warn">còn thiếu</Pill></span>}</td></tr>
++                <tr key={i}><td>{t.name}</td><td className="n">{nf(t.quantity)}</td><td>{t.unit}</td><td><StatusPill status={t.status} /></td>
++                  <td>{!t.complete && <span title={why(t.code).join("; ")}><Pill level="warn">{t.quantity == null ? "còn thiếu" : "một phần"}</Pill></span>}</td></tr>
+               ))}</tbody>
+             </table></div>
+           </Card>
+           <Card title="Cốp pha theo cấu kiện">
+             <div className="tw"><table><tbody>
+-              {R.formwork?.length ? R.formwork.map((f, i) => <tr key={i}><td>{f.name}</td><td className="n">{nf(f.quantity)}</td><td>m²</td></tr>)
++              {R.formwork?.length ? R.formwork.map((f, i) => <tr key={i}><td>{f.name}</td><td className="n">{nf(f.quantity)}</td><td>m²</td>
++                <td><StatusPill status={f.status} />{f.complete === false && <Pill level="warn">{f.quantity == null ? "còn thiếu" : "một phần"}</Pill>}</td></tr>)
+                 : <tr><td>Chưa có cốp pha.</td></tr>}
+             </tbody></table></div>
+           </Card>
+         </div>
+         <Card title="Vật liệu mua về">
+           <div className="tw"><table>
+-            <thead><tr><th>Mã</th><th>Vật liệu</th><th className="n">Khối lượng</th><th className="n">Có hao hụt</th><th>ĐVT</th><th>Thiếu</th></tr></thead>
++            <thead><tr><th>Mã</th><th>Vật liệu</th><th className="n">Khối lượng</th><th className="n">Có hao hụt</th><th>ĐVT</th><th className="n">Đơn giá</th><th className="n">Thành tiền</th><th>Nguồn giá</th><th>Trạng thái</th><th>Thiếu</th></tr></thead>
+             <tbody>{R.materials.map((m, i) => (
+-              <tr key={i}><td>{m.material_id || "—"}</td><td>{m.name}</td><td className="n">{m.quantity == null ? <Pill level="warn">thiếu</Pill> : nf(m.quantity, 3)}</td>
+-                <td className="n">{nf(m.quantity_with_waste, 3)}</td><td>{m.unit}</td><td className="text-[12.5px] text-muted">{m.missing.join("; ")}</td></tr>
++              <tr key={i}><td>{m.material_id || "—"}</td><td>{m.name}</td><td className="n">{m.quantity == null ? <Pill level="warn">thiếu</Pill> : <>{nf(m.quantity, 3)}{!m.complete && <> <Pill level="warn">một phần</Pill></>}</>}</td>
++                <td className="n">{nf(m.quantity_with_waste, 3)}</td><td>{m.unit}</td>
++                <td className="n">{m.best_price == null ? <Pill level="warn">chưa có giá</Pill> : nf(m.best_price)}</td>
++                <td className="n">{nf(m.est_cost)}</td><td className="text-[12.5px] text-muted">{m.price_source || ""}</td>
++                <td><StatusPill status={m.status} /></td><td className="text-[12.5px] text-muted">{m.missing.join("; ")}</td></tr>
+             ))}</tbody>
+           </table></div>
++          <p className="mb-0 text-[12.5px] text-muted">Đơn giá và thành tiền lấy từ kết quả máy chủ, chưa gồm vận chuyển và nhân công. Nguồn giá giữ nguyên loại, đơn vị cung cấp và ngày khi có; giá công bố (BULLETIN) không phải báo giá mua đã xác nhận. Dòng ghi một phần chưa đủ khối lượng để kết luận tổng.</p>
+         </Card>
+         {R.warnings.length > 0 && <Card title="Cảnh báo"><ul className="m-0 pl-[18px] text-muted">{R.warnings.map((w, i) => <li key={i}>{w}</li>)}</ul></Card>}
+       </>)}
+diff --git a/frontend/src/app/(user)/toi-uu/optimize.tsx b/frontend/src/app/(user)/toi-uu/optimize.tsx
+index 77b2f2e..4e79b3b 100644
+--- a/frontend/src/app/(user)/toi-uu/optimize.tsx
++++ b/frontend/src/app/(user)/toi-uu/optimize.tsx
+@@ -62,12 +62,17 @@ export function Optimize() {
+     setMsgs((m) => [...m, { text: reply }]);
+   };
+ 
++  const savedResult = useStored<Result | null>("optimat-optimization", null);
+   const [out, setOut] = useState<{ busy?: boolean; r?: Result; err?: string } | null>(null);
++  const visibleOut = out || (savedResult ? { r: savedResult } : null);
+   const run = async (e: FormEvent) => {
+     e.preventDefault();
+     const cons = toCons(f); store.set("optimat-constraints", cons);
+     setOut({ busy: true });
+-    try { setOut({ r: await post<Result>("/api/optimize", { groups, constraints: cons }) }); }
++    try {
++      const r = await post<Result>("/api/optimize", { groups, constraints: cons });
++      store.set("optimat-optimization", r); setOut({ r });
++    }
+     catch (err) { setOut({ err: (err as Error).message }); }
+   };
+ 
+@@ -111,9 +116,9 @@ export function Optimize() {
+           </form>
+         </Card>
+       </div>
+-      {out?.busy ? <Card><span className="text-muted">Đang tối ưu…</span></Card>
+-        : out?.err ? <Card><Note>{out.err}</Note></Card>
+-        : out?.r && <Solutions r={out.r} />}
++      {visibleOut?.busy ? <Card><span className="text-muted">Đang tối ưu…</span></Card>
++        : visibleOut?.err ? <Card><Note>{visibleOut.err}</Note></Card>
++        : visibleOut?.r && <Solutions r={visibleOut.r} />}
+     </>
+   );
+ }
+diff --git a/frontend/src/components/Shell.tsx b/frontend/src/components/Shell.tsx
+index 5fd138f..9d880cd 100644
+--- a/frontend/src/components/Shell.tsx
++++ b/frontend/src/components/Shell.tsx
+@@ -2,6 +2,7 @@
+ // Khung trang: menu bên trái theo vai trò (người dùng / quản trị) và vùng nội dung.
+ // Có PostgreSQL thì bắt đăng nhập (AD01-03): chưa đăng nhập chuyển sang /dang-nhap, người dùng thường vào khu quản trị thấy 403.
+ import Link from "next/link";
++import { ProjectBar } from "./ProjectBar";
+ import { usePathname, useRouter } from "next/navigation";
+ import { useEffect, type ReactNode } from "react";
+ import { logout, useMe } from "@/lib/auth";
+@@ -36,7 +37,7 @@ export function Shell({ role, children }: { role: Role; children: ReactNode }) {
+ 
+   const collapsed = useStored<boolean>("optimat-nav-collapsed", false);
+   const groups: Group[] = role === "admin" ? ADMIN
+-    : [{ items: [["/do-boc", "Hồ sơ và đo bóc", "▣"], ["/vat-lieu", "Vật liệu và giá", "▤", plans.length ? `${plans.length} mặt bằng` : ""],
++    : [{ items: [["/do-boc", "Hồ sơ và đo bóc", "▣"], ["/dieu-chinh", "Điều chỉnh vật liệu", "☷"], ["/vat-lieu", "Vật liệu và giá", "▤", plans.length ? `${plans.length} mặt bằng` : ""],
+        ["/phan-tho", "Phần thô", "☷", rough ? "đã tính" : ""], ["/toi-uu", "Phương án tối ưu", "✧"], ["/tiep-nhan", "Tiếp nhận hồ sơ CAD", "⇪"],
+        ["/mapping", "Duyệt mapping", "⌗"]] }];
+   const admin = role === "admin";
+@@ -91,9 +92,9 @@ export function Shell({ role, children }: { role: Role; children: ReactNode }) {
+         </div>}
+       </nav>
+       {/* trang đo bóc chiếm trọn vùng nội dung (bản vẽ + danh sách), không đệm */}
+-      <main className={`flex min-w-0 flex-1 flex-col ${path === "/do-boc" ? "" : "gap-[18px] px-[30px] pt-[26px] pb-10 max-[860px]:px-4 max-[860px]:pt-[18px] max-[860px]:pb-8"}`}>
++      <main className={`flex min-w-0 flex-1 flex-col ${["/do-boc", "/dieu-chinh"].includes(path) ? "" : "gap-[18px] px-[30px] pt-[26px] pb-10 max-[860px]:px-4 max-[860px]:pt-[18px] max-[860px]:pb-8"}`}>
+         {!me || (me.auth && !user) ? <Loading>Đang kiểm tra đăng nhập…</Loading>
+-          : admin && user && user.role !== "admin" ? <Forbidden /> : children}
++          : admin && user && user.role !== "admin" ? <Forbidden /> : <>{!admin && <ProjectBar />}{children}</>}
+       </main>
+     </div>
+   );
+diff --git a/frontend/src/components/ui.tsx b/frontend/src/components/ui.tsx
+index ea47c67..3a31368 100644
+--- a/frontend/src/components/ui.tsx
++++ b/frontend/src/components/ui.tsx
+@@ -67,7 +67,7 @@ export const Loading = ({ children = "Đang tải…" }: { children?: ReactNode
+ 
+ /** Thanh bước của luồng người dùng. done: các bước đã xong. */
+ export function Steps({ cur, done }: { cur: string; done: Record<string, boolean> }) {
+-  const list: [string, string][] = [["/do-boc", "1. Bản vẽ và đo bóc"], ["/vat-lieu", "2. Vật liệu và giá"], ["/phan-tho", "Phần thô"], ["/toi-uu", "3. Tối ưu"]];
++  const list: [string, string][] = [["/do-boc", "1. Bản vẽ và đo bóc"], ["/dieu-chinh", "2. Điều chỉnh vật liệu"], ["/vat-lieu", "3. Vật liệu và giá"], ["/phan-tho", "Phần thô"], ["/toi-uu", "4. Tối ưu"]];
+   return (
+     <ol className="m-0 flex list-none flex-wrap gap-2 p-0">
+       {list.map(([href, t]) => {
+diff --git a/frontend/src/lib/reference.ts b/frontend/src/lib/reference.ts
+index cf8cd51..fec4c4f 100644
+--- a/frontend/src/lib/reference.ts
++++ b/frontend/src/lib/reference.ts
+@@ -9,8 +9,12 @@ export type Reference = {
+   vehicles: { id: string; name: string; payload_ton: number }[];
+   wall_classes: { id: string; min_mm: number; max_mm: number }[];
+   concrete_grades: string[];
++  mortar_grades?: string[];
++  plaster_thicknesses?: string[];
++  screed_thicknesses?: string[];
+   waterproof_materials: { id: string; name: string }[];
+   steel_elements: { code: string; name: string }[];
++  raw_classes?: { code: string; name: string }[];
+   data_kinds: string[];
+ };
+ 

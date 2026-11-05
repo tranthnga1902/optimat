@@ -14,7 +14,7 @@ from functools import lru_cache
 from typing import Optional
 
 from .. import config
-from .encoding import normalize
+from .encoding import expand_abbreviations, normalize
 
 NOTES_FILE = config.DATA_DIR / "rules" / "material_notes.csv"
 
@@ -53,11 +53,13 @@ def load_note_rules(path: Optional[str] = None) -> tuple[NoteRule, ...]:
 
 
 def match_note(text: str, rules=None) -> list[NoteRule]:
-    """Quy tắc khớp một chữ (mỗi mã vật liệu một lần)."""
+    """Quy tắc khớp một chữ (mỗi mã vật liệu một lần). So trên chuỗi gốc đã bỏ dấu VÀ chuỗi đã giãn viết tắt theo
+    data/rules/viet_tat.csv ("vữa XM" -> vữa xi măng): mẫu cũ ghi tắt ("vua xm mac 75") vẫn khớp, mẫu đầy đủ khớp thêm."""
     norm = normalize(text)
+    variants = (norm, expand_abbreviations(norm))
     seen, out = set(), []
     for r in rules or load_note_rules():
-        if r.material_id not in seen and r.regex.search(norm):
+        if r.material_id not in seen and any(r.regex.search(v) for v in variants):
             seen.add(r.material_id)
             out.append(r)
     return out

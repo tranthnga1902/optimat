@@ -1,0 +1,8 @@
+{
+  "status": "STABLE_PENDING_NORMAL_REGRESSION",
+  "only_change_since_source_ready": "remove N02 xfail decorator",
+  "reader_unchanged": true,
+  "asserts_unchanged": true,
+  "tests_run_by_this_turn": false,
+  "coordinator_reported_focused": "74 passed, 0 skipped/failed, --runxfail, exit 0; hash207 unchanged"
+}

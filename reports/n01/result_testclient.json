@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\Admin\\Downloads\\optimat-ai_6\\optimat-ai\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_rough_agent.py::test_agent_api_rough_params",
+    "-q",
+    "-ra",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "faulthandler_timeout=60",
+    "--basetemp=reports/n01/temp_testclient"
+  ],
+  "exit_code": 0,
+  "seconds": 8.695900201797485,
+  "database_env_removed": true,
+  "execution": "outside sandbox; prior socketpair evidence reports/c01_regression/HANDOFF.md"
+}

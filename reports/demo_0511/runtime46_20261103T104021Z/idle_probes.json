@@ -1,0 +1,17 @@
+[
+  {
+    "endpoint": "auth/me",
+    "http": 200,
+    "seconds": 0.437
+  },
+  {
+    "endpoint": "health",
+    "http": 200,
+    "seconds": 14.787
+  },
+  {
+    "endpoint": "health",
+    "http": 200,
+    "seconds": 12.282
+  }
+]

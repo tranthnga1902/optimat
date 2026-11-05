@@ -2,67 +2,129 @@
 // Tab Phần thô: form thông số công trình và mặt bằng, kết quả máy chủ tính (công tác, cốp pha, vật liệu, chi tiết theo tầng).
 import s from "./review.module.css";
 import { ChangeInput } from "./ChangeInput";
+import { MATERIAL_PARAMS } from "@/lib/review-session";
 import { useReference } from "@/lib/reference";
-import { PP, fmt, roughFields, type Plan, type PlanParams, type Rough, type RoughResult } from "./model";
+import { PP, fmt, roughFields, type FactOption, type InputFacts, type Plan, type PlanParams, type Rough, type RoughResult, type Status, type Structural } from "./model";
 
 const missTip = (list?: string[]) => (list || []).join("; ");
+// trạng thái dữ liệu (đặc tả 30/10 mục 3): C luôn ghi "tạm tính", D không ra số
+const ST: Record<string, string> = { A: "A đọc", B: "B suy", C: "C tạm tính", D: "D thiếu" };
+const Badge = ({ st, tip }: { st?: Status; tip?: string }) => st ? <span className={`${s.tag} ${st === "C" || st === "D" ? s.low : ""}`} title={tip}>{ST[st]}</span> : null;
+
+const FACT_LABEL: Record<string, string> = {
+  plaster_thickness_mm: "Dày trát (mm)", screed_thickness_mm: "Dày cán nền (mm)", slab_thickness_mm: "Dày sàn (mm)",
+  stair_slab_thickness_mm: "Dày bản thang (mm)", lintel_height_mm: "Cao lanh tô (mm)", lintel_bearing_mm: "Gối lanh tô (mm)",
+  waterproof_upturn_mm: "Cao cổ chống thấm (mm)", beam_section: "Tiết diện dầm rộng × cao (mm)", concrete_grade: "Mác bê tông",
+  lean_concrete_grade: "Mác bê tông lót", masonry_mortar_grade: "Mác vữa xây", plaster_mortar_grade: "Mác vữa trát",
+  screed_mortar_grade: "Mác vữa cán nền",
+};
+
+function FactSuggestions({ facts, values, onParam }: { facts: InputFacts; values: Record<string, string>; onParam: (k: string, v: string) => void }) {
+  const apply = (field: string, o: FactOption) => {
+    if (field === "beam_section" && Array.isArray(o.value)) { onParam("beam_width_mm", String(o.value[0])); onParam("beam_depth_mm", String(o.value[1])); }
+    else onParam(field, String(o.value));
+  };
+  const show = (o: FactOption) => Array.isArray(o.value) ? o.value.join(" × ") : String(o.value);
+  const row = (field: string, o: FactOption, k: string) => (
+    <tr key={k}><td>{FACT_LABEL[field] || field}</td><td className={s.num}>{show(o)}</td>
+      <td title={o.sources.map(x => `${x.file} ${x.ref}: ${x.excerpt}`).join(" | ")}>{o.sources[0]?.excerpt}{o.count > 1 ? ` (+${o.count - 1})` : ""}</td>
+      <td>{o.methods.includes("ai_label") ? "AI gắn nhãn" : "quy tắc"}</td>
+      <td>{field !== "beam_section" && values[field] === String(o.value) ? "đang dùng" :
+        <button className={s.btn} type="button" onClick={() => apply(field, o)}>Áp dụng</button>}</td></tr>);
+  const sugg = Object.entries(facts.suggested_params || {}), conf = Object.entries(facts.conflicts || {});
+  if (!sugg.length && !conf.length) return null;
+  return <>
+    <p className={s.label}>Thông số gợi ý từ hồ sơ (B, cần xác nhận)</p>
+    <div style={{ overflowX: "auto" }}><table><thead><tr><th>Thông số</th><th>Giá trị</th><th>Trích đoạn gốc</th><th>Cách đọc</th><th></th></tr></thead>
+      <tbody>{sugg.map(([f, o]) => row(f, o, f))}
+        {conf.map(([f, opts]) => opts.map((o, i) => row(f, o, f + i)))}</tbody></table></div>
+    {conf.length > 0 && <p className={s.warn}>Có thông số ghi nhiều giá trị khác nhau trên hồ sơ (từng khu vực có thể khác): hệ thống không tự chọn, hãy áp dụng giá trị đúng cho công trình.</p>}
+  </>;
+}
 
 function RoughResultView({ R }: { R: Rough }) {
-  if (!R) return <p style={{ color: "var(--muted)", margin: 0 }}>Nhập thông số rồi bấm &quot;Tính phần thô&quot;. Thông số nào để trống thì công tác cần nó để trống và có cảnh báo, hệ thống không tự điền.</p>;
+  if (!R) return <p style={{ color: "var(--muted)", margin: 0 }}>Bổ sung thông số hình học và bấm Tính khối lượng; chưa cần chọn vật liệu. Các công tác chưa đủ dữ liệu sẽ ghi rõ thông tin cần bổ sung.</p>;
   if ("error" in R) return <ul className={s.warn}><li>{R.error}</li></ul>;
   const r: RoughResult = R;
   const why = (code: string) => r.works.filter((w) => w.code === code && w.missing.length).flatMap((w) => w.missing.map((m) => (w.plan ? w.plan + ": " : "") + m));
   const low = (t: string, title?: string) => <span className={`${s.tag} ${s.low}`} title={title}>{t}</span>;
   const plans = [...new Set(r.works.map((w) => w.plan || "Cả công trình"))];
   return <>
-    <p className={s.label}>Khối lượng công tác (cộng các tầng)</p>
-    <div style={{ overflowX: "auto" }}><table><thead><tr><th>Công tác</th><th className={s.num}>Khối lượng</th><th>ĐVT</th><th></th></tr></thead><tbody>
-      {r.totals.map((t, i) => <tr key={i}><td>{t.name}</td><td className={s.num}>{t.quantity == null ? "" : fmt(t.quantity)}</td><td>{t.unit}</td>
+    <p className={s.label}>Khối lượng công tác (cộng các tầng) <Badge st={r.status} tip="Trạng thái xấu nhất của toàn bảng" /></p>
+    <div style={{ overflowX: "auto" }}><table><thead><tr><th>Công tác</th><th className={s.num}>Khối lượng</th><th>ĐVT</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+      {r.totals.map((t, i) => <tr key={i}><td>{t.name}</td><td className={s.num}>{t.quantity == null ? "" : fmt(t.quantity)}</td><td>{t.unit}</td><td><Badge st={t.status} /></td>
         <td>{t.complete ? "" : low("còn thiếu", missTip([...new Set(why(t.code))]))}</td></tr>)}
     </tbody></table></div>
     {(r.formwork || []).length > 0 && <>
       <p className={s.label}>Cốp pha theo cấu kiện</p>
-      <div style={{ overflowX: "auto" }}><table><tbody>{r.formwork!.map((f, i) => <tr key={i}><td>{f.name}</td><td className={s.num}>{f.quantity == null ? "" : fmt(f.quantity)}</td><td>m²</td><td>{f.complete ? "" : low("còn thiếu")}</td></tr>)}</tbody></table></div>
+      <div style={{ overflowX: "auto" }}><table><tbody>{r.formwork!.map((f, i) => <tr key={i}><td>{f.name}</td><td className={s.num}>{f.quantity == null ? "" : fmt(f.quantity)}</td><td>m²</td><td><Badge st={f.status} /></td><td>{f.complete ? "" : low("còn thiếu")}</td></tr>)}</tbody></table></div>
     </>}
-    <p className={s.label}>Vật liệu mua về</p>
-    <div style={{ overflowX: "auto" }}><table><thead><tr><th>Mã</th><th>Vật liệu</th><th className={s.num}>Khối lượng</th><th className={s.num}>Có hao hụt</th><th>ĐVT</th></tr></thead><tbody>
-      {r.materials.map((m, i) => <tr key={i} className={m.complete ? undefined : s.missrow} title={m.complete ? undefined : missTip(m.missing)}>
-        <td>{m.material_id || "—"}</td><td>{m.name}</td>
-        <td className={s.num}>{m.quantity == null ? low("thiếu") : fmt(m.quantity, 3)}</td>
-        <td className={s.num}>{m.quantity_with_waste == null ? <span className={s.tag} title="Chưa có hao hụt thi công">—</span> : fmt(m.quantity_with_waste, 3)}</td><td>{m.unit}</td></tr>)}
-    </tbody></table></div>
-    <p style={{ color: "var(--muted)", margin: 0, fontSize: 12 }}>Dòng tô màu còn thiếu số liệu: rê chuột để xem thiếu gì.</p>
     <p className={s.label}>Chi tiết theo tầng</p>
     {plans.map((pl) => <details key={pl}><summary>{pl}</summary><div style={{ overflowX: "auto" }}><table><tbody>
       {r.works.filter((w) => (w.plan || "Cả công trình") === pl).map((w, i) => <tr key={i}><td>{w.name}<br /><small style={{ color: "var(--muted)" }}>{w.element || ""}</small></td>
         <td><small>{w.formula}</small>{w.missing.length > 0 && <><br />{low("thiếu: " + w.missing.join(", "))}</>}</td>
-        <td className={s.num}>{w.quantity == null ? "" : fmt(w.quantity, 3)} {w.unit}</td></tr>)}
+        <td className={s.num}>{w.quantity == null ? "" : fmt(w.quantity, 3)} {w.unit}</td><td><Badge st={w.status} tip={(w.inputs || []).join("; ")} /></td></tr>)}
     </tbody></table></div></details>)}
     {r.warnings.length > 0 && <><p className={s.label}>Cảnh báo</p><ul className={s.warn} style={{ padding: 0 }}>{r.warnings.map((w, i) => <li key={i}>{w}</li>)}</ul></>}
     {r.takeoff_id ? <p>Đã lưu vào dự án (mã kết quả {r.takeoff_id}).</p> : null}
   </>;
 }
 
-export function RoughTab({ P, pp, values, rough, busy, onParam, onPlanParam, onRun }: {
-  P: Plan; pp: PlanParams; values: Record<string, string>; rough: Rough; busy: boolean;
+export function RoughTab({ P, pp, values, rough, busy, onParam, onPlanParam, onRun, structural, onStructural, facts }: {
+  P: Plan; pp: PlanParams; values: Record<string, string>; rough: Rough; busy: boolean; facts?: InputFacts | null;
   onParam: (k: string, v: string) => void; onPlanParam: (k: string, v: string | boolean) => void; onRun: () => void;
+  structural: Structural | { error: string } | { busy: string } | null; onStructural: (f: File | undefined) => void;
 }) {
   const cols = pp.cols;
-  const { ref } = useReference();
+  const { ref, error } = useReference();
+  const suggestions: Record<string, string[]> = {
+    concrete_grade: ref?.concrete_grades || [], lean_concrete_grade: ref?.concrete_grades || [],
+    masonry_mortar_grade: ref?.mortar_grades || [], plaster_mortar_grade: ref?.mortar_grades || [],
+    screed_mortar_grade: ref?.mortar_grades || [], plaster_thickness_mm: ref?.plaster_thicknesses || [],
+    screed_thickness_mm: ref?.screed_thicknesses || [],
+  };
   return (
     <div className={s.qty}>
-      <p className={s.label}>Thông số công trình</p>
+      {facts && <FactSuggestions facts={facts} values={values} onParam={onParam} />}
+      <p className={s.label}>Bản vẽ kết cấu</p>
+      <div className={s.actions} style={{ justifyContent: "flex-start", alignItems: "center" }}>
+        <label className={s.btn}>{structural && "file" in structural ? "Đổi bản vẽ kết cấu…" : "Mở bản vẽ kết cấu…"}
+          <input type="file" accept=".dxf,.dwg" hidden onChange={(e) => { onStructural(e.target.files?.[0]); e.target.value = ""; }} /></label>
+        <span style={{ color: "var(--muted)", fontSize: 12.5 }}>
+          {!structural ? "Chưa có: dầm suy từ tường và cột, móng chưa tính. Mở file kết cấu (móng, dầm, cột, bảng thép) nếu tách riêng."
+            : "busy" in structural ? structural.busy
+            : "error" in structural ? <span className={`${s.tag} ${s.low}`}>{structural.error}</span>
+            : `${structural.file}: ${Object.keys(structural.structural_beams || {}).length} mặt bằng dầm, ${structural.foundations.length} loại móng.`}
+        </span>
+      </div>
+      {structural && "notes" in structural && structural.notes.length > 0 &&
+        <details><summary>Ghi chú đọc kết cấu ({structural.notes.length})</summary><ul className={s.warn} style={{ padding: 0 }}>{structural.notes.map((n, i) => <li key={i}>{n}</li>)}</ul></details>}
+      <p className={s.label}>Thông số tính phần thô</p>
+      <p style={{ margin: 0, color: "var(--muted)" }}>Chọn vật liệu ở bước tiếp theo. Thông số kết cấu được bổ sung từ bản vẽ khi có dữ liệu; các giá trị còn thiếu có thể nhập tại đây.</p>
+      {error && <p role="alert" className={s.warn}>Chưa tải được danh mục đề xuất: {error}. Bạn có thể nhập thông số riêng hoặc tải lại trang.</p>}
+      {!ref && !error && <p role="status">Đang tải thông số tham khảo…</p>}
       {/* gợi ý mác bê tông: biến thể BE_TONG_TRON trong rough_norms */}
       <datalist id="concrete-grades">{(ref?.concrete_grades || []).map((g) => <option key={g} value={g} />)}</datalist>
-      {roughFields(ref).map(([title, fields]) => (
+      {roughFields(ref).map(([title, fields]) => [title, fields.filter(([key]) => !MATERIAL_PARAMS.has(key))] as const).filter(([, fields]) => fields.length > 0).map(([title, fields]) => (
         <fieldset key={title} className={s.rfs}><legend>{title}</legend>
           {fields.map(([k, label, type, ph]) => (
             <label key={k} className={s.rf}><span>{label}</span>
+              {suggestions[k]?.length > 0 && <>
+                <select aria-label={`Đề xuất ${label.toLowerCase()}`} value={suggestions[k].includes(values[k] || "") ? values[k] : ""}
+                  onChange={(e) => onParam(k, e.target.value)}>
+                  <option value="">{values[k] ? "Thông số riêng" : "Chọn phương án đề xuất…"}</option>
+                  {suggestions[k].map((v) => <option key={v} value={v}>{v}{k.endsWith("_mm") ? " mm" : ""}</option>)}
+                </select>
+                <small>Đề xuất từ dữ liệu · có thể sửa bên dưới</small>
+              </> }
               {Array.isArray(type)
                 ? <select value={String(values[k] || "")} onChange={(e) => onParam(k, e.target.value)}>{type.map(([val, txt]) => <option key={val} value={val}>{txt}</option>)}</select>
-                : <ChangeInput {...(type === "num" ? { type: "number", min: 0, step: "any" } : { type: "text" })} list={type === "grade" ? "concrete-grades" : undefined}
-                  value={values[k] ?? ""} placeholder={ph || ""}
-                  onCommit={(el) => onParam(k, el.value)} />}
+                : <ChangeInput {...(type === "num" ? { type: "number", min: k === "natural_ground_level_mm" ? undefined : 0, step: "any" } : { type: "text" })} list={type === "grade" ? "concrete-grades" : undefined}
+                  value={values[k] ?? ""} placeholder={ph || (suggestions[k] ? "Hoặc nhập thông số riêng" : "Bổ sung nếu bản vẽ chưa có")}
+                  onCommit={(el) => {
+                    if (type === "num" && el.value !== "" && (!Number.isFinite(Number(el.value)) || (k !== "natural_ground_level_mm" && Number(el.value) < 0))) return values[k] ?? "";
+                    onParam(k, el.value);
+                  }} />}
             </label>
           ))}
         </fieldset>
@@ -75,9 +137,9 @@ export function RoughTab({ P, pp, values, rough, busy, onParam, onPlanParam, onR
             <ChangeInput type="number" min={0} step="any" value={String(pp[k] ?? "")} onCommit={(el) => onPlanParam(k, el.value)} /></label>
         ))}
       </fieldset>
-      <p style={{ margin: 0, color: "var(--muted)", fontSize: 12.5 }}>Cột nhận được: {cols.filter((c) => c.keep).length}/{cols.length} (bấm vào ô cột trên bản vẽ để bỏ hoặc giữ). Dầm chưa có bản vẽ kết cấu thì suy từ tường và cột.</p>
+      <p style={{ margin: 0, color: "var(--muted)", fontSize: 12.5 }}>Cột nhận được: {cols.filter((c) => c.keep).length}/{cols.length} (theo nhận dạng đã lưu). {structural && "file" in structural ? "Dầm, móng lấy từ bản vẽ kết cấu." : "Dầm chưa có bản vẽ kết cấu thì suy từ tường và cột."}</p>
       <div className={s.actions} style={{ justifyContent: "flex-start" }}>
-        <button className={`${s.btn} ${s.primary}`} type="button" disabled={busy} onClick={onRun}>{busy ? "Đang tính…" : "Tính phần thô"}</button>
+        <button className={`${s.btn} ${s.primary}`} type="button" disabled={busy} onClick={onRun}>{busy ? "Đang tính…" : "Tính khối lượng"}</button>
       </div>
       <div className={s.qty} style={{ padding: 0 }}><RoughResultView R={rough} /></div>
     </div>

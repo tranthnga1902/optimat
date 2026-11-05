@@ -1,0 +1,101 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.panel > section {
+  padding: 24px;
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.panel :global(.xl) {
+  max-height: 440px;
+}
+
+.panel :global(.xl) th,
+.panel :global(.xl) td {
+  border-right: 1px solid var(--rule2);
+}
+
+.panel :global(.xl) td {
+  padding-block: 10px;
+}
+
+.panel :global(.xl) td:first-child {
+  background: var(--xh);
+}
+
+.panel :global(.xl) :global(.rn) {
+  width: 1%;
+  min-width: 0;
+  padding-inline: 6px;
+  white-space: nowrap;
+}
+
+.panel :global(.xl) .viewingRow td {
+  background: var(--accent-soft);
+}
+
+.actions,
+.viewerHeading,
+.start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.actions label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  cursor: pointer;
+}
+
+.viewerHeading > div,
+.start > p {
+  flex: 1 1 280px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.viewer {
+  position: relative;
+  min-width: 0;
+  height: clamp(320px, 60vh, 720px);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.selection {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .panel {
+    gap: 18px;
+  }
+
+  .panel > section {
+    padding: 16px;
+  }
+
+  .start > button {
+    width: 100%;
+  }
+}

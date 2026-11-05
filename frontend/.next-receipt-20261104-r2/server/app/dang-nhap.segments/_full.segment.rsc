@@ -1,0 +1,49 @@
+1:"$Sreact.fragment"
+2:"/_next/static/chunks/1tq6ppe__m8m-.js"
+3:I[39756,["$2"],"default"]
+4:"/_next/static/chunks/1_txwh4m4zbbx.js"
+5:I[58298,["$2","$4"],"default"]
+6:I[37457,["$2"],"default"]
+7:"/_next/static/chunks/2pil-k9t2rt3u.js"
+8:I[22016,["$2","$7"],""]
+d:I[37552,["$2","$7"],"LoginPanel"]
+e:I[97367,["$2"],"OutletBoundary"]
+f:"$Sreact.suspense"
+12:"ViewportBoundary"
+13:I[97367,["$2"],"$12"]
+15:"MetadataBoundary"
+16:I[97367,["$2"],"$15"]
+19:I[68027,["$2"],"default",1]
+:HL["/_next/static/chunks/14aib9iixmmaa.css","style"]
+:HL["/_next/static/media/051742360c26797e-s.p.1bkzbscqrt8rl.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/3c285486269019b7-s.p.2g-0we2o5_ngd.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/53e45098eac42afb-s.p.1uklb5el4zgvl.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/625a092f804baad3-s.p.1zvg0ggiaivzo.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/6f42e0a3b0519c4d-s.p.13y-iz2lazqtb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/8f46d218c8f79e34-s.p.2wu4yy186g04j.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/8ffc259da9d23054-s.p.10uaeld2xxvpt.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/a3bcb02a0e9e5d11-s.p.25pbmqxk8u2s7.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/a4f4f75ad654963f-s.p.1hvvd1t-trplq.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/fa39153a3fc630ba-s.p.36fqqi66-3tjb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+9:X
+b:X
+11:X
+c:[["children",{"s":"__PAGE__","h":514,"d":{"r":["$","$1","c",{"children":[["$","div",null,{"className":"flex min-h-screen flex-wrap","children":[["$","div",null,{"className":"flex flex-[1_1_420px] flex-col justify-between gap-10 bg-nav-user p-14 text-white max-[860px]:px-4 max-[860px]:py-7","children":[["$","div",null,{"className":"flex items-center gap-2.5 text-lg font-bold","children":[["$","svg",null,{"width":28,"height":28,"viewBox":"0 0 36 36","fill":"none","stroke":"#7FD6BF","strokeWidth":"2.6","strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":[["$","rect",null,{"x":"4","y":"20","width":"12","height":"12"}],["$","rect",null,{"x":"20","y":"20","width":"12","height":"12"}],["$","rect",null,{"x":"12","y":"6","width":"12","height":"12"}]]}]," OptiMat AI"]}],["$","div",null,{"children":[["$","h1",null,{"className":"m-0 text-[38px] leading-tight font-bold","children":"Từ bản vẽ đến phương án vật liệu tối ưu"}],["$","p",null,{"className":"max-w-[460px] text-[16.5px] text-nav-muted","children":"Đọc bản vẽ DXF, đo bóc khối lượng tường, tra vật liệu và giá theo danh mục, đề xuất phương án cân bằng chi phí, thời gian cung ứng và khả năng cách nhiệt."}]]}],["$","div",null,{"className":"flex flex-wrap gap-2","children":[["$","span","AI Agent",{"className":"rounded-full border border-[#3C5A50] px-3 py-1.5 text-[13px] text-nav-muted","children":"AI Agent"}],["$","span","XGBoost",{"className":"rounded-full border border-[#3C5A50] px-3 py-1.5 text-[13px] text-nav-muted","children":"XGBoost"}],["$","span","NSGA-II",{"className":"rounded-full border border-[#3C5A50] px-3 py-1.5 text-[13px] text-nav-muted","children":"NSGA-II"}]]}]]}],["$","div",null,{"className":"flex flex-[1_1_460px] flex-col justify-center p-14 max-[860px]:px-4 max-[860px]:py-7","children":["$","$Ld",null,{"roles":[{"href":"/do-boc","title":"Người dùng","text":"Chủ nhà, kỹ sư, nhà thầu: tải bản vẽ, kiểm tra đo bóc, xem vật liệu, giá và phương án","primary":true},{"href":"/tong-quan","title":"Quản trị viên","text":"Kiểm soát dữ liệu vật liệu, phương án tường, giá, nhà cung cấp và mô hình","primary":false}]}]}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/2pil-k9t2rt3u.js","async":true,"nonce":"$undefined"}]],["$","$Le",null,{"children":["$","$f",null,{"name":"Next.MetadataOutlet","children":"$@10"}]}]]}],"p":true,"v":"$11"}}]]
+a:[["children",{"s":"dang-nhap","h":514,"d":{"r":["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],"p":true,"v":"$b"},"c":"$Qc"}]]
+18:X
+1a:X
+1b:X
+0:{"P":null,"c":["","dang-nhap"],"q":"","i":false,"t":{"t":{"s":"","h":530,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/14aib9iixmmaa.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1tq6ppe__m8m-.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"vi","className":"mYUAQa_variable SR4DPG_variable","children":["$","body",null,{"className":"font-sans antialiased","children":["$","$L3",null,{"parallelRouterKey":"children","error":"$5","errorStyles":[],"errorScripts":[["$","script","script-0",{"src":"/_next/static/chunks/1_txwh4m4zbbx.js","async":true,"nonce":"$undefined"}]],"template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","main",null,{"className":"mx-auto flex min-h-screen max-w-[520px] flex-col justify-center gap-3 p-6","children":[["$","h1",null,{"className":"m-0 text-[28px] font-bold","children":"404 · Không tìm thấy trang"}],["$","p",null,{"className":"m-0 text-muted","children":"Đường dẫn không tồn tại hoặc đã được đổi tên."}],["$","div",null,{"className":"flex flex-wrap gap-2","children":["$","$L8",null,{"className":"btn primary","href":"/","children":"Về trang chính"}]}]]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],"p":true,"v":"$9"},"c":"$Qa"},"h":{"r":["$","$1","h",{"children":[null,["$","$L13",null,{"children":"$L14"}],["$","$L16",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$f",null,{"name":"Next.Metadata","children":"$L17"}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":true,"v":"$18"}},"m":"$undefined","G":["$19",[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/14aib9iixmmaa.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]]],"S":true,"r":"$1a","s":"$1b","a":"$@1c","l":"$undefined","p":"$undefined","d":"$undefined","b":"NHJFk5xf3Mgq2V270e3rI","u":"$@1d"}
+b:C
+1b:300
+14:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+1e:I[27201,["$2"],"IconMark"]
+10:null
+17:[["$","title","0",{"children":"Đăng nhập · OptiMat AI"}],["$","meta","1",{"name":"description","content":"Từ bản vẽ đến phương án vật liệu tối ưu: đo bóc tường, tra giá, tối ưu NSGA-II."}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.117ezoe8m31dk.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","3",{}]]
+1b:C
+18:C
+1a:C
+11:C
+9:C
+1d:false
+1c:null

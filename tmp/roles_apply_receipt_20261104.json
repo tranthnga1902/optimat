@@ -1,0 +1,109 @@
+{
+  "status": "committed_verified",
+  "hashes": {
+    "delta": "547b8b44bc2154fe97c4e236f7239283ea55abca5a3e12397e21e4acfaed9a6d",
+    "rollback": "0c547c4ddd73e73ddc655c60cd86d47eaa42c4a73be5985aa583472276adc5f2"
+  },
+  "commit_attempted": true,
+  "target": {
+    "api_pid": 10060,
+    "api_start": "2026-11-04T08:24:49",
+    "api_port": 8000,
+    "client_address": "::1/128",
+    "client_port": 63224,
+    "database": "optimat",
+    "backend_start": "2026-11-04T09:42:14.202340+07:00"
+  },
+  "before": {
+    "project_document_revisions": {
+      "oid": 167922,
+      "count": 0
+    },
+    "project_profile_revisions": {
+      "oid": 167942,
+      "count": 1
+    },
+    "projects": {
+      "oid": 142603,
+      "count": 23
+    },
+    "project_files": {
+      "oid": 142596,
+      "count": 126
+    },
+    "takeoff_results": {
+      "oid": 142656,
+      "count": 24
+    },
+    "constraint": {
+      "validated": true,
+      "definition": "CHECK (((role)::text = ANY ((ARRAY['KT'::character varying, 'KC'::character varying, 'THAM_KHAO'::character varying])::text[])))"
+    },
+    "role_counts": {}
+  },
+  "target_rechecked": {
+    "api_pid": 10060,
+    "api_start": "2026-11-04T08:24:49",
+    "api_port": 8000,
+    "client_address": "::1/128",
+    "client_port": 63224,
+    "database": "optimat",
+    "backend_start": "2026-11-04T09:42:14.202340+07:00"
+  },
+  "after_in_transaction": {
+    "project_document_revisions": {
+      "oid": 167922,
+      "count": 0
+    },
+    "project_profile_revisions": {
+      "oid": 167942,
+      "count": 1
+    },
+    "projects": {
+      "oid": 142603,
+      "count": 23
+    },
+    "project_files": {
+      "oid": 142596,
+      "count": 126
+    },
+    "takeoff_results": {
+      "oid": 142656,
+      "count": 24
+    },
+    "constraint": {
+      "validated": true,
+      "definition": "CHECK (((role)::text = ANY ((ARRAY['KT'::character varying, 'KC'::character varying, 'HO_SO'::character varying, 'TIEN_LUONG'::character varying, 'THAM_KHAO'::character varying])::text[])))"
+    },
+    "role_counts": {}
+  },
+  "postcommit": {
+    "project_document_revisions": {
+      "oid": 167922,
+      "count": 0
+    },
+    "project_profile_revisions": {
+      "oid": 167942,
+      "count": 1
+    },
+    "projects": {
+      "oid": 142603,
+      "count": 23
+    },
+    "project_files": {
+      "oid": 142596,
+      "count": 126
+    },
+    "takeoff_results": {
+      "oid": 142656,
+      "count": 24
+    },
+    "constraint": {
+      "validated": true,
+      "definition": "CHECK (((role)::text = ANY ((ARRAY['KT'::character varying, 'KC'::character varying, 'HO_SO'::character varying, 'TIEN_LUONG'::character varying, 'THAM_KHAO'::character varying])::text[])))"
+    },
+    "role_counts": {}
+  },
+  "postcommit_schema_ok": true,
+  "postcommit_counts_match": true
+}

@@ -1,0 +1,108 @@
+"""Candidate ngoài production: đọc native ATTRIB, chỉ nhận bảng trong khung có nguồn rõ."""
+import hashlib
+import math
+import re
+from collections import Counter
+from pathlib import Path
+
+import ezdxf
+
+
+def load_source(path, expected_hash):
+    data = Path(path).read_bytes()
+    digest = hashlib.sha256(data).hexdigest()
+    if digest != expected_hash:
+        raise ValueError("Hash nguồn thay đổi")
+    return ezdxf.readfile(path), {"file": str(path), "sha256": digest}
+
+
+def native_rows(doc, source):
+    """Không ghép nhóm bằng trị số hoặc tên gần nhất; giữ riêng từng native INSERT."""
+    rows = []
+    for entity in doc.modelspace().query("INSERT"):
+        attrs = {a.dxf.tag.upper(): a.dxf.text for a in entity.attribs}
+        if entity.dxf.name not in ("TK_2", "TK_14"):
+            continue
+        point = entity.ocs().to_wcs(entity.dxf.insert)
+        rows.append({**source, "handlepath": ["modelspace", entity.dxf.handle],
+                     "type": "INSERT", "block": entity.dxf.name, "layer": entity.dxf.layer,
+                     "xy": [point.x, point.y], "raw": attrs,
+                     "duplicate_tags": [k for k, n in Counter(a.dxf.tag.upper() for a in entity.attribs).items() if n > 1],
+                     "attrib_sources": {a.dxf.tag.upper(): {"handle": a.dxf.handle,
+                         "type": a.dxftype(), "layer": a.dxf.layer} for a in entity.attribs},
+                     "group": None, "segment": None, "axis": None})
+    return rows
+
+
+def _number(raw):
+    if not re.fullmatch(r"\d+(?:[.,]\d+)?", raw.strip()):
+        raise ValueError("Số ATTRIB chưa rõ đơn vị/cách ghi")
+    value = float(raw.replace(",", "."))
+    if not math.isfinite(value) or value <= 0:
+        raise ValueError("Số ATTRIB phải hữu hạn và dương")
+    return value
+
+
+def read_region(doc, source, frame_handle, *, units, units_evidence):
+    """Khung kín là đầu vào bằng chứng, không tự dựng bbox từ các hàng muốn lấy."""
+    if units != {"DK": "mm", "DAI": "mm", "DT": "m", "TL": "kg"} or not units_evidence.strip():
+        return [], ["Chưa có căn cứ đơn vị DAI/DT/TL"]
+    frame = doc.entitydb.get(frame_handle)
+    if frame is None or frame.dxftype() != "LWPOLYLINE" or not frame.closed or frame.has_arc:
+        return [], ["Chưa có khung bảng kín đủ nguồn"]
+    if frame.dxf.owner != doc.modelspace().block_record_handle or tuple(frame.dxf.extrusion) != (0, 0, 1):
+        return [], ["Khung chưa có phép đổi từ block/OCS sang WCS đủ nguồn"]
+    points = list(frame.get_points("xy"))
+    xs, ys = sorted({p[0] for p in points}), sorted({p[1] for p in points})
+    if len(points) != 4 or len(xs) != 2 or len(ys) != 2 or set(points) != {(x, y) for x in xs for y in ys}:
+        return [], ["Khung chưa là chữ nhật theo WCS; không đoán vùng"]
+    if any(a[0] != b[0] and a[1] != b[1] for a, b in zip(points, points[1:]+points[:1])):
+        return [], ["Khung cắt chéo; không đoán vùng"]
+    def inside(x, y):
+        return xs[0] < x < xs[-1] and ys[0] < y < ys[-1]
+    labels, counts = [], []
+    for t in doc.modelspace().query("TEXT"):
+        p = t.dxf.insert
+        if not inside(p.x, p.y):
+            continue
+        value = t.dxf.text.strip()
+        if re.fullmatch(r"C-?\d+[A-Z]?", value, re.I):
+            labels.append(t)
+        if re.fullmatch(r"\(SL\s*:\s*\d+\)", value, re.I):
+            counts.append(t)
+    if len(labels) != 1 or len(counts) != 1:
+        return [], ["Khung không xác định duy nhất nhóm/số cấu kiện; không nối theo tên gần hoặc trị số"]
+    count = int(re.search(r"\d+", counts[0].dxf.text).group())
+    if count <= 0:
+        return [], ["Số cấu kiện không hợp lệ"]
+    result, warnings = [], []
+    for row in native_rows(doc, source):
+        if not inside(*row["xy"]):
+            continue
+        if row["block"] != "TK_2":
+            warnings.append(f"{row['handlepath'][-1]}: block {row['block']} chưa hỗ trợ; không gán đoạn")
+            continue
+        if row["duplicate_tags"] or not {"SH", "DK", "DAI", "SL1", "SLA", "DT", "TL"} <= row["raw"].keys():
+            warnings.append(f"{row['handlepath'][-1]}: thiếu/trùng ATTRIB; giữ pending")
+            continue
+        try:
+            values = {k: _number(row["raw"][k]) for k in ("DK", "DAI", "SL1", "SLA", "DT", "TL")}
+        except ValueError as exc:
+            warnings.append(f"{row['handlepath'][-1]}: {exc}")
+            continue
+        if any(values[k] != int(values[k]) for k in ("SL1", "SLA")) or values["SL1"]*count != values["SLA"]:
+            warnings.append(f"{row['handlepath'][-1]}: SL1 × số cấu kiện khác SLA; giữ pending")
+            continue
+        if abs(values["DAI"]/1000*values["SLA"]-values["DT"]) > 0.01:
+            warnings.append(f"{row['handlepath'][-1]}: tổng dài DT không khớp; giữ pending")
+            continue
+        row.update(group=labels[0].dxf.text, group_sources=[labels[0].dxf.handle, counts[0].dxf.handle],
+                   frame_handlepath=["modelspace", frame_handle], members=count, values=values,
+                   total_bars=values["SLA"], length_total_m=values["DAI"]/1000*values["SLA"],
+                   units=units, units_evidence=units_evidence, checked=False,
+                   pending=["Chưa có tầng/phạm vi toàn cột hoặc đoạn; chưa nối axis/mark tại chi tiết"])
+        result.append(row)
+    marks = [r["raw"]["SH"] for r in result]
+    if len(set(marks)) != len(marks):
+        return [], warnings + ["Trùng số hiệu trong vùng; cần phạm vi/occurrence riêng, không tự gộp"]
+    return result, warnings

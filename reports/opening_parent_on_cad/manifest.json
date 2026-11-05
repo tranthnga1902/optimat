@@ -1,0 +1,29 @@
+{
+  "cad_manifest_sha256": "f4badd409ad9600a334925c0949a14cf1e0c93ad9a32fa7a9618211eb59dd433",
+  "targets": {
+    "3002": {
+      "opening_base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3002-candidate",
+      "build_id": "5STud4qMZi47UJU3U-_3-",
+      "files": {
+        "src/app/(user)/do-boc/model.ts": {
+          "cad_base_sha256": "b4798ce06bb5ca74ecd55f5f12a564fc678c4f121abf55cde2312cf18fed9b80",
+          "new_sha256": "0b629c34eb9808cc7b74d6de05fa78cd539e223357cd43b9d2fc574eb45532ec"
+        }
+      },
+      "patch_sha256": "60e1ba18097d3e5bdce5f28e1a754720624d2921bb8836d80b81373003d0f852",
+      "apply_check": true
+    },
+    "3001": {
+      "opening_base": "C:\\Users\\Admin\\.codex\\visualizations\\2026\\11\\03\\01a1a0af-a01f-7af3-bf7d-34ef9a0c5576\\opening-3001-candidate",
+      "build_id": "UthdKbmMyzssbWeIX9H04",
+      "files": {
+        "src/app/(user)/do-boc/model.ts": {
+          "cad_base_sha256": "59900ecf9476a38241649f4652b03c7103e59659a8d23c097e81173734033fa9",
+          "new_sha256": "cbda27d09340493a1e1dc7e163c557553b2d0af0d46e49afa33ed70012d027dc"
+        }
+      },
+      "patch_sha256": "d914d06c792b5006f96c760568d49ec8c4bce80a8b5153036075f03ce0bb22a3",
+      "apply_check": true
+    }
+  }
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "file": "src/optimat/rough/models.py",
+    "sha256": "ea57ec73e239d73b6fd60ae7c4f8d0c5bc1e2994ba3e6f1401d5984e2b270a92"
+  },
+  {
+    "file": "src/optimat/rough/walls.py",
+    "sha256": "b3388b48e972043403a58c5e15d6f9683aa7ca2bb95b8846131e8c17463e7c66"
+  },
+  {
+    "file": "src/optimat/rough/columns.py",
+    "sha256": "344fa74a3b1df43d0e4f7317527773eaaa63388d71c1040c6933b2cfe2bf86fc"
+  },
+  {
+    "file": "src/optimat/rough/beams.py",
+    "sha256": "985ef5097f9a5b31a447a6cf8749cf8e69f79026f083d8cd0b844aa85ff6818e"
+  },
+  {
+    "file": "src/optimat/rough/foundations.py",
+    "sha256": "67d3ed107a29e544147c705b50238b67c43f4048b7a2504c6fea2f746cd08e93"
+  },
+  {
+    "file": "src/optimat/rough/areas.py",
+    "sha256": "7f12940fc150444e00b3a65c2c0d4140d41442d1deb03f436dfee923d58646c4"
+  },
+  {
+    "file": "src/optimat/rough/stairs.py",
+    "sha256": "4fa680b591f1f6d05ef2d7fa21098c34e40b638ce346b2a9fbfb453af3fd40ff"
+  },
+  {
+    "file": "src/optimat/rough/secondary.py",
+    "sha256": "e6b1e8717d4885ebeb412f1ce3a741606edd0660da5aa8988d73816cb5e30ad1"
+  },
+  {
+    "file": "src/optimat/rough/steel.py",
+    "sha256": "ac1e5d268bf6eea263838261e278b287125619e865cddb4ffe80c53081122af9"
+  },
+  {
+    "file": "src/optimat/rough/takeoff.py",
+    "sha256": "3c8095c296b65adab96940b1a6091d6edbba2036aa7d057b25b21f96e349c20e"
+  },
+  {
+    "file": "tests/test_work_dimensions.py",
+    "sha256": "75bc5d57d8b76f55fea01de131b2c008dce03002dacde11057e84a2ee3ab7759"
+  }
+]

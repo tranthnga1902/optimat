@@ -1,0 +1,28 @@
+{
+  "red": "12 failed, 3 passed, 31 deselected (masonry before fix)",
+  "redExit": 1,
+  "targets": [
+    "tests/test_rough_materials.py",
+    "tests/test_rough_takeoff.py",
+    "tests/test_rough_plaster.py",
+    "tests/test_wall_procurement_flow.py",
+    "tests/test_final_wall_groups_ui.py",
+    "tests/test_rough_price_source.py"
+  ],
+  "exit": 0,
+  "result": "95 passed in 19.38s",
+  "files": [
+    {
+      "path": "src/optimat/rough/materials.py",
+      "before": "10e261d451406850c8a27979862c87dbb3d456a527752ce90a93ff8199a77187",
+      "tested": "FC29185E25E80F9C90D0542D30D8E949FC501860D4CC74C9D30AE8A52830DE63",
+      "after": "FC29185E25E80F9C90D0542D30D8E949FC501860D4CC74C9D30AE8A52830DE63"
+    },
+    {
+      "path": "tests/test_rough_materials.py",
+      "before": "890abeb6fa7ab371dad3023388728b89a763971bec255749a507c113bc206959",
+      "tested": "85EBBFE1143298FA737966509B41561302A2505293B676FF5AA4743EB7161CFD",
+      "after": "85EBBFE1143298FA737966509B41561302A2505293B676FF5AA4743EB7161CFD"
+    }
+  ]
+}

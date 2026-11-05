@@ -1,0 +1,36 @@
+--- a/src/optimat/rough/models.py
++++ b/src/optimat/rough/models.py
+@@ -423,6 +423,8 @@
+             if (legacy is None) != (detail.legacy_quantity is None) or (
+                     legacy is not None and Decimal(legacy) != Decimal(detail.legacy_quantity)):
+                 raise ValueError("Lượng legacy trong detail không khớp công tác của snapshot.")
++            if (self.missing or self.status == "D") and (detail.complete or detail.total_raw is not None):
++                raise ValueError("Công tác D hoặc còn thiếu chỉ được giữ phần lượng đã biết trong detail.")
+         return self
+ 
+ 
+--- a/tests/test_rough_quantity_details.py
++++ b/tests/test_rough_quantity_details.py
+@@ -162,3 +162,22 @@
+ def test_missing_reason_cannot_be_only_whitespace(raw):
+     with pytest.raises(ValidationError):
+         row(raw_quantity=raw, missing=[" "])
++
++
++@pytest.mark.parametrize("status,missing", [("D", []), ("C", ["Chưa xác nhận phạm vi"]),
++                                          (None, ["Chưa có đủ căn cứ"])])
++def test_incomplete_parent_cannot_claim_complete_detail(status, missing):
++    detail = summarize([row()], "m³", "1", scope_complete=True)
++    with pytest.raises(ValidationError):
++        WorkItem(code="DAM", name="Dầm", unit="m³", quantity=1, status=status,
++                 missing=missing, quantity_detail=detail)
++
++
++def test_incomplete_parent_keeps_known_part_and_legacy_unchanged():
++    detail = summarize([row()], "m³", "1", scope_complete=False)
++    w = WorkItem(code="DAM", name="Dầm", unit="m³", quantity=1, status="D",
++                 missing=["Chưa xác nhận phạm vi"], quantity_detail=detail)
++    assert w.quantity == 1 and w.status == "D" and w.missing == ["Chưa xác nhận phạm vi"]
++    assert w.quantity_detail.known_part_raw == "1" and w.quantity_detail.total_raw is None
++    assert not w.quantity_detail.complete
++    assert WorkItem.model_validate_json(w.model_dump_json()) == w

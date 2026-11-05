@@ -10,7 +10,7 @@ là mã kế thừa, không phải mã tự phát triển.
 
 | File trong dự án này | Lấy từ file gốc | Mức độ |
 |---|---|---|
-| `src/optimat/drawing/dwg_convert.py` | `app/parsers/dwg_parser.py` | Giữ logic tìm và gọi ODA File Converter; bỏ phụ thuộc vào mô hình dữ liệu gốc, đổi thông báo sang tiếng Việt |
+| `src/optimat/drawing/dwg_convert.py` | `app/parsers/dwg_parser.py` | Giữ logic tìm và gọi ODA File Converter; bổ sung ưu tiên LibreDWG, bỏ phụ thuộc vào mô hình dữ liệu gốc, đổi thông báo sang tiếng Việt |
 | `src/optimat/drawing/layer_classifier.py` | `app/detection/layer_classifier.py` | Giữ cách tổ chức (quy tắc mặc định, ghi đè theo file); viết lại bộ quy tắc cho tên layer tiếng Việt và vai trò dùng cho đo bóc |
 | `tests/test_drawing_io.py` (một phần) | `tests/test_dwg_parser.py` | Chuyển thể các bài kiểm thử tìm ODA File Converter |
 
